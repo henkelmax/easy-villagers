@@ -1,0 +1,37 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "minecraft:copy_nbt",
+              "source": "block_entity",
+              "ops": [
+                {
+                  "source": "Villager",
+                  "target": "BlockEntityTag.Villager",
+                  "op": "replace"
+                },
+                {
+                  "source": "Workstation",
+                  "target": "BlockEntityTag.Workstation",
+                  "op": "replace"
+                },
+                {
+                  "source": "NextRestock",
+                  "target": "BlockEntityTag.NextRestock",
+                  "op": "replace"
+                }
+              ]
+            }
+          ],
+          "name": "easy_villagers:trader"
+        }
+      ]
+    }
+  ]
+}
