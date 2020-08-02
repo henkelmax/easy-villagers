@@ -55,7 +55,7 @@ public class TraderBlock extends Block implements ITileEntityProvider, IItemBloc
             if (trader.hasWorkstation()) {
                 VillagerEntity villagerEntity = trader.getVillagerEntity();
                 if (villagerEntity != null) {
-                    playVillagerSound(worldIn, pos, villagerEntity.getVillagerData().getProfession().getSound());
+                    playWorkstationSound(worldIn, pos, trader);
                 }
             } else {
                 playVillagerSound(worldIn, pos, SoundEvents.ENTITY_VILLAGER_CELEBRATE);
@@ -67,7 +67,7 @@ public class TraderBlock extends Block implements ITileEntityProvider, IItemBloc
             ItemUtils.decrItemStack(heldItem, player);
             VillagerEntity villagerEntity = trader.getVillagerEntity();
             if (villagerEntity != null) {
-                playVillagerSound(worldIn, pos, villagerEntity.getVillagerData().getProfession().getSound());
+                playWorkstationSound(worldIn, pos, trader);
             }
             SoundType type = block.getSoundType(block.getDefaultState());
             worldIn.playSound(null, pos, type.getPlaceSound(), SoundCategory.BLOCKS, type.getVolume(), type.getPitch());
@@ -102,6 +102,17 @@ public class TraderBlock extends Block implements ITileEntityProvider, IItemBloc
             return ActionResultType.SUCCESS;
         }
         return ActionResultType.SUCCESS;
+    }
+
+    private void playWorkstationSound(World world, BlockPos pos, TraderTileentity trader) {
+        VillagerEntity villagerEntity = trader.getVillagerEntity();
+        if (villagerEntity != null) {
+            if (trader.getWorkstationProfession().equals(villagerEntity.getVillagerData().getProfession())) {
+                playVillagerSound(world, pos, trader.getWorkstationProfession().getSound());
+            } else {
+                playVillagerSound(world, pos, SoundEvents.ENTITY_VILLAGER_NO);
+            }
+        }
     }
 
     public static void playVillagerSound(World world, BlockPos pos, SoundEvent soundEvent) {

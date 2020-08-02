@@ -36,10 +36,11 @@ public class TraderTileentity extends TileEntity implements ITickableTileEntity 
     private long nextRestock;
     private boolean fakeWorld;
 
-    private static final CachedValue<Field> LAST_RESTOCK = new CachedValue<>(() -> ObfuscationReflectionHelper.findField(VillagerEntity.class, "lastRestock"));
+    private static final CachedValue<Field> LAST_RESTOCK = new CachedValue<>(() -> ObfuscationReflectionHelper.findField(VillagerEntity.class, "field_213785_bP"));
     private static final CachedValue<Method> RESTOCK = new CachedValue<>(() -> ObfuscationReflectionHelper.findMethod(VillagerEntity.class, "func_223718_eH"));
-    private static final CachedValue<Field> LEVELED_UP = new CachedValue<>(() -> ObfuscationReflectionHelper.findField(VillagerEntity.class, "leveledUp"));
-    private static final CachedValue<Method> LEVEL_UP = new CachedValue<>(() -> ObfuscationReflectionHelper.findMethod(VillagerEntity.class, "levelUp"));
+    private static final CachedValue<Field> LEVELED_UP = new CachedValue<>(() -> ObfuscationReflectionHelper.findField(VillagerEntity.class, "field_213777_bF"));
+    private static final CachedValue<Method> LEVEL_UP = new CachedValue<>(() -> ObfuscationReflectionHelper.findMethod(VillagerEntity.class, "func_175554_cu"));
+    private static final CachedValue<Method> DISPLAY_MERCHANT_GUI = new CachedValue<>(() -> ObfuscationReflectionHelper.findMethod(VillagerEntity.class, "func_213740_f", PlayerEntity.class));
 
     public TraderTileentity() {
         super(ModTileEntities.TRADER);
@@ -97,7 +98,7 @@ public class TraderTileentity extends TileEntity implements ITickableTileEntity 
         return PointOfInterestType.forState(block.getDefaultState()).isPresent();
     }
 
-    private VillagerProfession getWorkstationProfession() {
+    public VillagerProfession getWorkstationProfession() {
         return PointOfInterestType.forState(workstation.getDefaultState()).flatMap(pointOfInterestType -> ForgeRegistries.PROFESSIONS.getValues().stream().filter(villagerProfession -> villagerProfession.getPointOfInterest() == pointOfInterestType).findFirst()).orElse(VillagerProfession.NONE);
     }
 
@@ -130,11 +131,13 @@ public class TraderTileentity extends TileEntity implements ITickableTileEntity 
             return false;
         }
 
-        //TODO obfuscated name
-        //TODO has profession
+        VillagerProfession profession = villagerEntity.getVillagerData().getProfession();
+        if (profession.equals(VillagerProfession.NONE) || profession.equals(VillagerProfession.NITWIT)) {
+            return false;
+        }
+
         try {
-            Method displayMerchantGui = ObfuscationReflectionHelper.findMethod(VillagerEntity.class, "displayMerchantGui", PlayerEntity.class);
-            displayMerchantGui.invoke(villagerEntity, playerEntity);
+            DISPLAY_MERCHANT_GUI.get().invoke(villagerEntity, playerEntity);
             return true;
         } catch (Exception e) {
             e.printStackTrace();
