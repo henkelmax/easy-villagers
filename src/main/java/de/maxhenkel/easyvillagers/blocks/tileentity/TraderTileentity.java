@@ -91,6 +91,10 @@ public class TraderTileentity extends VillagerTileentity implements ITickableTil
             return false;
         }
 
+        if (villagerEntity.isChild()) {
+            return false;
+        }
+
         VillagerProfession profession = villagerEntity.getVillagerData().getProfession();
         if (profession.equals(VillagerProfession.NONE) || profession.equals(VillagerProfession.NITWIT)) {
             return false;
@@ -114,6 +118,11 @@ public class TraderTileentity extends VillagerTileentity implements ITickableTil
         if (v == null) {
             return;
         }
+
+        if (advanceAge()) {
+            sync();
+        }
+        markDirty();
 
         if (world.getGameTime() % 20 == 0 && world.rand.nextInt(40) == 0) {
             TraderBlock.playVillagerSound(world, getPos(), SoundEvents.ENTITY_VILLAGER_AMBIENT);

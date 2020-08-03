@@ -12,23 +12,27 @@ public class ModBlocks {
 
     public static final TraderBlock TRADER = new TraderBlock();
     public static final FarmerBlock FARMER = new FarmerBlock();
+    public static final BreederBlock BREEDER = new BreederBlock();
 
     public static void registerBlocks(RegistryEvent.Register<Block> event) {
         event.getRegistry().registerAll(
                 TRADER,
-                FARMER
+                FARMER,
+                BREEDER
         );
 
         if (FMLEnvironment.dist == Dist.CLIENT) {
             RenderTypeLookup.setRenderLayer(TRADER, RenderType.getCutout());
             RenderTypeLookup.setRenderLayer(FARMER, RenderType.getCutout());
+            RenderTypeLookup.setRenderLayer(BREEDER, RenderType.getCutout());
         }
     }
 
     public static void registerItems(RegistryEvent.Register<Item> event) {
         event.getRegistry().registerAll(
                 TRADER.toItem(),
-                FARMER.toItem()
+                FARMER.toItem(),
+                BREEDER.toItem()
         );
     }
 

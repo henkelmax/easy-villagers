@@ -1,5 +1,8 @@
 {
   "item.easy_villagers.villager": "Villager",
   "block.easy_villagers.trader": "Trader",
-  "block.easy_villagers.farmer": "Farmer"
+  "block.easy_villagers.farmer": "Farmer",
+  "block.easy_villagers.breeder": "Breeder",
+  "gui.easy_villagers.food_items": "Food Items",
+  "gui.easy_villagers.output_items": "Output"
 }

@@ -6,6 +6,7 @@ import de.maxhenkel.easyvillagers.blocks.tileentity.ModTileEntities;
 import de.maxhenkel.easyvillagers.events.VillagerEvents;
 import de.maxhenkel.easyvillagers.gui.Containers;
 import de.maxhenkel.easyvillagers.items.ModItems;
+import de.maxhenkel.easyvillagers.net.MessageVillagerParticles;
 import net.minecraft.block.Block;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
@@ -20,6 +21,7 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.network.simple.SimpleChannel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -31,6 +33,8 @@ public class Main {
     public static final Logger LOGGER = LogManager.getLogger(MODID);
 
     public static ServerConfig SERVER_CONFIG;
+
+    public static SimpleChannel SIMPLE_CHANNEL;
 
     public Main() {
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Item.class, ModBlocks::registerItems);
@@ -48,6 +52,9 @@ public class Main {
     @SubscribeEvent
     public void commonSetup(FMLCommonSetupEvent event) {
         MinecraftForge.EVENT_BUS.register(new VillagerEvents());
+
+        SIMPLE_CHANNEL = CommonRegistry.registerChannel(Main.MODID, "default");
+        CommonRegistry.registerMessage(SIMPLE_CHANNEL, 0, MessageVillagerParticles.class);
     }
 
     @OnlyIn(Dist.CLIENT)

@@ -12,24 +12,29 @@
               "source": "block_entity",
               "ops": [
                 {
-                  "source": "Villager",
-                  "target": "BlockEntityTag.Villager",
+                  "source": "Villager1",
+                  "target": "BlockEntityTag.Villager1",
                   "op": "replace"
                 },
                 {
-                  "source": "Crop",
-                  "target": "BlockEntityTag.Crop",
+                  "source": "Villager2",
+                  "target": "BlockEntityTag.Villager2",
                   "op": "replace"
                 },
                 {
-                  "source": "Items",
-                  "target": "BlockEntityTag.Items",
+                  "source": "FoodInventory",
+                  "target": "BlockEntityTag.FoodInventory",
+                  "op": "replace"
+                },
+                {
+                  "source": "OutputInventory",
+                  "target": "BlockEntityTag.OutputInventory",
                   "op": "replace"
                 }
               ]
             }
           ],
-          "name": "easy_villagers:farmer"
+          "name": "easy_villagers:breeder"
         }
       ]
     }

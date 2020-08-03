@@ -55,6 +55,19 @@ public class VillagerTileentity extends FakeWorldTileentity {
         return v;
     }
 
+    public boolean advanceAge() {
+        return advanceAge(getVillagerEntity());
+    }
+
+    public static boolean advanceAge(VillagerEntity villagerEntity) {
+        if (villagerEntity == null) {
+            return false;
+        }
+        int age = villagerEntity.getGrowingAge() + 1;
+        villagerEntity.setGrowingAge(age);
+        return age == 0;
+    }
+
     @Override
     public CompoundNBT write(CompoundNBT compound) {
         if (hasVillager()) {

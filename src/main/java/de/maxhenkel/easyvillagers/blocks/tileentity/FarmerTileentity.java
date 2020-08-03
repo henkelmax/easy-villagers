@@ -6,6 +6,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.CropsBlock;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
+import net.minecraft.entity.merchant.villager.VillagerProfession;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -41,6 +42,14 @@ public class FarmerTileentity extends VillagerTileentity implements ITickableTil
     public FarmerTileentity() {
         super(ModTileEntities.FARMER);
         cropInventory = NonNullList.withSize(4, ItemStack.EMPTY);
+    }
+
+    @Override
+    protected void onAddVillager(VillagerEntity villager) {
+        super.onAddVillager(villager);
+        if (villager.getXp() <= 0) {
+            villager.setVillagerData(villager.getVillagerData().withProfession(VillagerProfession.FARMER));
+        }
     }
 
     public void setCrop(Item seed) {
@@ -96,25 +105,31 @@ public class FarmerTileentity extends VillagerTileentity implements ITickableTil
             if (world.getGameTime() % 20 == 0 && world.rand.nextInt(40) == 0) {
                 TraderBlock.playVillagerSound(world, getPos(), SoundEvents.ENTITY_VILLAGER_AMBIENT);
             }
+
+            if (advanceAge()) {
+                sync();
+            }
+            markDirty();
         }
 
         if (world.getGameTime() % 20 == 0 && world.rand.nextInt(10) == 0) {
-            ageCrop();
-            sync();
-            markDirty();
+            if (ageCrop(v)) {
+                sync();
+                markDirty();
+            }
         }
     }
 
-    private void ageCrop() {
+    private boolean ageCrop(@Nullable VillagerEntity villager) {
         BlockState c = getCrop();
         if (c == null) {
-            return;
+            return false;
         }
 
         Optional<Property<?>> ageProp = c.func_235904_r_().stream().filter(p -> p.equals(CropsBlock.AGE)).findFirst();
 
         if (!ageProp.isPresent()) {
-            return;
+            return false;
         }
 
         IntegerProperty p = (IntegerProperty) ageProp.get();
@@ -123,6 +138,9 @@ public class FarmerTileentity extends VillagerTileentity implements ITickableTil
         int age = c.get(CropsBlock.AGE);
 
         if (age >= max) {
+            if (villager == null || villager.isChild() || !villager.getVillagerData().getProfession().equals(VillagerProfession.FARMER)) {
+                return false;
+            }
             LootContext.Builder context = new LootContext.Builder((ServerWorld) world).withParameter(LootParameters.POSITION, pos).withParameter(LootParameters.BLOCK_STATE, c).withParameter(LootParameters.TOOL, ItemStack.EMPTY);
             List<ItemStack> drops = c.getDrops(context);
             IItemHandlerModifiable itemHandler = getItemHandler();
@@ -134,8 +152,10 @@ public class FarmerTileentity extends VillagerTileentity implements ITickableTil
 
             crop = crop.with(CropsBlock.AGE, 0);
             TraderBlock.playVillagerSound(world, getPos(), SoundEvents.ENTITY_VILLAGER_WORK_FARMER);
+            return true;
         } else {
             crop = crop.with(CropsBlock.AGE, age + 1);
+            return true;
         }
     }
 
@@ -144,7 +164,7 @@ public class FarmerTileentity extends VillagerTileentity implements ITickableTil
         if (crop != null) {
             compound.put("Crop", NBTUtil.writeBlockState(crop));
         }
-        ItemStackHelper.loadAllItems(compound, cropInventory);
+        ItemStackHelper.saveAllItems(compound, cropInventory, false);
         return super.write(compound);
     }
 
@@ -153,11 +173,12 @@ public class FarmerTileentity extends VillagerTileentity implements ITickableTil
         if (compound.contains("Crop")) {
             crop = NBTUtil.readBlockState(compound.getCompound("Crop"));
         }
-        ItemStackHelper.saveAllItems(compound, cropInventory, false);
+
+        ItemStackHelper.loadAllItems(compound, cropInventory);
         super.func_230337_a_(state, compound);
     }
 
-    private IItemHandlerModifiable chestHandler;
+    private IItemHandlerModifiable handler;
 
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
@@ -168,10 +189,10 @@ public class FarmerTileentity extends VillagerTileentity implements ITickableTil
     }
 
     public IItemHandlerModifiable getItemHandler() {
-        if (chestHandler == null) {
-            chestHandler = new ItemStackHandler(cropInventory);
+        if (handler == null) {
+            handler = new ItemStackHandler(cropInventory);
         }
-        return chestHandler;
+        return handler;
     }
 
 }
