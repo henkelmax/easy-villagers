@@ -3,7 +3,7 @@ package de.maxhenkel.easyvillagers.blocks.tileentity.render;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import de.maxhenkel.corelib.client.RenderUtils;
 import de.maxhenkel.easyvillagers.blocks.TraderBlock;
-import de.maxhenkel.easyvillagers.blocks.tileentity.TraderTileentity;
+import de.maxhenkel.easyvillagers.blocks.tileentity.FarmerTileentity;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
@@ -17,19 +17,18 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.client.model.data.EmptyModelData;
 
-public class TraderRenderer extends TileEntityRenderer<TraderTileentity> {
+public class FarmerRenderer extends TileEntityRenderer<FarmerTileentity> {
 
     private Minecraft minecraft;
     private VillagerRenderer renderer;
 
-    public TraderRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
+    public FarmerRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
         super(rendererDispatcherIn);
-
         minecraft = Minecraft.getInstance();
     }
 
     @Override
-    public void render(TraderTileentity trader, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn) {
+    public void render(FarmerTileentity farmer, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn) {
         matrixStack.push();
 
         if (renderer == null) {
@@ -37,22 +36,23 @@ public class TraderRenderer extends TileEntityRenderer<TraderTileentity> {
         }
 
         Direction direction = Direction.SOUTH;
-        if (!trader.isFakeWorld()) {
-            direction = trader.getBlockState().get(TraderBlock.FACING);
+        if (!farmer.isFakeWorld()) {
+            direction = farmer.getBlockState().get(TraderBlock.FACING);
         }
 
-        if (trader.getVillagerEntity() != null) {
+        if (farmer.getVillagerEntity() != null) {
             matrixStack.push();
 
             matrixStack.translate(0.5D, 1D / 16D, 0.5D);
             matrixStack.rotate(Vector3f.YP.rotationDegrees(-direction.getHorizontalAngle()));
             matrixStack.translate(0D, 0D, -4D / 16D);
             matrixStack.scale(0.45F, 0.45F, 0.45F);
-            renderer.render(trader.getVillagerEntity(), 0F, 1F, matrixStack, buffer, combinedLightIn);
+            renderer.render(farmer.getVillagerEntity(), 0F, 1F, matrixStack, buffer, combinedLightIn);
             matrixStack.pop();
         }
 
-        if (trader.hasWorkstation()) {
+        BlockState crop = farmer.getCrop();
+        if (crop != null) {
             matrixStack.push();
 
             matrixStack.translate(0.5D, 1D / 16D, 0.5D);
@@ -62,10 +62,9 @@ public class TraderRenderer extends TileEntityRenderer<TraderTileentity> {
             matrixStack.scale(0.45F, 0.45F, 0.45F);
             matrixStack.translate(0.5D / 0.45D - 0.5D, 0D, 0.5D / 0.45D - 0.5D);
 
-            BlockState workstation = trader.getWorkstation().getDefaultState();
             BlockRendererDispatcher dispatcher = minecraft.getBlockRendererDispatcher();
-            int color = minecraft.getBlockColors().getColor(workstation, null, null, 0);
-            dispatcher.getBlockModelRenderer().renderModel(matrixStack.getLast(), buffer.getBuffer(RenderTypeLookup.func_239221_b_(workstation)), workstation, dispatcher.getModelForState(workstation), RenderUtils.getRed(color), RenderUtils.getGreen(color), RenderUtils.getBlue(color), combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
+            int color = minecraft.getBlockColors().getColor(crop, null, null, 0);
+            dispatcher.getBlockModelRenderer().renderModel(matrixStack.getLast(), buffer.getBuffer(RenderTypeLookup.func_239221_b_(crop)), crop, dispatcher.getModelForState(crop), RenderUtils.getRed(color), RenderUtils.getGreen(color), RenderUtils.getBlue(color), combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
             matrixStack.pop();
         }
 

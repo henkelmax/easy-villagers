@@ -1,0 +1,177 @@
+package de.maxhenkel.easyvillagers.blocks.tileentity;
+
+import de.maxhenkel.easyvillagers.blocks.TraderBlock;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.CropsBlock;
+import net.minecraft.entity.merchant.villager.VillagerEntity;
+import net.minecraft.inventory.ItemStackHelper;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.loot.LootContext;
+import net.minecraft.loot.LootParameters;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.NBTUtil;
+import net.minecraft.state.IntegerProperty;
+import net.minecraft.state.Property;
+import net.minecraft.tileentity.ITickableTileEntity;
+import net.minecraft.util.Direction;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.SoundEvents;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.IPlantable;
+import net.minecraftforge.common.PlantType;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandlerModifiable;
+import net.minecraftforge.items.ItemStackHandler;
+
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Optional;
+
+public class FarmerTileentity extends VillagerTileentity implements ITickableTileEntity {
+
+    private BlockState crop;
+    private NonNullList<ItemStack> cropInventory;
+
+    public FarmerTileentity() {
+        super(ModTileEntities.FARMER);
+        cropInventory = NonNullList.withSize(4, ItemStack.EMPTY);
+    }
+
+    public void setCrop(Item seed) {
+        if (seed == null) {
+            this.crop = null;
+        } else {
+            this.crop = getSeedCrop(seed);
+        }
+        markDirty();
+        sync();
+    }
+
+    public Block removeSeed() {
+        Block s = crop.getBlock();
+        setCrop(null);
+        return s;
+    }
+
+    public boolean isValidSeed(Item seed) {
+        return getSeedCrop(seed) != null;
+    }
+
+    public BlockState getSeedCrop(Item seed) {
+        if (seed == Items.WHEAT_SEEDS) {
+            return Blocks.WHEAT.getDefaultState();
+        } else if (seed == Items.POTATO) {
+            return Blocks.POTATOES.getDefaultState();
+        } else if (seed == Items.CARROT) {
+            return Blocks.CARROTS.getDefaultState();
+        } else if (seed == Items.BEETROOT_SEEDS) {
+            return Blocks.BEETROOTS.getDefaultState();
+        } else if (seed instanceof IPlantable) {
+            IPlantable plantable = (IPlantable) seed;
+            if (plantable.getPlantType(world, getPos()) == PlantType.CROP) { //TODO fake world
+                return plantable.getPlant(world, getPos());
+            }
+        }
+        return null;
+    }
+
+    @Nullable
+    public BlockState getCrop() {
+        return crop;
+    }
+
+    @Override
+    public void tick() {
+        if (world.isRemote) {
+            return;
+        }
+        VillagerEntity v = getVillagerEntity();
+        if (v != null) {
+            if (world.getGameTime() % 20 == 0 && world.rand.nextInt(40) == 0) {
+                TraderBlock.playVillagerSound(world, getPos(), SoundEvents.ENTITY_VILLAGER_AMBIENT);
+            }
+        }
+
+        if (world.getGameTime() % 20 == 0 && world.rand.nextInt(10) == 0) {
+            ageCrop();
+            sync();
+            markDirty();
+        }
+    }
+
+    private void ageCrop() {
+        BlockState c = getCrop();
+        if (c == null) {
+            return;
+        }
+
+        Optional<Property<?>> ageProp = c.func_235904_r_().stream().filter(p -> p.equals(CropsBlock.AGE)).findFirst();
+
+        if (!ageProp.isPresent()) {
+            return;
+        }
+
+        IntegerProperty p = (IntegerProperty) ageProp.get();
+        Integer max = p.getAllowedValues().stream().max(Integer::compare).get();
+
+        int age = c.get(CropsBlock.AGE);
+
+        if (age >= max) {
+            LootContext.Builder context = new LootContext.Builder((ServerWorld) world).withParameter(LootParameters.POSITION, pos).withParameter(LootParameters.BLOCK_STATE, c).withParameter(LootParameters.TOOL, ItemStack.EMPTY);
+            List<ItemStack> drops = c.getDrops(context);
+            IItemHandlerModifiable itemHandler = getItemHandler();
+            for (ItemStack stack : drops) {
+                for (int i = 0; i < itemHandler.getSlots(); i++) {
+                    stack = itemHandler.insertItem(i, stack, false);
+                }
+            }
+
+            crop = crop.with(CropsBlock.AGE, 0);
+            TraderBlock.playVillagerSound(world, getPos(), SoundEvents.ENTITY_VILLAGER_WORK_FARMER);
+        } else {
+            crop = crop.with(CropsBlock.AGE, age + 1);
+        }
+    }
+
+    @Override
+    public CompoundNBT write(CompoundNBT compound) {
+        if (crop != null) {
+            compound.put("Crop", NBTUtil.writeBlockState(crop));
+        }
+        ItemStackHelper.loadAllItems(compound, cropInventory);
+        return super.write(compound);
+    }
+
+    @Override
+    public void func_230337_a_(BlockState state, CompoundNBT compound) {
+        if (compound.contains("Crop")) {
+            crop = NBTUtil.readBlockState(compound.getCompound("Crop"));
+        }
+        ItemStackHelper.saveAllItems(compound, cropInventory, false);
+        super.func_230337_a_(state, compound);
+    }
+
+    private IItemHandlerModifiable chestHandler;
+
+    @Override
+    public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+        if (!removed && cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+            return LazyOptional.of(this::getItemHandler).cast();
+        }
+        return super.getCapability(cap, side);
+    }
+
+    public IItemHandlerModifiable getItemHandler() {
+        if (chestHandler == null) {
+            chestHandler = new ItemStackHandler(cropInventory);
+        }
+        return chestHandler;
+    }
+
+}
