@@ -64,6 +64,9 @@ public class FarmerTileentity extends VillagerTileentity implements ITickableTil
     }
 
     public Block removeSeed() {
+        if (crop == null) {
+            return null;
+        }
         Block s = crop.getBlock();
         setCrop(null);
         return s;
