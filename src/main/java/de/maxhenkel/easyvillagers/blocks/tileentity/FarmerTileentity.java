@@ -172,6 +172,8 @@ public class FarmerTileentity extends VillagerTileentity implements ITickableTil
     public void func_230337_a_(BlockState state, CompoundNBT compound) {
         if (compound.contains("Crop")) {
             crop = NBTUtil.readBlockState(compound.getCompound("Crop"));
+        } else {
+            removeSeed();
         }
 
         ItemStackHelper.loadAllItems(compound, cropInventory);

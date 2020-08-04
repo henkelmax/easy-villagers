@@ -222,11 +222,15 @@ public class BreederTileentity extends FakeWorldTileentity implements ITickableT
             CompoundNBT comp = compound.getCompound("Villager1");
             villager1 = ItemStack.read(comp);
             villagerEntity1 = null;
+        } else {
+            removeVillager1();
         }
         if (compound.contains("Villager2")) {
             CompoundNBT comp = compound.getCompound("Villager2");
             villager2 = ItemStack.read(comp);
             villagerEntity2 = null;
+        } else {
+            removeVillager2();
         }
         ItemStackHelper.loadAllItems(compound.getCompound("FoodInventory"), foodInventory);
         ItemStackHelper.loadAllItems(compound.getCompound("OutputInventory"), outputInventory);

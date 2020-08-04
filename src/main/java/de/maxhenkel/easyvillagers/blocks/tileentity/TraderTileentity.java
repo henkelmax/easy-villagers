@@ -190,6 +190,8 @@ public class TraderTileentity extends VillagerTileentity implements ITickableTil
     public void func_230337_a_(BlockState state, CompoundNBT compound) {
         if (compound.contains("Workstation")) {
             workstation = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(compound.getString("Workstation")));
+        } else {
+            removeWorkstation();
         }
         nextRestock = compound.getLong("NextRestock");
         super.func_230337_a_(state, compound);

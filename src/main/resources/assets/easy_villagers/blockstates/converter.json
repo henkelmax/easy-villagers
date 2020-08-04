@@ -1,0 +1,8 @@
+{
+    "variants": {
+        "facing=north": { "model": "easy_villagers:block/converter" },
+        "facing=south": { "model": "easy_villagers:block/converter", "y": 180 },
+        "facing=west": { "model": "easy_villagers:block/converter", "y": 270 },
+        "facing=east": { "model": "easy_villagers:block/converter", "y": 90 }
+    }
+}

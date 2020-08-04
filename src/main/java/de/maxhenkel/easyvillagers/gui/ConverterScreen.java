@@ -5,20 +5,20 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.ITextProperties;
 import net.minecraft.util.text.TranslationTextComponent;
 
-public class BreederScreen extends InputOutputScreen<BreederContainer> {
+public class ConverterScreen extends InputOutputScreen<ConverterContainer> {
 
-    public BreederScreen(BreederContainer container, PlayerInventory playerInventory, ITextComponent name) {
+    public ConverterScreen(ConverterContainer container, PlayerInventory playerInventory, ITextComponent name) {
         super(container, playerInventory, name);
     }
 
     @Override
     protected ITextProperties getTopText() {
-        return new TranslationTextComponent("gui.easy_villagers.food_items");
+        return new TranslationTextComponent("gui.easy_villagers.input_villagers");
     }
 
     @Override
     protected ITextProperties getBottomText() {
-        return new TranslationTextComponent("gui.easy_villagers.output_items");
+        return new TranslationTextComponent("gui.easy_villagers.output_villagers");
     }
 
 }

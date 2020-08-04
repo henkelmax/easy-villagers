@@ -18,6 +18,9 @@ public class VillagerTileentity extends FakeWorldTileentity {
     }
 
     public ItemStack getVillager() {
+        if (villagerEntity != null) {
+            ModItems.VILLAGER.setVillager(villager, villagerEntity);
+        }
         return villager;
     }
 
@@ -50,7 +53,7 @@ public class VillagerTileentity extends FakeWorldTileentity {
     }
 
     public ItemStack removeVillager() {
-        ItemStack v = villager;
+        ItemStack v = getVillager();
         setVillager(ItemStack.EMPTY);
         return v;
     }
@@ -72,10 +75,7 @@ public class VillagerTileentity extends FakeWorldTileentity {
     public CompoundNBT write(CompoundNBT compound) {
         if (hasVillager()) {
             CompoundNBT comp = new CompoundNBT();
-            if (villagerEntity != null) {
-                ModItems.VILLAGER.setVillager(villager, villagerEntity);
-            }
-            villager.write(comp);
+            getVillager().write(comp);
             compound.put("Villager", comp);
         }
         return super.write(compound);
@@ -87,6 +87,8 @@ public class VillagerTileentity extends FakeWorldTileentity {
             CompoundNBT comp = compound.getCompound("Villager");
             villager = ItemStack.read(comp);
             villagerEntity = null;
+        } else {
+            removeVillager();
         }
         super.func_230337_a_(state, compound);
     }

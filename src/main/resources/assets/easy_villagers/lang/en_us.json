@@ -3,6 +3,9 @@
   "block.easy_villagers.trader": "Trader",
   "block.easy_villagers.farmer": "Farmer",
   "block.easy_villagers.breeder": "Breeder",
+  "block.easy_villagers.converter": "Converter",
   "gui.easy_villagers.food_items": "Food Items",
-  "gui.easy_villagers.output_items": "Output"
+  "gui.easy_villagers.output_items": "Output",
+  "gui.easy_villagers.input_villagers": "Villager Input",
+  "gui.easy_villagers.output_villagers": "Villager Output"
 }
