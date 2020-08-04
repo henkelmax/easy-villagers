@@ -31,8 +31,7 @@ public class ConverterTileentity extends VillagerTileentity implements ITickable
 
     public static final long ZOMBIFY_TIME = 20 * 3;
     public static final long CURE_TIME = ZOMBIFY_TIME + 20 * 3;
-    //public static final long CONVERT_TIME = CURE_TIME + 20 * 60 * 5; //TODO
-    public static final long CONVERT_TIME = CURE_TIME + 20 * 10;
+    public static final long CONVERT_TIME = CURE_TIME + 20 * 60 * 5;
     public static final long FINALIZE_TIME = CONVERT_TIME + 20 * 3;
 
     private NonNullList<ItemStack> inputInventory;

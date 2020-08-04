@@ -3,16 +3,15 @@ package de.maxhenkel.easyvillagers.blocks;
 import de.maxhenkel.corelib.block.IItemBlock;
 import de.maxhenkel.corelib.item.ItemUtils;
 import de.maxhenkel.easyvillagers.Main;
-import de.maxhenkel.easyvillagers.blocks.tileentity.FarmerTileentity;
+import de.maxhenkel.easyvillagers.blocks.tileentity.IronFarmTileentity;
 import de.maxhenkel.easyvillagers.gui.OutputContainer;
 import de.maxhenkel.easyvillagers.items.VillagerItem;
-import de.maxhenkel.easyvillagers.items.render.FarmerItemRenderer;
+import de.maxhenkel.easyvillagers.items.render.IronFarmItemRenderer;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.InventoryHelper;
@@ -35,62 +34,38 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 
-public class FarmerBlock extends HorizontalRotatableBlock implements ITileEntityProvider, IItemBlock {
+public class IronFarmBlock extends HorizontalRotatableBlock implements ITileEntityProvider, IItemBlock {
 
-    public FarmerBlock() {
+    public IronFarmBlock() {
         super(Properties.create(Material.IRON).hardnessAndResistance(2.5F).sound(SoundType.METAL).notSolid());
-        setRegistryName(new ResourceLocation(Main.MODID, "farmer"));
+        setRegistryName(new ResourceLocation(Main.MODID, "iron_farm"));
     }
 
     @Override
     public Item toItem() {
-        return new BlockItem(this, new Item.Properties().group(ItemGroup.MISC).setISTER(() -> FarmerItemRenderer::new)).setRegistryName(getRegistryName());
+        return new BlockItem(this, new Item.Properties().group(ItemGroup.MISC).setISTER(() -> IronFarmItemRenderer::new)).setRegistryName(getRegistryName());
     }
 
     @Override
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         ItemStack heldItem = player.getHeldItem(handIn);
         TileEntity tileEntity = worldIn.getTileEntity(pos);
-        if (!(tileEntity instanceof FarmerTileentity)) {
+        if (!(tileEntity instanceof IronFarmTileentity)) {
             return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
         }
-        FarmerTileentity farmer = (FarmerTileentity) tileEntity;
-        if (!farmer.hasVillager() && heldItem.getItem() instanceof VillagerItem) {
-            farmer.setVillager(heldItem.copy());
+        IronFarmTileentity farm = (IronFarmTileentity) tileEntity;
+        if (!farm.hasVillager() && heldItem.getItem() instanceof VillagerItem) {
+            farm.setVillager(heldItem.copy());
             ItemUtils.decrItemStack(heldItem, player);
-            TraderBlock.playVillagerSound(worldIn, pos, SoundEvents.ENTITY_VILLAGER_YES);
+            TraderBlock.playVillagerSound(worldIn, pos, SoundEvents.ENTITY_VILLAGER_NO);
             return ActionResultType.SUCCESS;
-        } else if (farmer.getCrop() == null && farmer.isValidSeed(heldItem.getItem())) {
-            Item seed = heldItem.getItem();
-            farmer.setCrop(seed);
-            ItemUtils.decrItemStack(heldItem, player);
-            VillagerEntity villagerEntity = farmer.getVillagerEntity();
-            if (villagerEntity != null) {
-                TraderBlock.playVillagerSound(worldIn, pos, SoundEvents.ENTITY_VILLAGER_WORK_FARMER);
-            }
-            TraderBlock.playVillagerSound(worldIn, pos, SoundEvents.ITEM_CROP_PLANT);
-            return ActionResultType.SUCCESS;
-        } else if (player.isSneaking() && farmer.getCrop() != null) {
-            ItemStack blockStack = new ItemStack(farmer.removeSeed());
-            if (heldItem.isEmpty()) {
-                player.setHeldItem(handIn, blockStack);
-            } else {
-                if (!player.inventory.addItemStackToInventory(blockStack)) {
-                    Direction direction = state.get(FarmerBlock.FACING);
-                    InventoryHelper.spawnItemStack(worldIn, direction.getXOffset() + pos.getX() + 0.5D, pos.getY() + 0.5D, direction.getZOffset() + pos.getZ() + 0.5D, blockStack);
-                }
-            }
-            if (farmer.hasVillager()) {
-                TraderBlock.playVillagerSound(worldIn, pos, SoundEvents.ENTITY_VILLAGER_NO);
-            }
-            return ActionResultType.SUCCESS;
-        } else if (player.isSneaking() && farmer.hasVillager()) {
-            ItemStack stack = farmer.removeVillager();
+        } else if (player.isSneaking() && farm.hasVillager()) {
+            ItemStack stack = farm.removeVillager();
             if (heldItem.isEmpty()) {
                 player.setHeldItem(handIn, stack);
             } else {
                 if (!player.inventory.addItemStackToInventory(stack)) {
-                    Direction direction = state.get(FarmerBlock.FACING);
+                    Direction direction = state.get(IronFarmBlock.FACING);
                     InventoryHelper.spawnItemStack(worldIn, direction.getXOffset() + pos.getX() + 0.5D, pos.getY() + 0.5D, direction.getZOffset() + pos.getZ() + 0.5D, stack);
                 }
             }
@@ -106,7 +81,7 @@ public class FarmerBlock extends HorizontalRotatableBlock implements ITileEntity
                 @Nullable
                 @Override
                 public Container createMenu(int id, PlayerInventory playerInventory, PlayerEntity player) {
-                    return new OutputContainer(id, playerInventory, farmer.getOutputInventory());
+                    return new OutputContainer(id, playerInventory, farm.getOutputInventory());
                 }
             });
             return ActionResultType.SUCCESS;
@@ -116,7 +91,7 @@ public class FarmerBlock extends HorizontalRotatableBlock implements ITileEntity
     @Nullable
     @Override
     public TileEntity createNewTileEntity(IBlockReader world) {
-        return new FarmerTileentity();
+        return new IronFarmTileentity();
     }
 
     @Override

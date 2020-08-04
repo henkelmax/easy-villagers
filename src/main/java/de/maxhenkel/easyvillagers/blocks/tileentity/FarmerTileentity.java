@@ -1,11 +1,13 @@
 package de.maxhenkel.easyvillagers.blocks.tileentity;
 
+import de.maxhenkel.corelib.inventory.ItemListInventory;
 import de.maxhenkel.easyvillagers.blocks.TraderBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -36,11 +38,11 @@ import java.util.Optional;
 public class FarmerTileentity extends VillagerTileentity implements ITickableTileEntity {
 
     private BlockState crop;
-    private NonNullList<ItemStack> cropInventory;
+    private NonNullList<ItemStack> inventory;
 
     public FarmerTileentity() {
         super(ModTileEntities.FARMER);
-        cropInventory = NonNullList.withSize(4, ItemStack.EMPTY);
+        inventory = NonNullList.withSize(4, ItemStack.EMPTY);
     }
 
     @Override
@@ -158,12 +160,16 @@ public class FarmerTileentity extends VillagerTileentity implements ITickableTil
         }
     }
 
+    public IInventory getOutputInventory() {
+        return new ItemListInventory(inventory, this::markDirty);
+    }
+
     @Override
     public CompoundNBT write(CompoundNBT compound) {
         if (crop != null) {
             compound.put("Crop", NBTUtil.writeBlockState(crop));
         }
-        ItemStackHelper.saveAllItems(compound, cropInventory, false);
+        ItemStackHelper.saveAllItems(compound, inventory, false);
         return super.write(compound);
     }
 
@@ -175,7 +181,7 @@ public class FarmerTileentity extends VillagerTileentity implements ITickableTil
             removeSeed();
         }
 
-        ItemStackHelper.loadAllItems(compound, cropInventory);
+        ItemStackHelper.loadAllItems(compound, inventory);
         super.func_230337_a_(state, compound);
     }
 
@@ -191,7 +197,7 @@ public class FarmerTileentity extends VillagerTileentity implements ITickableTil
 
     public IItemHandlerModifiable getItemHandler() {
         if (handler == null) {
-            handler = new ItemStackHandler(cropInventory);
+            handler = new ItemStackHandler(inventory);
         }
         return handler;
     }

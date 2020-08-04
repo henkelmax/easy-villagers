@@ -12,11 +12,13 @@ public class Containers {
 
     public static ContainerType<BreederContainer> BREEDER_CONTAINER;
     public static ContainerType<ConverterContainer> CONVERTER_CONTAINER;
+    public static ContainerType<OutputContainer> OUTPUT_CONTAINER;
 
     @OnlyIn(Dist.CLIENT)
     public static void clientSetup() {
         ClientRegistry.<BreederContainer, BreederScreen>registerScreen(BREEDER_CONTAINER, BreederScreen::new);
         ClientRegistry.<ConverterContainer, ConverterScreen>registerScreen(CONVERTER_CONTAINER, ConverterScreen::new);
+        ClientRegistry.<OutputContainer, OutputScreen>registerScreen(OUTPUT_CONTAINER, OutputScreen::new);
     }
 
     public static void registerContainers(RegistryEvent.Register<ContainerType<?>> event) {
@@ -27,6 +29,10 @@ public class Containers {
         CONVERTER_CONTAINER = new ContainerType<>(ConverterContainer::new);
         CONVERTER_CONTAINER.setRegistryName(new ResourceLocation(Main.MODID, "converter"));
         event.getRegistry().register(CONVERTER_CONTAINER);
+
+        OUTPUT_CONTAINER = new ContainerType<>(OutputContainer::new);
+        OUTPUT_CONTAINER.setRegistryName(new ResourceLocation(Main.MODID, "output"));
+        event.getRegistry().register(OUTPUT_CONTAINER);
     }
 
 }

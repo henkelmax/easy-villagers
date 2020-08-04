@@ -102,9 +102,8 @@ public class BreederBlock extends HorizontalRotatableBlock implements ITileEntit
                     return new BreederContainer(id, playerInventory, breeder.getFoodInventory(), breeder.getOutputInventory());
                 }
             });
+            return ActionResultType.SUCCESS;
         }
-
-        return ActionResultType.SUCCESS;
     }
 
     @Nullable
