@@ -65,6 +65,7 @@ public class ConverterRenderer extends TileEntityRenderer<ConverterTileentity> {
             matrixStack.scale(0.4F, 0.4F, 0.4F);
             if (converter.getTimer() >= ConverterTileentity.ZOMBIFY_TIME && converter.getTimer() < ConverterTileentity.CONVERT_TIME) {
                 zombieVillager.setVillagerData(villagerEntity.getVillagerData());
+                zombieVillager.setChild(villagerEntity.isChild());
                 zombieVillagerRenderer.render(zombieVillager, 0F, 1F, matrixStack, buffer, combinedLightIn);
             } else {
                 renderer.render(villagerEntity, 0F, 1F, matrixStack, buffer, combinedLightIn);

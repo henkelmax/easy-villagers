@@ -4,7 +4,6 @@ import de.maxhenkel.easyvillagers.blocks.TraderBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.CropsBlock;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
 import net.minecraft.inventory.ItemStackHelper;
@@ -126,16 +125,16 @@ public class FarmerTileentity extends VillagerTileentity implements ITickableTil
             return false;
         }
 
-        Optional<Property<?>> ageProp = c.func_235904_r_().stream().filter(p -> p.equals(CropsBlock.AGE)).findFirst();
+        Optional<Property<?>> ageProp = c.func_235904_r_().stream().filter(p -> p.getName().equals("age")).findFirst();
 
-        if (!ageProp.isPresent()) {
+        if (!ageProp.isPresent() || !(ageProp.get() instanceof IntegerProperty)) {
             return false;
         }
 
         IntegerProperty p = (IntegerProperty) ageProp.get();
         Integer max = p.getAllowedValues().stream().max(Integer::compare).get();
 
-        int age = c.get(CropsBlock.AGE);
+        int age = c.get(p);
 
         if (age >= max) {
             if (villager == null || villager.isChild() || !villager.getVillagerData().getProfession().equals(VillagerProfession.FARMER)) {
@@ -150,11 +149,11 @@ public class FarmerTileentity extends VillagerTileentity implements ITickableTil
                 }
             }
 
-            crop = crop.with(CropsBlock.AGE, 0);
+            crop = crop.with(p, 0);
             TraderBlock.playVillagerSound(world, getPos(), SoundEvents.ENTITY_VILLAGER_WORK_FARMER);
             return true;
         } else {
-            crop = crop.with(CropsBlock.AGE, age + 1);
+            crop = crop.with(p, age + 1);
             return true;
         }
     }
