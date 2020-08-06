@@ -1,6 +1,7 @@
 package de.maxhenkel.easyvillagers.blocks.tileentity;
 
 import de.maxhenkel.corelib.inventory.ItemListInventory;
+import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.blocks.TraderBlock;
 import de.maxhenkel.easyvillagers.items.VillagerItem;
 import net.minecraft.block.BlockState;
@@ -28,11 +29,6 @@ import net.minecraftforge.items.ItemStackHandler;
 import java.util.UUID;
 
 public class ConverterTileentity extends VillagerTileentity implements ITickableTileEntity {
-
-    public static final long ZOMBIFY_TIME = 20 * 3;
-    public static final long CURE_TIME = ZOMBIFY_TIME + 20 * 3;
-    public static final long CONVERT_TIME = CURE_TIME + 20 * 60 * 5;
-    public static final long FINALIZE_TIME = CONVERT_TIME + 20 * 3;
 
     private NonNullList<ItemStack> inputInventory;
     private NonNullList<ItemStack> outputInventory;
@@ -65,16 +61,16 @@ public class ConverterTileentity extends VillagerTileentity implements ITickable
             }
         }
         if (hasVillager()) {
-            if (timer == ZOMBIFY_TIME) {
+            if (timer == getZombifyTime()) {
                 TraderBlock.playVillagerSound(world, pos, SoundEvents.ENTITY_ZOMBIE_INFECT);
                 sync();
-            } else if (timer == CURE_TIME) {
+            } else if (timer == getCureTime()) {
                 TraderBlock.playVillagerSound(world, pos, SoundEvents.ENTITY_ZOMBIE_VILLAGER_CURE);
                 sync();
-            } else if (timer == CONVERT_TIME) {
+            } else if (timer == getConvertTime()) {
                 TraderBlock.playVillagerSound(world, pos, SoundEvents.ENTITY_ZOMBIE_VILLAGER_CONVERTED);
                 sync();
-            } else if (timer >= FINALIZE_TIME) {
+            } else if (timer >= getFinalizeTime()) {
                 PlayerEntity ownerPlayer = getOwnerPlayer();
                 if (ownerPlayer != null) {
                     for (int i = 0; i < outputInventory.size(); i++) {
@@ -98,7 +94,7 @@ public class ConverterTileentity extends VillagerTileentity implements ITickable
             markDirty();
         }
         if (hasVillager() && world.getGameTime() % 20 == 0 && world.rand.nextInt(40) == 0) {
-            if (timer < ZOMBIFY_TIME || timer >= CONVERT_TIME) {
+            if (timer < getZombifyTime() || timer >= getConvertTime()) {
                 TraderBlock.playVillagerSound(world, getPos(), SoundEvents.ENTITY_VILLAGER_AMBIENT);
             } else {
                 TraderBlock.playVillagerSound(world, getPos(), SoundEvents.ENTITY_ZOMBIE_VILLAGER_AMBIENT);
@@ -216,6 +212,22 @@ public class ConverterTileentity extends VillagerTileentity implements ITickable
             outputInventoryHandler = new ItemStackHandler(outputInventory);
         }
         return outputInventoryHandler;
+    }
+
+    public static int getZombifyTime() {
+        return 20 * 3;
+    }
+
+    public static int getCureTime() {
+        return getZombifyTime() + 20 * 3;
+    }
+
+    public static int getConvertTime() {
+        return getCureTime() + Main.SERVER_CONFIG.convertingTime.get();
+    }
+
+    public static int getFinalizeTime() {
+        return getConvertTime() + 20 * 3;
     }
 
 }

@@ -1,6 +1,7 @@
 package de.maxhenkel.easyvillagers.blocks.tileentity;
 
 import de.maxhenkel.corelib.inventory.ItemListInventory;
+import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.blocks.TraderBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -116,7 +117,7 @@ public class FarmerTileentity extends VillagerTileentity implements ITickableTil
             markDirty();
         }
 
-        if (world.getGameTime() % 20 == 0 && world.rand.nextInt(10) == 0) {
+        if (world.getGameTime() % 20 == 0 && world.rand.nextInt(Main.SERVER_CONFIG.farmSpeed.get()) == 0) {
             if (ageCrop(v)) {
                 sync();
                 markDirty();

@@ -1,6 +1,7 @@
 package de.maxhenkel.easyvillagers.blocks.tileentity;
 
 import de.maxhenkel.corelib.CachedValue;
+import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.blocks.TraderBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -147,7 +148,7 @@ public class TraderTileentity extends VillagerTileentity implements ITickableTil
     }
 
     private long calculateNextRestock() {
-        return 20 * 60 + world.rand.nextInt(20 * 60 * 2);
+        return Main.SERVER_CONFIG.traderMinRestockTime.get() + world.rand.nextInt(Math.max(Main.SERVER_CONFIG.traderMaxRestockTime.get() - Main.SERVER_CONFIG.traderMinRestockTime.get(), 1));
     }
 
     private void restock() {

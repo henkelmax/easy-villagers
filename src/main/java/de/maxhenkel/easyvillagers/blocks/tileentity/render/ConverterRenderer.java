@@ -63,7 +63,7 @@ public class ConverterRenderer extends TileEntityRenderer<ConverterTileentity> {
             matrixStack.translate(-5D / 16D, 0D, 0D);
             matrixStack.rotate(Vector3f.YP.rotationDegrees(90));
             matrixStack.scale(0.4F, 0.4F, 0.4F);
-            if (converter.getTimer() >= ConverterTileentity.ZOMBIFY_TIME && converter.getTimer() < ConverterTileentity.CONVERT_TIME) {
+            if (converter.getTimer() >= ConverterTileentity.getZombifyTime() && converter.getTimer() < ConverterTileentity.getConvertTime()) {
                 zombieVillager.setVillagerData(villagerEntity.getVillagerData());
                 zombieVillager.setChild(villagerEntity.isChild());
                 zombieVillagerRenderer.render(zombieVillager, 0F, 1F, matrixStack, buffer, combinedLightIn);

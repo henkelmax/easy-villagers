@@ -28,8 +28,6 @@ import net.minecraftforge.items.ItemStackHandler;
 
 public class BreederTileentity extends FakeWorldTileentity implements ITickableTileEntity {
 
-    public static final long BREEDING_TIME = 20L * 60L;
-
     private NonNullList<ItemStack> foodInventory;
     private NonNullList<ItemStack> outputInventory;
     private ItemStack villager1;
@@ -126,7 +124,7 @@ public class BreederTileentity extends FakeWorldTileentity implements ITickableT
             markDirty();
         }
 
-        if (world.getGameTime() % BREEDING_TIME == 0) {
+        if (world.getGameTime() % Main.SERVER_CONFIG.breedingTime.get() == 0) {
             tryBreed();
         }
     }

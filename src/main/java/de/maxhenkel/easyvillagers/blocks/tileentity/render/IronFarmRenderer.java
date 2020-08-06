@@ -74,7 +74,7 @@ public class IronFarmRenderer extends TileEntityRenderer<IronFarmTileentity> {
         zombieRenderer.render(zombie, 0F, 1F, matrixStack, buffer, combinedLightIn);
         matrixStack.pop();
 
-        if (farm.getTimer() >= IronFarmTileentity.IRON_GOLEM_SPAWN_TIME && farm.getTimer() < IronFarmTileentity.IRON_GOLEM_KILL_TIME) {
+        if (farm.getTimer() >= IronFarmTileentity.getGolemSpawnTime() && farm.getTimer() < IronFarmTileentity.getGolemKillTime()) {
             matrixStack.push();
             matrixStack.translate(0.5D, 1D / 16D, 0.5D);
             matrixStack.rotate(Vector3f.YP.rotationDegrees(-direction.getHorizontalAngle()));

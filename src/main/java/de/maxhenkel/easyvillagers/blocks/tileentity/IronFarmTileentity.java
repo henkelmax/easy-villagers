@@ -1,6 +1,7 @@
 package de.maxhenkel.easyvillagers.blocks.tileentity;
 
 import de.maxhenkel.corelib.inventory.ItemListInventory;
+import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.blocks.TraderBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
@@ -29,9 +30,6 @@ import java.util.List;
 public class IronFarmTileentity extends VillagerTileentity implements ITickableTileEntity {
 
     private static final ResourceLocation GOLEM_LOOT_TABLE = new ResourceLocation("entities/iron_golem");
-
-    public static long IRON_GOLEM_SPAWN_TIME = 20 * 60 * 4 - 20 * 10;
-    public static long IRON_GOLEM_KILL_TIME = IRON_GOLEM_SPAWN_TIME + 20 * 10;
 
     private NonNullList<ItemStack> inventory;
 
@@ -62,14 +60,14 @@ public class IronFarmTileentity extends VillagerTileentity implements ITickableT
             timer++;
             markDirty();
 
-            if (timer == IRON_GOLEM_SPAWN_TIME) {
+            if (timer == getGolemSpawnTime()) {
                 TraderBlock.playVillagerSound(world, getPos(), SoundEvents.ENTITY_ZOMBIE_AMBIENT);
                 sync();
-            } else if (timer > IRON_GOLEM_SPAWN_TIME && timer < IRON_GOLEM_KILL_TIME) {
+            } else if (timer > getGolemSpawnTime() && timer < getGolemKillTime()) {
                 if (timer % 20L == 0L) {
                     TraderBlock.playVillagerSound(world, getPos(), SoundEvents.ENTITY_IRON_GOLEM_HURT);
                 }
-            } else if (timer >= IRON_GOLEM_KILL_TIME) {
+            } else if (timer >= getGolemKillTime()) {
                 TraderBlock.playVillagerSound(world, getPos(), SoundEvents.ENTITY_IRON_GOLEM_DEATH);
                 IItemHandlerModifiable itemHandler = getItemHandler();
                 for (ItemStack drop : getDrops()) {
@@ -139,6 +137,14 @@ public class IronFarmTileentity extends VillagerTileentity implements ITickableT
             handler = new ItemStackHandler(inventory);
         }
         return handler;
+    }
+
+    public static int getGolemSpawnTime() {
+        return Main.SERVER_CONFIG.golemSpawnTime.get() - 20 * 10;
+    }
+
+    public static int getGolemKillTime() {
+        return getGolemSpawnTime() + 20 * 10;
     }
 
 }
