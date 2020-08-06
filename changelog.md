@@ -1,0 +1,1 @@
+- Fixed the crafting recipe of the iron farm
