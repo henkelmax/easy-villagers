@@ -1,1 +1,1 @@
-- Moved blocks to decoration blocks category
+- Added a config option to disable villager sounds in the players inventory

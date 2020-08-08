@@ -11,6 +11,7 @@ public class ServerConfig extends ConfigBase {
     public final ForgeConfigSpec.IntValue golemSpawnTime;
     public final ForgeConfigSpec.IntValue traderMinRestockTime;
     public final ForgeConfigSpec.IntValue traderMaxRestockTime;
+    public final ForgeConfigSpec.BooleanValue villagerInventorySounds;
 
     public ServerConfig(ForgeConfigSpec.Builder builder) {
         super(builder);
@@ -39,6 +40,10 @@ public class ServerConfig extends ConfigBase {
         traderMaxRestockTime = builder
                 .comment("The maximum amount of time in ticks the trader takes to restock")
                 .defineInRange("trader.max_restock_time", 20 * 60 * 3, 2, Integer.MAX_VALUE);
+
+        villagerInventorySounds = builder
+                .comment("If villagers should make sounds while in the players inventory")
+                .define("villager.inventory_sounds", true);
     }
 
 }

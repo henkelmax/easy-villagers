@@ -1,6 +1,7 @@
 package de.maxhenkel.easyvillagers.items;
 
 import de.maxhenkel.easyvillagers.CachedMap;
+import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.items.render.VillagerItemRenderer;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -80,6 +81,9 @@ public class VillagerItem extends Item {
     public void inventoryTick(ItemStack stack, World world, Entity entity, int itemSlot, boolean isSelected) {
         super.inventoryTick(stack, world, entity, itemSlot, isSelected);
         if (!(entity instanceof PlayerEntity) || world.isRemote) {
+            return;
+        }
+        if (!Main.SERVER_CONFIG.villagerInventorySounds.get()) {
             return;
         }
         if (world.getGameTime() % 20 != 0) {
