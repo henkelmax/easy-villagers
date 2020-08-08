@@ -1,1 +1,1 @@
-- Fixed mod URL
+- Moved blocks to decoration blocks category

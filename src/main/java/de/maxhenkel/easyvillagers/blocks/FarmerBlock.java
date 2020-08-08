@@ -44,7 +44,7 @@ public class FarmerBlock extends HorizontalRotatableBlock implements ITileEntity
 
     @Override
     public Item toItem() {
-        return new BlockItem(this, new Item.Properties().group(ItemGroup.MISC).setISTER(() -> FarmerItemRenderer::new)).setRegistryName(getRegistryName());
+        return new BlockItem(this, new Item.Properties().group(ItemGroup.DECORATIONS).setISTER(() -> FarmerItemRenderer::new)).setRegistryName(getRegistryName());
     }
 
     @Override

@@ -43,7 +43,7 @@ public class IronFarmBlock extends HorizontalRotatableBlock implements ITileEnti
 
     @Override
     public Item toItem() {
-        return new BlockItem(this, new Item.Properties().group(ItemGroup.MISC).setISTER(() -> IronFarmItemRenderer::new)).setRegistryName(getRegistryName());
+        return new BlockItem(this, new Item.Properties().group(ItemGroup.DECORATIONS).setISTER(() -> IronFarmItemRenderer::new)).setRegistryName(getRegistryName());
     }
 
     @Override

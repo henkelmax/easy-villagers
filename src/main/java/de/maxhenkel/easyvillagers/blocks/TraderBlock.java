@@ -35,7 +35,7 @@ public class TraderBlock extends HorizontalRotatableBlock implements ITileEntity
 
     @Override
     public Item toItem() {
-        return new BlockItem(this, new Item.Properties().group(ItemGroup.MISC).setISTER(() -> TraderItemRenderer::new)).setRegistryName(getRegistryName());
+        return new BlockItem(this, new Item.Properties().group(ItemGroup.DECORATIONS).setISTER(() -> TraderItemRenderer::new)).setRegistryName(getRegistryName());
     }
 
     @Override

@@ -43,7 +43,7 @@ public class ConverterBlock extends HorizontalRotatableBlock implements ITileEnt
 
     @Override
     public Item toItem() {
-        return new BlockItem(this, new Item.Properties().group(ItemGroup.MISC).setISTER(() -> ConverterItemRenderer::new)).setRegistryName(getRegistryName());
+        return new BlockItem(this, new Item.Properties().group(ItemGroup.DECORATIONS).setISTER(() -> ConverterItemRenderer::new)).setRegistryName(getRegistryName());
     }
 
     @Override

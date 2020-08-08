@@ -2,16 +2,11 @@ package de.maxhenkel.easyvillagers.events;
 
 import de.maxhenkel.corelib.item.ItemUtils;
 import de.maxhenkel.easyvillagers.items.ModItems;
-import de.maxhenkel.easyvillagers.items.VillagerItem;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.LeadItem;
 import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -68,23 +63,6 @@ public class VillagerEvents {
         if (villager.getLeashed()) {
             event.setCancellationResult(ActionResultType.FAIL);
             event.setCanceled(true);
-        }
-    }
-
-    @SubscribeEvent
-    public void playerTick(TickEvent.PlayerTickEvent event) {
-        if (!event.phase.equals(TickEvent.Phase.END)) {
-            return;
-        }
-
-        if (event.player.world.getGameTime() % 20 != 0) {
-            return;
-        }
-        for (Hand hand : Hand.values()) {
-            ItemStack heldItem = event.player.getHeldItem(hand);
-            if (heldItem.getItem() instanceof VillagerItem && event.player.world.rand.nextInt(20) == 0) {
-                event.player.playSound(SoundEvents.ENTITY_VILLAGER_AMBIENT, SoundCategory.NEUTRAL, 1F, 1F);
-            }
         }
     }
 

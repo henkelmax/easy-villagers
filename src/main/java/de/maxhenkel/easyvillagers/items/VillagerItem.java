@@ -5,15 +5,16 @@ import de.maxhenkel.easyvillagers.items.render.VillagerItemRenderer;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
@@ -72,6 +73,21 @@ public class VillagerItem extends Item {
             return super.getDisplayName(stack);
         } else {
             return getVillagerFast(world, stack).getDisplayName();
+        }
+    }
+
+    @Override
+    public void inventoryTick(ItemStack stack, World world, Entity entity, int itemSlot, boolean isSelected) {
+        super.inventoryTick(stack, world, entity, itemSlot, isSelected);
+        if (!(entity instanceof PlayerEntity) || world.isRemote) {
+            return;
+        }
+        if (world.getGameTime() % 20 != 0) {
+            return;
+        }
+        if (world.rand.nextInt(20) == 0) {
+            PlayerEntity playerEntity = (PlayerEntity) entity;
+            playerEntity.playSound(SoundEvents.ENTITY_VILLAGER_AMBIENT, SoundCategory.NEUTRAL, 1F, 1F);
         }
     }
 

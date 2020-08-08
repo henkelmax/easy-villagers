@@ -43,7 +43,7 @@ public class BreederBlock extends HorizontalRotatableBlock implements ITileEntit
 
     @Override
     public Item toItem() {
-        return new BlockItem(this, new Item.Properties().group(ItemGroup.MISC).setISTER(() -> BreederItemRenderer::new)).setRegistryName(getRegistryName());
+        return new BlockItem(this, new Item.Properties().group(ItemGroup.DECORATIONS).setISTER(() -> BreederItemRenderer::new)).setRegistryName(getRegistryName());
     }
 
     @Override
