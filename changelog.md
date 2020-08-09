@@ -1,2 +1,1 @@
-- Added a config option to disable villager sounds in the players inventory
-- Added chinese language
+- Added german language

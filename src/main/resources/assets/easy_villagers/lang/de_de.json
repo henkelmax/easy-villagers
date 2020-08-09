@@ -1,0 +1,15 @@
+{
+  "item.easy_villagers.villager": "Dorfbewohner",
+  "block.easy_villagers.trader": "Händler",
+  "block.easy_villagers.farmer": "Farmer",
+  "block.easy_villagers.breeder": "Züchter",
+  "block.easy_villagers.converter": "Umwandler",
+  "block.easy_villagers.iron_farm": "Eisen Farm",
+  "gui.easy_villagers.food_items": "Essensgegenstände",
+  "gui.easy_villagers.output_items": "Ausgabe",
+  "gui.easy_villagers.input_villagers": "Dorfbewohner Eingabe",
+  "gui.easy_villagers.output_villagers": "Dorfbewohner Ausgabe",
+  "gui.easy_villagers.output": "Ausgabegegenstände",
+  "tooltip.easy_villagers.villager_profession": "%s (%s)",
+  "tooltip.easy_villagers.zombie_villager_profession": "%s (%s)"
+}
