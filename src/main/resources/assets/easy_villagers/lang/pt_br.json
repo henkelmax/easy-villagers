@@ -1,0 +1,15 @@
+{
+  "item.easy_villagers.villager": "Aldeão",
+  "block.easy_villagers.trader": "Bloco de Comercio",
+  "block.easy_villagers.farmer": "Bloco de Agricultura",
+  "block.easy_villagers.breeder": "Bloco de Reprodução",
+  "block.easy_villagers.converter": "Bloco de Conversão",
+  "block.easy_villagers.iron_farm": "Farm de Ferro",
+  "gui.easy_villagers.food_items": "Itens Alimentares",
+  "gui.easy_villagers.output_items": "Saída",
+  "gui.easy_villagers.input_villagers": "Entrada de Aldeão",
+  "gui.easy_villagers.output_villagers": "Saída de Aldeão",
+  "gui.easy_villagers.output": "Saída de Itens ",
+  "tooltip.easy_villagers.villager_profession": "%s (%s)",
+  "tooltip.easy_villagers.zombie_villager_profession": "%s (%s)"
+}

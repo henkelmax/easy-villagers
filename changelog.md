@@ -1,1 +1,1 @@
-- Added german language
+- Added Brazilian Portuguese language
