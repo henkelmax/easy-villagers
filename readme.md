@@ -62,5 +62,7 @@ This averages about one iron ingot per minute.
 ---
 
 You can take stuff out of these blocks, by sneaking and right-clicking the block with an empty hand. 
+
 Baby villagers are able to grow up inside of blocks, but the functionality of the blocks will not work until they are grown.
+
 All blocks keep their stuff inside if they are broken.
