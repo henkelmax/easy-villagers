@@ -1,1 +1,1 @@
-- Added Brazilian Portuguese language
+- Fixed trader blocks not spawning experience

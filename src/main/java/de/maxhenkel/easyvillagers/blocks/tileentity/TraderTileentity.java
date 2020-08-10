@@ -101,6 +101,8 @@ public class TraderTileentity extends VillagerTileentity implements ITickableTil
             return false;
         }
 
+        villagerEntity.setPosition(getPos().getX() + 0.5D, getPos().getY() + 1D, getPos().getZ() + 0.5D);
+
         try {
             DISPLAY_MERCHANT_GUI.get().invoke(villagerEntity, playerEntity);
             return true;
