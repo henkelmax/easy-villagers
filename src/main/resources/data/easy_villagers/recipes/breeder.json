@@ -13,10 +13,10 @@
       "tag": "forge:ingots/iron"
     },
     "B": {
-      "item": "minecraft:red_bed"
+      "tag": "minecraft:beds"
     },
     "W": {
-      "item": "minecraft:oak_planks"
+      "tag": "minecraft:planks"
     }
   },
   "result": {

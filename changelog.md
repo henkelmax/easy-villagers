@@ -1,1 +1,1 @@
-- Fixed trader blocks not spawning experience
+- Fixed recipes not using tags
