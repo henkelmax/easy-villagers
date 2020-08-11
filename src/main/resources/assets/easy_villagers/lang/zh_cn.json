@@ -1,5 +1,6 @@
 {
   "item.easy_villagers.villager": "村民",
+  "item.easy_villagers.baby_villager": "幼年村民",
   "block.easy_villagers.trader": "村民交易所",
   "block.easy_villagers.farmer": "农民耕种器",
   "block.easy_villagers.breeder": "村民繁殖器",
@@ -10,6 +11,7 @@
   "gui.easy_villagers.input_villagers": "村民输入",
   "gui.easy_villagers.output_villagers": "村民输出",
   "gui.easy_villagers.output": "输出物品",
+  "itemGroup.easy_villagers": "Easy Villagers",
   "tooltip.easy_villagers.villager_profession": "%s (%s)",
   "tooltip.easy_villagers.zombie_villager_profession": "%s (%s)"
 }

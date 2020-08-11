@@ -2,6 +2,7 @@ package de.maxhenkel.easyvillagers.blocks;
 
 import de.maxhenkel.corelib.block.IItemBlock;
 import de.maxhenkel.easyvillagers.Main;
+import de.maxhenkel.easyvillagers.ModItemGroups;
 import de.maxhenkel.easyvillagers.blocks.tileentity.ConverterTileentity;
 import de.maxhenkel.easyvillagers.gui.ConverterContainer;
 import de.maxhenkel.easyvillagers.items.render.ConverterItemRenderer;
@@ -17,7 +18,6 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
@@ -43,7 +43,7 @@ public class ConverterBlock extends HorizontalRotatableBlock implements ITileEnt
 
     @Override
     public Item toItem() {
-        return new BlockItem(this, new Item.Properties().group(ItemGroup.DECORATIONS).setISTER(() -> ConverterItemRenderer::new)).setRegistryName(getRegistryName());
+        return new BlockItem(this, new Item.Properties().group(ModItemGroups.TAB_EASY_VILLAGERS).setISTER(() -> ConverterItemRenderer::new)).setRegistryName(getRegistryName());
     }
 
     @Override

@@ -3,6 +3,7 @@ package de.maxhenkel.easyvillagers.blocks;
 import de.maxhenkel.corelib.block.IItemBlock;
 import de.maxhenkel.corelib.item.ItemUtils;
 import de.maxhenkel.easyvillagers.Main;
+import de.maxhenkel.easyvillagers.ModItemGroups;
 import de.maxhenkel.easyvillagers.blocks.tileentity.TraderTileentity;
 import de.maxhenkel.easyvillagers.items.VillagerItem;
 import de.maxhenkel.easyvillagers.items.render.TraderItemRenderer;
@@ -13,7 +14,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
@@ -35,7 +35,7 @@ public class TraderBlock extends HorizontalRotatableBlock implements ITileEntity
 
     @Override
     public Item toItem() {
-        return new BlockItem(this, new Item.Properties().group(ItemGroup.DECORATIONS).setISTER(() -> TraderItemRenderer::new)).setRegistryName(getRegistryName());
+        return new BlockItem(this, new Item.Properties().group(ModItemGroups.TAB_EASY_VILLAGERS).setISTER(() -> TraderItemRenderer::new)).setRegistryName(getRegistryName());
     }
 
     @Override

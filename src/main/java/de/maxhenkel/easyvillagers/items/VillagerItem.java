@@ -11,13 +11,16 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.*;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -30,7 +33,7 @@ public class VillagerItem extends Item {
     private CachedMap<ItemStack, VillagerEntity> cachedVillagers;
 
     public VillagerItem() {
-        super(new Item.Properties().maxStackSize(1).group(ItemGroup.MISC).setISTER(() -> VillagerItemRenderer::new));
+        super(new Item.Properties().maxStackSize(1).setISTER(() -> VillagerItemRenderer::new));
         cachedVillagers = new CachedMap<>(10_000);
     }
 
@@ -73,7 +76,11 @@ public class VillagerItem extends Item {
         if (world == null) {
             return super.getDisplayName(stack);
         } else {
-            return getVillagerFast(world, stack).getDisplayName();
+            VillagerEntity villager = getVillagerFast(world, stack);
+            if (!villager.hasCustomName() && villager.isChild()) {
+                return new TranslationTextComponent("item.easy_villagers.baby_villager");
+            }
+            return villager.getDisplayName();
         }
     }
 

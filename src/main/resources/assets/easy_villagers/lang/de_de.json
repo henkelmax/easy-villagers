@@ -1,5 +1,6 @@
 {
   "item.easy_villagers.villager": "Dorfbewohner",
+  "item.easy_villagers.baby_villager": "Baby Dorfbewohner",
   "block.easy_villagers.trader": "Händler",
   "block.easy_villagers.farmer": "Farmer",
   "block.easy_villagers.breeder": "Züchter",
@@ -10,6 +11,7 @@
   "gui.easy_villagers.input_villagers": "Dorfbewohner Eingabe",
   "gui.easy_villagers.output_villagers": "Dorfbewohner Ausgabe",
   "gui.easy_villagers.output": "Ausgabegegenstände",
+  "itemGroup.easy_villagers": "Easy Villagers",
   "tooltip.easy_villagers.villager_profession": "%s (%s)",
   "tooltip.easy_villagers.zombie_villager_profession": "%s (%s)"
 }

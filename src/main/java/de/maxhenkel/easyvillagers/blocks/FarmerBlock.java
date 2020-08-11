@@ -3,6 +3,7 @@ package de.maxhenkel.easyvillagers.blocks;
 import de.maxhenkel.corelib.block.IItemBlock;
 import de.maxhenkel.corelib.item.ItemUtils;
 import de.maxhenkel.easyvillagers.Main;
+import de.maxhenkel.easyvillagers.ModItemGroups;
 import de.maxhenkel.easyvillagers.blocks.tileentity.FarmerTileentity;
 import de.maxhenkel.easyvillagers.gui.OutputContainer;
 import de.maxhenkel.easyvillagers.items.VillagerItem;
@@ -20,7 +21,6 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
@@ -44,7 +44,7 @@ public class FarmerBlock extends HorizontalRotatableBlock implements ITileEntity
 
     @Override
     public Item toItem() {
-        return new BlockItem(this, new Item.Properties().group(ItemGroup.DECORATIONS).setISTER(() -> FarmerItemRenderer::new)).setRegistryName(getRegistryName());
+        return new BlockItem(this, new Item.Properties().group(ModItemGroups.TAB_EASY_VILLAGERS).setISTER(() -> FarmerItemRenderer::new)).setRegistryName(getRegistryName());
     }
 
     @Override

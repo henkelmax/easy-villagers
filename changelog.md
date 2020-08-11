@@ -1,1 +1,1 @@
-- Fixed recipes not using tags
+- Added easy villagers creative tab
