@@ -1,1 +1,1 @@
-- Added JEI integration
+- Fixed misaligned villagers in item frames
