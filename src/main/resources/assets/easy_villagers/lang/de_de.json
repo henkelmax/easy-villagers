@@ -13,5 +13,7 @@
   "gui.easy_villagers.output": "Ausgabegegenstände",
   "itemGroup.easy_villagers": "Easy Villagers",
   "tooltip.easy_villagers.villager_profession": "%s (%s)",
-  "tooltip.easy_villagers.zombie_villager_profession": "%s (%s)"
+  "tooltip.easy_villagers.zombie_villager_profession": "%s (%s)",
+  "jei.easy_villagers.breeding": "Züchten",
+  "jei.easy_villagers.converting": "Umwandeln"
 }

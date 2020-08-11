@@ -122,4 +122,16 @@ public class VillagerItem extends Item {
         return cachedVillagers.get(stack, () -> getVillager(world, stack));
     }
 
+    public static ItemStack getBabyVillager() {
+        ItemStack babyVillager = new ItemStack(ModItems.VILLAGER);
+        VillagerEntity villager = new VillagerEntity(EntityType.VILLAGER, Minecraft.getInstance().world) {
+            @Override
+            public int getGrowingAge() {
+                return -24000;
+            }
+        };
+        ModItems.VILLAGER.setVillager(babyVillager, villager);
+        return babyVillager;
+    }
+
 }

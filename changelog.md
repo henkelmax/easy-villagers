@@ -1,1 +1,1 @@
-- Added easy villagers creative tab
+- Added JEI integration

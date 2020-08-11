@@ -13,5 +13,7 @@
   "gui.easy_villagers.output": "Output Items",
   "itemGroup.easy_villagers": "Easy Villagers",
   "tooltip.easy_villagers.villager_profession": "%s (%s)",
-  "tooltip.easy_villagers.zombie_villager_profession": "%s (%s)"
+  "tooltip.easy_villagers.zombie_villager_profession": "%s (%s)",
+  "jei.easy_villagers.breeding": "Breeding",
+  "jei.easy_villagers.converting": "Converting"
 }
