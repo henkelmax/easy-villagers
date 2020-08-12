@@ -1,1 +1,1 @@
-- Fixed misaligned villagers in item frames
+- Fixed a crash on servers

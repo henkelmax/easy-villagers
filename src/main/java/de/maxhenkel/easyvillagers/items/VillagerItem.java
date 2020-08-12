@@ -122,6 +122,7 @@ public class VillagerItem extends Item {
         return cachedVillagers.get(stack, () -> getVillager(world, stack));
     }
 
+    @OnlyIn(Dist.CLIENT)
     public static ItemStack getBabyVillager() {
         ItemStack babyVillager = new ItemStack(ModItems.VILLAGER);
         VillagerEntity villager = new VillagerEntity(EntityType.VILLAGER, Minecraft.getInstance().world) {
