@@ -1,1 +1,2 @@
-- Re-added HWYLA integration
+- Re-added JEI integration
+- Update pack format
