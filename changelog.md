@@ -1,1 +1,1 @@
-- Fixed a crash on servers
+- Re-added HWYLA integration

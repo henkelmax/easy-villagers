@@ -84,7 +84,7 @@ dependencies {
     runtimeOnly fg.deobf("de.maxhenkel.corelib:corelib:${mod_minecraft_version}-${corelib_version}")
     runtimeOnly fg.deobf("de.maxhenkel.corelib:corelib:${mod_minecraft_version}-${corelib_version}:javadoc")
 
-    //compile fg.deobf("mcp.mobius.waila:Hwyla:${hwyla_version}")
+    compile fg.deobf("mcp.mobius.waila:Hwyla:${hwyla_version}")
 }
 
 jar {
@@ -232,7 +232,7 @@ reobf {
 sourceSets {
     main {
         java {
-            exclude 'de/maxhenkel/easyvillagers/integration/**'
+            exclude 'de/maxhenkel/easyvillagers/integration/jei/**'
         }
     }
 }
