@@ -1,15 +1,16 @@
 modLoader="javafml"
 loaderVersion="${mod_forge_version}"
+license="All rights reserved"
 issueTrackerURL="https://www.curseforge.com/minecraft/mc-mods/easy-villagers/issues"
-displayURL="https://www.curseforge.com/minecraft/mc-mods/easy-villagers"
-# logoFile="easy_villagers.png"
-# credits=""
-authors="${mod_vendor}"
 [[mods]]
 modId="${mod_id}"
 version="${mod_version}"
 displayName="${mod_name}"
 updateJSONURL="https://maxhenkel.de/update/easy_villagers.json"
+displayURL="https://www.curseforge.com/minecraft/mc-mods/easy-villagers"
+# logoFile="easy_villagers.png"
+# credits=""
+authors="${mod_vendor}"
 description='''Easy Villagers'''
 [[dependencies.${mod_id}]]
     modId="forge"

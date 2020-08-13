@@ -17,6 +17,7 @@ import net.minecraft.loot.LootTable;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.util.*;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -94,7 +95,7 @@ public class IronFarmTileentity extends VillagerTileentity implements ITickableT
         LootContext.Builder builder = new LootContext.Builder(serverWorld)
                 .withRandom(serverWorld.rand)
                 .withParameter(LootParameters.THIS_ENTITY, new IronGolemEntity(EntityType.IRON_GOLEM, world))
-                .withParameter(LootParameters.POSITION, pos)
+                .withParameter(LootParameters.field_237457_g_, new Vector3d(pos.getX(), pos.getY(), pos.getZ()))
                 .withParameter(LootParameters.DAMAGE_SOURCE, DamageSource.LAVA);
 
         LootContext lootContext = builder.build(LootParameterSets.ENTITY);

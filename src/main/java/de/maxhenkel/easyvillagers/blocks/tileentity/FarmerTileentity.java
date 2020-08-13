@@ -23,6 +23,7 @@ import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.PlantType;
@@ -146,7 +147,7 @@ public class FarmerTileentity extends VillagerTileentity implements ITickableTil
             if (villager == null || villager.isChild() || !villager.getVillagerData().getProfession().equals(VillagerProfession.FARMER)) {
                 return false;
             }
-            LootContext.Builder context = new LootContext.Builder((ServerWorld) world).withParameter(LootParameters.POSITION, pos).withParameter(LootParameters.BLOCK_STATE, c).withParameter(LootParameters.TOOL, ItemStack.EMPTY);
+            LootContext.Builder context = new LootContext.Builder((ServerWorld) world).withParameter(LootParameters.field_237457_g_, new Vector3d(pos.getX(), pos.getY(), pos.getZ())).withParameter(LootParameters.BLOCK_STATE, c).withParameter(LootParameters.TOOL, ItemStack.EMPTY);
             List<ItemStack> drops = c.getDrops(context);
             IItemHandlerModifiable itemHandler = getItemHandler();
             for (ItemStack stack : drops) {

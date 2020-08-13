@@ -1,8 +1,8 @@
 package de.maxhenkel.easyvillagers.gui;
 
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.ITextProperties;
 import net.minecraft.util.text.TranslationTextComponent;
 
 public class ConverterScreen extends InputOutputScreen<ConverterContainer> {
@@ -12,12 +12,12 @@ public class ConverterScreen extends InputOutputScreen<ConverterContainer> {
     }
 
     @Override
-    protected ITextProperties getTopText() {
+    protected IFormattableTextComponent getTopText() {
         return new TranslationTextComponent("gui.easy_villagers.input_villagers");
     }
 
     @Override
-    protected ITextProperties getBottomText() {
+    protected IFormattableTextComponent getBottomText() {
         return new TranslationTextComponent("gui.easy_villagers.output_villagers");
     }
 
