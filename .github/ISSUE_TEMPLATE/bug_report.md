@@ -27,9 +27,14 @@ Don't paste the complete logs into the issue.
 You can use [https://gist.github.com/](https://gist.github.com/).
 
 **Versions**
-- Minecraft Version
-- Forge Version
-- Mod Version
+- Minecraft version
+- Forge version
+- Mod version
+
+**Other mods**
+A list of the other mods that were installed when this problem occurred.
+It would be ideal if you could test if this problem persists when no other mod is installed.
+If not, please narrow down the mod(s) that are causing the problem.
 
 **Screenshots (Optional)**
 Screenshots of the issue.
