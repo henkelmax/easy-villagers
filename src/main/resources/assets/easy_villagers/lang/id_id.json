@@ -1,0 +1,19 @@
+{
+  "item.easy_villagers.villager": "Penduduk",
+  "item.easy_villagers.baby_villager": "Bayi Penduduk",
+  "block.easy_villagers.trader": "Pedagang",
+  "block.easy_villagers.farmer": "Pertani",
+  "block.easy_villagers.breeder": "Pengembang Biak",
+  "block.easy_villagers.converter": "Konverter",
+  "block.easy_villagers.iron_farm": "Pertanian Besi",
+  "gui.easy_villagers.food_items": "Food Items",
+  "gui.easy_villagers.output_items": "Output",
+  "gui.easy_villagers.input_villagers": "Masukkan Penduduk",
+  "gui.easy_villagers.output_villagers": "Keluaran Penduduk",
+  "gui.easy_villagers.output": "Keluaran Item",
+  "itemGroup.easy_villagers": "Penduduk Dimudahkan",
+  "tooltip.easy_villagers.villager_profession": "%s (%s)",
+  "tooltip.easy_villagers.zombie_villager_profession": "%s (%s)",
+  "jei.easy_villagers.breeding": "Pembiakan",
+  "jei.easy_villagers.converting": "Mengkonversi"
+}

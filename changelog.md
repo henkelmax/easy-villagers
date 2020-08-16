@@ -1,2 +1,1 @@
-- Re-added JEI integration
-- Update pack format
+- Added Indonesian language
