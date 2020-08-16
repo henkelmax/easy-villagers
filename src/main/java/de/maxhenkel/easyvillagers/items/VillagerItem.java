@@ -1,6 +1,6 @@
 package de.maxhenkel.easyvillagers.items;
 
-import de.maxhenkel.easyvillagers.CachedMap;
+import de.maxhenkel.corelib.CachedMap;
 import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.items.render.VillagerItemRenderer;
 import net.minecraft.block.BlockState;

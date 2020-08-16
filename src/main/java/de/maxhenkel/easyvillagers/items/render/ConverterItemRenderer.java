@@ -1,7 +1,7 @@
 package de.maxhenkel.easyvillagers.items.render;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import de.maxhenkel.easyvillagers.CachedMap;
+import de.maxhenkel.corelib.CachedMap;
 import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.blocks.tileentity.ConverterTileentity;
 import de.maxhenkel.easyvillagers.blocks.tileentity.render.ConverterRenderer;
