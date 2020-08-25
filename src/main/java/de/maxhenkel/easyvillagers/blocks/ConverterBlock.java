@@ -37,7 +37,7 @@ import javax.annotation.Nullable;
 public class ConverterBlock extends HorizontalRotatableBlock implements ITileEntityProvider, IItemBlock {
 
     public ConverterBlock() {
-        super(Properties.create(Material.IRON).hardnessAndResistance(2.5F).sound(SoundType.METAL).notSolid());
+        super(Properties.create(Material.IRON).hardnessAndResistance(2.5F).sound(SoundType.METAL).notSolid().func_235838_a_(value -> 15));
         setRegistryName(new ResourceLocation(Main.MODID, "converter"));
     }
 

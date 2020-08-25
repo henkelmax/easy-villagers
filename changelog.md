@@ -1,1 +1,2 @@
-- Added Indonesian language
+- Fixed issue with resource packs
+- Fixed black faces when next to a block

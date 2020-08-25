@@ -37,7 +37,7 @@ import javax.annotation.Nullable;
 public class IronFarmBlock extends HorizontalRotatableBlock implements ITileEntityProvider, IItemBlock {
 
     public IronFarmBlock() {
-        super(Properties.create(Material.IRON).hardnessAndResistance(2.5F).sound(SoundType.METAL).notSolid());
+        super(Properties.create(Material.IRON).hardnessAndResistance(2.5F).sound(SoundType.METAL).notSolid().func_235838_a_(value -> 15));
         setRegistryName(new ResourceLocation(Main.MODID, "iron_farm"));
     }
 
