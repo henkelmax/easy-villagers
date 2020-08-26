@@ -1,0 +1,19 @@
+{
+  "item.easy_villagers.villager": "Житель",
+  "item.easy_villagers.baby_villager": "Ребенок житель",
+  "block.easy_villagers.trader": "Торговець",
+  "block.easy_villagers.farmer": "Фермер",
+  "block.easy_villagers.breeder": "Заводчик",
+  "block.easy_villagers.converter": "Конвертер",
+  "block.easy_villagers.iron_farm": "Железная ферма",
+  "gui.easy_villagers.food_items": "Еда предметы",
+  "gui.easy_villagers.output_items": "Вывод",
+  "gui.easy_villagers.input_villagers": "Ввод житель",
+  "gui.easy_villagers.output_villagers": "Выход жителя",
+  "gui.easy_villagers.output": "Предмет вывода",
+  "itemGroup.easy_villagers": "Легкие жители",
+  "tooltip.easy_villagers.villager_profession": "%s (%s)",
+  "tooltip.easy_villagers.zombie_villager_profession": "%s (%s)",
+  "jei.easy_villagers.breeding": "Разведение",
+  "jei.easy_villagers.converting": "Преобразование"
+}

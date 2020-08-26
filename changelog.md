@@ -1,2 +1,1 @@
-- Fixed issue with resource packs
-- Fixed black faces when next to a block
+- Added russian translation
