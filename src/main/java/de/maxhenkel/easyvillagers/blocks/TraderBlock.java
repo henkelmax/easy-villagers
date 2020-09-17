@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
 public class TraderBlock extends HorizontalRotatableBlock implements ITileEntityProvider, IItemBlock {
 
     public TraderBlock() {
-        super(Block.Properties.create(Material.IRON).hardnessAndResistance(2.5F).sound(SoundType.METAL).notSolid().func_235838_a_(value -> 15));
+        super(Block.Properties.create(Material.IRON).hardnessAndResistance(2.5F).sound(SoundType.METAL).nonOpaque().lightLevel(value -> 15));
         setRegistryName(new ResourceLocation(Main.MODID, "trader"));
     }
 
@@ -39,11 +39,11 @@ public class TraderBlock extends HorizontalRotatableBlock implements ITileEntity
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+    public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         ItemStack heldItem = player.getHeldItem(handIn);
         TileEntity tileEntity = worldIn.getTileEntity(pos);
         if (!(tileEntity instanceof TraderTileentity)) {
-            return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
+            return super.onUse(state, worldIn, pos, player, handIn, hit);
         }
         TraderTileentity trader = (TraderTileentity) tileEntity;
         if (!trader.hasVillager() && heldItem.getItem() instanceof VillagerItem) {
@@ -105,7 +105,7 @@ public class TraderBlock extends HorizontalRotatableBlock implements ITileEntity
         VillagerEntity villagerEntity = trader.getVillagerEntity();
         if (villagerEntity != null) {
             if (trader.getWorkstationProfession().equals(villagerEntity.getVillagerData().getProfession())) {
-                playVillagerSound(world, pos, trader.getWorkstationProfession().getSound());
+                playVillagerSound(world, pos, trader.getWorkstationProfession().getWorkSound());
             } else {
                 playVillagerSound(world, pos, SoundEvents.ENTITY_VILLAGER_NO);
             }

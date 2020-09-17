@@ -23,15 +23,15 @@ public abstract class InputOutputScreen<T extends Container> extends ScreenBase<
     }
 
     @Override
-    protected void func_230451_b_(MatrixStack matrixStack, int mouseX, int mouseY) {
+    protected void drawForeground(MatrixStack matrixStack, int x, int y) {
         drawCentered(matrixStack, getTopText(), 9, FONT_COLOR);
         drawCentered(matrixStack, getBottomText(), 40, FONT_COLOR);
-        field_230712_o_.func_238422_b_(matrixStack, playerInventory.getDisplayName().func_241878_f(), 8F, (float) (ySize - 96 + 3), FONT_COLOR);
+        textRenderer.draw(matrixStack, playerInventory.getDisplayName().asOrderedText(), 8F, (float) (ySize - 96 + 3), FONT_COLOR);
     }
 
     protected void drawCentered(MatrixStack matrixStack, IFormattableTextComponent text, int y, int color) {
-        int width = field_230712_o_.getStringWidth(text.getString());
-        field_230712_o_.func_238422_b_(matrixStack, text.func_241878_f(), xSize / 2F - width / 2F, y, color);
+        int width = textRenderer.getStringWidth(text.getString());
+        textRenderer.draw(matrixStack, text.asOrderedText(), xSize / 2F - width / 2F, y, color);
     }
 
     protected abstract IFormattableTextComponent getTopText();

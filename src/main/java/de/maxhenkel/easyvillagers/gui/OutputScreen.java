@@ -23,14 +23,14 @@ public class OutputScreen extends ScreenBase<OutputContainer> {
     }
 
     @Override
-    protected void func_230451_b_(MatrixStack matrixStack, int mouseX, int mouseY) {
+    protected void drawForeground(MatrixStack matrixStack, int mouseX, int mouseY) {
         drawCentered(matrixStack, new TranslationTextComponent("gui.easy_villagers.output"), 9, FONT_COLOR);
-        field_230712_o_.func_238422_b_(matrixStack, playerInventory.getDisplayName().func_241878_f(), 8F, (float) (ySize - 96 + 3), FONT_COLOR);
+        textRenderer.draw(matrixStack, playerInventory.getDisplayName().asOrderedText(), 8F, (float) (ySize - 96 + 3), FONT_COLOR);
     }
 
     protected void drawCentered(MatrixStack matrixStack, IFormattableTextComponent text, int y, int color) {
-        int width = field_230712_o_.getStringWidth(text.getString());
-        field_230712_o_.func_238422_b_(matrixStack, text.func_241878_f(), xSize / 2F - width / 2F, y, color);
+        int width = textRenderer.getStringWidth(text.getString());
+        textRenderer.draw(matrixStack, text.asOrderedText(), xSize / 2F - width / 2F, y, color);
     }
 
 }

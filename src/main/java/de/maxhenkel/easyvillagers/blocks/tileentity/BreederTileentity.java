@@ -217,7 +217,7 @@ public class BreederTileentity extends FakeWorldTileentity implements ITickableT
     }
 
     @Override
-    public void func_230337_a_(BlockState state, CompoundNBT compound) {
+    public void fromTag(BlockState state, CompoundNBT compound) {
         if (compound.contains("Villager1")) {
             CompoundNBT comp = compound.getCompound("Villager1");
             villager1 = ItemStack.read(comp);
@@ -234,7 +234,7 @@ public class BreederTileentity extends FakeWorldTileentity implements ITickableT
         }
         ItemStackHelper.loadAllItems(compound.getCompound("FoodInventory"), foodInventory);
         ItemStackHelper.loadAllItems(compound.getCompound("OutputInventory"), outputInventory);
-        super.func_230337_a_(state, compound);
+        super.fromTag(state, compound);
     }
 
     public IInventory getFoodInventory() {

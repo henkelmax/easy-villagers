@@ -43,9 +43,9 @@ public class PluginEasyVillagers implements IWailaPlugin {
             VillagerData villagerData = villager.getVillagerData();
             VillagerProfession profession = villagerData.getProfession();
             if (profession.equals(VillagerProfession.NONE) || profession.equals(VillagerProfession.NITWIT)) {
-                return PluginEasyVillagers.getVillagerName(profession).func_240699_a_(TextFormatting.GRAY);
+                return PluginEasyVillagers.getVillagerName(profession).formatted(TextFormatting.GRAY);
             } else {
-                return new TranslationTextComponent("tooltip.easy_villagers.villager_profession", PluginEasyVillagers.getVillagerName(profession), new TranslationTextComponent("merchant.level." + villagerData.getLevel())).func_240699_a_(TextFormatting.GRAY);
+                return new TranslationTextComponent("tooltip.easy_villagers.villager_profession", PluginEasyVillagers.getVillagerName(profession), new TranslationTextComponent("merchant.level." + villagerData.getLevel())).formatted(TextFormatting.GRAY);
             }
         }
         return null;

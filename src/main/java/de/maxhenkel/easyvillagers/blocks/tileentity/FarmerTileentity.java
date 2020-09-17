@@ -132,7 +132,7 @@ public class FarmerTileentity extends VillagerTileentity implements ITickableTil
             return false;
         }
 
-        Optional<Property<?>> ageProp = c.func_235904_r_().stream().filter(p -> p.getName().equals("age")).findFirst();
+        Optional<Property<?>> ageProp = c.getProperties().stream().filter(p -> p.getName().equals("age")).findFirst();
 
         if (!ageProp.isPresent() || !(ageProp.get() instanceof IntegerProperty)) {
             return false;
@@ -147,7 +147,7 @@ public class FarmerTileentity extends VillagerTileentity implements ITickableTil
             if (villager == null || villager.isChild() || !villager.getVillagerData().getProfession().equals(VillagerProfession.FARMER)) {
                 return false;
             }
-            LootContext.Builder context = new LootContext.Builder((ServerWorld) world).withParameter(LootParameters.field_237457_g_, new Vector3d(pos.getX(), pos.getY(), pos.getZ())).withParameter(LootParameters.BLOCK_STATE, c).withParameter(LootParameters.TOOL, ItemStack.EMPTY);
+            LootContext.Builder context = new LootContext.Builder((ServerWorld) world).withParameter(LootParameters.ORIGIN, new Vector3d(pos.getX(), pos.getY(), pos.getZ())).withParameter(LootParameters.BLOCK_STATE, c).withParameter(LootParameters.TOOL, ItemStack.EMPTY);
             List<ItemStack> drops = c.getDrops(context);
             IItemHandlerModifiable itemHandler = getItemHandler();
             for (ItemStack stack : drops) {
@@ -179,7 +179,7 @@ public class FarmerTileentity extends VillagerTileentity implements ITickableTil
     }
 
     @Override
-    public void func_230337_a_(BlockState state, CompoundNBT compound) {
+    public void fromTag(BlockState state, CompoundNBT compound) {
         if (compound.contains("Crop")) {
             crop = NBTUtil.readBlockState(compound.getCompound("Crop"));
         } else {
@@ -187,7 +187,7 @@ public class FarmerTileentity extends VillagerTileentity implements ITickableTil
         }
 
         ItemStackHelper.loadAllItems(compound, inventory);
-        super.func_230337_a_(state, compound);
+        super.fromTag(state, compound);
     }
 
     private IItemHandlerModifiable handler;

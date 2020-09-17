@@ -57,9 +57,9 @@ public class IronFarmRenderer extends TileEntityRenderer<IronFarmTileentity> {
         if (farm.getVillagerEntity() != null) {
             matrixStack.push();
             matrixStack.translate(0.5D, 1D / 16D, 0.5D);
-            matrixStack.rotate(Vector3f.YP.rotationDegrees(-direction.getHorizontalAngle()));
+            matrixStack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-direction.getHorizontalAngle()));
             matrixStack.translate(-5D / 16D, 0D, -5D / 16D);
-            matrixStack.rotate(Vector3f.YP.rotationDegrees(90));
+            matrixStack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(90));
             matrixStack.scale(0.3F, 0.3F, 0.3F);
             renderer.render(farm.getVillagerEntity(), 0F, 1F, matrixStack, buffer, combinedLightIn);
             matrixStack.pop();
@@ -67,9 +67,9 @@ public class IronFarmRenderer extends TileEntityRenderer<IronFarmTileentity> {
 
         matrixStack.push();
         matrixStack.translate(0.5D, 1D / 16D, 0.5D);
-        matrixStack.rotate(Vector3f.YP.rotationDegrees(-direction.getHorizontalAngle()));
+        matrixStack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-direction.getHorizontalAngle()));
         matrixStack.translate(5D / 16D, 0D, -5D / 16D);
-        matrixStack.rotate(Vector3f.YP.rotationDegrees(-90));
+        matrixStack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-90));
         matrixStack.scale(0.3F, 0.3F, 0.3F);
         zombieRenderer.render(zombie, 0F, 1F, matrixStack, buffer, combinedLightIn);
         matrixStack.pop();
@@ -77,7 +77,7 @@ public class IronFarmRenderer extends TileEntityRenderer<IronFarmTileentity> {
         if (farm.getTimer() >= IronFarmTileentity.getGolemSpawnTime() && farm.getTimer() < IronFarmTileentity.getGolemKillTime()) {
             matrixStack.push();
             matrixStack.translate(0.5D, 1D / 16D, 0.5D);
-            matrixStack.rotate(Vector3f.YP.rotationDegrees(-direction.getHorizontalAngle()));
+            matrixStack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-direction.getHorizontalAngle()));
             matrixStack.translate(0D, 0D, 3D / 16D);
             matrixStack.scale(0.3F, 0.3F, 0.3F);
             if (farm.getTimer() % 20 < 10) {

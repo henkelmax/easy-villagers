@@ -30,14 +30,14 @@ public class BreederItemRenderer extends ItemStackTileEntityRenderer {
     }
 
     @Override
-    public void func_239207_a_(ItemStack itemStack, ItemCameraTransforms.TransformType transformType, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn) {
+    public void render(ItemStack itemStack, ItemCameraTransforms.TransformType transformType, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn) {
         if (renderer == null) {
             renderer = new BreederRenderer(TileEntityRendererDispatcher.instance);
         }
 
         BlockState breederBlock = ModBlocks.BREEDER.getDefaultState();
         BlockRendererDispatcher dispatcher = minecraft.getBlockRendererDispatcher();
-        dispatcher.getBlockModelRenderer().renderModel(matrixStack.getLast(), buffer.getBuffer(RenderType.getCutoutMipped()), breederBlock, dispatcher.getModelForState(breederBlock), 0, 0, 0, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
+        dispatcher.getBlockModelRenderer().renderModel(matrixStack.peek(), buffer.getBuffer(RenderType.getCutoutMipped()), breederBlock, dispatcher.getModelForState(breederBlock), 0, 0, 0, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
 
         CompoundNBT blockEntityTag = itemStack.getChildTag("BlockEntityTag");
         if (blockEntityTag == null) {
@@ -47,7 +47,7 @@ public class BreederItemRenderer extends ItemStackTileEntityRenderer {
         BreederTileentity breeder = cachedMap.get(itemStack, () -> {
             BreederTileentity b = new BreederTileentity();
             b.setFakeWorld(minecraft.world);
-            b.func_230337_a_(null, blockEntityTag);
+            b.fromTag(null, blockEntityTag);
             return b;
         });
         renderer.render(breeder, 0F, matrixStack, buffer, combinedLightIn, combinedOverlayIn);

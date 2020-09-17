@@ -59,12 +59,12 @@ public class ConverterRenderer extends TileEntityRenderer<ConverterTileentity> {
         if (villagerEntity != null) {
             matrixStack.push();
             matrixStack.translate(0.5D, 1D / 16D, 0.5D);
-            matrixStack.rotate(Vector3f.YP.rotationDegrees(-direction.getHorizontalAngle()));
+            matrixStack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-direction.getHorizontalAngle()));
             matrixStack.translate(-5D / 16D, 0D, 0D);
-            matrixStack.rotate(Vector3f.YP.rotationDegrees(90));
+            matrixStack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(90));
             matrixStack.scale(0.4F, 0.4F, 0.4F);
             if (converter.getTimer() >= ConverterTileentity.getZombifyTime() && converter.getTimer() < ConverterTileentity.getConvertTime()) {
-                zombieVillager.setVillagerData(villagerEntity.getVillagerData());
+                zombieVillager.func_213792_a(villagerEntity.getVillagerData());
                 zombieVillager.setChild(villagerEntity.isChild());
                 zombieVillagerRenderer.render(zombieVillager, 0F, 1F, matrixStack, buffer, combinedLightIn);
             } else {
@@ -76,9 +76,9 @@ public class ConverterRenderer extends TileEntityRenderer<ConverterTileentity> {
         matrixStack.push();
 
         matrixStack.translate(0.5D, 1D / 16D, 0.5D);
-        matrixStack.rotate(Vector3f.YP.rotationDegrees(-direction.getHorizontalAngle()));
+        matrixStack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-direction.getHorizontalAngle()));
         matrixStack.translate(5D / 16D, 0D, 0D);
-        matrixStack.rotate(Vector3f.YP.rotationDegrees(-90));
+        matrixStack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-90));
         matrixStack.scale(0.4F, 0.4F, 0.4F);
         zombieRenderer.render(zombie, 0F, 1F, matrixStack, buffer, combinedLightIn);
         matrixStack.pop();

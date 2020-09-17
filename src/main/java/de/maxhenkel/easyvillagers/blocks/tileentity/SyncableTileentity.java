@@ -32,7 +32,7 @@ public class SyncableTileentity extends TileEntity {
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        func_230337_a_(getBlockState(), pkt.getNbtCompound());
+        fromTag(getBlockState(), pkt.getNbtCompound());
     }
 
     @Override

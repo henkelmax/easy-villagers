@@ -179,6 +179,9 @@ repositories {
         name = "henkelmax.public"
         url = 'https://maven.maxhenkel.de/repository/public'
     }
+    maven {
+        url "https://maven.tterrag.com/"
+    }
     mavenLocal()
 }
 
