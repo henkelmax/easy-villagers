@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
 public class TraderBlock extends HorizontalRotatableBlock implements ITileEntityProvider, IItemBlock {
 
     public TraderBlock() {
-        super(Block.Properties.create(Material.IRON).hardnessAndResistance(2.5F).sound(SoundType.METAL).nonOpaque().lightLevel(value -> 15));
+        super(Block.Properties.create(Material.IRON).hardnessAndResistance(2.5F).sound(SoundType.METAL).nonOpaque().luminance(value -> 15));
         setRegistryName(new ResourceLocation(Main.MODID, "trader"));
     }
 
