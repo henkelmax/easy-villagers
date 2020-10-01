@@ -1,1 +1,1 @@
-- Updated dependencies
+- Fixed breeder not creating biome specific villagers

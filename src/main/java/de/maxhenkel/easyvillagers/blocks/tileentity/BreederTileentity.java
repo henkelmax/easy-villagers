@@ -10,6 +10,7 @@ import de.maxhenkel.easyvillagers.net.MessageVillagerParticles;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
+import net.minecraft.entity.villager.VillagerType;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
@@ -156,6 +157,7 @@ public class BreederTileentity extends FakeWorldTileentity implements ITickableT
         for (int i = 0; i < outputInventory.size(); i++) {
             if (outputInventory.get(i).isEmpty()) {
                 VillagerEntity villagerEntity = new VillagerEntity(EntityType.VILLAGER, world);
+                villagerEntity.setVillagerData(villagerEntity.getVillagerData().withType(VillagerType.forBiome(world.method_31081(getPos()))));
                 villagerEntity.setGrowingAge(-24000);
                 ItemStack villager = new ItemStack(ModItems.VILLAGER);
                 ModItems.VILLAGER.setVillager(villager, villagerEntity);
