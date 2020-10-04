@@ -1,1 +1,1 @@
-- Fixed breeder not creating biome specific villagers
+- Updated mods.toml
