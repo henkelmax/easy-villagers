@@ -1,1 +1,1 @@
-- Updated mods.toml
+- Made recipes compatible with tags

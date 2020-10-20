@@ -7,7 +7,7 @@
   ],
   "key": {
     "G": {
-      "item": "minecraft:glass_pane"
+      "tag": "forge:glass_panes/colorless"
     },
     "I": {
       "tag": "forge:ingots/iron"
