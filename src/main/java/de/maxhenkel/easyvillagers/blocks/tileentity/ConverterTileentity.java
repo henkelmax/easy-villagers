@@ -61,6 +61,9 @@ public class ConverterTileentity extends VillagerTileentity implements ITickable
             }
         }
         if (hasVillager()) {
+            if (advanceAge()) {
+                sync();
+            }
             if (timer == getZombifyTime()) {
                 TraderBlock.playVillagerSound(world, pos, SoundEvents.ENTITY_ZOMBIE_INFECT);
                 sync();

@@ -58,6 +58,10 @@ public class IronFarmTileentity extends VillagerTileentity implements ITickableT
                 }
             }
 
+            if (advanceAge()) {
+                sync();
+            }
+
             timer++;
             markDirty();
 

@@ -1,1 +1,2 @@
-- Made recipes compatible with tags
+- Fixed villagers not growing up in certain blocks
+- Updated to 1.16.4
