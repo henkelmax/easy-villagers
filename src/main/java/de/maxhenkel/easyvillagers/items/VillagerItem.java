@@ -98,7 +98,7 @@ public class VillagerItem extends Item {
         }
         if (world.rand.nextInt(20) == 0) {
             PlayerEntity playerEntity = (PlayerEntity) entity;
-            playerEntity.func_213823_a(SoundEvents.ENTITY_VILLAGER_AMBIENT, SoundCategory.NEUTRAL, 1F, 1F);
+            playerEntity.playSound(SoundEvents.ENTITY_VILLAGER_AMBIENT, SoundCategory.NEUTRAL, 1F, 1F);
         }
     }
 

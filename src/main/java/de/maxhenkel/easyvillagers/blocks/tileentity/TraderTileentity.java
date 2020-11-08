@@ -161,7 +161,7 @@ public class TraderTileentity extends VillagerTileentity implements ITickableTil
         try {
             LAST_RESTOCK.get().set(villagerEntity, world.getGameTime());
             RESTOCK.get().invoke(villagerEntity);
-            TraderBlock.playVillagerSound(world, getPos(), villagerEntity.getVillagerData().getProfession().getWorkSound());
+            TraderBlock.playVillagerSound(world, getPos(), villagerEntity.getVillagerData().getProfession().getSound());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -190,14 +190,14 @@ public class TraderTileentity extends VillagerTileentity implements ITickableTil
     }
 
     @Override
-    public void fromTag(BlockState state, CompoundNBT compound) {
+    public void read(BlockState state, CompoundNBT compound) {
         if (compound.contains("Workstation")) {
             workstation = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(compound.getString("Workstation")));
         } else {
             removeWorkstation();
         }
         nextRestock = compound.getLong("NextRestock");
-        super.fromTag(state, compound);
+        super.read(state, compound);
     }
 
 }

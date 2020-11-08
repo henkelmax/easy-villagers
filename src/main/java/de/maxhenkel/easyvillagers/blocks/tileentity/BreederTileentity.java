@@ -157,7 +157,7 @@ public class BreederTileentity extends FakeWorldTileentity implements ITickableT
         for (int i = 0; i < outputInventory.size(); i++) {
             if (outputInventory.get(i).isEmpty()) {
                 VillagerEntity villagerEntity = new VillagerEntity(EntityType.VILLAGER, world);
-                villagerEntity.setVillagerData(villagerEntity.getVillagerData().withType(VillagerType.forBiome(world.method_31081(getPos()))));
+                villagerEntity.setVillagerData(villagerEntity.getVillagerData().withType(VillagerType.func_242371_a(world.func_242406_i(getPos()))));
                 villagerEntity.setGrowingAge(-24000);
                 ItemStack villager = new ItemStack(ModItems.VILLAGER);
                 ModItems.VILLAGER.setVillager(villager, villagerEntity);
@@ -219,7 +219,7 @@ public class BreederTileentity extends FakeWorldTileentity implements ITickableT
     }
 
     @Override
-    public void fromTag(BlockState state, CompoundNBT compound) {
+    public void read(BlockState state, CompoundNBT compound) {
         if (compound.contains("Villager1")) {
             CompoundNBT comp = compound.getCompound("Villager1");
             villager1 = ItemStack.read(comp);
@@ -236,7 +236,7 @@ public class BreederTileentity extends FakeWorldTileentity implements ITickableT
         }
         ItemStackHelper.loadAllItems(compound.getCompound("FoodInventory"), foodInventory);
         ItemStackHelper.loadAllItems(compound.getCompound("OutputInventory"), outputInventory);
-        super.fromTag(state, compound);
+        super.read(state, compound);
     }
 
     public IInventory getFoodInventory() {

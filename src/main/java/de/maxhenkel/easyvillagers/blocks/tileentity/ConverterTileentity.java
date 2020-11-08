@@ -166,7 +166,7 @@ public class ConverterTileentity extends VillagerTileentity implements ITickable
     }
 
     @Override
-    public void fromTag(BlockState state, CompoundNBT compound) {
+    public void read(BlockState state, CompoundNBT compound) {
         ItemStackHelper.loadAllItems(compound.getCompound("InputInventory"), inputInventory);
         ItemStackHelper.loadAllItems(compound.getCompound("OutputInventory"), outputInventory);
         timer = compound.getLong("Timer");
@@ -175,7 +175,7 @@ public class ConverterTileentity extends VillagerTileentity implements ITickable
         } else {
             owner = null;
         }
-        super.fromTag(state, compound);
+        super.read(state, compound);
     }
 
     public IInventory getInputInventory() {

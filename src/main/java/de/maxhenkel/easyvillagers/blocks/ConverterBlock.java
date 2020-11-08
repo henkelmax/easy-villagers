@@ -37,7 +37,7 @@ import javax.annotation.Nullable;
 public class ConverterBlock extends HorizontalRotatableBlock implements ITileEntityProvider, IItemBlock {
 
     public ConverterBlock() {
-        super(Properties.create(Material.IRON).hardnessAndResistance(2.5F).sound(SoundType.METAL).nonOpaque().luminance(value -> 15));
+        super(Properties.create(Material.IRON).hardnessAndResistance(2.5F).sound(SoundType.METAL).notSolid().setLightLevel(value -> 15));
         setRegistryName(new ResourceLocation(Main.MODID, "converter"));
     }
 
@@ -47,10 +47,10 @@ public class ConverterBlock extends HorizontalRotatableBlock implements ITileEnt
     }
 
     @Override
-    public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         TileEntity tileEntity = worldIn.getTileEntity(pos);
         if (!(tileEntity instanceof ConverterTileentity)) {
-            return super.onUse(state, worldIn, pos, player, handIn, hit);
+            return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
         }
         ConverterTileentity breeder = (ConverterTileentity) tileEntity;
 

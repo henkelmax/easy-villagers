@@ -49,9 +49,9 @@ public class BreederRenderer extends TileEntityRenderer<BreederTileentity> {
         if (breeder.getVillagerEntity1() != null) {
             matrixStack.push();
             matrixStack.translate(0.5D, 1D / 16D, 0.5D);
-            matrixStack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-direction.getHorizontalAngle()));
+            matrixStack.rotate(Vector3f.YP.rotationDegrees(-direction.getHorizontalAngle()));
             matrixStack.translate(-5D / 16D, 0D, 0D);
-            matrixStack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(90));
+            matrixStack.rotate(Vector3f.YP.rotationDegrees(90));
             matrixStack.scale(0.45F, 0.45F, 0.45F);
             renderer.render(breeder.getVillagerEntity1(), 0F, 1F, matrixStack, buffer, combinedLightIn);
             matrixStack.pop();
@@ -61,9 +61,9 @@ public class BreederRenderer extends TileEntityRenderer<BreederTileentity> {
             matrixStack.push();
 
             matrixStack.translate(0.5D, 1D / 16D, 0.5D);
-            matrixStack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-direction.getHorizontalAngle()));
+            matrixStack.rotate(Vector3f.YP.rotationDegrees(-direction.getHorizontalAngle()));
             matrixStack.translate(5D / 16D, 0D, 0D);
-            matrixStack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-90));
+            matrixStack.rotate(Vector3f.YP.rotationDegrees(-90));
             matrixStack.scale(0.45F, 0.45F, 0.45F);
             renderer.render(breeder.getVillagerEntity2(), 0F, 1F, matrixStack, buffer, combinedLightIn);
             matrixStack.pop();
@@ -71,7 +71,7 @@ public class BreederRenderer extends TileEntityRenderer<BreederTileentity> {
 
         matrixStack.push();
         matrixStack.translate(0.5D, 1D / 16D, 0.5D);
-        matrixStack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-direction.getHorizontalAngle()));
+        matrixStack.rotate(Vector3f.YP.rotationDegrees(-direction.getHorizontalAngle()));
         matrixStack.translate(0D, 0D, 3D / 16D);
         matrixStack.translate(-0.5D, 0D, -0.5D);
         matrixStack.scale(0.4F, 0.4F, 0.4F);

@@ -30,14 +30,14 @@ public class TraderItemRenderer extends ItemStackTileEntityRenderer {
     }
 
     @Override
-    public void render(ItemStack itemStack, ItemCameraTransforms.TransformType transformType, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn) {
+    public void func_239207_a_(ItemStack itemStack, ItemCameraTransforms.TransformType transformType, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn) {
         if (renderer == null) {
             renderer = new TraderRenderer(TileEntityRendererDispatcher.instance);
         }
 
         BlockState traderBlock = ModBlocks.TRADER.getDefaultState();
         BlockRendererDispatcher dispatcher = minecraft.getBlockRendererDispatcher();
-        dispatcher.getBlockModelRenderer().renderModel(matrixStack.peek(), buffer.getBuffer(RenderType.getCutoutMipped()), traderBlock, dispatcher.getModelForState(traderBlock), 0, 0, 0, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
+        dispatcher.getBlockModelRenderer().renderModel(matrixStack.getLast(), buffer.getBuffer(RenderType.getCutoutMipped()), traderBlock, dispatcher.getModelForState(traderBlock), 0, 0, 0, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
 
         CompoundNBT blockEntityTag = itemStack.getChildTag("BlockEntityTag");
         if (blockEntityTag == null) {
@@ -47,7 +47,7 @@ public class TraderItemRenderer extends ItemStackTileEntityRenderer {
         TraderTileentity trader = cachedMap.get(itemStack, () -> {
             TraderTileentity traderTileentity = new TraderTileentity();
             traderTileentity.setFakeWorld(minecraft.world);
-            traderTileentity.fromTag(null, blockEntityTag);
+            traderTileentity.read(null, blockEntityTag);
             return traderTileentity;
         });
         renderer.render(trader, 0F, matrixStack, buffer, combinedLightIn, combinedOverlayIn);

@@ -30,14 +30,14 @@ public class FarmerItemRenderer extends ItemStackTileEntityRenderer {
     }
 
     @Override
-    public void render(ItemStack itemStack, ItemCameraTransforms.TransformType transformType, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn) {
+    public void func_239207_a_(ItemStack itemStack, ItemCameraTransforms.TransformType transformType, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn) {
         if (renderer == null) {
             renderer = new FarmerRenderer(TileEntityRendererDispatcher.instance);
         }
 
         BlockState farmerBlock = ModBlocks.FARMER.getDefaultState();
         BlockRendererDispatcher dispatcher = minecraft.getBlockRendererDispatcher();
-        dispatcher.getBlockModelRenderer().renderModel(matrixStack.peek(), buffer.getBuffer(RenderType.getCutoutMipped()), farmerBlock, dispatcher.getModelForState(farmerBlock), 0, 0, 0, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
+        dispatcher.getBlockModelRenderer().renderModel(matrixStack.getLast(), buffer.getBuffer(RenderType.getCutoutMipped()), farmerBlock, dispatcher.getModelForState(farmerBlock), 0, 0, 0, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
 
         CompoundNBT blockEntityTag = itemStack.getChildTag("BlockEntityTag");
         if (blockEntityTag == null) {
@@ -47,7 +47,7 @@ public class FarmerItemRenderer extends ItemStackTileEntityRenderer {
         FarmerTileentity farmer = cachedMap.get(itemStack, () -> {
             FarmerTileentity farmerTileentity = new FarmerTileentity();
             farmerTileentity.setFakeWorld(minecraft.world);
-            farmerTileentity.fromTag(null, blockEntityTag);
+            farmerTileentity.read(null, blockEntityTag);
             return farmerTileentity;
         });
         renderer.render(farmer, 0F, matrixStack, buffer, combinedLightIn, combinedOverlayIn);

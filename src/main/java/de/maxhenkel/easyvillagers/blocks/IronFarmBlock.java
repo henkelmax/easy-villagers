@@ -37,7 +37,7 @@ import javax.annotation.Nullable;
 public class IronFarmBlock extends HorizontalRotatableBlock implements ITileEntityProvider, IItemBlock {
 
     public IronFarmBlock() {
-        super(Properties.create(Material.IRON).hardnessAndResistance(2.5F).sound(SoundType.METAL).nonOpaque().luminance(value -> 15));
+        super(Properties.create(Material.IRON).hardnessAndResistance(2.5F).sound(SoundType.METAL).notSolid().setLightLevel(value -> 15));
         setRegistryName(new ResourceLocation(Main.MODID, "iron_farm"));
     }
 
@@ -47,11 +47,11 @@ public class IronFarmBlock extends HorizontalRotatableBlock implements ITileEnti
     }
 
     @Override
-    public ActionResultType onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         ItemStack heldItem = player.getHeldItem(handIn);
         TileEntity tileEntity = worldIn.getTileEntity(pos);
         if (!(tileEntity instanceof IronFarmTileentity)) {
-            return super.onUse(state, worldIn, pos, player, handIn, hit);
+            return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
         }
         IronFarmTileentity farm = (IronFarmTileentity) tileEntity;
         if (!farm.hasVillager() && heldItem.getItem() instanceof VillagerItem) {

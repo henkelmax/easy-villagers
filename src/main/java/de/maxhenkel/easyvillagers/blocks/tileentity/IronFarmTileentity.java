@@ -99,7 +99,7 @@ public class IronFarmTileentity extends VillagerTileentity implements ITickableT
         LootContext.Builder builder = new LootContext.Builder(serverWorld)
                 .withRandom(serverWorld.rand)
                 .withParameter(LootParameters.THIS_ENTITY, new IronGolemEntity(EntityType.IRON_GOLEM, world))
-                .withParameter(LootParameters.ORIGIN, new Vector3d(pos.getX(), pos.getY(), pos.getZ()))
+                .withParameter(LootParameters.field_237457_g_, new Vector3d(pos.getX(), pos.getY(), pos.getZ()))
                 .withParameter(LootParameters.DAMAGE_SOURCE, DamageSource.LAVA);
 
         LootContext lootContext = builder.build(LootParameterSets.ENTITY);
@@ -121,10 +121,10 @@ public class IronFarmTileentity extends VillagerTileentity implements ITickableT
     }
 
     @Override
-    public void fromTag(BlockState state, CompoundNBT compound) {
+    public void read(BlockState state, CompoundNBT compound) {
         ItemStackHelper.loadAllItems(compound, inventory);
         timer = compound.getLong("Timer");
-        super.fromTag(state, compound);
+        super.read(state, compound);
     }
 
     private IItemHandlerModifiable handler;

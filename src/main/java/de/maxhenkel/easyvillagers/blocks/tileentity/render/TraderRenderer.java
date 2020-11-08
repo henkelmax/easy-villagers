@@ -45,7 +45,7 @@ public class TraderRenderer extends TileEntityRenderer<TraderTileentity> {
             matrixStack.push();
 
             matrixStack.translate(0.5D, 1D / 16D, 0.5D);
-            matrixStack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-direction.getHorizontalAngle()));
+            matrixStack.rotate(Vector3f.YP.rotationDegrees(-direction.getHorizontalAngle()));
             matrixStack.translate(0D, 0D, -4D / 16D);
             matrixStack.scale(0.45F, 0.45F, 0.45F);
             renderer.render(trader.getVillagerEntity(), 0F, 1F, matrixStack, buffer, combinedLightIn);
@@ -56,7 +56,7 @@ public class TraderRenderer extends TileEntityRenderer<TraderTileentity> {
             matrixStack.push();
 
             matrixStack.translate(0.5D, 1D / 16D, 0.5D);
-            matrixStack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-direction.getHorizontalAngle()));
+            matrixStack.rotate(Vector3f.YP.rotationDegrees(-direction.getHorizontalAngle()));
             matrixStack.translate(0D, 0D, 2D / 16D);
             matrixStack.translate(-0.5D, 0D, -0.5D);
             matrixStack.scale(0.45F, 0.45F, 0.45F);
@@ -65,7 +65,7 @@ public class TraderRenderer extends TileEntityRenderer<TraderTileentity> {
             BlockState workstation = trader.getWorkstation().getDefaultState();
             BlockRendererDispatcher dispatcher = minecraft.getBlockRendererDispatcher();
             int color = minecraft.getBlockColors().getColor(workstation, null, null, 0);
-            dispatcher.getBlockModelRenderer().renderModel(matrixStack.peek(), buffer.getBuffer(RenderTypeLookup.getBlockLayer(workstation)), workstation, dispatcher.getModelForState(workstation), RenderUtils.getRed(color), RenderUtils.getGreen(color), RenderUtils.getBlue(color), combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
+            dispatcher.getBlockModelRenderer().renderModel(matrixStack.getLast(), buffer.getBuffer(RenderTypeLookup.func_239221_b_(workstation)), workstation, dispatcher.getModelForState(workstation), RenderUtils.getRed(color), RenderUtils.getGreen(color), RenderUtils.getBlue(color), combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
             matrixStack.pop();
         }
 

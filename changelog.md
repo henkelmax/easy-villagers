@@ -1,2 +1,1 @@
-- Fixed villagers not growing up in certain blocks
-- Updated to 1.16.4
+- Updated dependencies
