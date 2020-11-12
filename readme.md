@@ -1,5 +1,4 @@
-# Easy Villagers ![](http://cf.way2muchnoise.eu/full_400514_downloads.svg)
-![](http://cf.way2muchnoise.eu/versions/400514.svg)
+# Easy Villagers ![](http://cf.way2muchnoise.eu/full_400514_downloads.svg) ![](http://cf.way2muchnoise.eu/versions/400514.svg)
 
 ## Links
 - [CurseForge](https://www.curseforge.com/minecraft/mc-mods/easy-villagers)
