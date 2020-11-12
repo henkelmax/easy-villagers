@@ -1,1 +1,1 @@
-- Fixed block models
+- Re-added JEI support
