@@ -1,1 +1,1 @@
-- Re-added JEI support
+- Updated brazilian translation
