@@ -1,6 +1,6 @@
 {
   "item.easy_villagers.villager": "Aldeão",
-  "item.easy_villagers.baby_villager": "Aldeões bebê",
+  "item.easy_villagers.baby_villager": "Aldeão bebê",
   "block.easy_villagers.trader": "Bloco de Comercio",
   "block.easy_villagers.farmer": "Bloco de Agricultura",
   "block.easy_villagers.breeder": "Bloco de Reprodução",
@@ -10,7 +10,7 @@
   "gui.easy_villagers.output_items": "Saída",
   "gui.easy_villagers.input_villagers": "Entrada de Aldeão",
   "gui.easy_villagers.output_villagers": "Saída de Aldeão",
-  "gui.easy_villagers.output": "Saída de Itens ",
+  "gui.easy_villagers.output": "Saída de Itens",
   "itemGroup.easy_villagers": "Easy Villagers",
   "tooltip.easy_villagers.villager_profession": "%s (%s)",
   "tooltip.easy_villagers.zombie_villager_profession": "%s (%s)"
