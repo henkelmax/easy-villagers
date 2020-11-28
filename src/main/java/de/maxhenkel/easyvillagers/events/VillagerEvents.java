@@ -1,12 +1,17 @@
 package de.maxhenkel.easyvillagers.events;
 
-import de.maxhenkel.corelib.item.ItemUtils;
+import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.items.ModItems;
+import de.maxhenkel.easyvillagers.net.MessagePickUpVillager;
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.LeadItem;
 import net.minecraft.util.ActionResultType;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -25,44 +30,41 @@ public class VillagerEvents {
             return;
         }
 
-        if (villager.removed || villager.getLeashed()) {
+        if (!villager.isAlive() || villager.getLeashed()) {
             event.setCancellationResult(ActionResultType.FAIL);
             event.setCanceled(true);
             return;
         }
 
-        ItemStack heldItem = player.getHeldItem(event.getHand());
+        pickUp(villager, player);
 
-        if (heldItem.getItem() instanceof LeadItem) {
-            villager.setLeashHolder(player, true);
-            ItemUtils.decrItemStack(heldItem, player);
-            event.setCancellationResult(ActionResultType.CONSUME);
-            event.setCanceled(true);
+        event.setCancellationResult(ActionResultType.SUCCESS);
+        event.setCanceled(true);
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    @SubscribeEvent
+    public void onKeyInput(InputEvent.KeyInputEvent event) {
+        if (!Main.PICKUP_KEY.isPressed()) {
             return;
         }
 
+        Entity pointedEntity = Minecraft.getInstance().pointedEntity;
+
+        if (!(pointedEntity instanceof VillagerEntity) || !pointedEntity.isAlive()) {
+            return;
+        }
+
+        Main.SIMPLE_CHANNEL.sendToServer(new MessagePickUpVillager(pointedEntity.getUniqueID()));
+    }
+
+    public static void pickUp(VillagerEntity villager, PlayerEntity player) {
         ItemStack stack = new ItemStack(ModItems.VILLAGER);
 
         ModItems.VILLAGER.setVillager(stack, villager);
 
         if (player.inventory.addItemStackToInventory(stack)) {
             villager.remove();
-        }
-        event.setCancellationResult(ActionResultType.SUCCESS);
-        event.setCanceled(true);
-    }
-
-    @SubscribeEvent
-    public void onClick(PlayerInteractEvent.EntityInteractSpecific event) {
-        if (!(event.getTarget() instanceof VillagerEntity)) {
-            return;
-        }
-
-        VillagerEntity villager = (VillagerEntity) event.getTarget();
-
-        if (villager.getLeashed()) {
-            event.setCancellationResult(ActionResultType.FAIL);
-            event.setCanceled(true);
         }
     }
 

@@ -13,5 +13,6 @@
   "gui.easy_villagers.output": "输出物品",
   "itemGroup.easy_villagers": "Easy Villagers",
   "tooltip.easy_villagers.villager_profession": "%s (%s)",
-  "tooltip.easy_villagers.zombie_villager_profession": "%s (%s)"
+  "tooltip.easy_villagers.zombie_villager_profession": "%s (%s)",
+  "category.easy_villagers": "Easy Villagers"
 }

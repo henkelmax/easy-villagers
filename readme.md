@@ -14,7 +14,7 @@ There are also blocks that substitute every farm that includes villagers.
  
 ## The Villager Item
 
-The villager item can be obtained by sneaking and right-clicking a villager.
+The villager item can be obtained by sneaking and right-clicking a villager or pressing the `V` key.
 
 ![](https://media.giphy.com/media/LnvMxJIQ0QwDARBMLn/giphy.gif)
 

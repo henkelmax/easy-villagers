@@ -1,1 +1,1 @@
-- Updated brazilian translation
+- Added a keybind to pick up villagers

@@ -15,5 +15,6 @@
   "tooltip.easy_villagers.villager_profession": "%s (%s)",
   "tooltip.easy_villagers.zombie_villager_profession": "%s (%s)",
   "jei.easy_villagers.breeding": "Разведение",
-  "jei.easy_villagers.converting": "Преобразование"
+  "jei.easy_villagers.converting": "Преобразование",
+  "category.easy_villagers": "Легкие жители"
 }
