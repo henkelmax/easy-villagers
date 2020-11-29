@@ -37,6 +37,7 @@ public class Main {
     public static final Logger LOGGER = LogManager.getLogger(MODID);
 
     public static ServerConfig SERVER_CONFIG;
+    public static ClientConfig CLIENT_CONFIG;
 
     public static SimpleChannel SIMPLE_CHANNEL;
     public static KeyBinding PICKUP_KEY;
@@ -50,6 +51,7 @@ public class Main {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
 
         SERVER_CONFIG = CommonRegistry.registerConfig(ModConfig.Type.SERVER, ServerConfig.class);
+        CLIENT_CONFIG = CommonRegistry.registerConfig(ModConfig.Type.CLIENT, ClientConfig.class);
 
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> FMLJavaModLoadingContext.get().getModEventBus().addListener(Main.this::clientSetup));
     }

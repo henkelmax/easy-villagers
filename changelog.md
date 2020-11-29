@@ -1,1 +1,1 @@
-- Added a keybind to pick up villagers
+- Added a config option to disable sneak + right-click pickup

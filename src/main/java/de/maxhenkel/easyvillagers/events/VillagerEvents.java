@@ -23,6 +23,10 @@ public class VillagerEvents {
             return;
         }
 
+        if (!Main.CLIENT_CONFIG.enableRightClickPickup.get()) {
+            return;
+        }
+
         VillagerEntity villager = (VillagerEntity) event.getTarget();
         PlayerEntity player = event.getPlayer();
 
@@ -30,9 +34,7 @@ public class VillagerEvents {
             return;
         }
 
-        if (!villager.isAlive() || villager.getLeashed()) {
-            event.setCancellationResult(ActionResultType.FAIL);
-            event.setCanceled(true);
+        if (!villager.isAlive()) {
             return;
         }
 
