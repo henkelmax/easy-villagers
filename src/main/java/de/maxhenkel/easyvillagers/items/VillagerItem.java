@@ -115,6 +115,7 @@ public class VillagerItem extends Item {
 
         VillagerEntity villager = new VillagerEntity(EntityType.VILLAGER, world);
         villager.readAdditional(compound);
+        villager.hurtTime = 0;
         return villager;
     }
 

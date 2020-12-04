@@ -1,1 +1,1 @@
-- Added a config option to disable sneak + right-click pickup
+- Fixed villagers red when recently hit
