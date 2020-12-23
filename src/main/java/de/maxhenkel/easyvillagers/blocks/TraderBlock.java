@@ -113,7 +113,7 @@ public class TraderBlock extends HorizontalRotatableBlock implements ITileEntity
     }
 
     public static void playVillagerSound(World world, BlockPos pos, SoundEvent soundEvent) {
-        world.playSound(null, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, soundEvent, SoundCategory.NEUTRAL, 1F, 1F);
+        world.playSound(null, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, soundEvent, SoundCategory.BLOCKS, 1F, 1F);
     }
 
     @Nullable

@@ -1,1 +1,2 @@
-- Fixed villagers red when recently hit
+- Moved villager sounds to block category
+- Added villager volume config option
