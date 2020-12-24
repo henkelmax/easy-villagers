@@ -11,7 +11,7 @@ public class ModSoundEvents {
 
     @SubscribeEvent
     public void onSound(PlaySoundAtEntityEvent event) {
-        if (isVillagerSound(event.getSound()) && event.getCategory().equals(SoundCategory.BLOCKS)) {
+        if (event.getSound() != null && event.getCategory() != null && isVillagerSound(event.getSound()) && event.getCategory().equals(SoundCategory.BLOCKS)) {
             event.setVolume(Main.CLIENT_CONFIG.villagerVolume.get().floatValue());
         }
     }

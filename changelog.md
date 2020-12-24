@@ -1,2 +1,2 @@
-- Moved villager sounds to block category
-- Added villager volume config option
+- Fixed crash with XNet
+- Fixed exception when playing sound

@@ -250,7 +250,7 @@ public class BreederTileentity extends FakeWorldTileentity implements ITickableT
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
         if (!removed && cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            if (side.equals(Direction.DOWN)) {
+            if (side != null && side.equals(Direction.DOWN)) {
                 return LazyOptional.of(this::getOutputInventoryItemHandler).cast();
             } else {
                 return LazyOptional.of(this::getFoodInventoryItemHandler).cast();
