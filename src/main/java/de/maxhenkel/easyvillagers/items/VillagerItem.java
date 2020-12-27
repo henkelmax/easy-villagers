@@ -105,6 +105,9 @@ public class VillagerItem extends Item {
     public void setVillager(ItemStack stack, VillagerEntity villager) {
         CompoundNBT compound = stack.getOrCreateChildTag("villager");
         villager.writeAdditional(compound);
+        if (villager.hasCustomName()) {
+            stack.setDisplayName(villager.getCustomName());
+        }
     }
 
     public VillagerEntity getVillager(World world, ItemStack stack) {
@@ -115,6 +118,11 @@ public class VillagerItem extends Item {
 
         VillagerEntity villager = new VillagerEntity(EntityType.VILLAGER, world);
         villager.readAdditional(compound);
+
+        if (stack.hasDisplayName()) {
+            villager.setCustomName(stack.getDisplayName());
+        }
+
         villager.hurtTime = 0;
         return villager;
     }

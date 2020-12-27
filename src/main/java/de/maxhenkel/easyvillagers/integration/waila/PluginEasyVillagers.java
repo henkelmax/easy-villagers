@@ -10,6 +10,7 @@ import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.IFormattableTextComponent;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 
@@ -38,8 +39,11 @@ public class PluginEasyVillagers implements IWailaPlugin {
     }
 
     @Nullable
-    public static IFormattableTextComponent getVillager(VillagerEntity villager) {
+    public static ITextComponent getVillager(VillagerEntity villager) {
         if (villager != null) {
+            if (villager.hasCustomName()) {
+                return villager.getCustomName();
+            }
             VillagerData villagerData = villager.getVillagerData();
             VillagerProfession profession = villagerData.getProfession();
             if (profession.equals(VillagerProfession.NONE) || profession.equals(VillagerProfession.NITWIT)) {

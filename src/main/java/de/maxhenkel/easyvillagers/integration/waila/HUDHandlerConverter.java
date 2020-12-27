@@ -6,7 +6,6 @@ import mcp.mobius.waila.api.IDataAccessor;
 import mcp.mobius.waila.api.IPluginConfig;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
-import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -37,7 +36,7 @@ public class HUDHandlerConverter implements IComponentProvider {
                     ).mergeStyle(TextFormatting.GRAY));
                 }
             } else {
-                IFormattableTextComponent villager = PluginEasyVillagers.getVillager(villagerEntity);
+                ITextComponent villager = PluginEasyVillagers.getVillager(villagerEntity);
                 if (villager != null) {
                     tooltip.add(villager);
                 }

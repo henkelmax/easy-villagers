@@ -4,7 +4,6 @@ import de.maxhenkel.easyvillagers.blocks.tileentity.VillagerTileentity;
 import mcp.mobius.waila.api.IComponentProvider;
 import mcp.mobius.waila.api.IDataAccessor;
 import mcp.mobius.waila.api.IPluginConfig;
-import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 
 import java.util.List;
@@ -20,7 +19,7 @@ public class HUDHandlerVillager implements IComponentProvider {
         }
         VillagerTileentity tileEntity = (VillagerTileentity) accessor.getTileEntity();
 
-        IFormattableTextComponent villager = PluginEasyVillagers.getVillager(tileEntity.getVillagerEntity());
+        ITextComponent villager = PluginEasyVillagers.getVillager(tileEntity.getVillagerEntity());
         if (villager != null) {
             tooltip.add(villager);
         }
