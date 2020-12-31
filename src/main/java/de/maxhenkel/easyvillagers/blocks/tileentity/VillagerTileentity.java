@@ -62,13 +62,22 @@ public class VillagerTileentity extends FakeWorldTileentity {
         return advanceAge(getVillagerEntity());
     }
 
-    public static boolean advanceAge(VillagerEntity villagerEntity) {
+    public boolean advanceAge(int amount) {
+        return advanceAge(getVillagerEntity(), amount);
+    }
+
+    public static boolean advanceAge(VillagerEntity villagerEntity, int amount) {
         if (villagerEntity == null) {
             return false;
         }
-        int age = villagerEntity.getGrowingAge() + 1;
+        int prevAge = villagerEntity.getGrowingAge();
+        int age = prevAge + amount;
         villagerEntity.setGrowingAge(age);
-        return age == 0;
+        return prevAge < 0 && age >= 0;
+    }
+
+    public static boolean advanceAge(VillagerEntity villagerEntity) {
+        return advanceAge(villagerEntity, 1);
     }
 
     @Override

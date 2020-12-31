@@ -28,6 +28,7 @@ public class PluginEasyVillagers implements IWailaPlugin {
         registrar.registerComponentProvider(HUDHandlerVillager.INSTANCE, TooltipPosition.BODY, TraderTileentity.class);
         registrar.registerComponentProvider(HUDHandlerVillager.INSTANCE, TooltipPosition.BODY, IronFarmTileentity.class);
         registrar.registerComponentProvider(HUDHandlerVillager.INSTANCE, TooltipPosition.BODY, FarmerTileentity.class);
+        registrar.registerComponentProvider(HUDHandlerVillager.INSTANCE, TooltipPosition.BODY, IncubatorTileentity.class);
 
         registrar.registerComponentProvider(HUDHandlerConverter.INSTANCE, TooltipPosition.BODY, ConverterTileentity.class);
 

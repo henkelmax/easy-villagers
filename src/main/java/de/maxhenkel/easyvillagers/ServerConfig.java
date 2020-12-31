@@ -12,6 +12,7 @@ public class ServerConfig extends ConfigBase {
     public final ForgeConfigSpec.IntValue traderMinRestockTime;
     public final ForgeConfigSpec.IntValue traderMaxRestockTime;
     public final ForgeConfigSpec.BooleanValue villagerInventorySounds;
+    public final ForgeConfigSpec.IntValue incubatorSpeed;
 
     public ServerConfig(ForgeConfigSpec.Builder builder) {
         super(builder);
@@ -44,6 +45,10 @@ public class ServerConfig extends ConfigBase {
         villagerInventorySounds = builder
                 .comment("If villagers should make sounds while in the players inventory")
                 .define("villager.inventory_sounds", true);
+
+        incubatorSpeed = builder
+                .comment("The speed at which the incubator ages the villagers")
+                .defineInRange("incubator.speed", 2, 1, 1024);
     }
 
 }

@@ -1,3 +1,1 @@
-- Villagers can now be named in the anvil
-- Villager items show the villagers custom name
-- Fixed HWYLA tooltip not showing custom villager names
+- Added the incubator

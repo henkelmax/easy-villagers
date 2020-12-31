@@ -3,8 +3,8 @@ package de.maxhenkel.easyvillagers.items.render;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import de.maxhenkel.corelib.CachedMap;
 import de.maxhenkel.easyvillagers.blocks.ModBlocks;
-import de.maxhenkel.easyvillagers.blocks.tileentity.ConverterTileentity;
-import de.maxhenkel.easyvillagers.blocks.tileentity.render.ConverterRenderer;
+import de.maxhenkel.easyvillagers.blocks.tileentity.IncubatorTileentity;
+import de.maxhenkel.easyvillagers.blocks.tileentity.render.IncubatorRenderer;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
@@ -17,14 +17,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.client.model.data.EmptyModelData;
 
-public class ConverterItemRenderer extends ItemStackTileEntityRenderer {
+public class IncubatorItemRenderer extends ItemStackTileEntityRenderer {
 
-    private ConverterRenderer renderer;
+    private IncubatorRenderer renderer;
     private Minecraft minecraft;
 
-    private CachedMap<ItemStack, ConverterTileentity> cachedMap;
+    private CachedMap<ItemStack, IncubatorTileentity> cachedMap;
 
-    public ConverterItemRenderer() {
+    public IncubatorItemRenderer() {
         cachedMap = new CachedMap<>(10_000L);
         minecraft = Minecraft.getInstance();
     }
@@ -32,25 +32,25 @@ public class ConverterItemRenderer extends ItemStackTileEntityRenderer {
     @Override
     public void func_239207_a_(ItemStack itemStack, ItemCameraTransforms.TransformType transformType, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn) {
         if (renderer == null) {
-            renderer = new ConverterRenderer(TileEntityRendererDispatcher.instance);
+            renderer = new IncubatorRenderer(TileEntityRendererDispatcher.instance);
         }
 
-        BlockState converterBlock = ModBlocks.CONVERTER.getDefaultState();
+        BlockState incubatorBlock = ModBlocks.INCUBATOR.getDefaultState();
         BlockRendererDispatcher dispatcher = minecraft.getBlockRendererDispatcher();
-        dispatcher.getBlockModelRenderer().renderModel(matrixStack.getLast(), buffer.getBuffer(RenderType.getCutoutMipped()), converterBlock, dispatcher.getModelForState(converterBlock), 0, 0, 0, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
+        dispatcher.getBlockModelRenderer().renderModel(matrixStack.getLast(), buffer.getBuffer(RenderType.getCutoutMipped()), incubatorBlock, dispatcher.getModelForState(incubatorBlock), 0, 0, 0, combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
 
         CompoundNBT blockEntityTag = itemStack.getChildTag("BlockEntityTag");
         if (blockEntityTag == null) {
             return;
         }
 
-        ConverterTileentity converter = cachedMap.get(itemStack, () -> {
-            ConverterTileentity b = new ConverterTileentity();
+        IncubatorTileentity incubator = cachedMap.get(itemStack, () -> {
+            IncubatorTileentity b = new IncubatorTileentity();
             b.setFakeWorld(minecraft.world);
             b.read(null, blockEntityTag);
             return b;
         });
-        renderer.render(converter, 0F, matrixStack, buffer, combinedLightIn, combinedOverlayIn);
+        renderer.render(incubator, 0F, matrixStack, buffer, combinedLightIn, combinedOverlayIn);
     }
 
 }

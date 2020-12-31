@@ -15,6 +15,7 @@ public class ModBlocks {
     public static final BreederBlock BREEDER = new BreederBlock();
     public static final ConverterBlock CONVERTER = new ConverterBlock();
     public static final IronFarmBlock IRON_FARM = new IronFarmBlock();
+    public static final IncubatorBlock INCUBATOR = new IncubatorBlock();
 
     public static void registerBlocks(RegistryEvent.Register<Block> event) {
         event.getRegistry().registerAll(
@@ -22,7 +23,8 @@ public class ModBlocks {
                 FARMER,
                 BREEDER,
                 CONVERTER,
-                IRON_FARM
+                IRON_FARM,
+                INCUBATOR
         );
 
         if (FMLEnvironment.dist == Dist.CLIENT) {
@@ -31,6 +33,7 @@ public class ModBlocks {
             RenderTypeLookup.setRenderLayer(BREEDER, RenderType.getCutout());
             RenderTypeLookup.setRenderLayer(CONVERTER, RenderType.getCutout());
             RenderTypeLookup.setRenderLayer(IRON_FARM, RenderType.getCutout());
+            RenderTypeLookup.setRenderLayer(INCUBATOR, RenderType.getCutout());
         }
     }
 
@@ -40,7 +43,8 @@ public class ModBlocks {
                 FARMER.toItem(),
                 BREEDER.toItem(),
                 CONVERTER.toItem(),
-                IRON_FARM.toItem()
+                IRON_FARM.toItem(),
+                INCUBATOR.toItem()
         );
     }
 

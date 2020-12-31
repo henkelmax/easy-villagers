@@ -17,6 +17,7 @@ public class ModTileEntities {
     public static TileEntityType<BreederTileentity> BREEDER;
     public static TileEntityType<ConverterTileentity> CONVERTER;
     public static TileEntityType<IronFarmTileentity> IRON_FARM;
+    public static TileEntityType<IncubatorTileentity> INCUBATOR;
 
     public static void registerTileEntities(RegistryEvent.Register<TileEntityType<?>> event) {
         TRADER = TileEntityType.Builder.create(TraderTileentity::new, ModBlocks.TRADER).build(null);
@@ -38,6 +39,10 @@ public class ModTileEntities {
         IRON_FARM = TileEntityType.Builder.create(IronFarmTileentity::new, ModBlocks.IRON_FARM).build(null);
         IRON_FARM.setRegistryName(new ResourceLocation(Main.MODID, "iron_farm"));
         event.getRegistry().register(IRON_FARM);
+
+        INCUBATOR = TileEntityType.Builder.create(IncubatorTileentity::new, ModBlocks.INCUBATOR).build(null);
+        INCUBATOR.setRegistryName(new ResourceLocation(Main.MODID, "incubator"));
+        event.getRegistry().register(INCUBATOR);
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -47,6 +52,7 @@ public class ModTileEntities {
         ClientRegistry.bindTileEntityRenderer(ModTileEntities.BREEDER, BreederRenderer::new);
         ClientRegistry.bindTileEntityRenderer(ModTileEntities.CONVERTER, ConverterRenderer::new);
         ClientRegistry.bindTileEntityRenderer(ModTileEntities.IRON_FARM, IronFarmRenderer::new);
+        ClientRegistry.bindTileEntityRenderer(ModTileEntities.INCUBATOR, IncubatorRenderer::new);
     }
 
 }

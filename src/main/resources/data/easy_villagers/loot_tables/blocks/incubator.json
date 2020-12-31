@@ -25,21 +25,11 @@
                   "source": "OutputInventory",
                   "target": "BlockEntityTag.OutputInventory",
                   "op": "replace"
-                },
-                {
-                  "source": "Timer",
-                  "target": "BlockEntityTag.Timer",
-                  "op": "replace"
-                },
-                {
-                  "source": "Owner",
-                  "target": "BlockEntityTag.Owner",
-                  "op": "replace"
                 }
               ]
             }
           ],
-          "name": "easy_villagers:converter"
+          "name": "easy_villagers:incubator"
         }
       ]
     }
