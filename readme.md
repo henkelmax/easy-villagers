@@ -57,6 +57,10 @@ This averages about one iron ingot per minute.
 
 ![](https://media.giphy.com/media/cMK6vI8EgSWA1Tzete/giphy.gif)
 
+## The Incubator Block
+
+The incubator block increases the growth rate of baby villagers.
+The speed can be changed in the config.
 
 ---
 
