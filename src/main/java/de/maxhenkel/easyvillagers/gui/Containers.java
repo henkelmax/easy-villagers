@@ -10,35 +10,35 @@ import net.minecraftforge.event.RegistryEvent;
 
 public class Containers {
 
+    public static ContainerType<AutoTraderContainer> AUTO_TRADER_CONTAINER;
     public static ContainerType<BreederContainer> BREEDER_CONTAINER;
-    public static ContainerType<ConverterContainer> CONVERTER_CONTAINER;
+    public static ContainerType<VillagerIOContainer> VILLAGER_IO_CONTAINER;
     public static ContainerType<OutputContainer> OUTPUT_CONTAINER;
-    public static ContainerType<IncubatorContainer> INCUBATOR_CONTAINER;
 
     @OnlyIn(Dist.CLIENT)
     public static void clientSetup() {
+        ClientRegistry.<AutoTraderContainer, AutoTraderScreen>registerScreen(AUTO_TRADER_CONTAINER, AutoTraderScreen::new);
         ClientRegistry.<BreederContainer, BreederScreen>registerScreen(BREEDER_CONTAINER, BreederScreen::new);
-        ClientRegistry.<ConverterContainer, ConverterScreen>registerScreen(CONVERTER_CONTAINER, ConverterScreen::new);
+        ClientRegistry.<VillagerIOContainer, VillagerIOScreen>registerScreen(VILLAGER_IO_CONTAINER, VillagerIOScreen::new);
         ClientRegistry.<OutputContainer, OutputScreen>registerScreen(OUTPUT_CONTAINER, OutputScreen::new);
-        ClientRegistry.<IncubatorContainer, IncubatorScreen>registerScreen(INCUBATOR_CONTAINER, IncubatorScreen::new);
     }
 
     public static void registerContainers(RegistryEvent.Register<ContainerType<?>> event) {
+        AUTO_TRADER_CONTAINER = new ContainerType<>(AutoTraderContainer::new);
+        AUTO_TRADER_CONTAINER.setRegistryName(new ResourceLocation(Main.MODID, "auto_trader"));
+        event.getRegistry().register(AUTO_TRADER_CONTAINER);
+
         BREEDER_CONTAINER = new ContainerType<>(BreederContainer::new);
         BREEDER_CONTAINER.setRegistryName(new ResourceLocation(Main.MODID, "breeder"));
         event.getRegistry().register(BREEDER_CONTAINER);
 
-        CONVERTER_CONTAINER = new ContainerType<>(ConverterContainer::new);
-        CONVERTER_CONTAINER.setRegistryName(new ResourceLocation(Main.MODID, "converter"));
-        event.getRegistry().register(CONVERTER_CONTAINER);
+        VILLAGER_IO_CONTAINER = new ContainerType<>(VillagerIOContainer::new);
+        VILLAGER_IO_CONTAINER.setRegistryName(new ResourceLocation(Main.MODID, "converter"));
+        event.getRegistry().register(VILLAGER_IO_CONTAINER);
 
         OUTPUT_CONTAINER = new ContainerType<>(OutputContainer::new);
         OUTPUT_CONTAINER.setRegistryName(new ResourceLocation(Main.MODID, "output"));
         event.getRegistry().register(OUTPUT_CONTAINER);
-
-        INCUBATOR_CONTAINER = new ContainerType<>(IncubatorContainer::new);
-        INCUBATOR_CONTAINER.setRegistryName(new ResourceLocation(Main.MODID, "incubator"));
-        event.getRegistry().register(INCUBATOR_CONTAINER);
     }
 
 }

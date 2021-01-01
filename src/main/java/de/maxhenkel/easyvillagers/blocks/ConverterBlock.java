@@ -4,7 +4,7 @@ import de.maxhenkel.corelib.block.IItemBlock;
 import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.ModItemGroups;
 import de.maxhenkel.easyvillagers.blocks.tileentity.ConverterTileentity;
-import de.maxhenkel.easyvillagers.gui.ConverterContainer;
+import de.maxhenkel.easyvillagers.gui.VillagerIOContainer;
 import de.maxhenkel.easyvillagers.items.render.ConverterItemRenderer;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -63,7 +63,7 @@ public class ConverterBlock extends HorizontalRotatableBlock implements ITileEnt
             @Nullable
             @Override
             public Container createMenu(int id, PlayerInventory playerInventory, PlayerEntity player) {
-                return new ConverterContainer(id, playerInventory, converter.getInputInventory(), converter.getOutputInventory());
+                return new VillagerIOContainer(id, playerInventory, converter.getInputInventory(), converter.getOutputInventory());
             }
         });
 

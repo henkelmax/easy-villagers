@@ -9,6 +9,7 @@ import de.maxhenkel.easyvillagers.events.VillagerEvents;
 import de.maxhenkel.easyvillagers.gui.Containers;
 import de.maxhenkel.easyvillagers.items.ModItems;
 import de.maxhenkel.easyvillagers.net.MessagePickUpVillager;
+import de.maxhenkel.easyvillagers.net.MessageSelectTrade;
 import de.maxhenkel.easyvillagers.net.MessageVillagerParticles;
 import net.minecraft.block.Block;
 import net.minecraft.client.settings.KeyBinding;
@@ -64,6 +65,7 @@ public class Main {
         SIMPLE_CHANNEL = CommonRegistry.registerChannel(Main.MODID, "default");
         CommonRegistry.registerMessage(SIMPLE_CHANNEL, 0, MessageVillagerParticles.class);
         CommonRegistry.registerMessage(SIMPLE_CHANNEL, 1, MessagePickUpVillager.class);
+        CommonRegistry.registerMessage(SIMPLE_CHANNEL, 2, MessageSelectTrade.class);
     }
 
     @OnlyIn(Dist.CLIENT)

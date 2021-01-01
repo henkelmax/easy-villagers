@@ -1,0 +1,8 @@
+{
+    "variants": {
+        "facing=north": { "model": "easy_villagers:block/auto_trader" },
+        "facing=south": { "model": "easy_villagers:block/auto_trader", "y": 180 },
+        "facing=west": { "model": "easy_villagers:block/auto_trader", "y": 270 },
+        "facing=east": { "model": "easy_villagers:block/auto_trader", "y": 90 }
+    }
+}

@@ -5,9 +5,9 @@ import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
-public class IncubatorScreen extends InputOutputScreen<IncubatorContainer> {
+public class VillagerIOScreen extends InputOutputScreen<VillagerIOContainer> {
 
-    public IncubatorScreen(IncubatorContainer container, PlayerInventory playerInventory, ITextComponent name) {
+    public VillagerIOScreen(VillagerIOContainer container, PlayerInventory playerInventory, ITextComponent name) {
         super(container, playerInventory, name);
     }
 

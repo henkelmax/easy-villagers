@@ -4,7 +4,7 @@ import de.maxhenkel.corelib.block.IItemBlock;
 import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.ModItemGroups;
 import de.maxhenkel.easyvillagers.blocks.tileentity.IncubatorTileentity;
-import de.maxhenkel.easyvillagers.gui.IncubatorContainer;
+import de.maxhenkel.easyvillagers.gui.VillagerIOContainer;
 import de.maxhenkel.easyvillagers.items.render.IncubatorItemRenderer;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -61,7 +61,7 @@ public class IncubatorBlock extends HorizontalRotatableBlock implements ITileEnt
             @Nullable
             @Override
             public Container createMenu(int id, PlayerInventory playerInventory, PlayerEntity player) {
-                return new IncubatorContainer(id, playerInventory, incubator.getInputInventory(), incubator.getOutputInventory());
+                return new VillagerIOContainer(id, playerInventory, incubator.getInputInventory(), incubator.getOutputInventory());
             }
         });
 

@@ -13,6 +13,7 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 public class ModTileEntities {
 
     public static TileEntityType<TraderTileentity> TRADER;
+    public static TileEntityType<AutoTraderTileentity> AUTO_TRADER;
     public static TileEntityType<FarmerTileentity> FARMER;
     public static TileEntityType<BreederTileentity> BREEDER;
     public static TileEntityType<ConverterTileentity> CONVERTER;
@@ -23,6 +24,10 @@ public class ModTileEntities {
         TRADER = TileEntityType.Builder.create(TraderTileentity::new, ModBlocks.TRADER).build(null);
         TRADER.setRegistryName(new ResourceLocation(Main.MODID, "trader"));
         event.getRegistry().register(TRADER);
+
+        AUTO_TRADER = TileEntityType.Builder.create(AutoTraderTileentity::new, ModBlocks.AUTO_TRADER).build(null);
+        AUTO_TRADER.setRegistryName(new ResourceLocation(Main.MODID, "auto_trader"));
+        event.getRegistry().register(AUTO_TRADER);
 
         FARMER = TileEntityType.Builder.create(FarmerTileentity::new, ModBlocks.FARMER).build(null);
         FARMER.setRegistryName(new ResourceLocation(Main.MODID, "farmer"));
@@ -48,6 +53,7 @@ public class ModTileEntities {
     @OnlyIn(Dist.CLIENT)
     public static void clientSetup() {
         ClientRegistry.bindTileEntityRenderer(ModTileEntities.TRADER, TraderRenderer::new);
+        ClientRegistry.bindTileEntityRenderer(ModTileEntities.AUTO_TRADER, AutoTraderRenderer::new);
         ClientRegistry.bindTileEntityRenderer(ModTileEntities.FARMER, FarmerRenderer::new);
         ClientRegistry.bindTileEntityRenderer(ModTileEntities.BREEDER, BreederRenderer::new);
         ClientRegistry.bindTileEntityRenderer(ModTileEntities.CONVERTER, ConverterRenderer::new);

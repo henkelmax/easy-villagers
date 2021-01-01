@@ -1,1 +1,1 @@
-- Added the incubator
+- Added the auto trader

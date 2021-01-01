@@ -11,6 +11,7 @@ import net.minecraftforge.fml.loading.FMLEnvironment;
 public class ModBlocks {
 
     public static final TraderBlock TRADER = new TraderBlock();
+    public static final AutoTraderBlock AUTO_TRADER = new AutoTraderBlock();
     public static final FarmerBlock FARMER = new FarmerBlock();
     public static final BreederBlock BREEDER = new BreederBlock();
     public static final ConverterBlock CONVERTER = new ConverterBlock();
@@ -20,6 +21,7 @@ public class ModBlocks {
     public static void registerBlocks(RegistryEvent.Register<Block> event) {
         event.getRegistry().registerAll(
                 TRADER,
+                AUTO_TRADER,
                 FARMER,
                 BREEDER,
                 CONVERTER,
@@ -29,6 +31,7 @@ public class ModBlocks {
 
         if (FMLEnvironment.dist == Dist.CLIENT) {
             RenderTypeLookup.setRenderLayer(TRADER, RenderType.getCutout());
+            RenderTypeLookup.setRenderLayer(AUTO_TRADER, RenderType.getCutout());
             RenderTypeLookup.setRenderLayer(FARMER, RenderType.getCutout());
             RenderTypeLookup.setRenderLayer(BREEDER, RenderType.getCutout());
             RenderTypeLookup.setRenderLayer(CONVERTER, RenderType.getCutout());
@@ -40,6 +43,7 @@ public class ModBlocks {
     public static void registerItems(RegistryEvent.Register<Item> event) {
         event.getRegistry().registerAll(
                 TRADER.toItem(),
+                AUTO_TRADER.toItem(),
                 FARMER.toItem(),
                 BREEDER.toItem(),
                 CONVERTER.toItem(),
