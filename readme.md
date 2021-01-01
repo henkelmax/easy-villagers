@@ -24,10 +24,20 @@ The villager item can be placed by right-clicking on the ground.
 
 ## The Trader Block
 
-The trader block allows to trade with the villager without having to deal with securing the villager. 
-This block also allows the villager to restock in non working hours.
+The trader block allows trading with the villager without having to deal with securing the villager. 
+This block also allows the villager to restock in non-working hours.
+The restocking time of the villager is not dependent on any external sources like day/night time or dimension.
+You can customize the trading interval in the config.
 
 ![](https://media.giphy.com/media/hQosKTXihKZuRlEmcy/giphy.gif)
+
+## The Auto Trader Block
+
+The auto trader works exactly line the trader block, except it automatically trades items for you.
+You can also automatically put items in and take items out with a hopper.
+The cooldown between trades is fully configurable.
+
+![](https://media.giphy.com/media/VSEnGAkDcXRRRGNmuf/giphy.gif)
 
 ## The Farmer Block
 
