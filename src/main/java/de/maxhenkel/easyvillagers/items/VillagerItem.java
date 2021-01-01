@@ -4,6 +4,7 @@ import de.maxhenkel.corelib.CachedMap;
 import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.items.render.VillagerItemRenderer;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.DispenserBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
@@ -35,6 +36,17 @@ public class VillagerItem extends Item {
     public VillagerItem() {
         super(new Item.Properties().maxStackSize(1).setISTER(() -> VillagerItemRenderer::new));
         cachedVillagers = new CachedMap<>(10_000);
+
+        DispenserBlock.registerDispenseBehavior(this, (source, stack) -> {
+            Direction direction = source.getBlockState().get(DispenserBlock.FACING);
+            BlockPos blockpos = source.getBlockPos().offset(direction);
+            World world = source.getWorld();
+            VillagerEntity villager = getVillager(world, stack);
+            villager.setPositionAndRotation(blockpos.getX() + 0.5D, blockpos.getY(), blockpos.getZ() + 0.5D, direction.getHorizontalAngle(), 0F);
+            world.addEntity(villager);
+            stack.shrink(1);
+            return stack;
+        });
     }
 
     @Override

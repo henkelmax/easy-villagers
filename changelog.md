@@ -1,1 +1,1 @@
-- Added the auto trader
+- Added dispensing villagers
