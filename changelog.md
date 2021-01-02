@@ -1,1 +1,1 @@
-- Updated brazilian portuguese language
+- Fixed villager names in HWYLA tooltips
