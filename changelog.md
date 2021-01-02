@@ -1,1 +1,1 @@
-- Added dispensing villagers
+- Updated brazilian portuguese language
