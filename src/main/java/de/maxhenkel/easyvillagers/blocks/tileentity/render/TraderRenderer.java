@@ -4,6 +4,8 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import de.maxhenkel.corelib.client.RenderUtils;
 import de.maxhenkel.easyvillagers.blocks.TraderBlock;
 import de.maxhenkel.easyvillagers.blocks.tileentity.TraderTileentity;
+import de.maxhenkel.easyvillagers.blocks.tileentity.TraderTileentityBase;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
@@ -14,8 +16,14 @@ import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.client.model.data.EmptyModelData;
+import net.minecraftforge.registries.ForgeRegistries;
+
+import javax.annotation.Nullable;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TraderRenderer extends TileEntityRenderer<TraderTileentity> {
 
@@ -30,12 +38,14 @@ public class TraderRenderer extends TileEntityRenderer<TraderTileentity> {
 
     @Override
     public void render(TraderTileentity trader, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn) {
-        matrixStack.push();
-
         if (renderer == null) {
             renderer = new VillagerRenderer(minecraft.getRenderManager(), (IReloadableResourceManager) minecraft.getResourceManager());
         }
+        renderTraderBase(minecraft, renderer, trader, partialTicks, matrixStack, buffer, combinedLightIn, combinedOverlayIn);
+    }
 
+    public static void renderTraderBase(Minecraft minecraft, VillagerRenderer renderer, TraderTileentityBase trader, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn) {
+        matrixStack.push();
         Direction direction = Direction.SOUTH;
         if (!trader.isFakeWorld()) {
             direction = trader.getBlockState().get(TraderBlock.FACING);
@@ -66,10 +76,43 @@ public class TraderRenderer extends TileEntityRenderer<TraderTileentity> {
             BlockRendererDispatcher dispatcher = minecraft.getBlockRendererDispatcher();
             int color = minecraft.getBlockColors().getColor(workstation, null, null, 0);
             dispatcher.getBlockModelRenderer().renderModel(matrixStack.getLast(), buffer.getBuffer(RenderTypeLookup.func_239221_b_(workstation)), workstation, dispatcher.getModelForState(workstation), RenderUtils.getRed(color), RenderUtils.getGreen(color), RenderUtils.getBlue(color), combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
+            BlockState topBlock = getTopBlock(workstation);
+            if (topBlock != null) {
+                matrixStack.translate(0D, 1D, 0D);
+                dispatcher.getBlockModelRenderer().renderModel(matrixStack.getLast(), buffer.getBuffer(RenderTypeLookup.func_239221_b_(topBlock)), topBlock, dispatcher.getModelForState(topBlock), RenderUtils.getRed(color), RenderUtils.getGreen(color), RenderUtils.getBlue(color), combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
+            }
             matrixStack.pop();
         }
 
         matrixStack.pop();
+    }
+
+    public static final Map<ResourceLocation, ResourceLocation> TOP_BLOCKS = new HashMap<>();
+    private static final Map<ResourceLocation, BlockState> TOP_BLOCK_CACHE = new HashMap<>();
+
+    static {
+        TOP_BLOCKS.put(new ResourceLocation("car", "gas_station"), new ResourceLocation("car", "gas_station_top"));
+    }
+
+    @Nullable
+    protected static BlockState getTopBlock(BlockState bottom) {
+        ResourceLocation registryName = bottom.getBlock().getRegistryName();
+
+        ResourceLocation resourceLocation = TOP_BLOCKS.get(registryName);
+        if (resourceLocation == null) {
+            return null;
+        }
+        BlockState cached = TOP_BLOCK_CACHE.get(registryName);
+        if (cached != null) {
+            return cached;
+        }
+        Block b = ForgeRegistries.BLOCKS.getValue(resourceLocation);
+        if (b == null) {
+            return null;
+        }
+        BlockState state = b.getDefaultState();
+        TOP_BLOCK_CACHE.put(registryName, state);
+        return state;
     }
 
 }

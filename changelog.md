@@ -1,1 +1,2 @@
-- Fixed villager names in HWYLA tooltips
+- Fixed compatibility with the ultimate car mod
+- Fixed auto trader HWYLA tooltip
