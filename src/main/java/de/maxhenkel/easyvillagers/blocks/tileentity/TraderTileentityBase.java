@@ -1,6 +1,5 @@
 package de.maxhenkel.easyvillagers.blocks.tileentity;
 
-import de.maxhenkel.corelib.CachedValue;
 import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.blocks.TraderBlock;
 import net.minecraft.block.Block;
@@ -23,11 +22,12 @@ import java.lang.reflect.Method;
 
 public abstract class TraderTileentityBase extends VillagerTileentity implements ITickableTileEntity {
 
-    protected static final CachedValue<Field> LAST_RESTOCK = new CachedValue<>(() -> ObfuscationReflectionHelper.findField(VillagerEntity.class, "field_213785_bP"));
-    protected static final CachedValue<Method> RESTOCK = new CachedValue<>(() -> ObfuscationReflectionHelper.findMethod(VillagerEntity.class, "func_223718_eH"));
-    protected static final CachedValue<Field> LEVELED_UP = new CachedValue<>(() -> ObfuscationReflectionHelper.findField(VillagerEntity.class, "field_213777_bF"));
-    protected static final CachedValue<Method> LEVEL_UP = new CachedValue<>(() -> ObfuscationReflectionHelper.findMethod(VillagerEntity.class, "func_175554_cu"));
-    protected static final CachedValue<Method> DISPLAY_MERCHANT_GUI = new CachedValue<>(() -> ObfuscationReflectionHelper.findMethod(VillagerEntity.class, "func_213740_f", PlayerEntity.class));
+    protected static final Field LAST_RESTOCK = ObfuscationReflectionHelper.findField(VillagerEntity.class, "field_213785_bP");
+    protected static final Method RESTOCK = ObfuscationReflectionHelper.findMethod(VillagerEntity.class, "func_223718_eH");
+    protected static final Field LEVELED_UP = ObfuscationReflectionHelper.findField(VillagerEntity.class, "field_213777_bF");
+    protected static final Method LEVEL_UP = ObfuscationReflectionHelper.findMethod(VillagerEntity.class, "func_175554_cu");
+    protected static final Method DISPLAY_MERCHANT_GUI = ObfuscationReflectionHelper.findMethod(VillagerEntity.class, "func_213740_f", PlayerEntity.class);
+    protected static final Method CAN_LEVEL_UP = ObfuscationReflectionHelper.findMethod(VillagerEntity.class, "func_213741_eu");
 
     private Block workstation;
     private long nextRestock;
@@ -105,7 +105,7 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
         villagerEntity.setPosition(getPos().getX() + 0.5D, getPos().getY() + 1D, getPos().getZ() + 0.5D);
 
         try {
-            DISPLAY_MERCHANT_GUI.get().invoke(villagerEntity, playerEntity);
+            DISPLAY_MERCHANT_GUI.invoke(villagerEntity, playerEntity);
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -134,9 +134,9 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
 
         if (!v.hasCustomer()) {
             try {
-                if ((Boolean) LEVELED_UP.get().get(v)) {
-                    LEVEL_UP.get().invoke(v);
-                    LEVELED_UP.get().set(v, false);
+                if ((Boolean) LEVELED_UP.get(v)) {
+                    LEVEL_UP.invoke(v);
+                    LEVELED_UP.set(v, false);
                     sync();
                 }
             } catch (Exception e) {
@@ -160,8 +160,8 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
             return;
         }
         try {
-            LAST_RESTOCK.get().set(villagerEntity, world.getGameTime());
-            RESTOCK.get().invoke(villagerEntity);
+            LAST_RESTOCK.set(villagerEntity, world.getGameTime());
+            RESTOCK.invoke(villagerEntity);
             TraderBlock.playVillagerSound(world, getPos(), villagerEntity.getVillagerData().getProfession().getSound());
         } catch (Exception e) {
             e.printStackTrace();
@@ -174,7 +174,7 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
             return 0L;
         }
         try {
-            return (long) LAST_RESTOCK.get().get(villagerEntity);
+            return (long) LAST_RESTOCK.get(villagerEntity);
         } catch (Exception e) {
             e.printStackTrace();
             return 0L;

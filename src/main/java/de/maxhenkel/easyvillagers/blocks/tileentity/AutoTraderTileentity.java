@@ -69,7 +69,17 @@ public class AutoTraderTileentity extends TraderTileentityBase {
         hasEnoughItems(offer.getBuyingStackSecond(), true);
         canFitItems(offer.getSellingStack(), true);
 
-        villager.onTrade(offer);
+        // villager.onTrade(offer) spawns XP, so we manually do all necessary stuff
+        offer.increaseUses();
+        try {
+            villager.setXp(villager.getXp() + offer.getGivenExp());
+            if ((boolean) CAN_LEVEL_UP.invoke(villager)) {
+                LEVELED_UP.set(villager, true);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         markDirty();
     }
 

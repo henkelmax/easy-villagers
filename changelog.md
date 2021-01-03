@@ -1,2 +1,1 @@
-- Fixed compatibility with the ultimate car mod
-- Fixed auto trader HWYLA tooltip
+- Fixed auto traders spawning XP at 0,0
