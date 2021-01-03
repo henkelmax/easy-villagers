@@ -36,7 +36,14 @@ public class ModSoundEvents {
                 || event.equals(SoundEvents.ENTITY_VILLAGER_WORK_SHEPHERD)
                 || event.equals(SoundEvents.ENTITY_VILLAGER_WORK_TOOLSMITH)
                 || event.equals(SoundEvents.ENTITY_VILLAGER_WORK_WEAPONSMITH)
-                || event.equals(SoundEvents.ENTITY_VILLAGER_YES);
+                || event.equals(SoundEvents.ENTITY_VILLAGER_YES)
+                || event.equals(SoundEvents.ENTITY_IRON_GOLEM_HURT)
+                || event.equals(SoundEvents.ENTITY_IRON_GOLEM_DEATH)
+                || event.equals(SoundEvents.ENTITY_ZOMBIE_AMBIENT)
+                || event.equals(SoundEvents.ENTITY_ZOMBIE_INFECT)
+                || event.equals(SoundEvents.ENTITY_ZOMBIE_VILLAGER_AMBIENT)
+                || event.equals(SoundEvents.ENTITY_ZOMBIE_VILLAGER_CONVERTED)
+                || event.equals(SoundEvents.ENTITY_ZOMBIE_VILLAGER_CURE);
     }
 
 }

@@ -1,1 +1,1 @@
-- Fixed auto traders spawning XP at 0,0
+- Fixed villager.volume config option ignoring other sounds
