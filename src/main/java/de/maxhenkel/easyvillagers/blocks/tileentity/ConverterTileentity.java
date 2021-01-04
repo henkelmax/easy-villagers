@@ -3,10 +3,10 @@ package de.maxhenkel.easyvillagers.blocks.tileentity;
 import de.maxhenkel.corelib.inventory.ItemListInventory;
 import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.blocks.TraderBlock;
+import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import de.maxhenkel.easyvillagers.items.VillagerItem;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.merchant.IReputationType;
-import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ItemStackHelper;
@@ -79,7 +79,7 @@ public class ConverterTileentity extends VillagerTileentity implements ITickable
                     for (int i = 0; i < outputInventory.size(); i++) {
                         ItemStack stack = outputInventory.get(i);
                         if (stack.isEmpty()) {
-                            VillagerEntity villagerEntity = getVillagerEntity();
+                            EasyVillagerEntity villagerEntity = getVillagerEntity();
                             villagerEntity.updateReputation(IReputationType.ZOMBIE_VILLAGER_CURED, ownerPlayer);
                             outputInventory.set(i, removeVillager().copy());
                             timer = 0L;

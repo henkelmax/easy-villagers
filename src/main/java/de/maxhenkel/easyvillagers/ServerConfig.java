@@ -16,6 +16,7 @@ public class ServerConfig extends ConfigBase {
     public final ForgeConfigSpec.IntValue autoTraderCooldown;
     public final ForgeConfigSpec.BooleanValue villagerInventorySounds;
     public final ForgeConfigSpec.IntValue incubatorSpeed;
+    public final ForgeConfigSpec.BooleanValue tradeCycling;
 
     public ServerConfig(ForgeConfigSpec.Builder builder) {
         super(builder);
@@ -64,6 +65,10 @@ public class ServerConfig extends ConfigBase {
         incubatorSpeed = builder
                 .comment("The speed at which the incubator ages the villagers")
                 .defineInRange("incubator.speed", 2, 1, 1024);
+
+        tradeCycling = builder
+                .comment("If the trade cycling button should be enabled")
+                .define("trade_cycling", true);
     }
 
 }

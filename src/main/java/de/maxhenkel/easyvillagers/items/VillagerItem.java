@@ -2,6 +2,7 @@ package de.maxhenkel.easyvillagers.items;
 
 import de.maxhenkel.corelib.CachedMap;
 import de.maxhenkel.easyvillagers.Main;
+import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import de.maxhenkel.easyvillagers.items.render.VillagerItemRenderer;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DispenserBlock;
@@ -31,7 +32,7 @@ import java.util.List;
 
 public class VillagerItem extends Item {
 
-    private CachedMap<ItemStack, VillagerEntity> cachedVillagers;
+    private CachedMap<ItemStack, EasyVillagerEntity> cachedVillagers;
 
     public VillagerItem() {
         super(new Item.Properties().maxStackSize(1).setISTER(() -> VillagerItemRenderer::new));
@@ -41,7 +42,7 @@ public class VillagerItem extends Item {
             Direction direction = source.getBlockState().get(DispenserBlock.FACING);
             BlockPos blockpos = source.getBlockPos().offset(direction);
             World world = source.getWorld();
-            VillagerEntity villager = getVillager(world, stack);
+            EasyVillagerEntity villager = getVillager(world, stack);
             villager.setPositionAndRotation(blockpos.getX() + 0.5D, blockpos.getY(), blockpos.getZ() + 0.5D, direction.getHorizontalAngle(), 0F);
             world.addEntity(villager);
             stack.shrink(1);
@@ -64,7 +65,7 @@ public class VillagerItem extends Item {
                 blockpos = blockpos.offset(direction);
             }
 
-            VillagerEntity villager = getVillager(world, itemstack);
+            EasyVillagerEntity villager = getVillager(world, itemstack);
 
             villager.setPosition(blockpos.getX() + 0.5D, blockpos.getY(), blockpos.getZ() + 0.5);
 
@@ -88,7 +89,7 @@ public class VillagerItem extends Item {
         if (world == null) {
             return super.getDisplayName(stack);
         } else {
-            VillagerEntity villager = getVillagerFast(world, stack);
+            EasyVillagerEntity villager = getVillagerFast(world, stack);
             if (!villager.hasCustomName() && villager.isChild()) {
                 return new TranslationTextComponent("item.easy_villagers.baby_villager");
             }
@@ -122,13 +123,13 @@ public class VillagerItem extends Item {
         }
     }
 
-    public VillagerEntity getVillager(World world, ItemStack stack) {
+    public EasyVillagerEntity getVillager(World world, ItemStack stack) {
         CompoundNBT compound = stack.getChildTag("villager");
         if (compound == null) {
             compound = new CompoundNBT();
         }
 
-        VillagerEntity villager = new VillagerEntity(EntityType.VILLAGER, world);
+        EasyVillagerEntity villager = new EasyVillagerEntity(EntityType.VILLAGER, world);
         villager.readAdditional(compound);
 
         if (stack.hasDisplayName()) {
@@ -139,14 +140,14 @@ public class VillagerItem extends Item {
         return villager;
     }
 
-    public VillagerEntity getVillagerFast(World world, ItemStack stack) {
+    public EasyVillagerEntity getVillagerFast(World world, ItemStack stack) {
         return cachedVillagers.get(stack, () -> getVillager(world, stack));
     }
 
     @OnlyIn(Dist.CLIENT)
     public static ItemStack getBabyVillager() {
         ItemStack babyVillager = new ItemStack(ModItems.VILLAGER);
-        VillagerEntity villager = new VillagerEntity(EntityType.VILLAGER, Minecraft.getInstance().world) {
+        EasyVillagerEntity villager = new EasyVillagerEntity(EntityType.VILLAGER, Minecraft.getInstance().world) {
             @Override
             public int getGrowingAge() {
                 return -24000;

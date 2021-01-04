@@ -2,6 +2,7 @@ package de.maxhenkel.easyvillagers.blocks.tileentity;
 
 import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.blocks.TraderBlock;
+import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -22,12 +23,12 @@ import java.lang.reflect.Method;
 
 public abstract class TraderTileentityBase extends VillagerTileentity implements ITickableTileEntity {
 
-    protected static final Field LAST_RESTOCK = ObfuscationReflectionHelper.findField(VillagerEntity.class, "field_213785_bP");
-    protected static final Method RESTOCK = ObfuscationReflectionHelper.findMethod(VillagerEntity.class, "func_223718_eH");
-    protected static final Field LEVELED_UP = ObfuscationReflectionHelper.findField(VillagerEntity.class, "field_213777_bF");
-    protected static final Method LEVEL_UP = ObfuscationReflectionHelper.findMethod(VillagerEntity.class, "func_175554_cu");
-    protected static final Method DISPLAY_MERCHANT_GUI = ObfuscationReflectionHelper.findMethod(VillagerEntity.class, "func_213740_f", PlayerEntity.class);
-    protected static final Method CAN_LEVEL_UP = ObfuscationReflectionHelper.findMethod(VillagerEntity.class, "func_213741_eu");
+    public static final Field LAST_RESTOCK = ObfuscationReflectionHelper.findField(VillagerEntity.class, "field_213785_bP");
+    public static final Method RESTOCK = ObfuscationReflectionHelper.findMethod(VillagerEntity.class, "func_223718_eH");
+    public static final Field LEVELED_UP = ObfuscationReflectionHelper.findField(VillagerEntity.class, "field_213777_bF");
+    public static final Method LEVEL_UP = ObfuscationReflectionHelper.findMethod(VillagerEntity.class, "func_175554_cu");
+    public static final Method DISPLAY_MERCHANT_GUI = ObfuscationReflectionHelper.findMethod(VillagerEntity.class, "func_213740_f", PlayerEntity.class);
+    public static final Method CAN_LEVEL_UP = ObfuscationReflectionHelper.findMethod(VillagerEntity.class, "func_213741_eu");
 
     private Block workstation;
     private long nextRestock;
@@ -71,7 +72,7 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
     }
 
     @Override
-    protected void onAddVillager(VillagerEntity villager) {
+    protected void onAddVillager(EasyVillagerEntity villager) {
         super.onAddVillager(villager);
 
         if (hasWorkstation()) {
@@ -80,7 +81,7 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
     }
 
     private void fixProfession() {
-        VillagerEntity v = getVillagerEntity();
+        EasyVillagerEntity v = getVillagerEntity();
         if (v == null || v.getXp() > 0) {
             return;
         }
@@ -88,7 +89,7 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
     }
 
     public boolean openTradingGUI(PlayerEntity playerEntity) {
-        VillagerEntity villagerEntity = getVillagerEntity();
+        EasyVillagerEntity villagerEntity = getVillagerEntity();
         if (villagerEntity == null) {
             return false;
         }
@@ -122,7 +123,7 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
         if (world.isRemote) {
             return;
         }
-        VillagerEntity v = getVillagerEntity();
+        EasyVillagerEntity v = getVillagerEntity();
         if (v == null) {
             return;
         }
@@ -159,7 +160,7 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
     }
 
     protected void restock() {
-        VillagerEntity villagerEntity = getVillagerEntity();
+        EasyVillagerEntity villagerEntity = getVillagerEntity();
         if (villagerEntity == null) {
             return;
         }
@@ -173,7 +174,7 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
     }
 
     protected long getLastRestock() {
-        VillagerEntity villagerEntity = getVillagerEntity();
+        EasyVillagerEntity villagerEntity = getVillagerEntity();
         if (villagerEntity == null) {
             return 0L;
         }

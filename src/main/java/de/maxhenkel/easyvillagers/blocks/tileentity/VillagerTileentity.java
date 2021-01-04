@@ -1,8 +1,8 @@
 package de.maxhenkel.easyvillagers.blocks.tileentity;
 
+import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import de.maxhenkel.easyvillagers.items.ModItems;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
@@ -10,7 +10,7 @@ import net.minecraft.tileentity.TileEntityType;
 public class VillagerTileentity extends FakeWorldTileentity {
 
     private ItemStack villager;
-    private VillagerEntity villagerEntity;
+    private EasyVillagerEntity villagerEntity;
 
     public VillagerTileentity(TileEntityType<?> tileEntityTypeIn) {
         super(tileEntityTypeIn);
@@ -28,7 +28,7 @@ public class VillagerTileentity extends FakeWorldTileentity {
         return !villager.isEmpty();
     }
 
-    public VillagerEntity getVillagerEntity() {
+    public EasyVillagerEntity getVillagerEntity() {
         if (villagerEntity == null && !villager.isEmpty()) {
             villagerEntity = ModItems.VILLAGER.getVillager(world, villager);
         }
@@ -48,7 +48,7 @@ public class VillagerTileentity extends FakeWorldTileentity {
         sync();
     }
 
-    protected void onAddVillager(VillagerEntity villager) {
+    protected void onAddVillager(EasyVillagerEntity villager) {
 
     }
 
@@ -66,7 +66,7 @@ public class VillagerTileentity extends FakeWorldTileentity {
         return advanceAge(getVillagerEntity(), amount);
     }
 
-    public static boolean advanceAge(VillagerEntity villagerEntity, int amount) {
+    public static boolean advanceAge(EasyVillagerEntity villagerEntity, int amount) {
         if (villagerEntity == null) {
             return false;
         }
@@ -76,7 +76,7 @@ public class VillagerTileentity extends FakeWorldTileentity {
         return prevAge < 0 && age >= 0;
     }
 
-    public static boolean advanceAge(VillagerEntity villagerEntity) {
+    public static boolean advanceAge(EasyVillagerEntity villagerEntity) {
         return advanceAge(villagerEntity, 1);
     }
 

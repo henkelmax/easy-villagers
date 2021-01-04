@@ -4,13 +4,12 @@ import de.maxhenkel.corelib.ClientRegistry;
 import de.maxhenkel.corelib.CommonRegistry;
 import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.blocks.tileentity.ModTileEntities;
+import de.maxhenkel.easyvillagers.events.GuiEvents;
 import de.maxhenkel.easyvillagers.events.ModSoundEvents;
 import de.maxhenkel.easyvillagers.events.VillagerEvents;
 import de.maxhenkel.easyvillagers.gui.Containers;
 import de.maxhenkel.easyvillagers.items.ModItems;
-import de.maxhenkel.easyvillagers.net.MessagePickUpVillager;
-import de.maxhenkel.easyvillagers.net.MessageSelectTrade;
-import de.maxhenkel.easyvillagers.net.MessageVillagerParticles;
+import de.maxhenkel.easyvillagers.net.*;
 import net.minecraft.block.Block;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.inventory.container.ContainerType;
@@ -66,6 +65,7 @@ public class Main {
         CommonRegistry.registerMessage(SIMPLE_CHANNEL, 0, MessageVillagerParticles.class);
         CommonRegistry.registerMessage(SIMPLE_CHANNEL, 1, MessagePickUpVillager.class);
         CommonRegistry.registerMessage(SIMPLE_CHANNEL, 2, MessageSelectTrade.class);
+        CommonRegistry.registerMessage(SIMPLE_CHANNEL, 3, MessageCycleTrades.class);
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -74,6 +74,7 @@ public class Main {
         Containers.clientSetup();
 
         MinecraftForge.EVENT_BUS.register(new ModSoundEvents());
+        MinecraftForge.EVENT_BUS.register(new GuiEvents());
 
         PICKUP_KEY = ClientRegistry.registerKeyBinding("key.easy_villagers.pick_up", "category.easy_villagers", GLFW.GLFW_KEY_V);
     }

@@ -3,10 +3,10 @@ package de.maxhenkel.easyvillagers.blocks.tileentity;
 import de.maxhenkel.corelib.inventory.ItemListInventory;
 import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.blocks.TraderBlock;
+import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ItemStackHelper;
@@ -48,7 +48,7 @@ public class FarmerTileentity extends VillagerTileentity implements ITickableTil
     }
 
     @Override
-    protected void onAddVillager(VillagerEntity villager) {
+    protected void onAddVillager(EasyVillagerEntity villager) {
         super.onAddVillager(villager);
         if (villager.getXp() <= 0) {
             villager.setVillagerData(villager.getVillagerData().withProfession(VillagerProfession.FARMER));
@@ -106,7 +106,7 @@ public class FarmerTileentity extends VillagerTileentity implements ITickableTil
         if (world.isRemote) {
             return;
         }
-        VillagerEntity v = getVillagerEntity();
+        EasyVillagerEntity v = getVillagerEntity();
         if (v != null) {
             if (world.getGameTime() % 20 == 0 && world.rand.nextInt(40) == 0) {
                 TraderBlock.playVillagerSound(world, getPos(), SoundEvents.ENTITY_VILLAGER_AMBIENT);
@@ -126,7 +126,7 @@ public class FarmerTileentity extends VillagerTileentity implements ITickableTil
         }
     }
 
-    private boolean ageCrop(@Nullable VillagerEntity villager) {
+    private boolean ageCrop(@Nullable EasyVillagerEntity villager) {
         BlockState c = getCrop();
         if (c == null) {
             return false;

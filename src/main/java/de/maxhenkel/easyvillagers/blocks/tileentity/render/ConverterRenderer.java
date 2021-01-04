@@ -3,6 +3,7 @@ package de.maxhenkel.easyvillagers.blocks.tileentity.render;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import de.maxhenkel.easyvillagers.blocks.TraderBlock;
 import de.maxhenkel.easyvillagers.blocks.tileentity.ConverterTileentity;
+import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.VillagerRenderer;
@@ -11,7 +12,6 @@ import net.minecraft.client.renderer.entity.ZombieVillagerRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.monster.ZombieEntity;
 import net.minecraft.entity.monster.ZombieVillagerEntity;
 import net.minecraft.resources.IReloadableResourceManager;
@@ -55,7 +55,7 @@ public class ConverterRenderer extends TileEntityRenderer<ConverterTileentity> {
         if (!converter.isFakeWorld()) {
             direction = converter.getBlockState().get(TraderBlock.FACING);
         }
-        VillagerEntity villagerEntity = converter.getVillagerEntity();
+        EasyVillagerEntity villagerEntity = converter.getVillagerEntity();
         if (villagerEntity != null) {
             matrixStack.push();
             matrixStack.translate(0.5D, 1D / 16D, 0.5D);

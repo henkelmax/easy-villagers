@@ -5,6 +5,7 @@ import de.maxhenkel.corelib.inventory.ItemListInventory;
 import de.maxhenkel.corelib.net.NetUtils;
 import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.blocks.TraderBlock;
+import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import de.maxhenkel.easyvillagers.items.ModItems;
 import de.maxhenkel.easyvillagers.net.MessageVillagerParticles;
 import net.minecraft.block.BlockState;
@@ -32,9 +33,9 @@ public class BreederTileentity extends FakeWorldTileentity implements ITickableT
     private NonNullList<ItemStack> foodInventory;
     private NonNullList<ItemStack> outputInventory;
     private ItemStack villager1;
-    private VillagerEntity villagerEntity1;
+    private EasyVillagerEntity villagerEntity1;
     private ItemStack villager2;
-    private VillagerEntity villagerEntity2;
+    private EasyVillagerEntity villagerEntity2;
 
     public BreederTileentity() {
         super(ModTileEntities.BREEDER);
@@ -60,14 +61,14 @@ public class BreederTileentity extends FakeWorldTileentity implements ITickableT
         return !villager2.isEmpty();
     }
 
-    public VillagerEntity getVillagerEntity1() {
+    public EasyVillagerEntity getVillagerEntity1() {
         if (villagerEntity1 == null && !villager1.isEmpty()) {
             villagerEntity1 = ModItems.VILLAGER.getVillager(world, villager1);
         }
         return villagerEntity1;
     }
 
-    public VillagerEntity getVillagerEntity2() {
+    public EasyVillagerEntity getVillagerEntity2() {
         if (villagerEntity2 == null && !villager2.isEmpty()) {
             villagerEntity2 = ModItems.VILLAGER.getVillager(world, villager2);
         }
@@ -156,7 +157,7 @@ public class BreederTileentity extends FakeWorldTileentity implements ITickableT
     private boolean addVillager() {
         for (int i = 0; i < outputInventory.size(); i++) {
             if (outputInventory.get(i).isEmpty()) {
-                VillagerEntity villagerEntity = new VillagerEntity(EntityType.VILLAGER, world);
+                EasyVillagerEntity villagerEntity = new EasyVillagerEntity(EntityType.VILLAGER, world);
                 villagerEntity.setVillagerData(villagerEntity.getVillagerData().withType(VillagerType.func_242371_a(world.func_242406_i(getPos()))));
                 villagerEntity.setGrowingAge(-24000);
                 ItemStack villager = new ItemStack(ModItems.VILLAGER);

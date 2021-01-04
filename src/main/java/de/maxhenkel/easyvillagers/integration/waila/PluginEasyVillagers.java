@@ -1,12 +1,12 @@
 package de.maxhenkel.easyvillagers.integration.waila;
 
 import de.maxhenkel.easyvillagers.blocks.tileentity.*;
+import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import mcp.mobius.waila.api.IRegistrar;
 import mcp.mobius.waila.api.IWailaPlugin;
 import mcp.mobius.waila.api.TooltipPosition;
 import mcp.mobius.waila.api.WailaPlugin;
 import net.minecraft.entity.merchant.villager.VillagerData;
-import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.IFormattableTextComponent;
@@ -36,12 +36,12 @@ public class PluginEasyVillagers implements IWailaPlugin {
         registrar.registerComponentProvider(HUDHandlerBreeder.INSTANCE, TooltipPosition.BODY, BreederTileentity.class);
     }
 
-    public static IFormattableTextComponent getVillagerName(VillagerEntity villager) {
+    public static IFormattableTextComponent getVillagerName(EasyVillagerEntity villager) {
         return villager.getName().deepCopy();
     }
 
     @Nullable
-    public static ITextComponent getVillager(VillagerEntity villager) {
+    public static ITextComponent getVillager(EasyVillagerEntity villager) {
         if (villager != null) {
             VillagerData villagerData = villager.getVillagerData();
             VillagerProfession profession = villagerData.getProfession();

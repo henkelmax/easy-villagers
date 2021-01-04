@@ -72,6 +72,15 @@ This averages about one iron ingot per minute.
 The incubator block increases the growth rate of baby villagers.
 The speed can be changed in the config.
 
+## Trade Cycling
+
+When looking for a good trade, you always have to remove the villagers workstation, in order to reset their trades.
+The trade cycle button solves this problem. If a villager hasn't been traded before, you can just press it and the trades reset automatically.
+
+This also works for normal villagers.
+
+![](https://media.giphy.com/media/6mO7UlamgPV08FSWga/giphy.gif)
+
 ---
 
 You can take stuff out of these blocks, by sneaking and right-clicking the block with an empty hand. 

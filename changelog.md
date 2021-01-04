@@ -1,1 +1,2 @@
-- Fixed trader could be accessed multiple times
+- Added trade cycling
+- Sneak-clicking the trader now takes out the villager first

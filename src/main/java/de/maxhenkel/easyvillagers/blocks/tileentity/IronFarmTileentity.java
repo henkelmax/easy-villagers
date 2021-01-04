@@ -3,9 +3,9 @@ package de.maxhenkel.easyvillagers.blocks.tileentity;
 import de.maxhenkel.corelib.inventory.ItemListInventory;
 import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.blocks.TraderBlock;
+import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ItemStackHelper;
@@ -47,7 +47,7 @@ public class IronFarmTileentity extends VillagerTileentity implements ITickableT
 
     @Override
     public void tick() {
-        VillagerEntity v = getVillagerEntity();
+        EasyVillagerEntity v = getVillagerEntity();
         if (v != null) {
             if (world.getGameTime() % 20 == 0) {
                 if (world.rand.nextInt(40) == 0) {

@@ -3,6 +3,7 @@ package de.maxhenkel.easyvillagers.blocks.tileentity;
 import de.maxhenkel.corelib.inventory.ItemListInventory;
 import de.maxhenkel.corelib.item.ItemUtils;
 import de.maxhenkel.easyvillagers.Main;
+import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
@@ -135,7 +136,7 @@ public class AutoTraderTileentity extends TraderTileentityBase {
     }
 
     @Override
-    protected void onAddVillager(VillagerEntity villager) {
+    protected void onAddVillager(EasyVillagerEntity villager) {
         super.onAddVillager(villager);
         updateTradeInv();
     }

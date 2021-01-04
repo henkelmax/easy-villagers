@@ -63,6 +63,18 @@ public abstract class TraderBlockBase extends HorizontalRotatableBlock implement
             SoundType type = block.getSoundType(block.getDefaultState());
             worldIn.playSound(null, pos, type.getPlaceSound(), SoundCategory.BLOCKS, type.getVolume(), type.getPitch());
             return ActionResultType.SUCCESS;
+        } else if (player.isSneaking() && trader.hasVillager()) {
+            ItemStack stack = trader.removeVillager();
+            if (heldItem.isEmpty()) {
+                player.setHeldItem(handIn, stack);
+            } else {
+                if (!player.inventory.addItemStackToInventory(stack)) {
+                    Direction direction = state.get(TraderBlockBase.FACING);
+                    InventoryHelper.spawnItemStack(worldIn, direction.getXOffset() + pos.getX() + 0.5D, pos.getY() + 0.5D, direction.getZOffset() + pos.getZ() + 0.5D, stack);
+                }
+            }
+            playVillagerSound(worldIn, pos, SoundEvents.ENTITY_VILLAGER_CELEBRATE);
+            return ActionResultType.SUCCESS;
         } else if (player.isSneaking() && trader.hasWorkstation()) {
             ItemStack blockStack = new ItemStack(trader.removeWorkstation());
             if (heldItem.isEmpty()) {
@@ -76,18 +88,6 @@ public abstract class TraderBlockBase extends HorizontalRotatableBlock implement
             if (trader.hasVillager()) {
                 playVillagerSound(worldIn, pos, SoundEvents.ENTITY_VILLAGER_NO);
             }
-            return ActionResultType.SUCCESS;
-        } else if (player.isSneaking() && trader.hasVillager()) {
-            ItemStack stack = trader.removeVillager();
-            if (heldItem.isEmpty()) {
-                player.setHeldItem(handIn, stack);
-            } else {
-                if (!player.inventory.addItemStackToInventory(stack)) {
-                    Direction direction = state.get(TraderBlockBase.FACING);
-                    InventoryHelper.spawnItemStack(worldIn, direction.getXOffset() + pos.getX() + 0.5D, pos.getY() + 0.5D, direction.getZOffset() + pos.getZ() + 0.5D, stack);
-                }
-            }
-            playVillagerSound(worldIn, pos, SoundEvents.ENTITY_VILLAGER_CELEBRATE);
             return ActionResultType.SUCCESS;
         } else if (openGUI(trader, player)) {
             return ActionResultType.SUCCESS;

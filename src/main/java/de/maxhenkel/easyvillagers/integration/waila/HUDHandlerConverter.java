@@ -1,10 +1,10 @@
 package de.maxhenkel.easyvillagers.integration.waila;
 
 import de.maxhenkel.easyvillagers.blocks.tileentity.ConverterTileentity;
+import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import mcp.mobius.waila.api.IComponentProvider;
 import mcp.mobius.waila.api.IDataAccessor;
 import mcp.mobius.waila.api.IPluginConfig;
-import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -23,7 +23,7 @@ public class HUDHandlerConverter implements IComponentProvider {
         }
 
         ConverterTileentity converter = (ConverterTileentity) accessor.getTileEntity();
-        VillagerEntity villagerEntity = converter.getVillagerEntity();
+        EasyVillagerEntity villagerEntity = converter.getVillagerEntity();
         if (villagerEntity != null) {
             if (converter.getTimer() >= ConverterTileentity.getZombifyTime() && converter.getTimer() < ConverterTileentity.getConvertTime()) {
                 VillagerProfession profession = villagerEntity.getVillagerData().getProfession();
