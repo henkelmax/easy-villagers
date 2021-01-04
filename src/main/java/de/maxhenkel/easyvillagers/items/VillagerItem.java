@@ -137,6 +137,8 @@ public class VillagerItem extends Item {
         }
 
         villager.hurtTime = 0;
+        villager.rotationYawHead = 0F;
+        villager.prevRotationYawHead = 0F;
         return villager;
     }
 

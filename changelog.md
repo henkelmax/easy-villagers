@@ -1,2 +1,1 @@
-- Added trade cycling
-- Sneak-clicking the trader now takes out the villager first
+- Fixed villager head shaking in some cases
