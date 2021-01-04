@@ -21,7 +21,7 @@ public class GuiEvents {
     public static final Field OFFERS = ObfuscationReflectionHelper.findField(AbstractVillagerEntity.class, "field_213724_bz");
 
     @SubscribeEvent
-    public void onOpenScreen(GuiScreenEvent.InitGuiEvent event) {
+    public void onOpenScreen(GuiScreenEvent.InitGuiEvent.Post event) {
         if (!Main.SERVER_CONFIG.tradeCycling.get()) {
             return;
         }
