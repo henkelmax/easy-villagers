@@ -1,1 +1,1 @@
-- Fixed villager.volume config option ignoring other sounds
+- Fixed trader could be accessed multiple times

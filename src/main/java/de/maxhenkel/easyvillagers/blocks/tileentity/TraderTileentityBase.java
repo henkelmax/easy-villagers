@@ -102,6 +102,10 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
             return false;
         }
 
+        if (villagerEntity.hasCustomer()) {
+            return false;
+        }
+
         villagerEntity.setPosition(getPos().getX() + 0.5D, getPos().getY() + 1D, getPos().getZ() + 0.5D);
 
         try {
