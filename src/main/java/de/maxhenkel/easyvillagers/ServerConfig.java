@@ -15,6 +15,7 @@ public class ServerConfig extends ConfigBase {
     public final ForgeConfigSpec.IntValue autoTraderMaxRestockTime;
     public final ForgeConfigSpec.IntValue autoTraderCooldown;
     public final ForgeConfigSpec.BooleanValue villagerInventorySounds;
+    public final ForgeConfigSpec.IntValue villagerSoundAmount;
     public final ForgeConfigSpec.IntValue incubatorSpeed;
     public final ForgeConfigSpec.BooleanValue tradeCycling;
 
@@ -62,6 +63,10 @@ public class ServerConfig extends ConfigBase {
                 .comment("If villagers should make sounds while in the players inventory")
                 .define("villager.inventory_sounds", true);
 
+        villagerSoundAmount = builder
+                .comment("How frequent a villager block should make a villager sound", "Lower values mean more frequent sounds")
+                .defineInRange("villager.sound_amount", 20, 1, Integer.MAX_VALUE);
+
         incubatorSpeed = builder
                 .comment("The speed at which the incubator ages the villagers")
                 .defineInRange("incubator.speed", 2, 1, 1024);
@@ -69,6 +74,7 @@ public class ServerConfig extends ConfigBase {
         tradeCycling = builder
                 .comment("If the trade cycling button should be enabled")
                 .define("trade_cycling", true);
+
     }
 
 }

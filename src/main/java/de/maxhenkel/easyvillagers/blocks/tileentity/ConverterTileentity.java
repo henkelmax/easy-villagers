@@ -2,7 +2,7 @@ package de.maxhenkel.easyvillagers.blocks.tileentity;
 
 import de.maxhenkel.corelib.inventory.ItemListInventory;
 import de.maxhenkel.easyvillagers.Main;
-import de.maxhenkel.easyvillagers.blocks.TraderBlock;
+import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import de.maxhenkel.easyvillagers.items.VillagerItem;
 import net.minecraft.block.BlockState;
@@ -65,13 +65,13 @@ public class ConverterTileentity extends VillagerTileentity implements ITickable
                 sync();
             }
             if (timer == getZombifyTime()) {
-                TraderBlock.playVillagerSound(world, pos, SoundEvents.ENTITY_ZOMBIE_INFECT);
+                VillagerBlockBase.playVillagerSound(world, pos, SoundEvents.ENTITY_ZOMBIE_INFECT);
                 sync();
             } else if (timer == getCureTime()) {
-                TraderBlock.playVillagerSound(world, pos, SoundEvents.ENTITY_ZOMBIE_VILLAGER_CURE);
+                VillagerBlockBase.playVillagerSound(world, pos, SoundEvents.ENTITY_ZOMBIE_VILLAGER_CURE);
                 sync();
             } else if (timer == getConvertTime()) {
-                TraderBlock.playVillagerSound(world, pos, SoundEvents.ENTITY_ZOMBIE_VILLAGER_CONVERTED);
+                VillagerBlockBase.playVillagerSound(world, pos, SoundEvents.ENTITY_ZOMBIE_VILLAGER_CONVERTED);
                 sync();
             } else if (timer >= getFinalizeTime()) {
                 PlayerEntity ownerPlayer = getOwnerPlayer();
@@ -92,16 +92,15 @@ public class ConverterTileentity extends VillagerTileentity implements ITickable
 
             timer++;
             markDirty();
+            if (timer < getZombifyTime() || timer >= getConvertTime()) {
+                VillagerBlockBase.playRandomVillagerSound(world, getPos(), SoundEvents.ENTITY_VILLAGER_AMBIENT);
+            } else {
+                VillagerBlockBase.playRandomVillagerSound(world, getPos(), SoundEvents.ENTITY_ZOMBIE_VILLAGER_AMBIENT);
+            }
+            VillagerBlockBase.playRandomVillagerSound(world, getPos(), SoundEvents.ENTITY_ZOMBIE_AMBIENT);
         } else if (timer != 0L) {
             timer = 0L;
             markDirty();
-        }
-        if (hasVillager() && world.getGameTime() % 20 == 0 && world.rand.nextInt(40) == 0) {
-            if (timer < getZombifyTime() || timer >= getConvertTime()) {
-                TraderBlock.playVillagerSound(world, getPos(), SoundEvents.ENTITY_VILLAGER_AMBIENT);
-            } else {
-                TraderBlock.playVillagerSound(world, getPos(), SoundEvents.ENTITY_ZOMBIE_VILLAGER_AMBIENT);
-            }
         }
     }
 

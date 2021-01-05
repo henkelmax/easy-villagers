@@ -1,1 +1,2 @@
-- Fixed taking out items when having items in the off hand
+- Added villager sound amount config option
+- Fixed villager sound inconsistencies

@@ -1,7 +1,7 @@
 package de.maxhenkel.easyvillagers.blocks.tileentity;
 
 import de.maxhenkel.easyvillagers.Main;
-import de.maxhenkel.easyvillagers.blocks.TraderBlock;
+import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -133,9 +133,7 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
         }
         markDirty();
 
-        if (world.getGameTime() % 20 == 0 && world.rand.nextInt(40) == 0) {
-            TraderBlock.playVillagerSound(world, getPos(), SoundEvents.ENTITY_VILLAGER_AMBIENT);
-        }
+        VillagerBlockBase.playRandomVillagerSound(world, getPos(), SoundEvents.ENTITY_VILLAGER_AMBIENT);
 
         if (!v.hasCustomer()) {
             try {
@@ -167,7 +165,7 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
         try {
             LAST_RESTOCK.set(villagerEntity, world.getGameTime());
             RESTOCK.invoke(villagerEntity);
-            TraderBlock.playVillagerSound(world, getPos(), villagerEntity.getVillagerData().getProfession().getSound());
+            VillagerBlockBase.playVillagerSound(world, getPos(), villagerEntity.getVillagerData().getProfession().getSound());
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -2,6 +2,7 @@ package de.maxhenkel.easyvillagers.blocks.tileentity;
 
 import de.maxhenkel.corelib.inventory.ItemListInventory;
 import de.maxhenkel.easyvillagers.Main;
+import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
 import de.maxhenkel.easyvillagers.items.VillagerItem;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
@@ -12,6 +13,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.SoundEvents;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -48,6 +50,8 @@ public class IncubatorTileentity extends VillagerTileentity implements ITickable
             }
         }
         if (hasVillager()) {
+            VillagerBlockBase.playRandomVillagerSound(world, getPos(), SoundEvents.ENTITY_VILLAGER_AMBIENT);
+
             VillagerEntity villagerEntity = getVillagerEntity();
 
             if (villagerEntity.isChild()) {

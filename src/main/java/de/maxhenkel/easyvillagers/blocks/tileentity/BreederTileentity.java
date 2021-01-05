@@ -4,7 +4,7 @@ import de.maxhenkel.corelib.entity.EntityUtils;
 import de.maxhenkel.corelib.inventory.ItemListInventory;
 import de.maxhenkel.corelib.net.NetUtils;
 import de.maxhenkel.easyvillagers.Main;
-import de.maxhenkel.easyvillagers.blocks.TraderBlock;
+import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import de.maxhenkel.easyvillagers.items.ModItems;
 import de.maxhenkel.easyvillagers.net.MessageVillagerParticles;
@@ -124,6 +124,7 @@ public class BreederTileentity extends FakeWorldTileentity implements ITickableT
         }
         if (hasVillager1() || hasVillager2()) {
             markDirty();
+            VillagerBlockBase.playRandomVillagerSound(world, getPos(), SoundEvents.ENTITY_VILLAGER_AMBIENT);
         }
 
         if (world.getGameTime() % Main.SERVER_CONFIG.breedingTime.get() == 0) {
@@ -134,7 +135,7 @@ public class BreederTileentity extends FakeWorldTileentity implements ITickableT
     public void tryBreed() {
         if (canBreed() && addVillager()) {
             removeBreedingItems();
-            TraderBlock.playVillagerSound(world, pos, SoundEvents.ENTITY_VILLAGER_CELEBRATE);
+            VillagerBlockBase.playVillagerSound(world, pos, SoundEvents.ENTITY_VILLAGER_CELEBRATE);
             spawnParticles();
         }
     }

@@ -2,7 +2,7 @@ package de.maxhenkel.easyvillagers.blocks.tileentity;
 
 import de.maxhenkel.corelib.inventory.ItemListInventory;
 import de.maxhenkel.easyvillagers.Main;
-import de.maxhenkel.easyvillagers.blocks.TraderBlock;
+import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -108,9 +108,7 @@ public class FarmerTileentity extends VillagerTileentity implements ITickableTil
         }
         EasyVillagerEntity v = getVillagerEntity();
         if (v != null) {
-            if (world.getGameTime() % 20 == 0 && world.rand.nextInt(40) == 0) {
-                TraderBlock.playVillagerSound(world, getPos(), SoundEvents.ENTITY_VILLAGER_AMBIENT);
-            }
+            VillagerBlockBase.playRandomVillagerSound(world, getPos(), SoundEvents.ENTITY_VILLAGER_AMBIENT);
 
             if (advanceAge()) {
                 sync();
@@ -157,7 +155,7 @@ public class FarmerTileentity extends VillagerTileentity implements ITickableTil
             }
 
             crop = crop.with(p, 0);
-            TraderBlock.playVillagerSound(world, getPos(), SoundEvents.ENTITY_VILLAGER_WORK_FARMER);
+            VillagerBlockBase.playVillagerSound(world, getPos(), SoundEvents.ENTITY_VILLAGER_WORK_FARMER);
             return true;
         } else {
             crop = crop.with(p, age + 1);

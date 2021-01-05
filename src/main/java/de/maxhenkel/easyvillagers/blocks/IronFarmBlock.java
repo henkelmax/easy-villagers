@@ -57,7 +57,7 @@ public class IronFarmBlock extends VillagerBlockBase implements ITileEntityProvi
         if (!farm.hasVillager() && heldItem.getItem() instanceof VillagerItem) {
             farm.setVillager(heldItem.copy());
             ItemUtils.decrItemStack(heldItem, player);
-            TraderBlock.playVillagerSound(worldIn, pos, SoundEvents.ENTITY_VILLAGER_NO);
+            VillagerBlockBase.playVillagerSound(worldIn, pos, SoundEvents.ENTITY_VILLAGER_NO);
             return ActionResultType.SUCCESS;
         } else if (player.isSneaking() && farm.hasVillager()) {
             ItemStack stack = farm.removeVillager();
@@ -69,7 +69,7 @@ public class IronFarmBlock extends VillagerBlockBase implements ITileEntityProvi
                     InventoryHelper.spawnItemStack(worldIn, direction.getXOffset() + pos.getX() + 0.5D, pos.getY() + 0.5D, direction.getZOffset() + pos.getZ() + 0.5D, stack);
                 }
             }
-            TraderBlock.playVillagerSound(worldIn, pos, SoundEvents.ENTITY_VILLAGER_CELEBRATE);
+            VillagerBlockBase.playVillagerSound(worldIn, pos, SoundEvents.ENTITY_VILLAGER_CELEBRATE);
             return ActionResultType.SUCCESS;
         } else {
             player.openContainer(new INamedContainerProvider() {

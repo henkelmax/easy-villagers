@@ -3,6 +3,7 @@ package de.maxhenkel.easyvillagers.items;
 import de.maxhenkel.corelib.CachedMap;
 import de.maxhenkel.corelib.item.ItemUtils;
 import de.maxhenkel.easyvillagers.Main;
+import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import de.maxhenkel.easyvillagers.items.render.VillagerItemRenderer;
 import net.minecraft.block.BlockState;
@@ -19,7 +20,6 @@ import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
@@ -107,13 +107,7 @@ public class VillagerItem extends Item {
         if (!Main.SERVER_CONFIG.villagerInventorySounds.get()) {
             return;
         }
-        if (world.getGameTime() % 20 != 0) {
-            return;
-        }
-        if (world.rand.nextInt(20) == 0) {
-            PlayerEntity playerEntity = (PlayerEntity) entity;
-            playerEntity.playSound(SoundEvents.ENTITY_VILLAGER_AMBIENT, SoundCategory.BLOCKS, 1F, 1F);
-        }
+        VillagerBlockBase.playRandomVillagerSound((PlayerEntity) entity, SoundEvents.ENTITY_VILLAGER_AMBIENT);
     }
 
     public void setVillager(ItemStack stack, VillagerEntity villager) {

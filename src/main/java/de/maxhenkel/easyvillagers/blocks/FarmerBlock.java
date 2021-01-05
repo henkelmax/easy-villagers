@@ -58,7 +58,7 @@ public class FarmerBlock extends VillagerBlockBase implements ITileEntityProvide
         if (!farmer.hasVillager() && heldItem.getItem() instanceof VillagerItem) {
             farmer.setVillager(heldItem.copy());
             ItemUtils.decrItemStack(heldItem, player);
-            TraderBlock.playVillagerSound(worldIn, pos, SoundEvents.ENTITY_VILLAGER_YES);
+            VillagerBlockBase.playVillagerSound(worldIn, pos, SoundEvents.ENTITY_VILLAGER_YES);
             return ActionResultType.SUCCESS;
         } else if (farmer.getCrop() == null && farmer.isValidSeed(heldItem.getItem())) {
             Item seed = heldItem.getItem();
@@ -66,9 +66,9 @@ public class FarmerBlock extends VillagerBlockBase implements ITileEntityProvide
             ItemUtils.decrItemStack(heldItem, player);
             VillagerEntity villagerEntity = farmer.getVillagerEntity();
             if (villagerEntity != null) {
-                TraderBlock.playVillagerSound(worldIn, pos, SoundEvents.ENTITY_VILLAGER_WORK_FARMER);
+                VillagerBlockBase.playVillagerSound(worldIn, pos, SoundEvents.ENTITY_VILLAGER_WORK_FARMER);
             }
-            TraderBlock.playVillagerSound(worldIn, pos, SoundEvents.ITEM_CROP_PLANT);
+            VillagerBlockBase.playVillagerSound(worldIn, pos, SoundEvents.ITEM_CROP_PLANT);
             return ActionResultType.SUCCESS;
         } else if (player.isSneaking() && farmer.getCrop() != null) {
             ItemStack blockStack = new ItemStack(farmer.removeSeed());
@@ -81,7 +81,7 @@ public class FarmerBlock extends VillagerBlockBase implements ITileEntityProvide
                 }
             }
             if (farmer.hasVillager()) {
-                TraderBlock.playVillagerSound(worldIn, pos, SoundEvents.ENTITY_VILLAGER_NO);
+                VillagerBlockBase.playVillagerSound(worldIn, pos, SoundEvents.ENTITY_VILLAGER_NO);
             }
             return ActionResultType.SUCCESS;
         } else if (player.isSneaking() && farmer.hasVillager()) {
@@ -94,7 +94,7 @@ public class FarmerBlock extends VillagerBlockBase implements ITileEntityProvide
                     InventoryHelper.spawnItemStack(worldIn, direction.getXOffset() + pos.getX() + 0.5D, pos.getY() + 0.5D, direction.getZOffset() + pos.getZ() + 0.5D, stack);
                 }
             }
-            TraderBlock.playVillagerSound(worldIn, pos, SoundEvents.ENTITY_VILLAGER_CELEBRATE);
+            VillagerBlockBase.playVillagerSound(worldIn, pos, SoundEvents.ENTITY_VILLAGER_CELEBRATE);
             return ActionResultType.SUCCESS;
         } else {
             player.openContainer(new INamedContainerProvider() {

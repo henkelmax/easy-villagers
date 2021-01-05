@@ -2,7 +2,7 @@ package de.maxhenkel.easyvillagers.blocks.tileentity;
 
 import de.maxhenkel.corelib.inventory.ItemListInventory;
 import de.maxhenkel.easyvillagers.Main;
-import de.maxhenkel.easyvillagers.blocks.TraderBlock;
+import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
@@ -49,14 +49,8 @@ public class IronFarmTileentity extends VillagerTileentity implements ITickableT
     public void tick() {
         EasyVillagerEntity v = getVillagerEntity();
         if (v != null) {
-            if (world.getGameTime() % 20 == 0) {
-                if (world.rand.nextInt(40) == 0) {
-                    TraderBlock.playVillagerSound(world, getPos(), SoundEvents.ENTITY_VILLAGER_AMBIENT);
-                }
-                if (world.rand.nextInt(40) == 0) {
-                    TraderBlock.playVillagerSound(world, getPos(), SoundEvents.ENTITY_ZOMBIE_AMBIENT);
-                }
-            }
+            VillagerBlockBase.playRandomVillagerSound(world, getPos(), SoundEvents.ENTITY_VILLAGER_AMBIENT);
+            VillagerBlockBase.playRandomVillagerSound(world, getPos(), SoundEvents.ENTITY_ZOMBIE_AMBIENT);
 
             if (advanceAge()) {
                 sync();
@@ -66,14 +60,14 @@ public class IronFarmTileentity extends VillagerTileentity implements ITickableT
             markDirty();
 
             if (timer == getGolemSpawnTime()) {
-                TraderBlock.playVillagerSound(world, getPos(), SoundEvents.ENTITY_ZOMBIE_AMBIENT);
+                VillagerBlockBase.playVillagerSound(world, getPos(), SoundEvents.ENTITY_ZOMBIE_AMBIENT);
                 sync();
             } else if (timer > getGolemSpawnTime() && timer < getGolemKillTime()) {
                 if (timer % 20L == 0L) {
-                    TraderBlock.playVillagerSound(world, getPos(), SoundEvents.ENTITY_IRON_GOLEM_HURT);
+                    VillagerBlockBase.playVillagerSound(world, getPos(), SoundEvents.ENTITY_IRON_GOLEM_HURT);
                 }
             } else if (timer >= getGolemKillTime()) {
-                TraderBlock.playVillagerSound(world, getPos(), SoundEvents.ENTITY_IRON_GOLEM_DEATH);
+                VillagerBlockBase.playVillagerSound(world, getPos(), SoundEvents.ENTITY_IRON_GOLEM_DEATH);
                 IItemHandlerModifiable itemHandler = getItemHandler();
                 for (ItemStack drop : getDrops()) {
                     for (int i = 0; i < itemHandler.getSlots(); i++) {

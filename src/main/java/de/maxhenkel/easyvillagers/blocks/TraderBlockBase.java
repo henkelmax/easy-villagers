@@ -108,10 +108,6 @@ public abstract class TraderBlockBase extends VillagerBlockBase implements ITile
         }
     }
 
-    public static void playVillagerSound(World world, BlockPos pos, SoundEvent soundEvent) {
-        world.playSound(null, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, soundEvent, SoundCategory.BLOCKS, 1F, 1F);
-    }
-
     @Nullable
     @Override
     public abstract TileEntity createNewTileEntity(IBlockReader world);
