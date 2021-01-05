@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="${mod_forge_version}"
+loaderVersion="${mod_loader_version}"
 license="All rights reserved"
 issueTrackerURL="https://github.com/henkelmax/easy-villagers/issues"
 [[mods]]

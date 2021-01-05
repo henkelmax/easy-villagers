@@ -109,8 +109,13 @@ processResources {
     from(sourceSets.main.resources.srcDirs) {
         include '**/*.toml'
 
-        expand 'mod_id': mod_id, 'mod_version': mod_version, 'mod_vendor': mod_vendor, 'mod_name': mod_name,
-                'mod_forge_version': mod_forge_version, 'mod_minecraft_version': mod_minecraft_version
+        expand 'mod_id': mod_id,
+                'mod_version': mod_version,
+                'mod_vendor': mod_vendor,
+                'mod_name': mod_name,
+                'mod_forge_version': mod_forge_version,
+                'mod_loader_version': mod_loader_version,
+                'mod_minecraft_version': mod_minecraft_version
     }
     from(sourceSets.main.resources.srcDirs) {
         exclude '**/*.toml'
