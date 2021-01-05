@@ -1,1 +1,2 @@
-- Fixed villager head shaking in some cases
+- Improved item rendering performance
+- Improved WAILA/HWYLA tooltips

@@ -2,6 +2,7 @@ package de.maxhenkel.easyvillagers.items.render;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import de.maxhenkel.corelib.CachedMap;
+import de.maxhenkel.corelib.item.ItemUtils;
 import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.blocks.tileentity.TraderTileentity;
 import de.maxhenkel.easyvillagers.blocks.tileentity.render.TraderRenderer;
@@ -25,7 +26,7 @@ public class TraderItemRenderer extends ItemStackTileEntityRenderer {
     private CachedMap<ItemStack, TraderTileentity> cachedMap;
 
     public TraderItemRenderer() {
-        cachedMap = new CachedMap<>(10_000L);
+        cachedMap = new CachedMap<>(10_000L, ItemUtils.ITEM_COMPARATOR);
         minecraft = Minecraft.getInstance();
     }
 

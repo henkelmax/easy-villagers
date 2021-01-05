@@ -4,6 +4,9 @@ import de.maxhenkel.easyvillagers.blocks.tileentity.VillagerTileentity;
 import mcp.mobius.waila.api.IComponentProvider;
 import mcp.mobius.waila.api.IDataAccessor;
 import mcp.mobius.waila.api.IPluginConfig;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.text.ITextComponent;
 
 import java.util.List;
@@ -25,4 +28,12 @@ public class HUDHandlerVillager implements IComponentProvider {
         }
     }
 
+    @Override
+    public ItemStack getStack(IDataAccessor accessor, IPluginConfig config) {
+        TileEntity te = accessor.getTileEntity();
+        ItemStack stack = new ItemStack(te.getBlockState().getBlock().asItem());
+        CompoundNBT blockEntityTag = stack.getOrCreateChildTag("BlockEntityTag");
+        te.write(blockEntityTag);
+        return stack;
+    }
 }

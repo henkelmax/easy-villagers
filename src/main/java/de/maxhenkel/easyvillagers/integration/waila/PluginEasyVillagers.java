@@ -34,6 +34,14 @@ public class PluginEasyVillagers implements IWailaPlugin {
         registrar.registerComponentProvider(HUDHandlerConverter.INSTANCE, TooltipPosition.BODY, ConverterTileentity.class);
 
         registrar.registerComponentProvider(HUDHandlerBreeder.INSTANCE, TooltipPosition.BODY, BreederTileentity.class);
+
+        registrar.registerStackProvider(HUDHandlerVillager.INSTANCE, TraderTileentity.class);
+        registrar.registerStackProvider(HUDHandlerVillager.INSTANCE, AutoTraderTileentity.class);
+        registrar.registerStackProvider(HUDHandlerVillager.INSTANCE, IronFarmTileentity.class);
+        registrar.registerStackProvider(HUDHandlerVillager.INSTANCE, FarmerTileentity.class);
+        registrar.registerStackProvider(HUDHandlerVillager.INSTANCE, IncubatorTileentity.class);
+        registrar.registerStackProvider(HUDHandlerVillager.INSTANCE, ConverterTileentity.class);
+        registrar.registerStackProvider(HUDHandlerVillager.INSTANCE, BreederTileentity.class);
     }
 
     public static IFormattableTextComponent getVillagerName(EasyVillagerEntity villager) {

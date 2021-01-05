@@ -2,6 +2,7 @@ package de.maxhenkel.easyvillagers.items.render;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import de.maxhenkel.corelib.CachedMap;
+import de.maxhenkel.corelib.item.ItemUtils;
 import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.blocks.tileentity.BreederTileentity;
 import de.maxhenkel.easyvillagers.blocks.tileentity.render.BreederRenderer;
@@ -25,10 +26,9 @@ public class BreederItemRenderer extends ItemStackTileEntityRenderer {
     private CachedMap<ItemStack, BreederTileentity> cachedMap;
 
     public BreederItemRenderer() {
-        cachedMap = new CachedMap<>(10_000L);
+        cachedMap = new CachedMap<>(10_000L, ItemUtils.ITEM_COMPARATOR);
         minecraft = Minecraft.getInstance();
     }
-
 
 
     @Override

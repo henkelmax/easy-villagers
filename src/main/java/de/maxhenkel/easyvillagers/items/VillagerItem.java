@@ -1,6 +1,7 @@
 package de.maxhenkel.easyvillagers.items;
 
 import de.maxhenkel.corelib.CachedMap;
+import de.maxhenkel.corelib.item.ItemUtils;
 import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import de.maxhenkel.easyvillagers.items.render.VillagerItemRenderer;
@@ -32,11 +33,11 @@ import java.util.List;
 
 public class VillagerItem extends Item {
 
-    private CachedMap<ItemStack, EasyVillagerEntity> cachedVillagers;
+    private final CachedMap<ItemStack, EasyVillagerEntity> cachedVillagers;
 
     public VillagerItem() {
         super(new Item.Properties().maxStackSize(1).setISTER(() -> VillagerItemRenderer::new));
-        cachedVillagers = new CachedMap<>(10_000);
+        cachedVillagers = new CachedMap<>(10_000, ItemUtils.ITEM_COMPARATOR);
 
         DispenserBlock.registerDispenseBehavior(this, (source, stack) -> {
             Direction direction = source.getBlockState().get(DispenserBlock.FACING);
