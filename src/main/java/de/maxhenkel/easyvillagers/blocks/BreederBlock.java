@@ -34,7 +34,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 
-public class BreederBlock extends HorizontalRotatableBlock implements ITileEntityProvider, IItemBlock {
+public class BreederBlock extends VillagerBlockBase implements ITileEntityProvider, IItemBlock {
 
     public BreederBlock() {
         super(Properties.create(Material.IRON).hardnessAndResistance(2.5F).sound(SoundType.METAL).notSolid().setLightLevel(value -> 15));

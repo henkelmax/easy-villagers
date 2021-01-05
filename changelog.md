@@ -1,2 +1,1 @@
-- Improved item rendering performance
-- Improved WAILA/HWYLA tooltips
+- Fixed taking out items when having items in the off hand

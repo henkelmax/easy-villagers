@@ -35,7 +35,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 
-public class FarmerBlock extends HorizontalRotatableBlock implements ITileEntityProvider, IItemBlock {
+public class FarmerBlock extends VillagerBlockBase implements ITileEntityProvider, IItemBlock {
 
     public FarmerBlock() {
         super(Properties.create(Material.IRON).hardnessAndResistance(2.5F).sound(SoundType.METAL).notSolid().setLightLevel(value -> 15));

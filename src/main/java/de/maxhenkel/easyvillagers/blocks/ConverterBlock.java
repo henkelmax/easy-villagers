@@ -34,7 +34,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 
-public class ConverterBlock extends HorizontalRotatableBlock implements ITileEntityProvider, IItemBlock {
+public class ConverterBlock extends VillagerBlockBase implements ITileEntityProvider, IItemBlock {
 
     public ConverterBlock() {
         super(Properties.create(Material.IRON).hardnessAndResistance(2.5F).sound(SoundType.METAL).notSolid().setLightLevel(value -> 15));

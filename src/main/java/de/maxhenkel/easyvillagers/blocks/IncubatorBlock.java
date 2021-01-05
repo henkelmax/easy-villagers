@@ -32,7 +32,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 
-public class IncubatorBlock extends HorizontalRotatableBlock implements ITileEntityProvider, IItemBlock {
+public class IncubatorBlock extends VillagerBlockBase implements ITileEntityProvider, IItemBlock {
 
     public IncubatorBlock() {
         super(Properties.create(Material.IRON).hardnessAndResistance(2.5F).sound(SoundType.METAL).notSolid().setLightLevel(value -> 15));

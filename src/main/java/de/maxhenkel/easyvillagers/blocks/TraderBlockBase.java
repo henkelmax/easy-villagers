@@ -23,7 +23,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 
-public abstract class TraderBlockBase extends HorizontalRotatableBlock implements ITileEntityProvider, IItemBlock {
+public abstract class TraderBlockBase extends VillagerBlockBase implements ITileEntityProvider, IItemBlock {
 
     public TraderBlockBase() {
         super(Properties.create(Material.IRON).hardnessAndResistance(2.5F).sound(SoundType.METAL).notSolid().setLightLevel(value -> 15));
