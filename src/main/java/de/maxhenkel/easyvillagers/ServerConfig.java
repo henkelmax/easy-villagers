@@ -18,6 +18,7 @@ public class ServerConfig extends ConfigBase {
     public final ForgeConfigSpec.IntValue villagerSoundAmount;
     public final ForgeConfigSpec.IntValue incubatorSpeed;
     public final ForgeConfigSpec.BooleanValue tradeCycling;
+    public final ForgeConfigSpec.BooleanValue universalReputation;
 
     public ServerConfig(ForgeConfigSpec.Builder builder) {
         super(builder);
@@ -73,7 +74,14 @@ public class ServerConfig extends ConfigBase {
 
         tradeCycling = builder
                 .comment("If the trade cycling button should be enabled")
-                .define("trade_cycling", true);
+                .define("villager.trade_cycling", true);
+
+        universalReputation = builder
+                .comment(
+                        "If the villager reputation should be the same for every player",
+                        "This affects the prices of cured/converted villagers and the prices of the auto trader"
+                )
+                .define("villager.universal_reputation", true);
 
     }
 

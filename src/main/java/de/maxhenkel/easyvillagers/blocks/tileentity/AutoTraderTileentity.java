@@ -162,11 +162,12 @@ public class AutoTraderTileentity extends TraderTileentityBase {
     }
 
     protected void updateTradeInv() {
-        VillagerEntity villagerEntity = getVillagerEntity();
+        EasyVillagerEntity villagerEntity = getVillagerEntity();
         if (villagerEntity == null) {
             tradeGuiInv.clear();
             return;
         }
+        villagerEntity.recalculateOffers();
         MerchantOffer offer = getOffer();
         if (offer == null) {
             tradeGuiInv.clear();

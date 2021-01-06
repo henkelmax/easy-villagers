@@ -1,2 +1,1 @@
-- Added villager sound amount config option
-- Fixed villager sound inconsistencies
+- Added universal reputation config option
