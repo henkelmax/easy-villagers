@@ -1,1 +1,1 @@
-- Added universal reputation config option
+- Added cycle trades button location config option

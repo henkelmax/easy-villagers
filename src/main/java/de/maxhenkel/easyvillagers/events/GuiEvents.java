@@ -32,7 +32,19 @@ public class GuiEvents {
 
         MerchantScreen merchantScreen = (MerchantScreen) event.getGui();
 
-        event.addWidget(new CycleTradesButton(merchantScreen.getGuiLeft() + 250, merchantScreen.getGuiTop() + 8, b -> {
+        int posX;
+
+        switch (Main.CLIENT_CONFIG.cycleTradesButtonLocation.get()) {
+            case TOP_LEFT:
+            default:
+                posX = merchantScreen.getGuiLeft() + 107;
+                break;
+            case TOP_RIGHT:
+                posX = merchantScreen.getGuiLeft() + 250;
+                break;
+        }
+
+        event.addWidget(new CycleTradesButton(posX, merchantScreen.getGuiTop() + 8, b -> {
             Main.SIMPLE_CHANNEL.sendToServer(new MessageCycleTrades());
         }, merchantScreen));
     }
