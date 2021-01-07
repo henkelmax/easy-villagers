@@ -1,1 +1,1 @@
-- Added cycle trades button location config option
+- Updated cycle trades button texture
