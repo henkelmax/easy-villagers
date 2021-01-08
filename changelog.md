@@ -1,1 +1,1 @@
-- Fixed a crash in combination with create
+- Fixed crash on servers when using cycle trades

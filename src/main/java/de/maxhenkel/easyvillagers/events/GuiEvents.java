@@ -9,6 +9,8 @@ import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.MerchantContainer;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
@@ -20,6 +22,7 @@ public class GuiEvents {
     public static final Field MERCHANT = ObfuscationReflectionHelper.findField(MerchantContainer.class, "field_75178_e");
     public static final Field OFFERS = ObfuscationReflectionHelper.findField(AbstractVillagerEntity.class, "field_213724_bz");
 
+    @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
     public void onOpenScreen(GuiScreenEvent.InitGuiEvent.Post event) {
         if (!Main.SERVER_CONFIG.tradeCycling.get()) {
@@ -66,7 +69,7 @@ public class GuiEvents {
             return;
         }
 
-        if (container.getXp() > 0) {
+        if (merchant.getXp() > 0) {
             return;
         }
 
