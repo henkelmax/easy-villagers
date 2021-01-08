@@ -7,7 +7,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.eventbus.api.Event;
 
@@ -17,7 +16,7 @@ public class VillagerBlockBase extends HorizontalRotatableBlock {
         super(properties);
     }
 
-    public boolean overrideClick(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit, Event.Result itemResult) {
+    public boolean overrideClick(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, Event.Result itemResult) {
         return player.isSneaking() && player.getHeldItemMainhand().isEmpty();
     }
 
