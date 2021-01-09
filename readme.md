@@ -76,6 +76,7 @@ The speed can be changed in the config.
 
 When looking for a good trade, you always have to remove the villagers workstation, in order to reset their trades.
 The trade cycle button solves this problem. If a villager hasn't been traded before, you can just press it and the trades reset automatically.
+Alternatively you can use the `C` key to cycle trades.
 
 This also works for normal villagers.
 

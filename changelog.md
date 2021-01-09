@@ -1,1 +1,1 @@
-- Fixed crash on servers when using cycle trades
+- Added cycle trades keybind

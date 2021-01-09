@@ -43,6 +43,7 @@ public class Main {
 
     public static SimpleChannel SIMPLE_CHANNEL;
     public static KeyBinding PICKUP_KEY;
+    public static KeyBinding CYCLE_TRADES_KEY;
 
     public Main() {
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Item.class, ModBlocks::registerItems);
@@ -79,6 +80,7 @@ public class Main {
         MinecraftForge.EVENT_BUS.register(new GuiEvents());
 
         PICKUP_KEY = ClientRegistry.registerKeyBinding("key.easy_villagers.pick_up", "category.easy_villagers", GLFW.GLFW_KEY_V);
+        CYCLE_TRADES_KEY = ClientRegistry.registerKeyBinding("key.easy_villagers.cycle_trades", "category.easy_villagers", GLFW.GLFW_KEY_C);
     }
 
 }
