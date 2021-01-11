@@ -5,10 +5,9 @@ import de.maxhenkel.corelib.item.ItemUtils;
 import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.ModItemGroups;
 import de.maxhenkel.easyvillagers.blocks.tileentity.BreederTileentity;
-import de.maxhenkel.easyvillagers.blocks.tileentity.render.BreederRenderer;
 import de.maxhenkel.easyvillagers.gui.BreederContainer;
 import de.maxhenkel.easyvillagers.items.VillagerItem;
-import de.maxhenkel.easyvillagers.items.render.BlockItemRendererBase;
+import de.maxhenkel.easyvillagers.items.render.BreederItemRenderer;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ITileEntityProvider;
@@ -44,7 +43,7 @@ public class BreederBlock extends VillagerBlockBase implements ITileEntityProvid
 
     @Override
     public Item toItem() {
-        return new BlockItem(this, new Item.Properties().group(ModItemGroups.TAB_EASY_VILLAGERS).setISTER(() -> () -> new BlockItemRendererBase<>(BreederRenderer::new, BreederTileentity::new))).setRegistryName(getRegistryName());
+        return new BlockItem(this, new Item.Properties().group(ModItemGroups.TAB_EASY_VILLAGERS).setISTER(() -> BreederItemRenderer::new)).setRegistryName(getRegistryName());
     }
 
     @Override

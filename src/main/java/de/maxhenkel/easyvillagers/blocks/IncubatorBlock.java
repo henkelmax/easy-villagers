@@ -4,9 +4,8 @@ import de.maxhenkel.corelib.block.IItemBlock;
 import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.ModItemGroups;
 import de.maxhenkel.easyvillagers.blocks.tileentity.IncubatorTileentity;
-import de.maxhenkel.easyvillagers.blocks.tileentity.render.IncubatorRenderer;
 import de.maxhenkel.easyvillagers.gui.VillagerIOContainer;
-import de.maxhenkel.easyvillagers.items.render.BlockItemRendererBase;
+import de.maxhenkel.easyvillagers.items.render.IncubatorItemRenderer;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ITileEntityProvider;
@@ -42,7 +41,7 @@ public class IncubatorBlock extends VillagerBlockBase implements ITileEntityProv
 
     @Override
     public Item toItem() {
-        return new BlockItem(this, new Item.Properties().group(ModItemGroups.TAB_EASY_VILLAGERS).setISTER(() -> () -> new BlockItemRendererBase<>(IncubatorRenderer::new, IncubatorTileentity::new))).setRegistryName(getRegistryName());
+        return new BlockItem(this, new Item.Properties().group(ModItemGroups.TAB_EASY_VILLAGERS).setISTER(() -> IncubatorItemRenderer::new)).setRegistryName(getRegistryName());
     }
 
     @Override

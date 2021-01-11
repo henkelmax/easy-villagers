@@ -4,9 +4,8 @@ import de.maxhenkel.corelib.block.IItemBlock;
 import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.ModItemGroups;
 import de.maxhenkel.easyvillagers.blocks.tileentity.ConverterTileentity;
-import de.maxhenkel.easyvillagers.blocks.tileentity.render.ConverterRenderer;
 import de.maxhenkel.easyvillagers.gui.VillagerIOContainer;
-import de.maxhenkel.easyvillagers.items.render.BlockItemRendererBase;
+import de.maxhenkel.easyvillagers.items.render.ConverterItemRenderer;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ITileEntityProvider;
@@ -44,7 +43,7 @@ public class ConverterBlock extends VillagerBlockBase implements ITileEntityProv
 
     @Override
     public Item toItem() {
-        return new BlockItem(this, new Item.Properties().group(ModItemGroups.TAB_EASY_VILLAGERS).setISTER(() -> () -> new BlockItemRendererBase<>(ConverterRenderer::new, ConverterTileentity::new))).setRegistryName(getRegistryName());
+        return new BlockItem(this, new Item.Properties().group(ModItemGroups.TAB_EASY_VILLAGERS).setISTER(() -> ConverterItemRenderer::new)).setRegistryName(getRegistryName());
     }
 
     @Override

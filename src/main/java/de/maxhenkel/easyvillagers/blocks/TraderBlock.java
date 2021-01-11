@@ -4,8 +4,7 @@ import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.ModItemGroups;
 import de.maxhenkel.easyvillagers.blocks.tileentity.TraderTileentity;
 import de.maxhenkel.easyvillagers.blocks.tileentity.TraderTileentityBase;
-import de.maxhenkel.easyvillagers.blocks.tileentity.render.TraderRenderer;
-import de.maxhenkel.easyvillagers.items.render.BlockItemRendererBase;
+import de.maxhenkel.easyvillagers.items.render.TraderItemRenderer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -23,7 +22,7 @@ public class TraderBlock extends TraderBlockBase {
 
     @Override
     public Item toItem() {
-        return new BlockItem(this, new Item.Properties().group(ModItemGroups.TAB_EASY_VILLAGERS).setISTER(() -> () -> new BlockItemRendererBase<>(TraderRenderer::new, TraderTileentity::new))).setRegistryName(getRegistryName());
+        return new BlockItem(this, new Item.Properties().group(ModItemGroups.TAB_EASY_VILLAGERS).setISTER(() -> TraderItemRenderer::new)).setRegistryName(getRegistryName());
     }
 
     @Override

@@ -5,10 +5,9 @@ import de.maxhenkel.corelib.item.ItemUtils;
 import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.ModItemGroups;
 import de.maxhenkel.easyvillagers.blocks.tileentity.IronFarmTileentity;
-import de.maxhenkel.easyvillagers.blocks.tileentity.render.IronFarmRenderer;
 import de.maxhenkel.easyvillagers.gui.OutputContainer;
 import de.maxhenkel.easyvillagers.items.VillagerItem;
-import de.maxhenkel.easyvillagers.items.render.BlockItemRendererBase;
+import de.maxhenkel.easyvillagers.items.render.IronFarmItemRenderer;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ITileEntityProvider;
@@ -44,7 +43,7 @@ public class IronFarmBlock extends VillagerBlockBase implements ITileEntityProvi
 
     @Override
     public Item toItem() {
-        return new BlockItem(this, new Item.Properties().group(ModItemGroups.TAB_EASY_VILLAGERS).setISTER(() -> () -> new BlockItemRendererBase<>(IronFarmRenderer::new, IronFarmTileentity::new))).setRegistryName(getRegistryName());
+        return new BlockItem(this, new Item.Properties().group(ModItemGroups.TAB_EASY_VILLAGERS).setISTER(() -> IronFarmItemRenderer::new)).setRegistryName(getRegistryName());
     }
 
     @Override

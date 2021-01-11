@@ -1,2 +1,1 @@
-- Fix trader block rendering
-- The grindstone is now mounted to the floor in the trader
+- Fixed crash on servers
