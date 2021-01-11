@@ -1,6 +1,7 @@
 package de.maxhenkel.easyvillagers.blocks.tileentity.render;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import de.maxhenkel.corelib.client.RenderUtils;
 import de.maxhenkel.easyvillagers.blocks.tileentity.FakeWorldTileentity;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
@@ -27,8 +28,9 @@ public class BlockRendererBase<T extends FakeWorldTileentity> extends TileEntity
 
     protected void renderBlock(T tileEntity, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
         BlockState state = tileEntity.getBlockState();
+        int color = minecraft.getBlockColors().getColor(state, null, null, 0);
         BlockRendererDispatcher dispatcher = minecraft.getBlockRendererDispatcher();
-        dispatcher.getBlockModelRenderer().renderModel(matrixStack.getLast(), buffer.getBuffer(RenderType.getCutoutMipped()), state, dispatcher.getModelForState(state), 0, 0, 0, combinedLight, combinedOverlay, EmptyModelData.INSTANCE);
+        dispatcher.getBlockModelRenderer().renderModel(matrixStack.getLast(), buffer.getBuffer(RenderType.getCutoutMipped()), state, dispatcher.getModelForState(state), RenderUtils.getRed(color), RenderUtils.getGreen(color), RenderUtils.getBlue(color), combinedLight, combinedOverlay, EmptyModelData.INSTANCE);
     }
 
 }

@@ -1,2 +1,2 @@
-- Blocks no longer emit light
-- Updated block model
+- Fix trader block rendering
+- The grindstone is now mounted to the floor in the trader
