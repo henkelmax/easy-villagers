@@ -1,1 +1,1 @@
-- Added cycle trades keybind
+- Added option to hide the cycle trades button

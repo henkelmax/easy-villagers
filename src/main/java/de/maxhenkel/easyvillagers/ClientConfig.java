@@ -25,7 +25,7 @@ public class ClientConfig extends ConfigBase {
     }
 
     public enum CycleTradesButtonLocation {
-        TOP_LEFT, TOP_RIGHT
+        TOP_LEFT, TOP_RIGHT, NONE
     }
 
 }

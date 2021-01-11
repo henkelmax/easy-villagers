@@ -1,5 +1,6 @@
 package de.maxhenkel.easyvillagers.events;
 
+import de.maxhenkel.easyvillagers.ClientConfig;
 import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.gui.CycleTradesButton;
 import de.maxhenkel.easyvillagers.net.MessageCycleTrades;
@@ -38,11 +39,17 @@ public class GuiEvents {
             return;
         }
 
+        ClientConfig.CycleTradesButtonLocation loc = Main.CLIENT_CONFIG.cycleTradesButtonLocation.get();
+
+        if (loc.equals(ClientConfig.CycleTradesButtonLocation.NONE)) {
+            return;
+        }
+
         MerchantScreen merchantScreen = (MerchantScreen) event.getGui();
 
         int posX;
 
-        switch (Main.CLIENT_CONFIG.cycleTradesButtonLocation.get()) {
+        switch (loc) {
             case TOP_LEFT:
             default:
                 posX = merchantScreen.getGuiLeft() + 107;
