@@ -12,9 +12,7 @@ import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.entity.VillagerRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Vector3f;
@@ -25,26 +23,19 @@ import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TraderRenderer extends TileEntityRenderer<TraderTileentity> {
+public class TraderRenderer extends VillagerRendererBase<TraderTileentity> {
 
-    private Minecraft minecraft;
-    private VillagerRenderer renderer;
-
-    public TraderRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
-        super(rendererDispatcherIn);
-
-        minecraft = Minecraft.getInstance();
+    public TraderRenderer(TileEntityRendererDispatcher rendererDispatcher) {
+        super(rendererDispatcher);
     }
 
     @Override
-    public void render(TraderTileentity trader, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn) {
-        if (renderer == null) {
-            renderer = new VillagerRenderer(minecraft.getRenderManager(), (IReloadableResourceManager) minecraft.getResourceManager());
-        }
-        renderTraderBase(minecraft, renderer, trader, partialTicks, matrixStack, buffer, combinedLightIn, combinedOverlayIn);
+    public void render(TraderTileentity trader, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
+        super.render(trader, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
+        renderTraderBase(minecraft, villagerRenderer, trader, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
     }
 
-    public static void renderTraderBase(Minecraft minecraft, VillagerRenderer renderer, TraderTileentityBase trader, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn) {
+    public static void renderTraderBase(Minecraft minecraft, VillagerRenderer renderer, TraderTileentityBase trader, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
         matrixStack.push();
         Direction direction = Direction.SOUTH;
         if (!trader.isFakeWorld()) {
@@ -58,7 +49,7 @@ public class TraderRenderer extends TileEntityRenderer<TraderTileentity> {
             matrixStack.rotate(Vector3f.YP.rotationDegrees(-direction.getHorizontalAngle()));
             matrixStack.translate(0D, 0D, -4D / 16D);
             matrixStack.scale(0.45F, 0.45F, 0.45F);
-            renderer.render(trader.getVillagerEntity(), 0F, 1F, matrixStack, buffer, combinedLightIn);
+            renderer.render(trader.getVillagerEntity(), 0F, 1F, matrixStack, buffer, combinedLight);
             matrixStack.pop();
         }
 
@@ -75,11 +66,11 @@ public class TraderRenderer extends TileEntityRenderer<TraderTileentity> {
             BlockState workstation = trader.getWorkstation().getDefaultState();
             BlockRendererDispatcher dispatcher = minecraft.getBlockRendererDispatcher();
             int color = minecraft.getBlockColors().getColor(workstation, null, null, 0);
-            dispatcher.getBlockModelRenderer().renderModel(matrixStack.getLast(), buffer.getBuffer(RenderTypeLookup.func_239221_b_(workstation)), workstation, dispatcher.getModelForState(workstation), RenderUtils.getRed(color), RenderUtils.getGreen(color), RenderUtils.getBlue(color), combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
+            dispatcher.getBlockModelRenderer().renderModel(matrixStack.getLast(), buffer.getBuffer(RenderTypeLookup.func_239221_b_(workstation)), workstation, dispatcher.getModelForState(workstation), RenderUtils.getRed(color), RenderUtils.getGreen(color), RenderUtils.getBlue(color), combinedLight, combinedOverlay, EmptyModelData.INSTANCE);
             BlockState topBlock = getTopBlock(workstation);
             if (topBlock != null) {
                 matrixStack.translate(0D, 1D, 0D);
-                dispatcher.getBlockModelRenderer().renderModel(matrixStack.getLast(), buffer.getBuffer(RenderTypeLookup.func_239221_b_(topBlock)), topBlock, dispatcher.getModelForState(topBlock), RenderUtils.getRed(color), RenderUtils.getGreen(color), RenderUtils.getBlue(color), combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
+                dispatcher.getBlockModelRenderer().renderModel(matrixStack.getLast(), buffer.getBuffer(RenderTypeLookup.func_239221_b_(topBlock)), topBlock, dispatcher.getModelForState(topBlock), RenderUtils.getRed(color), RenderUtils.getGreen(color), RenderUtils.getBlue(color), combinedLight, combinedOverlay, EmptyModelData.INSTANCE);
             }
             matrixStack.pop();
         }

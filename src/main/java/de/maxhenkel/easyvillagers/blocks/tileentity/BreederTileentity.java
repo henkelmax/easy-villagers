@@ -4,6 +4,7 @@ import de.maxhenkel.corelib.entity.EntityUtils;
 import de.maxhenkel.corelib.inventory.ItemListInventory;
 import de.maxhenkel.corelib.net.NetUtils;
 import de.maxhenkel.easyvillagers.Main;
+import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import de.maxhenkel.easyvillagers.items.ModItems;
@@ -38,7 +39,7 @@ public class BreederTileentity extends FakeWorldTileentity implements ITickableT
     private EasyVillagerEntity villagerEntity2;
 
     public BreederTileentity() {
-        super(ModTileEntities.BREEDER);
+        super(ModTileEntities.BREEDER, ModBlocks.BREEDER.getDefaultState());
         foodInventory = NonNullList.withSize(4, ItemStack.EMPTY);
         outputInventory = NonNullList.withSize(4, ItemStack.EMPTY);
         villager1 = ItemStack.EMPTY;

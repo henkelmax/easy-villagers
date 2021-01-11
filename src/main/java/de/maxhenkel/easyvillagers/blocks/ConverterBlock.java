@@ -4,8 +4,9 @@ import de.maxhenkel.corelib.block.IItemBlock;
 import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.ModItemGroups;
 import de.maxhenkel.easyvillagers.blocks.tileentity.ConverterTileentity;
+import de.maxhenkel.easyvillagers.blocks.tileentity.render.ConverterRenderer;
 import de.maxhenkel.easyvillagers.gui.VillagerIOContainer;
-import de.maxhenkel.easyvillagers.items.render.ConverterItemRenderer;
+import de.maxhenkel.easyvillagers.items.render.BlockItemRendererBase;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ITileEntityProvider;
@@ -37,13 +38,13 @@ import javax.annotation.Nullable;
 public class ConverterBlock extends VillagerBlockBase implements ITileEntityProvider, IItemBlock {
 
     public ConverterBlock() {
-        super(Properties.create(Material.IRON).hardnessAndResistance(2.5F).sound(SoundType.METAL).notSolid().setLightLevel(value -> 15));
+        super(Properties.create(Material.IRON).hardnessAndResistance(2.5F).sound(SoundType.METAL).notSolid());
         setRegistryName(new ResourceLocation(Main.MODID, "converter"));
     }
 
     @Override
     public Item toItem() {
-        return new BlockItem(this, new Item.Properties().group(ModItemGroups.TAB_EASY_VILLAGERS).setISTER(() -> ConverterItemRenderer::new)).setRegistryName(getRegistryName());
+        return new BlockItem(this, new Item.Properties().group(ModItemGroups.TAB_EASY_VILLAGERS).setISTER(() -> () -> new BlockItemRendererBase<>(ConverterRenderer::new, ConverterTileentity::new))).setRegistryName(getRegistryName());
     }
 
     @Override
@@ -88,7 +89,7 @@ public class ConverterBlock extends VillagerBlockBase implements ITileEntityProv
 
     @Override
     public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
+        return BlockRenderType.INVISIBLE;
     }
 
     @OnlyIn(Dist.CLIENT)

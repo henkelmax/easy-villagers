@@ -5,35 +5,24 @@ import de.maxhenkel.corelib.client.RenderUtils;
 import de.maxhenkel.easyvillagers.blocks.TraderBlock;
 import de.maxhenkel.easyvillagers.blocks.tileentity.FarmerTileentity;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderTypeLookup;
-import net.minecraft.client.renderer.entity.VillagerRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.client.model.data.EmptyModelData;
 
-public class FarmerRenderer extends TileEntityRenderer<FarmerTileentity> {
+public class FarmerRenderer extends VillagerRendererBase<FarmerTileentity> {
 
-    private Minecraft minecraft;
-    private VillagerRenderer renderer;
-
-    public FarmerRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
-        super(rendererDispatcherIn);
-        minecraft = Minecraft.getInstance();
+    public FarmerRenderer(TileEntityRendererDispatcher rendererDispatcher) {
+        super(rendererDispatcher);
     }
 
     @Override
-    public void render(FarmerTileentity farmer, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn) {
+    public void render(FarmerTileentity farmer, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
+        super.render(farmer, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
         matrixStack.push();
-
-        if (renderer == null) {
-            renderer = new VillagerRenderer(minecraft.getRenderManager(), (IReloadableResourceManager) minecraft.getResourceManager());
-        }
 
         Direction direction = Direction.SOUTH;
         if (!farmer.isFakeWorld()) {
@@ -47,7 +36,7 @@ public class FarmerRenderer extends TileEntityRenderer<FarmerTileentity> {
             matrixStack.rotate(Vector3f.YP.rotationDegrees(-direction.getHorizontalAngle()));
             matrixStack.translate(0D, 0D, -4D / 16D);
             matrixStack.scale(0.45F, 0.45F, 0.45F);
-            renderer.render(farmer.getVillagerEntity(), 0F, 1F, matrixStack, buffer, combinedLightIn);
+            villagerRenderer.render(farmer.getVillagerEntity(), 0F, 1F, matrixStack, buffer, combinedLight);
             matrixStack.pop();
         }
 
@@ -64,7 +53,7 @@ public class FarmerRenderer extends TileEntityRenderer<FarmerTileentity> {
 
             BlockRendererDispatcher dispatcher = minecraft.getBlockRendererDispatcher();
             int color = minecraft.getBlockColors().getColor(crop, null, null, 0);
-            dispatcher.getBlockModelRenderer().renderModel(matrixStack.getLast(), buffer.getBuffer(RenderTypeLookup.func_239221_b_(crop)), crop, dispatcher.getModelForState(crop), RenderUtils.getRed(color), RenderUtils.getGreen(color), RenderUtils.getBlue(color), combinedLightIn, combinedOverlayIn, EmptyModelData.INSTANCE);
+            dispatcher.getBlockModelRenderer().renderModel(matrixStack.getLast(), buffer.getBuffer(RenderTypeLookup.func_239221_b_(crop)), crop, dispatcher.getModelForState(crop), RenderUtils.getRed(color), RenderUtils.getGreen(color), RenderUtils.getBlue(color), combinedLight, combinedOverlay, EmptyModelData.INSTANCE);
             matrixStack.pop();
         }
 

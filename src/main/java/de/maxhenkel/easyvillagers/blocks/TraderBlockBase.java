@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
 public abstract class TraderBlockBase extends VillagerBlockBase implements ITileEntityProvider, IItemBlock {
 
     public TraderBlockBase() {
-        super(Properties.create(Material.IRON).hardnessAndResistance(2.5F).sound(SoundType.METAL).notSolid().setLightLevel(value -> 15));
+        super(Properties.create(Material.IRON).hardnessAndResistance(2.5F).sound(SoundType.METAL).notSolid());
     }
 
     @Override
@@ -114,7 +114,7 @@ public abstract class TraderBlockBase extends VillagerBlockBase implements ITile
 
     @Override
     public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
+        return BlockRenderType.INVISIBLE;
     }
 
     @OnlyIn(Dist.CLIENT)

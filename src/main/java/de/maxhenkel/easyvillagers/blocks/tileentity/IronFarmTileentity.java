@@ -2,6 +2,7 @@ package de.maxhenkel.easyvillagers.blocks.tileentity;
 
 import de.maxhenkel.corelib.inventory.ItemListInventory;
 import de.maxhenkel.easyvillagers.Main;
+import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import net.minecraft.block.BlockState;
@@ -37,7 +38,7 @@ public class IronFarmTileentity extends VillagerTileentity implements ITickableT
     private long timer;
 
     public IronFarmTileentity() {
-        super(ModTileEntities.IRON_FARM);
+        super(ModTileEntities.IRON_FARM, ModBlocks.IRON_FARM.getDefaultState());
         inventory = NonNullList.withSize(4, ItemStack.EMPTY);
     }
 

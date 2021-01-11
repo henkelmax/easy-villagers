@@ -2,6 +2,7 @@ package de.maxhenkel.easyvillagers.blocks.tileentity;
 
 import de.maxhenkel.corelib.inventory.ItemListInventory;
 import de.maxhenkel.easyvillagers.Main;
+import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
 import de.maxhenkel.easyvillagers.items.VillagerItem;
 import net.minecraft.block.BlockState;
@@ -26,7 +27,7 @@ public class IncubatorTileentity extends VillagerTileentity implements ITickable
     private NonNullList<ItemStack> outputInventory;
 
     public IncubatorTileentity() {
-        super(ModTileEntities.INCUBATOR);
+        super(ModTileEntities.INCUBATOR, ModBlocks.INCUBATOR.getDefaultState());
         inputInventory = NonNullList.withSize(4, ItemStack.EMPTY);
         outputInventory = NonNullList.withSize(4, ItemStack.EMPTY);
     }

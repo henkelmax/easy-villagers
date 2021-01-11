@@ -5,9 +5,10 @@ import de.maxhenkel.corelib.item.ItemUtils;
 import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.ModItemGroups;
 import de.maxhenkel.easyvillagers.blocks.tileentity.FarmerTileentity;
+import de.maxhenkel.easyvillagers.blocks.tileentity.render.FarmerRenderer;
 import de.maxhenkel.easyvillagers.gui.OutputContainer;
 import de.maxhenkel.easyvillagers.items.VillagerItem;
-import de.maxhenkel.easyvillagers.items.render.FarmerItemRenderer;
+import de.maxhenkel.easyvillagers.items.render.BlockItemRendererBase;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ITileEntityProvider;
@@ -38,13 +39,13 @@ import javax.annotation.Nullable;
 public class FarmerBlock extends VillagerBlockBase implements ITileEntityProvider, IItemBlock {
 
     public FarmerBlock() {
-        super(Properties.create(Material.IRON).hardnessAndResistance(2.5F).sound(SoundType.METAL).notSolid().setLightLevel(value -> 15));
+        super(Properties.create(Material.IRON).hardnessAndResistance(2.5F).sound(SoundType.METAL).notSolid());
         setRegistryName(new ResourceLocation(Main.MODID, "farmer"));
     }
 
     @Override
     public Item toItem() {
-        return new BlockItem(this, new Item.Properties().group(ModItemGroups.TAB_EASY_VILLAGERS).setISTER(() -> FarmerItemRenderer::new)).setRegistryName(getRegistryName());
+        return new BlockItem(this, new Item.Properties().group(ModItemGroups.TAB_EASY_VILLAGERS).setISTER(() -> () -> new BlockItemRendererBase<>(FarmerRenderer::new, FarmerTileentity::new))).setRegistryName(getRegistryName());
     }
 
     @Override
@@ -121,7 +122,7 @@ public class FarmerBlock extends VillagerBlockBase implements ITileEntityProvide
 
     @Override
     public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
+        return BlockRenderType.INVISIBLE;
     }
 
     @OnlyIn(Dist.CLIENT)

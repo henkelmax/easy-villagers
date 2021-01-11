@@ -3,41 +3,31 @@ package de.maxhenkel.easyvillagers.blocks.tileentity.render;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import de.maxhenkel.easyvillagers.blocks.TraderBlock;
 import de.maxhenkel.easyvillagers.blocks.tileentity.IronFarmTileentity;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.IronGolemRenderer;
-import net.minecraft.client.renderer.entity.VillagerRenderer;
 import net.minecraft.client.renderer.entity.ZombieRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.monster.ZombieEntity;
 import net.minecraft.entity.passive.IronGolemEntity;
-import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.vector.Vector3f;
 
-public class IronFarmRenderer extends TileEntityRenderer<IronFarmTileentity> {
+public class IronFarmRenderer extends VillagerRendererBase<IronFarmTileentity> {
 
-    private Minecraft minecraft;
-    private VillagerRenderer renderer;
     private ZombieEntity zombie;
     private ZombieRenderer zombieRenderer;
     private IronGolemEntity ironGolem;
     private IronGolemRenderer ironGolemRenderer;
 
-    public IronFarmRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
-        super(rendererDispatcherIn);
-        minecraft = Minecraft.getInstance();
+    public IronFarmRenderer(TileEntityRendererDispatcher rendererDispatcher) {
+        super(rendererDispatcher);
     }
 
     @Override
-    public void render(IronFarmTileentity farm, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn) {
+    public void render(IronFarmTileentity farm, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
+        super.render(farm, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
         matrixStack.push();
-
-        if (renderer == null) {
-            renderer = new VillagerRenderer(minecraft.getRenderManager(), (IReloadableResourceManager) minecraft.getResourceManager());
-        }
 
         if (zombieRenderer == null) {
             zombieRenderer = new ZombieRenderer(minecraft.getRenderManager());
@@ -61,7 +51,7 @@ public class IronFarmRenderer extends TileEntityRenderer<IronFarmTileentity> {
             matrixStack.translate(-5D / 16D, 0D, -5D / 16D);
             matrixStack.rotate(Vector3f.YP.rotationDegrees(90));
             matrixStack.scale(0.3F, 0.3F, 0.3F);
-            renderer.render(farm.getVillagerEntity(), 0F, 1F, matrixStack, buffer, combinedLightIn);
+            villagerRenderer.render(farm.getVillagerEntity(), 0F, 1F, matrixStack, buffer, combinedLight);
             matrixStack.pop();
         }
 
@@ -71,7 +61,7 @@ public class IronFarmRenderer extends TileEntityRenderer<IronFarmTileentity> {
         matrixStack.translate(5D / 16D, 0D, -5D / 16D);
         matrixStack.rotate(Vector3f.YP.rotationDegrees(-90));
         matrixStack.scale(0.3F, 0.3F, 0.3F);
-        zombieRenderer.render(zombie, 0F, 1F, matrixStack, buffer, combinedLightIn);
+        zombieRenderer.render(zombie, 0F, 1F, matrixStack, buffer, combinedLight);
         matrixStack.pop();
 
         if (farm.getTimer() >= IronFarmTileentity.getGolemSpawnTime() && farm.getTimer() < IronFarmTileentity.getGolemKillTime()) {
@@ -85,7 +75,7 @@ public class IronFarmRenderer extends TileEntityRenderer<IronFarmTileentity> {
             } else {
                 ironGolem.hurtTime = 0;
             }
-            ironGolemRenderer.render(ironGolem, 0F, 1F, matrixStack, buffer, combinedLightIn);
+            ironGolemRenderer.render(ironGolem, 0F, 1F, matrixStack, buffer, combinedLight);
             matrixStack.pop();
         }
 

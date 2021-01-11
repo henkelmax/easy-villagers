@@ -12,8 +12,8 @@ public class VillagerTileentity extends FakeWorldTileentity {
     private ItemStack villager;
     private EasyVillagerEntity villagerEntity;
 
-    public VillagerTileentity(TileEntityType<?> tileEntityTypeIn) {
-        super(tileEntityTypeIn);
+    public VillagerTileentity(TileEntityType<?> tileEntityTypeIn, BlockState defaultState) {
+        super(tileEntityTypeIn, defaultState);
         villager = ItemStack.EMPTY;
     }
 

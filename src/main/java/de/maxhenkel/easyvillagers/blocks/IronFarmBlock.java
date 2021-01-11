@@ -5,9 +5,10 @@ import de.maxhenkel.corelib.item.ItemUtils;
 import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.ModItemGroups;
 import de.maxhenkel.easyvillagers.blocks.tileentity.IronFarmTileentity;
+import de.maxhenkel.easyvillagers.blocks.tileentity.render.IronFarmRenderer;
 import de.maxhenkel.easyvillagers.gui.OutputContainer;
 import de.maxhenkel.easyvillagers.items.VillagerItem;
-import de.maxhenkel.easyvillagers.items.render.IronFarmItemRenderer;
+import de.maxhenkel.easyvillagers.items.render.BlockItemRendererBase;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ITileEntityProvider;
@@ -37,13 +38,13 @@ import javax.annotation.Nullable;
 public class IronFarmBlock extends VillagerBlockBase implements ITileEntityProvider, IItemBlock {
 
     public IronFarmBlock() {
-        super(Properties.create(Material.IRON).hardnessAndResistance(2.5F).sound(SoundType.METAL).notSolid().setLightLevel(value -> 15));
+        super(Properties.create(Material.IRON).hardnessAndResistance(2.5F).sound(SoundType.METAL).notSolid());
         setRegistryName(new ResourceLocation(Main.MODID, "iron_farm"));
     }
 
     @Override
     public Item toItem() {
-        return new BlockItem(this, new Item.Properties().group(ModItemGroups.TAB_EASY_VILLAGERS).setISTER(() -> IronFarmItemRenderer::new)).setRegistryName(getRegistryName());
+        return new BlockItem(this, new Item.Properties().group(ModItemGroups.TAB_EASY_VILLAGERS).setISTER(() -> () -> new BlockItemRendererBase<>(IronFarmRenderer::new, IronFarmTileentity::new))).setRegistryName(getRegistryName());
     }
 
     @Override
@@ -96,7 +97,7 @@ public class IronFarmBlock extends VillagerBlockBase implements ITileEntityProvi
 
     @Override
     public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
+        return BlockRenderType.INVISIBLE;
     }
 
     @OnlyIn(Dist.CLIENT)

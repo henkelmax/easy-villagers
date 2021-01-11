@@ -2,6 +2,7 @@ package de.maxhenkel.easyvillagers.blocks.tileentity;
 
 import de.maxhenkel.corelib.inventory.ItemListInventory;
 import de.maxhenkel.easyvillagers.Main;
+import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import de.maxhenkel.easyvillagers.items.VillagerItem;
@@ -37,7 +38,7 @@ public class ConverterTileentity extends VillagerTileentity implements ITickable
     private UUID owner;
 
     public ConverterTileentity() {
-        super(ModTileEntities.CONVERTER);
+        super(ModTileEntities.CONVERTER, ModBlocks.CONVERTER.getDefaultState());
         inputInventory = NonNullList.withSize(4, ItemStack.EMPTY);
         outputInventory = NonNullList.withSize(4, ItemStack.EMPTY);
     }

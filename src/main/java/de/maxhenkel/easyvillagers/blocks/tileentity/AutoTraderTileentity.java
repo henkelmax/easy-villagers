@@ -3,6 +3,7 @@ package de.maxhenkel.easyvillagers.blocks.tileentity;
 import de.maxhenkel.corelib.inventory.ItemListInventory;
 import de.maxhenkel.corelib.item.ItemUtils;
 import de.maxhenkel.easyvillagers.Main;
+import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -34,7 +35,7 @@ public class AutoTraderTileentity extends TraderTileentityBase {
     protected int tradeIndex;
 
     public AutoTraderTileentity() {
-        super(ModTileEntities.AUTO_TRADER);
+        super(ModTileEntities.AUTO_TRADER, ModBlocks.AUTO_TRADER.getDefaultState());
         tradeGuiInv = new Inventory(3);
 
         inputInventory = NonNullList.withSize(4, ItemStack.EMPTY);

@@ -33,8 +33,8 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
     private Block workstation;
     private long nextRestock;
 
-    public TraderTileentityBase(TileEntityType type) {
-        super(type);
+    public TraderTileentityBase(TileEntityType type, BlockState defaultState) {
+        super(type, defaultState);
         workstation = Blocks.AIR;
     }
 

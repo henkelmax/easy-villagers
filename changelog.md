@@ -1,1 +1,2 @@
-- Added option to hide the cycle trades button
+- Blocks no longer emit light
+- Updated block model
