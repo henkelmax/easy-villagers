@@ -13,6 +13,7 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
+import net.minecraft.entity.merchant.villager.VillagerProfession;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -93,6 +94,9 @@ public class VillagerItem extends Item {
             EasyVillagerEntity villager = getVillagerFast(world, stack);
             if (!villager.hasCustomName() && villager.isChild()) {
                 return new TranslationTextComponent("item.easy_villagers.baby_villager");
+            }
+            if (villager.getVillagerData().getProfession().equals(VillagerProfession.NITWIT) || villager.getVillagerData().getProfession().equals(VillagerProfession.NONE)) {
+                return super.getDisplayName(stack);
             }
             return villager.getDisplayName();
         }

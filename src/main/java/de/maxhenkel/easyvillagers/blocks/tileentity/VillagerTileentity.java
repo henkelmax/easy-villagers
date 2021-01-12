@@ -91,7 +91,7 @@ public class VillagerTileentity extends FakeWorldTileentity {
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT compound) {
+    public void read(CompoundNBT compound) {
         if (compound.contains("Villager")) {
             CompoundNBT comp = compound.getCompound("Villager");
             villager = ItemStack.read(comp);
@@ -99,7 +99,7 @@ public class VillagerTileentity extends FakeWorldTileentity {
         } else {
             removeVillager();
         }
-        super.read(state, compound);
+        super.read(compound);
     }
 
 }

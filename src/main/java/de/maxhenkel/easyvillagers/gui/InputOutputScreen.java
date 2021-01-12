@@ -1,12 +1,10 @@
 package de.maxhenkel.easyvillagers.gui;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import de.maxhenkel.corelib.inventory.ScreenBase;
 import de.maxhenkel.easyvillagers.Main;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 
 public abstract class InputOutputScreen<T extends Container> extends ScreenBase<T> {
@@ -23,19 +21,19 @@ public abstract class InputOutputScreen<T extends Container> extends ScreenBase<
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(MatrixStack matrixStack, int x, int y) {
-        drawCentered(matrixStack, getTopText(), 9, FONT_COLOR);
-        drawCentered(matrixStack, getBottomText(), 40, FONT_COLOR);
-        font.func_243248_b(matrixStack, playerInventory.getDisplayName(), 8F, (float) (ySize - 96 + 3), FONT_COLOR);
+    protected void drawGuiContainerForegroundLayer(int x, int y) {
+        drawCentered(getTopText().getString(), 9, FONT_COLOR);
+        drawCentered(getBottomText().getString(), 40, FONT_COLOR);
+        font.drawString(playerInventory.getDisplayName().getString(), 8F, (float) (ySize - 96 + 3), FONT_COLOR);
     }
 
-    protected void drawCentered(MatrixStack matrixStack, IFormattableTextComponent text, int y, int color) {
-        int width = font.getStringPropertyWidth(text);
-        font.func_243248_b(matrixStack, text, xSize / 2F - width / 2F, y, color);
+    protected void drawCentered(String text, int y, int color) {
+        int width = font.getStringWidth(text);
+        font.drawString(text, xSize / 2F - width / 2F, y, color);
     }
 
-    protected abstract IFormattableTextComponent getTopText();
+    protected abstract ITextComponent getTopText();
 
-    protected abstract IFormattableTextComponent getBottomText();
+    protected abstract ITextComponent getBottomText();
 
 }

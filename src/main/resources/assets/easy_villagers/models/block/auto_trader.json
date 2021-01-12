@@ -1,7 +1,7 @@
 {
   "parent": "easy_villagers:block/farm",
   "textures": {
-    "front": "minecraft:block/netherite_block",
-    "back": "minecraft:block/netherite_block"
+    "front": "easy_villagers:block/netherite_block",
+    "back": "easy_villagers:block/netherite_block"
   }
 }

@@ -24,7 +24,6 @@ import java.lang.reflect.Method;
 public abstract class TraderTileentityBase extends VillagerTileentity implements ITickableTileEntity {
 
     public static final Field LAST_RESTOCK = ObfuscationReflectionHelper.findField(VillagerEntity.class, "field_213785_bP");
-    public static final Method RESTOCK = ObfuscationReflectionHelper.findMethod(VillagerEntity.class, "func_223718_eH");
     public static final Field LEVELED_UP = ObfuscationReflectionHelper.findField(VillagerEntity.class, "field_213777_bF");
     public static final Method LEVEL_UP = ObfuscationReflectionHelper.findMethod(VillagerEntity.class, "func_175554_cu");
     public static final Method DISPLAY_MERCHANT_GUI = ObfuscationReflectionHelper.findMethod(VillagerEntity.class, "func_213740_f", PlayerEntity.class);
@@ -164,7 +163,7 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
         }
         try {
             LAST_RESTOCK.set(villagerEntity, world.getGameTime());
-            RESTOCK.invoke(villagerEntity);
+            villagerEntity.func_213766_ei(); // restock
             VillagerBlockBase.playVillagerSound(world, getPos(), villagerEntity.getVillagerData().getProfession().getSound());
         } catch (Exception e) {
             e.printStackTrace();
@@ -194,14 +193,14 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT compound) {
+    public void read(CompoundNBT compound) {
         if (compound.contains("Workstation")) {
             workstation = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(compound.getString("Workstation")));
         } else {
             removeWorkstation();
         }
         nextRestock = compound.getLong("NextRestock");
-        super.read(state, compound);
+        super.read(compound);
     }
 
 }

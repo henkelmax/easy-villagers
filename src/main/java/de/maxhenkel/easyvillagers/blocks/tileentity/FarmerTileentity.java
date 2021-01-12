@@ -14,18 +14,17 @@ import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.loot.LootContext;
-import net.minecraft.loot.LootParameters;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
+import net.minecraft.state.IProperty;
 import net.minecraft.state.IntegerProperty;
-import net.minecraft.state.Property;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.storage.loot.LootContext;
+import net.minecraft.world.storage.loot.LootParameters;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.PlantType;
 import net.minecraftforge.common.capabilities.Capability;
@@ -90,7 +89,7 @@ public class FarmerTileentity extends VillagerTileentity implements ITickableTil
             return Blocks.BEETROOTS.getDefaultState();
         } else if (seed instanceof IPlantable) {
             IPlantable plantable = (IPlantable) seed;
-            if (plantable.getPlantType(world, getPos()) == PlantType.CROP) { //TODO fake world
+            if (plantable.getPlantType(world, getPos()) == PlantType.Crop) { //TODO fake world
                 return plantable.getPlant(world, getPos());
             }
         }
@@ -131,7 +130,7 @@ public class FarmerTileentity extends VillagerTileentity implements ITickableTil
             return false;
         }
 
-        Optional<Property<?>> ageProp = c.getProperties().stream().filter(p -> p.getName().equals("age")).findFirst();
+        Optional<IProperty<?>> ageProp = c.getProperties().stream().filter(p -> p.getName().equals("age")).findFirst();
 
         if (!ageProp.isPresent() || !(ageProp.get() instanceof IntegerProperty)) {
             return false;
@@ -146,7 +145,7 @@ public class FarmerTileentity extends VillagerTileentity implements ITickableTil
             if (villager == null || villager.isChild() || !villager.getVillagerData().getProfession().equals(VillagerProfession.FARMER)) {
                 return false;
             }
-            LootContext.Builder context = new LootContext.Builder((ServerWorld) world).withParameter(LootParameters.field_237457_g_, new Vector3d(pos.getX(), pos.getY(), pos.getZ())).withParameter(LootParameters.BLOCK_STATE, c).withParameter(LootParameters.TOOL, ItemStack.EMPTY);
+            LootContext.Builder context = new LootContext.Builder((ServerWorld) world).withParameter(LootParameters.POSITION, pos).withParameter(LootParameters.BLOCK_STATE, c).withParameter(LootParameters.TOOL, ItemStack.EMPTY);
             List<ItemStack> drops = c.getDrops(context);
             IItemHandlerModifiable itemHandler = getItemHandler();
             for (ItemStack stack : drops) {
@@ -178,7 +177,7 @@ public class FarmerTileentity extends VillagerTileentity implements ITickableTil
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT compound) {
+    public void read(CompoundNBT compound) {
         if (compound.contains("Crop")) {
             crop = NBTUtil.readBlockState(compound.getCompound("Crop"));
         } else {
@@ -186,7 +185,7 @@ public class FarmerTileentity extends VillagerTileentity implements ITickableTil
         }
 
         ItemStackHelper.loadAllItems(compound, inventory);
-        super.read(state, compound);
+        super.read(compound);
     }
 
     private IItemHandlerModifiable handler;

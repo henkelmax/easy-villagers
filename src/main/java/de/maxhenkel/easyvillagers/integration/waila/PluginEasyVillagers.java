@@ -9,7 +9,6 @@ import mcp.mobius.waila.api.WailaPlugin;
 import net.minecraft.entity.merchant.villager.VillagerData;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -44,7 +43,7 @@ public class PluginEasyVillagers implements IWailaPlugin {
         registrar.registerStackProvider(HUDHandlerVillager.INSTANCE, BreederTileentity.class);
     }
 
-    public static IFormattableTextComponent getVillagerName(EasyVillagerEntity villager) {
+    public static ITextComponent getVillagerName(EasyVillagerEntity villager) {
         return villager.getName().deepCopy();
     }
 
@@ -54,9 +53,9 @@ public class PluginEasyVillagers implements IWailaPlugin {
             VillagerData villagerData = villager.getVillagerData();
             VillagerProfession profession = villagerData.getProfession();
             if (profession.equals(VillagerProfession.NONE) || profession.equals(VillagerProfession.NITWIT)) {
-                return PluginEasyVillagers.getVillagerName(villager).mergeStyle(TextFormatting.GRAY);
+                return PluginEasyVillagers.getVillagerName(villager).applyTextStyle(TextFormatting.GRAY);
             } else {
-                return new TranslationTextComponent("tooltip.easy_villagers.villager_profession", PluginEasyVillagers.getVillagerName(villager), new TranslationTextComponent("merchant.level." + villagerData.getLevel())).mergeStyle(TextFormatting.GRAY);
+                return new TranslationTextComponent("tooltip.easy_villagers.villager_profession", PluginEasyVillagers.getVillagerName(villager), new TranslationTextComponent("merchant.level." + villagerData.getLevel())).applyTextStyle(TextFormatting.GRAY);
             }
         }
         return null;

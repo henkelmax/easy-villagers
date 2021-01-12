@@ -22,10 +22,6 @@ apply plugin: 'forge-update'
 apply plugin: 'com.github.johnrengelman.shadow'
 apply plugin: 'idea'
 
-import net.minecraftforge.gradle.common.task.SignJar
-import groovy.json.JsonSlurper
-import groovy.json.JsonOutput
-
 idea {
     module {
         downloadJavadoc = true
@@ -217,20 +213,6 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
     classifier = 'javadoc'
     from javadoc.getDestinationDir()
 }
-
-task signJar(type: SignJar, dependsOn: jar) {
-    onlyIf {
-        project.hasProperty('keyStore')
-    }
-    keyStore = project.findProperty('keyStore')
-    alias = project.findProperty('keyStoreAlias')
-    storePass = project.findProperty('keyStorePass')
-    keyPass = project.findProperty('keyStoreKeyPass')
-    inputFile = jar.archivePath
-    outputFile = jar.archivePath
-}
-
-build.dependsOn signJar
 
 artifacts {
     archives deobfJar

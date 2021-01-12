@@ -5,7 +5,6 @@ import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
 import de.maxhenkel.easyvillagers.items.VillagerItem;
-import net.minecraft.block.BlockState;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ItemStackHelper;
@@ -84,10 +83,10 @@ public class IncubatorTileentity extends VillagerTileentity implements ITickable
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT compound) {
+    public void read(CompoundNBT compound) {
         ItemStackHelper.loadAllItems(compound.getCompound("InputInventory"), inputInventory);
         ItemStackHelper.loadAllItems(compound.getCompound("OutputInventory"), outputInventory);
-        super.read(state, compound);
+        super.read(compound);
     }
 
     public IInventory getInputInventory() {

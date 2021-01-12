@@ -4,7 +4,7 @@ import de.maxhenkel.easyvillagers.Main;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.villager.VillagerType;
+import net.minecraft.entity.villager.IVillagerType;
 import net.minecraft.item.MerchantOffer;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.village.GossipManager;
@@ -23,7 +23,7 @@ public class EasyVillagerEntity extends VillagerEntity {
         super(type, worldIn);
     }
 
-    public EasyVillagerEntity(EntityType<? extends VillagerEntity> type, World worldIn, VillagerType villagerType) {
+    public EasyVillagerEntity(EntityType<? extends VillagerEntity> type, World worldIn, IVillagerType villagerType) {
         super(type, worldIn, villagerType);
     }
 

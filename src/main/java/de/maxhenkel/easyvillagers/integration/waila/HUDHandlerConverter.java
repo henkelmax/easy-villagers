@@ -28,12 +28,12 @@ public class HUDHandlerConverter implements IComponentProvider {
             if (converter.getTimer() >= ConverterTileentity.getZombifyTime() && converter.getTimer() < ConverterTileentity.getConvertTime()) {
                 VillagerProfession profession = villagerEntity.getVillagerData().getProfession();
                 if (profession.equals(VillagerProfession.NONE)) {
-                    tooltip.add(new TranslationTextComponent("entity.minecraft.zombie_villager").mergeStyle(TextFormatting.GRAY));
+                    tooltip.add(new TranslationTextComponent("entity.minecraft.zombie_villager").applyTextStyle(TextFormatting.GRAY));
                 } else {
                     tooltip.add(new TranslationTextComponent("tooltip.easy_villagers.zombie_villager_profession",
                             new TranslationTextComponent("entity.minecraft.zombie_villager"),
                             PluginEasyVillagers.getVillagerName(villagerEntity)
-                    ).mergeStyle(TextFormatting.GRAY));
+                    ).applyTextStyle(TextFormatting.GRAY));
                 }
             } else {
                 ITextComponent villager = PluginEasyVillagers.getVillager(villagerEntity);

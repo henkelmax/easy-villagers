@@ -4,12 +4,12 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import de.maxhenkel.easyvillagers.blocks.TraderBlock;
 import de.maxhenkel.easyvillagers.blocks.tileentity.BreederTileentity;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.tileentity.BedTileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.item.DyeColor;
 import net.minecraft.tileentity.BedTileEntity;
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.vector.Vector3f;
 
 public class BreederRenderer extends VillagerRendererBase<BreederTileentity> {
 

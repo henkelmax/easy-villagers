@@ -8,9 +8,9 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderTypeLookup;
+import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.client.model.data.EmptyModelData;
 
 public class FarmerRenderer extends VillagerRendererBase<FarmerTileentity> {
@@ -53,7 +53,7 @@ public class FarmerRenderer extends VillagerRendererBase<FarmerTileentity> {
 
             BlockRendererDispatcher dispatcher = minecraft.getBlockRendererDispatcher();
             int color = minecraft.getBlockColors().getColor(crop, null, null, 0);
-            dispatcher.getBlockModelRenderer().renderModel(matrixStack.getLast(), buffer.getBuffer(RenderTypeLookup.func_239221_b_(crop)), crop, dispatcher.getModelForState(crop), RenderUtils.getRed(color), RenderUtils.getGreen(color), RenderUtils.getBlue(color), combinedLight, combinedOverlay, EmptyModelData.INSTANCE);
+            dispatcher.getBlockModelRenderer().renderModel(matrixStack.getLast(), buffer.getBuffer(RenderTypeLookup.getRenderType(crop)), crop, dispatcher.getModelForState(crop), RenderUtils.getRed(color), RenderUtils.getGreen(color), RenderUtils.getBlue(color), combinedLight, combinedOverlay, EmptyModelData.INSTANCE);
             matrixStack.pop();
         }
 

@@ -1,1 +1,1 @@
-- Updated Brazilian Portuguese language
+- Ported to 1.15.2

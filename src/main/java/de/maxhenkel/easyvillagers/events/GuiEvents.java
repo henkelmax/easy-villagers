@@ -119,7 +119,7 @@ public class GuiEvents {
         VillagerEntity villager = (VillagerEntity) merchant;
         try {
             OFFERS.set(villager, null);
-            player.openMerchantContainer(container.windowId, villager.getOffers(), villager.getVillagerData().getLevel(), villager.getXp(), villager.hasXPBar(), villager.canRestockTrades());
+            player.openMerchantContainer(container.windowId, villager.getOffers(), villager.getVillagerData().getLevel(), villager.getXp(), villager.func_213705_dZ(), villager.func_223340_ej()); // hasxpbar canrestocktrades
         } catch (Exception e) {
             e.printStackTrace();
         }

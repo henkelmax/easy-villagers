@@ -6,7 +6,6 @@ import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import de.maxhenkel.easyvillagers.items.VillagerItem;
-import net.minecraft.block.BlockState;
 import net.minecraft.entity.merchant.IReputationType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
@@ -166,7 +165,7 @@ public class ConverterTileentity extends VillagerTileentity implements ITickable
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT compound) {
+    public void read(CompoundNBT compound) {
         ItemStackHelper.loadAllItems(compound.getCompound("InputInventory"), inputInventory);
         ItemStackHelper.loadAllItems(compound.getCompound("OutputInventory"), outputInventory);
         timer = compound.getLong("Timer");
@@ -175,7 +174,7 @@ public class ConverterTileentity extends VillagerTileentity implements ITickable
         } else {
             owner = null;
         }
-        super.read(state, compound);
+        super.read(compound);
     }
 
     public IInventory getInputInventory() {

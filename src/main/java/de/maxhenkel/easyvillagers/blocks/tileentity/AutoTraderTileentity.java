@@ -6,7 +6,6 @@ import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Inventory;
@@ -61,13 +60,13 @@ public class AutoTraderTileentity extends TraderTileentityBase {
 
         VillagerEntity villager = getVillagerEntity();
 
-        if (!hasEnoughItems(offer.getDiscountedBuyingStackFirst(), false)
+        if (!hasEnoughItems(offer.func_222205_b(), false)
                 || !hasEnoughItems(offer.getBuyingStackSecond(), false)
                 || !canFitItems(offer.getSellingStack(), false)) {
             return;
         }
 
-        hasEnoughItems(offer.getDiscountedBuyingStackFirst(), true);
+        hasEnoughItems(offer.func_222205_b(), true);
         hasEnoughItems(offer.getBuyingStackSecond(), true);
         canFitItems(offer.getSellingStack(), true);
 
@@ -174,7 +173,7 @@ public class AutoTraderTileentity extends TraderTileentityBase {
             tradeGuiInv.clear();
             return;
         }
-        tradeGuiInv.setInventorySlotContents(0, offer.getDiscountedBuyingStackFirst());
+        tradeGuiInv.setInventorySlotContents(0, offer.func_222205_b());
         tradeGuiInv.setInventorySlotContents(1, offer.getBuyingStackSecond());
         tradeGuiInv.setInventorySlotContents(2, offer.getSellingStack());
     }
@@ -214,8 +213,8 @@ public class AutoTraderTileentity extends TraderTileentityBase {
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT compound) {
-        super.read(state, compound);
+    public void read(CompoundNBT compound) {
+        super.read(compound);
         tradeIndex = compound.getInt("Trade");
         ItemStackHelper.loadAllItems(compound.getCompound("InputInventory"), inputInventory);
         ItemStackHelper.loadAllItems(compound.getCompound("OutputInventory"), outputInventory);

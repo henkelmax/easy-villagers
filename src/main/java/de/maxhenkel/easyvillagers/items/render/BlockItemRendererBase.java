@@ -6,7 +6,6 @@ import de.maxhenkel.corelib.item.ItemUtils;
 import de.maxhenkel.easyvillagers.blocks.tileentity.FakeWorldTileentity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
@@ -33,7 +32,7 @@ public class BlockItemRendererBase<T extends TileEntityRenderer<U>, U extends Fa
     }
 
     @Override
-    public void func_239207_a_(ItemStack itemStack, ItemCameraTransforms.TransformType transformType, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn) {
+    public void render(ItemStack itemStack, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn) {
         if (renderer == null) {
             renderer = rendererSupplier.apply(TileEntityRendererDispatcher.instance);
         }
@@ -43,7 +42,7 @@ public class BlockItemRendererBase<T extends TileEntityRenderer<U>, U extends Fa
             U te = tileEntitySupplier.get();
             te.setFakeWorld(minecraft.world);
             if (blockEntityTag != null) {
-                te.read(null, blockEntityTag);
+                te.read(blockEntityTag);
             }
             return te;
         });

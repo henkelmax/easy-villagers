@@ -1,13 +1,11 @@
 package de.maxhenkel.easyvillagers.gui;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import de.maxhenkel.easyvillagers.Main;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.MerchantScreen;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
 import java.util.Collections;
@@ -22,25 +20,25 @@ public class CycleTradesButton extends Button {
     private MerchantScreen screen;
 
     public CycleTradesButton(int x, int y, IPressable pressable, MerchantScreen screen) {
-        super(x, y, WIDTH, HEIGHT, StringTextComponent.EMPTY, pressable);
+        super(x, y, WIDTH, HEIGHT, "", pressable);
         this.screen = screen;
     }
 
     @Override
-    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(int mouseX, int mouseY, float partialTicks) {
         visible = screen.getContainer().func_217042_i() /* hasXpBar */ && screen.getContainer().getXp() <= 0;
-        super.render(matrixStack, mouseX, mouseY, partialTicks);
+        super.render(mouseX, mouseY, partialTicks);
     }
 
     @Override
-    public void renderButton(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void renderButton(int mouseX, int mouseY, float partialTicks) {
         RenderSystem.color4f(1F, 1F, 1F, 1F);
         Minecraft.getInstance().getTextureManager().bindTexture(ARROW_BUTTON);
         if (isHovered()) {
-            blit(matrixStack, x, y, 0, 14, WIDTH, HEIGHT, 32, 32);
-            screen.renderToolTip(matrixStack, Collections.singletonList(new TranslationTextComponent("tooltip.easy_villagers.cycle_trades").func_241878_f()), mouseX, mouseY, screen.getMinecraft().fontRenderer);
+            blit(x, y, 0, 14, WIDTH, HEIGHT, 32, 32);
+            screen.renderTooltip(Collections.singletonList(new TranslationTextComponent("tooltip.easy_villagers.cycle_trades").getString()), mouseX, mouseY, screen.getMinecraft().fontRenderer);
         } else {
-            blit(matrixStack, x, y, 0, 0, WIDTH, HEIGHT, 32, 32);
+            blit(x, y, 0, 0, WIDTH, HEIGHT, 32, 32);
         }
     }
 }
