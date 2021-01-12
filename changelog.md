@@ -1,1 +1,1 @@
-- Fixed crash on servers
+- Updated Brazilian Portuguese language
