@@ -17,8 +17,10 @@
   "itemGroup.easy_villagers": "Easy Villagers",
   "tooltip.easy_villagers.villager_profession": "%s (%s)",
   "tooltip.easy_villagers.zombie_villager_profession": "%s (%s)",
+  "tooltip.easy_villagers.cycle_trades": "Alterar Trocas",
   "jei.easy_villagers.breeding": "Reprodução",
   "jei.easy_villagers.converting": "Converção",
   "key.easy_villagers.pick_up": "Pegar",
+  "key.easy_villagers.cycle_trades": "Alterar Trocas",
   "category.easy_villagers": "Easy Villagers"
 }
