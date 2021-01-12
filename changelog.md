@@ -1,1 +1,1 @@
-- Updated Brazilian Portuguese language
+- Fixed trader restocking
