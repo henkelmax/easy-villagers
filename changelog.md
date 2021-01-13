@@ -1,1 +1,1 @@
-- Ported to 1.15.2
+- Fixed trade cycling not working with discounts
