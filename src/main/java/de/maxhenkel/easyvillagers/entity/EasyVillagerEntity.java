@@ -30,24 +30,24 @@ public class EasyVillagerEntity extends VillagerEntity {
     @Override
     public int getPlayerReputation(PlayerEntity player) {
         if (Main.SERVER_CONFIG.universalReputation.get()) {
-            return getUniversalReputation();
+            return getUniversalReputation(this);
         } else {
             return super.getPlayerReputation(player);
         }
     }
 
-    public int getReputation() {
+    public static int getReputation(VillagerEntity villager) {
         if (Main.SERVER_CONFIG.universalReputation.get()) {
-            return getUniversalReputation();
+            return getUniversalReputation(villager);
         } else {
             return 0;
         }
     }
 
-    public int getUniversalReputation() {
+    public static int getUniversalReputation(VillagerEntity villager) {
         try {
-            Map<UUID, Object> map = (Map<UUID, Object>) UUID_GOSSIPS_MAPPING.get(getGossip());
-            return map.keySet().stream().map(uuid -> getGossip().getReputation(uuid, (gossipType) -> true)).reduce(0, Integer::sum);
+            Map<UUID, Object> map = (Map<UUID, Object>) UUID_GOSSIPS_MAPPING.get(villager.getGossip());
+            return map.keySet().stream().map(uuid -> villager.getGossip().getReputation(uuid, (gossipType) -> true)).reduce(0, Integer::sum);
         } catch (Exception e) {
             e.printStackTrace();
             return 0;
@@ -55,20 +55,25 @@ public class EasyVillagerEntity extends VillagerEntity {
     }
 
     public void recalculateOffers() {
-        resetOffers();
-        calculateOffers();
+        resetOffers(this);
+        calculateOffers(this);
     }
 
-    private void resetOffers() {
-        for (MerchantOffer merchantoffer : getOffers()) {
+    public static void recalculateOffers(VillagerEntity villager) {
+        resetOffers(villager);
+        calculateOffers(villager);
+    }
+
+    private static void resetOffers(VillagerEntity villager) {
+        for (MerchantOffer merchantoffer : villager.getOffers()) {
             merchantoffer.resetSpecialPrice();
         }
     }
 
-    private void calculateOffers() {
-        int i = getReputation();
+    private static void calculateOffers(VillagerEntity villager) {
+        int i = getReputation(villager);
         if (i != 0) {
-            for (MerchantOffer merchantoffer : getOffers()) {
+            for (MerchantOffer merchantoffer : villager.getOffers()) {
                 merchantoffer.increaseSpecialPrice(-MathHelper.floor((float) i * merchantoffer.getPriceMultiplier()));
             }
         }

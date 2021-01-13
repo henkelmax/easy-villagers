@@ -2,6 +2,7 @@ package de.maxhenkel.easyvillagers.events;
 
 import de.maxhenkel.easyvillagers.ClientConfig;
 import de.maxhenkel.easyvillagers.Main;
+import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import de.maxhenkel.easyvillagers.gui.CycleTradesButton;
 import de.maxhenkel.easyvillagers.net.MessageCycleTrades;
 import net.minecraft.client.Minecraft;
@@ -119,6 +120,7 @@ public class GuiEvents {
         VillagerEntity villager = (VillagerEntity) merchant;
         try {
             OFFERS.set(villager, null);
+            EasyVillagerEntity.recalculateOffers(villager);
             player.openMerchantContainer(container.windowId, villager.getOffers(), villager.getVillagerData().getLevel(), villager.getXp(), villager.hasXPBar(), villager.canRestockTrades());
         } catch (Exception e) {
             e.printStackTrace();

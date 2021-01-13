@@ -1,1 +1,1 @@
-- Fixed trader restocking
+- Fixed trade cycling not working with discounts
