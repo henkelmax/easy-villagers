@@ -1,1 +1,1 @@
-- Fixed trade cycling not working with discounts
+- Fixed villager duplication
