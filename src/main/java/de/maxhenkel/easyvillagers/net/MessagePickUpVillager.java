@@ -2,6 +2,7 @@ package de.maxhenkel.easyvillagers.net;
 
 import de.maxhenkel.corelib.net.Message;
 import de.maxhenkel.easyvillagers.events.VillagerEvents;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
@@ -30,7 +31,7 @@ public class MessagePickUpVillager implements Message<MessagePickUpVillager> {
     @Override
     public void executeServerSide(NetworkEvent.Context context) {
         ServerPlayerEntity player = context.getSender();
-        player.world.getEntitiesWithinAABB(VillagerEntity.class, player.getBoundingBox().grow(8D), v -> v.getUniqueID().equals(villager)).stream().findAny().ifPresent(villagerEntity -> {
+        player.world.getEntitiesWithinAABB(VillagerEntity.class, player.getBoundingBox().grow(8D), v -> v.getUniqueID().equals(villager)).stream().filter(LivingEntity::isAlive).findAny().ifPresent(villagerEntity -> {
             VillagerEvents.pickUp(villagerEntity, player);
         });
     }
