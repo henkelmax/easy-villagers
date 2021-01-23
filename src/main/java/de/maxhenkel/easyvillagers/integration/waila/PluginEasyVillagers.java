@@ -1,20 +1,11 @@
 package de.maxhenkel.easyvillagers.integration.waila;
 
 import de.maxhenkel.easyvillagers.blocks.tileentity.*;
-import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import mcp.mobius.waila.api.IRegistrar;
 import mcp.mobius.waila.api.IWailaPlugin;
 import mcp.mobius.waila.api.TooltipPosition;
 import mcp.mobius.waila.api.WailaPlugin;
-import net.minecraft.entity.merchant.villager.VillagerData;
-import net.minecraft.entity.merchant.villager.VillagerProfession;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-
-import javax.annotation.Nullable;
 
 @WailaPlugin
 public class PluginEasyVillagers implements IWailaPlugin {
@@ -44,22 +35,5 @@ public class PluginEasyVillagers implements IWailaPlugin {
         registrar.registerStackProvider(HUDHandlerVillager.INSTANCE, BreederTileentity.class);
     }
 
-    public static IFormattableTextComponent getVillagerName(EasyVillagerEntity villager) {
-        return villager.getName().deepCopy();
-    }
-
-    @Nullable
-    public static ITextComponent getVillager(EasyVillagerEntity villager) {
-        if (villager != null) {
-            VillagerData villagerData = villager.getVillagerData();
-            VillagerProfession profession = villagerData.getProfession();
-            if (profession.equals(VillagerProfession.NONE) || profession.equals(VillagerProfession.NITWIT)) {
-                return PluginEasyVillagers.getVillagerName(villager).mergeStyle(TextFormatting.GRAY);
-            } else {
-                return new TranslationTextComponent("tooltip.easy_villagers.villager_profession", PluginEasyVillagers.getVillagerName(villager), new TranslationTextComponent("merchant.level." + villagerData.getLevel())).mergeStyle(TextFormatting.GRAY);
-            }
-        }
-        return null;
-    }
 
 }

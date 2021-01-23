@@ -1,6 +1,7 @@
 package de.maxhenkel.easyvillagers.integration.waila;
 
 import de.maxhenkel.easyvillagers.blocks.tileentity.BreederTileentity;
+import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import mcp.mobius.waila.api.IComponentProvider;
 import mcp.mobius.waila.api.IDataAccessor;
 import mcp.mobius.waila.api.IPluginConfig;
@@ -19,14 +20,14 @@ public class HUDHandlerBreeder implements IComponentProvider {
         }
         BreederTileentity tileEntity = (BreederTileentity) accessor.getTileEntity();
 
-        ITextComponent villager1 = PluginEasyVillagers.getVillager(tileEntity.getVillagerEntity1());
+        EasyVillagerEntity villager1 = tileEntity.getVillagerEntity1();
         if (villager1 != null) {
-            tooltip.add(villager1);
+            tooltip.add(villager1.getAdvancedName());
         }
 
-        ITextComponent villager2 = PluginEasyVillagers.getVillager(tileEntity.getVillagerEntity2());
+        EasyVillagerEntity villager2 = tileEntity.getVillagerEntity2();
         if (villager2 != null) {
-            tooltip.add(villager2);
+            tooltip.add(villager2.getAdvancedName());
         }
     }
 

@@ -5,12 +5,10 @@ import de.maxhenkel.easyvillagers.blocks.tileentity.BreederTileentity;
 import de.maxhenkel.easyvillagers.blocks.tileentity.ConverterTileentity;
 import de.maxhenkel.easyvillagers.blocks.tileentity.VillagerTileentity;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
-import de.maxhenkel.easyvillagers.integration.waila.PluginEasyVillagers;
 import mcjty.theoneprobe.api.*;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 
 public class TileInfoProvider implements IProbeInfoProvider {
@@ -47,8 +45,7 @@ public class TileInfoProvider implements IProbeInfoProvider {
     private void addVillager(EasyVillagerEntity villager, IProbeInfo iProbeInfo) {
         if (villager != null) {
             IProbeInfo info = iProbeInfo.horizontal(iProbeInfo.defaultLayoutStyle().alignment(ElementAlignment.ALIGN_CENTER));
-            ITextComponent name = PluginEasyVillagers.getVillager(villager);
-            info.entity(villager).text(name);
+            info.entity(villager).text(villager.getAdvancedName());
         }
     }
 }

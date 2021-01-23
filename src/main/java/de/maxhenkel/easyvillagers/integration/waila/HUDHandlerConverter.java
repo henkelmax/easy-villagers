@@ -32,11 +32,11 @@ public class HUDHandlerConverter implements IComponentProvider {
                 } else {
                     tooltip.add(new TranslationTextComponent("tooltip.easy_villagers.zombie_villager_profession",
                             new TranslationTextComponent("entity.minecraft.zombie_villager"),
-                            PluginEasyVillagers.getVillagerName(villagerEntity)
+                            villagerEntity.getAdvancedName()
                     ).mergeStyle(TextFormatting.GRAY));
                 }
             } else {
-                ITextComponent villager = PluginEasyVillagers.getVillager(villagerEntity);
+                ITextComponent villager = villagerEntity.getAdvancedName();
                 if (villager != null) {
                     tooltip.add(villager);
                 }
