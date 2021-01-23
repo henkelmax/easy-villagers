@@ -84,6 +84,9 @@ dependencies {
     compileOnly fg.deobf("mezz.jei:jei-${mod_minecraft_version}:${jei_version}:api")
     runtimeOnly fg.deobf("mezz.jei:jei-${mod_minecraft_version}:${jei_version}")
 
+    compileOnly fg.deobf("mcjty.theoneprobe:TheOneProbe-${theoneprobe_mc_version}:${theoneprobe_mc_version}-${theoneprobe_version}:api")
+    runtimeOnly fg.deobf("mcjty.theoneprobe:TheOneProbe-${theoneprobe_mc_version}:${theoneprobe_mc_version}-${theoneprobe_version}")
+
     shadow fg.deobf("de.maxhenkel.corelib:corelib:${mod_minecraft_version}-${corelib_version}:api")
     runtimeOnly fg.deobf("de.maxhenkel.corelib:corelib:${mod_minecraft_version}-${corelib_version}")
     runtimeOnly fg.deobf("de.maxhenkel.corelib:corelib:${mod_minecraft_version}-${corelib_version}:javadoc")
@@ -185,6 +188,7 @@ repositories {
         url = 'https://maven.maxhenkel.de/repository/public'
     }
     maven {
+        name 'tterrag maven'
         url "https://maven.tterrag.com/"
     }
     mavenLocal()

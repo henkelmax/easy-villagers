@@ -2,11 +2,16 @@ package de.maxhenkel.easyvillagers.entity;
 
 import de.maxhenkel.easyvillagers.Main;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.merchant.villager.VillagerData;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
+import net.minecraft.entity.merchant.villager.VillagerProfession;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.villager.VillagerType;
 import net.minecraft.item.MerchantOffer;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.village.GossipManager;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
@@ -76,6 +81,16 @@ public class EasyVillagerEntity extends VillagerEntity {
             for (MerchantOffer merchantoffer : villager.getOffers()) {
                 merchantoffer.increaseSpecialPrice(-MathHelper.floor((float) i * merchantoffer.getPriceMultiplier()));
             }
+        }
+    }
+
+    public ITextComponent getAdvancedName() {
+        VillagerData villagerData = getVillagerData();
+        VillagerProfession profession = villagerData.getProfession();
+        if (profession.equals(VillagerProfession.NONE) || profession.equals(VillagerProfession.NITWIT)) {
+            return getName().deepCopy().mergeStyle(TextFormatting.GRAY);
+        } else {
+            return new TranslationTextComponent("tooltip.easy_villagers.villager_profession", getName().deepCopy(), new TranslationTextComponent("merchant.level." + villagerData.getLevel())).mergeStyle(TextFormatting.GRAY);
         }
     }
 
