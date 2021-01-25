@@ -64,6 +64,15 @@ public class EasyVillagerEntity extends VillagerEntity {
         calculateOffers(this);
     }
 
+    @Override
+    public int getGrowingAge() {
+        if (world.isRemote) {
+            return super.getGrowingAge() < 0 ? -24000 : 1;
+        } else {
+            return growingAge;
+        }
+    }
+
     public static void recalculateOffers(VillagerEntity villager) {
         resetOffers(villager);
         calculateOffers(villager);

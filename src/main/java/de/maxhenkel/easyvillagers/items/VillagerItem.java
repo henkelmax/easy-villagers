@@ -144,12 +144,8 @@ public class VillagerItem extends Item {
     @OnlyIn(Dist.CLIENT)
     public static ItemStack getBabyVillager() {
         ItemStack babyVillager = new ItemStack(ModItems.VILLAGER);
-        EasyVillagerEntity villager = new EasyVillagerEntity(EntityType.VILLAGER, Minecraft.getInstance().world) {
-            @Override
-            public int getGrowingAge() {
-                return -24000;
-            }
-        };
+        EasyVillagerEntity villager = new EasyVillagerEntity(EntityType.VILLAGER, Minecraft.getInstance().world);
+        villager.setGrowingAge(-24000);
         ModItems.VILLAGER.setVillager(babyVillager, villager);
         return babyVillager;
     }
