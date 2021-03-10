@@ -21,31 +21,31 @@ public class ModTileEntities {
     public static TileEntityType<IncubatorTileentity> INCUBATOR;
 
     public static void registerTileEntities(RegistryEvent.Register<TileEntityType<?>> event) {
-        TRADER = TileEntityType.Builder.create(TraderTileentity::new, ModBlocks.TRADER).build(null);
+        TRADER = TileEntityType.Builder.of(TraderTileentity::new, ModBlocks.TRADER).build(null);
         TRADER.setRegistryName(new ResourceLocation(Main.MODID, "trader"));
         event.getRegistry().register(TRADER);
 
-        AUTO_TRADER = TileEntityType.Builder.create(AutoTraderTileentity::new, ModBlocks.AUTO_TRADER).build(null);
+        AUTO_TRADER = TileEntityType.Builder.of(AutoTraderTileentity::new, ModBlocks.AUTO_TRADER).build(null);
         AUTO_TRADER.setRegistryName(new ResourceLocation(Main.MODID, "auto_trader"));
         event.getRegistry().register(AUTO_TRADER);
 
-        FARMER = TileEntityType.Builder.create(FarmerTileentity::new, ModBlocks.FARMER).build(null);
+        FARMER = TileEntityType.Builder.of(FarmerTileentity::new, ModBlocks.FARMER).build(null);
         FARMER.setRegistryName(new ResourceLocation(Main.MODID, "farmer"));
         event.getRegistry().register(FARMER);
 
-        BREEDER = TileEntityType.Builder.create(BreederTileentity::new, ModBlocks.BREEDER).build(null);
+        BREEDER = TileEntityType.Builder.of(BreederTileentity::new, ModBlocks.BREEDER).build(null);
         BREEDER.setRegistryName(new ResourceLocation(Main.MODID, "breeder"));
         event.getRegistry().register(BREEDER);
 
-        CONVERTER = TileEntityType.Builder.create(ConverterTileentity::new, ModBlocks.CONVERTER).build(null);
+        CONVERTER = TileEntityType.Builder.of(ConverterTileentity::new, ModBlocks.CONVERTER).build(null);
         CONVERTER.setRegistryName(new ResourceLocation(Main.MODID, "converter"));
         event.getRegistry().register(CONVERTER);
 
-        IRON_FARM = TileEntityType.Builder.create(IronFarmTileentity::new, ModBlocks.IRON_FARM).build(null);
+        IRON_FARM = TileEntityType.Builder.of(IronFarmTileentity::new, ModBlocks.IRON_FARM).build(null);
         IRON_FARM.setRegistryName(new ResourceLocation(Main.MODID, "iron_farm"));
         event.getRegistry().register(IRON_FARM);
 
-        INCUBATOR = TileEntityType.Builder.create(IncubatorTileentity::new, ModBlocks.INCUBATOR).build(null);
+        INCUBATOR = TileEntityType.Builder.of(IncubatorTileentity::new, ModBlocks.INCUBATOR).build(null);
         INCUBATOR.setRegistryName(new ResourceLocation(Main.MODID, "incubator"));
         event.getRegistry().register(INCUBATOR);
     }

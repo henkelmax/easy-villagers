@@ -27,14 +27,14 @@ public class IncubatorTileentity extends VillagerTileentity implements ITickable
     private NonNullList<ItemStack> outputInventory;
 
     public IncubatorTileentity() {
-        super(ModTileEntities.INCUBATOR, ModBlocks.INCUBATOR.getDefaultState());
+        super(ModTileEntities.INCUBATOR, ModBlocks.INCUBATOR.defaultBlockState());
         inputInventory = NonNullList.withSize(4, ItemStack.EMPTY);
         outputInventory = NonNullList.withSize(4, ItemStack.EMPTY);
     }
 
     @Override
     public void tick() {
-        if (world.isRemote) {
+        if (level.isClientSide) {
             return;
         }
 
@@ -51,19 +51,19 @@ public class IncubatorTileentity extends VillagerTileentity implements ITickable
             }
         }
         if (hasVillager()) {
-            VillagerBlockBase.playRandomVillagerSound(world, getPos(), SoundEvents.ENTITY_VILLAGER_AMBIENT);
+            VillagerBlockBase.playRandomVillagerSound(level, getBlockPos(), SoundEvents.VILLAGER_AMBIENT);
 
             VillagerEntity villagerEntity = getVillagerEntity();
 
-            if (villagerEntity.isChild()) {
-                if (advanceAge(Math.min(Main.SERVER_CONFIG.incubatorSpeed.get(), Math.abs(villagerEntity.getGrowingAge())))) {
+            if (villagerEntity.isBaby()) {
+                if (advanceAge(Math.min(Main.SERVER_CONFIG.incubatorSpeed.get(), Math.abs(villagerEntity.getAge())))) {
                     sync();
                 }
             } else {
                 advanceAge(1);
             }
 
-            if (villagerEntity.getGrowingAge() > 20) {
+            if (villagerEntity.getAge() > 20) {
                 for (int i = 0; i < outputInventory.size(); i++) {
                     ItemStack stack = outputInventory.get(i);
                     if (stack.isEmpty()) {
@@ -77,30 +77,30 @@ public class IncubatorTileentity extends VillagerTileentity implements ITickable
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
+    public CompoundNBT save(CompoundNBT compound) {
         compound.put("InputInventory", ItemStackHelper.saveAllItems(new CompoundNBT(), inputInventory, true));
         compound.put("OutputInventory", ItemStackHelper.saveAllItems(new CompoundNBT(), outputInventory, true));
-        return super.write(compound);
+        return super.save(compound);
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT compound) {
+    public void load(BlockState state, CompoundNBT compound) {
         ItemStackHelper.loadAllItems(compound.getCompound("InputInventory"), inputInventory);
         ItemStackHelper.loadAllItems(compound.getCompound("OutputInventory"), outputInventory);
-        super.read(state, compound);
+        super.load(state, compound);
     }
 
     public IInventory getInputInventory() {
-        return new ItemListInventory(inputInventory, this::markDirty);
+        return new ItemListInventory(inputInventory, this::setChanged);
     }
 
     public IInventory getOutputInventory() {
-        return new ItemListInventory(outputInventory, this::markDirty);
+        return new ItemListInventory(outputInventory, this::setChanged);
     }
 
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-        if (!removed && cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+        if (!remove && cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             if (side != null && side.equals(Direction.DOWN)) {
                 return LazyOptional.of(this::getOutputInventoryItemHandler).cast();
             } else {

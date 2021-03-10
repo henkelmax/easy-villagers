@@ -50,16 +50,16 @@ public class JEIPlugin implements IModPlugin {
 
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
-        Collection<ItemStack> foods = VillagerEntity.FOOD_VALUES.entrySet().stream().map(itemIntegerEntry -> new ItemStack(itemIntegerEntry.getKey(), (int) Math.ceil(24D / (double) itemIntegerEntry.getValue()))).collect(Collectors.toList());
+        Collection<ItemStack> foods = VillagerEntity.FOOD_POINTS.entrySet().stream().map(itemIntegerEntry -> new ItemStack(itemIntegerEntry.getKey(), (int) Math.ceil(24D / (double) itemIntegerEntry.getValue()))).collect(Collectors.toList());
         registration.addRecipes(foods, CATEGORY_BREEDING);
 
         Collection<ItemStack> potions = new ArrayList<>();
-        potions.add(PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), Potions.WEAKNESS));
-        potions.add(PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), Potions.LONG_WEAKNESS));
-        potions.add(PotionUtils.addPotionToItemStack(new ItemStack(Items.SPLASH_POTION), Potions.WEAKNESS));
-        potions.add(PotionUtils.addPotionToItemStack(new ItemStack(Items.SPLASH_POTION), Potions.LONG_WEAKNESS));
-        potions.add(PotionUtils.addPotionToItemStack(new ItemStack(Items.LINGERING_POTION), Potions.WEAKNESS));
-        potions.add(PotionUtils.addPotionToItemStack(new ItemStack(Items.LINGERING_POTION), Potions.LONG_WEAKNESS));
+        potions.add(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WEAKNESS));
+        potions.add(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.LONG_WEAKNESS));
+        potions.add(PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), Potions.WEAKNESS));
+        potions.add(PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), Potions.LONG_WEAKNESS));
+        potions.add(PotionUtils.setPotion(new ItemStack(Items.LINGERING_POTION), Potions.WEAKNESS));
+        potions.add(PotionUtils.setPotion(new ItemStack(Items.LINGERING_POTION), Potions.LONG_WEAKNESS));
         registration.addRecipes(potions, CATEGORY_CONVERTING);
 
         registration.addRecipes(Collections.singletonList(VillagerItem.getBabyVillager()), CATEGORY_INCUBATING);

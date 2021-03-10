@@ -17,24 +17,24 @@ public class IncubatorRenderer extends VillagerRendererBase<IncubatorTileentity>
     @Override
     public void render(IncubatorTileentity incubator, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
         super.render(incubator, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
-        matrixStack.push();
+        matrixStack.pushPose();
 
         Direction direction = Direction.SOUTH;
         if (!incubator.isFakeWorld()) {
-            direction = incubator.getBlockState().get(TraderBlock.FACING);
+            direction = incubator.getBlockState().getValue(TraderBlock.FACING);
         }
 
         if (incubator.getVillagerEntity() != null) {
-            matrixStack.push();
+            matrixStack.pushPose();
 
             matrixStack.translate(0.5D, 1D / 16D, 0.5D);
-            matrixStack.rotate(Vector3f.YP.rotationDegrees(-direction.getHorizontalAngle()));
+            matrixStack.mulPose(Vector3f.YP.rotationDegrees(-direction.toYRot()));
             matrixStack.scale(0.45F, 0.45F, 0.45F);
             villagerRenderer.render(incubator.getVillagerEntity(), 0F, 1F, matrixStack, buffer, combinedLight);
-            matrixStack.pop();
+            matrixStack.popPose();
         }
 
-        matrixStack.pop();
+        matrixStack.popPose();
     }
 
 }

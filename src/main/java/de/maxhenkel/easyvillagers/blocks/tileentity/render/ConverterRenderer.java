@@ -29,51 +29,51 @@ public class ConverterRenderer extends VillagerRendererBase<ConverterTileentity>
     @Override
     public void render(ConverterTileentity converter, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
         super.render(converter, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
-        matrixStack.push();
+        matrixStack.pushPose();
 
         if (zombieRenderer == null) {
-            zombieRenderer = new ZombieRenderer(minecraft.getRenderManager());
-            zombie = new ZombieEntity(minecraft.world);
+            zombieRenderer = new ZombieRenderer(minecraft.getEntityRenderDispatcher());
+            zombie = new ZombieEntity(minecraft.level);
         }
 
         if (zombieVillagerRenderer == null) {
-            zombieVillagerRenderer = new ZombieVillagerRenderer(minecraft.getRenderManager(), (IReloadableResourceManager) minecraft.getResourceManager());
-            zombieVillager = new ZombieVillagerEntity(EntityType.ZOMBIE_VILLAGER, minecraft.world);
+            zombieVillagerRenderer = new ZombieVillagerRenderer(minecraft.getEntityRenderDispatcher(), (IReloadableResourceManager) minecraft.getResourceManager());
+            zombieVillager = new ZombieVillagerEntity(EntityType.ZOMBIE_VILLAGER, minecraft.level);
         }
 
         Direction direction = Direction.SOUTH;
         if (!converter.isFakeWorld()) {
-            direction = converter.getBlockState().get(TraderBlock.FACING);
+            direction = converter.getBlockState().getValue(TraderBlock.FACING);
         }
         EasyVillagerEntity villagerEntity = converter.getVillagerEntity();
         if (villagerEntity != null) {
-            matrixStack.push();
+            matrixStack.pushPose();
             matrixStack.translate(0.5D, 1D / 16D, 0.5D);
-            matrixStack.rotate(Vector3f.YP.rotationDegrees(-direction.getHorizontalAngle()));
+            matrixStack.mulPose(Vector3f.YP.rotationDegrees(-direction.toYRot()));
             matrixStack.translate(-5D / 16D, 0D, 0D);
-            matrixStack.rotate(Vector3f.YP.rotationDegrees(90));
+            matrixStack.mulPose(Vector3f.YP.rotationDegrees(90));
             matrixStack.scale(0.4F, 0.4F, 0.4F);
             if (converter.getTimer() >= ConverterTileentity.getZombifyTime() && converter.getTimer() < ConverterTileentity.getConvertTime()) {
                 zombieVillager.setVillagerData(villagerEntity.getVillagerData());
-                zombieVillager.setChild(villagerEntity.isChild());
+                zombieVillager.setBaby(villagerEntity.isBaby());
                 zombieVillagerRenderer.render(zombieVillager, 0F, 1F, matrixStack, buffer, combinedLight);
             } else {
                 villagerRenderer.render(villagerEntity, 0F, 1F, matrixStack, buffer, combinedLight);
             }
-            matrixStack.pop();
+            matrixStack.popPose();
         }
 
-        matrixStack.push();
+        matrixStack.pushPose();
 
         matrixStack.translate(0.5D, 1D / 16D, 0.5D);
-        matrixStack.rotate(Vector3f.YP.rotationDegrees(-direction.getHorizontalAngle()));
+        matrixStack.mulPose(Vector3f.YP.rotationDegrees(-direction.toYRot()));
         matrixStack.translate(5D / 16D, 0D, 0D);
-        matrixStack.rotate(Vector3f.YP.rotationDegrees(-90));
+        matrixStack.mulPose(Vector3f.YP.rotationDegrees(-90));
         matrixStack.scale(0.4F, 0.4F, 0.4F);
         zombieRenderer.render(zombie, 0F, 1F, matrixStack, buffer, combinedLight);
-        matrixStack.pop();
+        matrixStack.popPose();
 
-        matrixStack.pop();
+        matrixStack.popPose();
     }
 
 }

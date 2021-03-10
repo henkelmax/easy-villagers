@@ -16,28 +16,28 @@ public class SyncableTileentity extends TileEntity {
     }
 
     public void sync() {
-        if (world instanceof ServerWorld) {
-            EntityUtils.forEachPlayerAround((ServerWorld) world, getPos(), 128D, this::syncContents);
+        if (level instanceof ServerWorld) {
+            EntityUtils.forEachPlayerAround((ServerWorld) level, getBlockPos(), 128D, this::syncContents);
         }
     }
 
     public void syncContents(ServerPlayerEntity player) {
-        player.connection.sendPacket(getUpdatePacket());
+        player.connection.send(getUpdatePacket());
     }
 
     @Override
     public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(pos, 1, getUpdateTag());
+        return new SUpdateTileEntityPacket(worldPosition, 1, getUpdateTag());
     }
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        handleUpdateTag(getBlockState(), pkt.getNbtCompound());
+        handleUpdateTag(getBlockState(), pkt.getTag());
     }
 
     @Override
     public CompoundNBT getUpdateTag() {
-        return write(new CompoundNBT());
+        return save(new CompoundNBT());
     }
 
 }

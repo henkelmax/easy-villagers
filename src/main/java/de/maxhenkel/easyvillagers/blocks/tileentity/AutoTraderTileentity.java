@@ -35,7 +35,7 @@ public class AutoTraderTileentity extends TraderTileentityBase {
     protected int tradeIndex;
 
     public AutoTraderTileentity() {
-        super(ModTileEntities.AUTO_TRADER, ModBlocks.AUTO_TRADER.getDefaultState());
+        super(ModTileEntities.AUTO_TRADER, ModBlocks.AUTO_TRADER.defaultBlockState());
         tradeGuiInv = new Inventory(3);
 
         inputInventory = NonNullList.withSize(4, ItemStack.EMPTY);
@@ -50,31 +50,31 @@ public class AutoTraderTileentity extends TraderTileentityBase {
             return;
         }
 
-        if (world.getGameTime() % Main.SERVER_CONFIG.autoTraderCooldown.get() != 0) {
+        if (level.getGameTime() % Main.SERVER_CONFIG.autoTraderCooldown.get() != 0) {
             return;
         }
 
         MerchantOffer offer = getOffer();
-        if (offer == null || offer.hasNoUsesLeft() || inputInventory.isEmpty()) {
+        if (offer == null || offer.isOutOfStock() || inputInventory.isEmpty()) {
             return;
         }
 
         VillagerEntity villager = getVillagerEntity();
 
-        if (!hasEnoughItems(offer.getDiscountedBuyingStackFirst(), false)
-                || !hasEnoughItems(offer.getBuyingStackSecond(), false)
-                || !canFitItems(offer.getSellingStack(), false)) {
+        if (!hasEnoughItems(offer.getCostA(), false)
+                || !hasEnoughItems(offer.getCostB(), false)
+                || !canFitItems(offer.getResult(), false)) {
             return;
         }
 
-        hasEnoughItems(offer.getDiscountedBuyingStackFirst(), true);
-        hasEnoughItems(offer.getBuyingStackSecond(), true);
-        canFitItems(offer.getSellingStack(), true);
+        hasEnoughItems(offer.getCostA(), true);
+        hasEnoughItems(offer.getCostB(), true);
+        canFitItems(offer.getResult(), true);
 
         // villager.onTrade(offer) spawns XP, so we manually do all necessary stuff
         offer.increaseUses();
         try {
-            villager.setXp(villager.getXp() + offer.getGivenExp());
+            villager.setVillagerXp(villager.getVillagerXp() + offer.getXp());
             if ((boolean) CAN_LEVEL_UP.invoke(villager)) {
                 LEVELED_UP.set(villager, true);
             }
@@ -82,7 +82,7 @@ public class AutoTraderTileentity extends TraderTileentityBase {
             e.printStackTrace();
         }
 
-        markDirty();
+        setChanged();
     }
 
     protected boolean hasEnoughItems(ItemStack buying, boolean remove) {
@@ -133,7 +133,7 @@ public class AutoTraderTileentity extends TraderTileentityBase {
     public void setTradeIndex(int tradeIndex) {
         this.tradeIndex = tradeIndex;
         updateTradeInv();
-        markDirty();
+        setChanged();
     }
 
     @Override
@@ -165,18 +165,18 @@ public class AutoTraderTileentity extends TraderTileentityBase {
     protected void updateTradeInv() {
         EasyVillagerEntity villagerEntity = getVillagerEntity();
         if (villagerEntity == null) {
-            tradeGuiInv.clear();
+            tradeGuiInv.clearContent();
             return;
         }
         villagerEntity.recalculateOffers();
         MerchantOffer offer = getOffer();
         if (offer == null) {
-            tradeGuiInv.clear();
+            tradeGuiInv.clearContent();
             return;
         }
-        tradeGuiInv.setInventorySlotContents(0, offer.getDiscountedBuyingStackFirst());
-        tradeGuiInv.setInventorySlotContents(1, offer.getBuyingStackSecond());
-        tradeGuiInv.setInventorySlotContents(2, offer.getSellingStack());
+        tradeGuiInv.setItem(0, offer.getCostA());
+        tradeGuiInv.setItem(1, offer.getCostB());
+        tradeGuiInv.setItem(2, offer.getResult());
     }
 
     @Nullable
@@ -202,36 +202,36 @@ public class AutoTraderTileentity extends TraderTileentityBase {
 
     @Override
     protected long calculateNextRestock() {
-        return Main.SERVER_CONFIG.autoTraderMinRestockTime.get() + world.rand.nextInt(Math.max(Main.SERVER_CONFIG.autoTraderMaxRestockTime.get() - Main.SERVER_CONFIG.autoTraderMinRestockTime.get(), 1));
+        return Main.SERVER_CONFIG.autoTraderMinRestockTime.get() + level.random.nextInt(Math.max(Main.SERVER_CONFIG.autoTraderMaxRestockTime.get() - Main.SERVER_CONFIG.autoTraderMinRestockTime.get(), 1));
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
+    public CompoundNBT save(CompoundNBT compound) {
         compound.putInt("Trade", tradeIndex);
         compound.put("InputInventory", ItemStackHelper.saveAllItems(new CompoundNBT(), inputInventory, true));
         compound.put("OutputInventory", ItemStackHelper.saveAllItems(new CompoundNBT(), outputInventory, true));
-        return super.write(compound);
+        return super.save(compound);
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT compound) {
-        super.read(state, compound);
+    public void load(BlockState state, CompoundNBT compound) {
+        super.load(state, compound);
         tradeIndex = compound.getInt("Trade");
         ItemStackHelper.loadAllItems(compound.getCompound("InputInventory"), inputInventory);
         ItemStackHelper.loadAllItems(compound.getCompound("OutputInventory"), outputInventory);
     }
 
     public IInventory getInputInventory() {
-        return new ItemListInventory(inputInventory, this::markDirty);
+        return new ItemListInventory(inputInventory, this::setChanged);
     }
 
     public IInventory getOutputInventory() {
-        return new ItemListInventory(outputInventory, this::markDirty);
+        return new ItemListInventory(outputInventory, this::setChanged);
     }
 
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-        if (!removed && cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+        if (!remove && cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             if (side != null && side.equals(Direction.DOWN)) {
                 return LazyOptional.of(this::getOutputInventoryItemHandler).cast();
             } else {

@@ -38,7 +38,7 @@ public class IronFarmTileentity extends VillagerTileentity implements ITickableT
     private long timer;
 
     public IronFarmTileentity() {
-        super(ModTileEntities.IRON_FARM, ModBlocks.IRON_FARM.getDefaultState());
+        super(ModTileEntities.IRON_FARM, ModBlocks.IRON_FARM.defaultBlockState());
         inventory = NonNullList.withSize(4, ItemStack.EMPTY);
     }
 
@@ -50,25 +50,25 @@ public class IronFarmTileentity extends VillagerTileentity implements ITickableT
     public void tick() {
         EasyVillagerEntity v = getVillagerEntity();
         if (v != null) {
-            VillagerBlockBase.playRandomVillagerSound(world, getPos(), SoundEvents.ENTITY_VILLAGER_AMBIENT);
-            VillagerBlockBase.playRandomVillagerSound(world, getPos(), SoundEvents.ENTITY_ZOMBIE_AMBIENT);
+            VillagerBlockBase.playRandomVillagerSound(level, getBlockPos(), SoundEvents.VILLAGER_AMBIENT);
+            VillagerBlockBase.playRandomVillagerSound(level, getBlockPos(), SoundEvents.ZOMBIE_AMBIENT);
 
             if (advanceAge()) {
                 sync();
             }
 
             timer++;
-            markDirty();
+            setChanged();
 
             if (timer == getGolemSpawnTime()) {
-                VillagerBlockBase.playVillagerSound(world, getPos(), SoundEvents.ENTITY_ZOMBIE_AMBIENT);
+                VillagerBlockBase.playVillagerSound(level, getBlockPos(), SoundEvents.ZOMBIE_AMBIENT);
                 sync();
             } else if (timer > getGolemSpawnTime() && timer < getGolemKillTime()) {
                 if (timer % 20L == 0L) {
-                    VillagerBlockBase.playVillagerSound(world, getPos(), SoundEvents.ENTITY_IRON_GOLEM_HURT);
+                    VillagerBlockBase.playVillagerSound(level, getBlockPos(), SoundEvents.IRON_GOLEM_HURT);
                 }
             } else if (timer >= getGolemKillTime()) {
-                VillagerBlockBase.playVillagerSound(world, getPos(), SoundEvents.ENTITY_IRON_GOLEM_DEATH);
+                VillagerBlockBase.playVillagerSound(level, getBlockPos(), SoundEvents.IRON_GOLEM_DEATH);
                 IItemHandlerModifiable itemHandler = getItemHandler();
                 for (ItemStack drop : getDrops()) {
                     for (int i = 0; i < itemHandler.getSlots(); i++) {
@@ -86,47 +86,47 @@ public class IronFarmTileentity extends VillagerTileentity implements ITickableT
     }
 
     private List<ItemStack> getDrops() {
-        if (!(world instanceof ServerWorld)) {
+        if (!(level instanceof ServerWorld)) {
             return Collections.emptyList();
         }
-        ServerWorld serverWorld = (ServerWorld) world;
+        ServerWorld serverWorld = (ServerWorld) level;
 
         LootContext.Builder builder = new LootContext.Builder(serverWorld)
-                .withRandom(serverWorld.rand)
-                .withParameter(LootParameters.THIS_ENTITY, new IronGolemEntity(EntityType.IRON_GOLEM, world))
-                .withParameter(LootParameters.field_237457_g_, new Vector3d(pos.getX(), pos.getY(), pos.getZ()))
+                .withRandom(serverWorld.random)
+                .withParameter(LootParameters.THIS_ENTITY, new IronGolemEntity(EntityType.IRON_GOLEM, level))
+                .withParameter(LootParameters.ORIGIN, new Vector3d(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ()))
                 .withParameter(LootParameters.DAMAGE_SOURCE, DamageSource.LAVA);
 
-        LootContext lootContext = builder.build(LootParameterSets.ENTITY);
+        LootContext lootContext = builder.create(LootParameterSets.ENTITY);
 
-        LootTable lootTable = serverWorld.getServer().getLootTableManager().getLootTableFromLocation(GOLEM_LOOT_TABLE);
+        LootTable lootTable = serverWorld.getServer().getLootTables().get(GOLEM_LOOT_TABLE);
 
-        return lootTable.generate(lootContext);
+        return lootTable.getRandomItems(lootContext);
     }
 
     public IInventory getOutputInventory() {
-        return new ItemListInventory(inventory, this::markDirty);
+        return new ItemListInventory(inventory, this::setChanged);
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
+    public CompoundNBT save(CompoundNBT compound) {
         ItemStackHelper.saveAllItems(compound, inventory, false);
         compound.putLong("Timer", timer);
-        return super.write(compound);
+        return super.save(compound);
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT compound) {
+    public void load(BlockState state, CompoundNBT compound) {
         ItemStackHelper.loadAllItems(compound, inventory);
         timer = compound.getLong("Timer");
-        super.read(state, compound);
+        super.load(state, compound);
     }
 
     private IItemHandlerModifiable handler;
 
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-        if (!removed && cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+        if (!remove && cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             return LazyOptional.of(this::getItemHandler).cast();
         }
         return super.getCapability(cap, side);

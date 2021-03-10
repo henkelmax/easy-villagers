@@ -38,47 +38,47 @@ public class TraderRenderer extends VillagerRendererBase<TraderTileentity> {
     }
 
     public static void renderTraderBase(Minecraft minecraft, VillagerRenderer renderer, TraderTileentityBase trader, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
-        matrixStack.push();
+        matrixStack.pushPose();
         Direction direction = Direction.SOUTH;
         if (!trader.isFakeWorld()) {
-            direction = trader.getBlockState().get(TraderBlock.FACING);
+            direction = trader.getBlockState().getValue(TraderBlock.FACING);
         }
 
         if (trader.getVillagerEntity() != null) {
-            matrixStack.push();
+            matrixStack.pushPose();
 
             matrixStack.translate(0.5D, 1D / 16D, 0.5D);
-            matrixStack.rotate(Vector3f.YP.rotationDegrees(-direction.getHorizontalAngle()));
+            matrixStack.mulPose(Vector3f.YP.rotationDegrees(-direction.toYRot()));
             matrixStack.translate(0D, 0D, -4D / 16D);
             matrixStack.scale(0.45F, 0.45F, 0.45F);
             renderer.render(trader.getVillagerEntity(), 0F, 1F, matrixStack, buffer, combinedLight);
-            matrixStack.pop();
+            matrixStack.popPose();
         }
 
         if (trader.hasWorkstation()) {
-            matrixStack.push();
+            matrixStack.pushPose();
 
             matrixStack.translate(0.5D, 1D / 16D, 0.5D);
-            matrixStack.rotate(Vector3f.YP.rotationDegrees(-direction.getHorizontalAngle()));
+            matrixStack.mulPose(Vector3f.YP.rotationDegrees(-direction.toYRot()));
             matrixStack.translate(0D, 0D, 2D / 16D);
             matrixStack.translate(-0.5D, 0D, -0.5D);
             matrixStack.scale(0.45F, 0.45F, 0.45F);
             matrixStack.translate(0.5D / 0.45D - 0.5D, 0D, 0.5D / 0.45D - 0.5D);
 
             BlockState workstation = getState(trader.getWorkstation());
-            BlockRendererDispatcher dispatcher = minecraft.getBlockRendererDispatcher();
+            BlockRendererDispatcher dispatcher = minecraft.getBlockRenderer();
             int color = minecraft.getBlockColors().getColor(workstation, null, null, 0);
-            dispatcher.getBlockModelRenderer().renderModel(matrixStack.getLast(), buffer.getBuffer(RenderTypeLookup.func_239221_b_(workstation)), workstation, dispatcher.getModelForState(workstation), RenderUtils.getRed(color), RenderUtils.getGreen(color), RenderUtils.getBlue(color), combinedLight, combinedOverlay, EmptyModelData.INSTANCE);
+            dispatcher.getModelRenderer().renderModel(matrixStack.last(), buffer.getBuffer(RenderTypeLookup.getMovingBlockRenderType(workstation)), workstation, dispatcher.getBlockModel(workstation), RenderUtils.getRed(color), RenderUtils.getGreen(color), RenderUtils.getBlue(color), combinedLight, combinedOverlay, EmptyModelData.INSTANCE);
             BlockState topBlock = getTopBlock(workstation);
             if (!topBlock.isAir()) {
                 matrixStack.translate(0D, 1D, 0D);
                 int topColor = minecraft.getBlockColors().getColor(topBlock, null, null, 0);
-                dispatcher.getBlockModelRenderer().renderModel(matrixStack.getLast(), buffer.getBuffer(RenderTypeLookup.func_239221_b_(topBlock)), topBlock, dispatcher.getModelForState(topBlock), RenderUtils.getRed(topColor), RenderUtils.getGreen(topColor), RenderUtils.getBlue(topColor), combinedLight, combinedOverlay, EmptyModelData.INSTANCE);
+                dispatcher.getModelRenderer().renderModel(matrixStack.last(), buffer.getBuffer(RenderTypeLookup.getMovingBlockRenderType(topBlock)), topBlock, dispatcher.getBlockModel(topBlock), RenderUtils.getRed(topColor), RenderUtils.getGreen(topColor), RenderUtils.getBlue(topColor), combinedLight, combinedOverlay, EmptyModelData.INSTANCE);
             }
-            matrixStack.pop();
+            matrixStack.popPose();
         }
 
-        matrixStack.pop();
+        matrixStack.popPose();
     }
 
     private static final Map<Block, BlockState> BLOCK_CACHE = new HashMap<>();
@@ -96,9 +96,9 @@ public class TraderRenderer extends VillagerRendererBase<TraderTileentity> {
 
     protected static BlockState getFittingState(Block block) {
         if (block == Blocks.GRINDSTONE) {
-            return block.getDefaultState().with(GrindstoneBlock.FACE, AttachFace.FLOOR);
+            return block.defaultBlockState().setValue(GrindstoneBlock.FACE, AttachFace.FLOOR);
         }
-        return block.getDefaultState();
+        return block.defaultBlockState();
     }
 
     public static final Map<ResourceLocation, ResourceLocation> TOP_BLOCKS = new HashMap<>();
@@ -115,17 +115,17 @@ public class TraderRenderer extends VillagerRendererBase<TraderTileentity> {
         }
         ResourceLocation resourceLocation = TOP_BLOCKS.get(bottom.getBlock().getRegistryName());
         if (resourceLocation == null) {
-            BlockState state = Blocks.AIR.getDefaultState();
+            BlockState state = Blocks.AIR.defaultBlockState();
             TOP_BLOCK_CACHE.put(bottom.getBlock(), state);
             return state;
         }
         Block b = ForgeRegistries.BLOCKS.getValue(resourceLocation);
         if (b == null) {
-            BlockState state = Blocks.AIR.getDefaultState();
+            BlockState state = Blocks.AIR.defaultBlockState();
             TOP_BLOCK_CACHE.put(bottom.getBlock(), state);
             return state;
         }
-        BlockState state = b.getDefaultState();
+        BlockState state = b.defaultBlockState();
         TOP_BLOCK_CACHE.put(bottom.getBlock(), state);
         return state;
     }

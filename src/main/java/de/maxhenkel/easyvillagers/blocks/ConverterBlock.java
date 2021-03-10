@@ -37,27 +37,27 @@ import javax.annotation.Nullable;
 public class ConverterBlock extends VillagerBlockBase implements ITileEntityProvider, IItemBlock {
 
     public ConverterBlock() {
-        super(Properties.create(Material.IRON).hardnessAndResistance(2.5F).sound(SoundType.METAL).notSolid());
+        super(Properties.of(Material.METAL).strength(2.5F).sound(SoundType.METAL).noOcclusion());
         setRegistryName(new ResourceLocation(Main.MODID, "converter"));
     }
 
     @Override
     public Item toItem() {
-        return new BlockItem(this, new Item.Properties().group(ModItemGroups.TAB_EASY_VILLAGERS).setISTER(() -> ConverterItemRenderer::new)).setRegistryName(getRegistryName());
+        return new BlockItem(this, new Item.Properties().tab(ModItemGroups.TAB_EASY_VILLAGERS).setISTER(() -> ConverterItemRenderer::new)).setRegistryName(getRegistryName());
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        TileEntity tileEntity = worldIn.getTileEntity(pos);
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        TileEntity tileEntity = worldIn.getBlockEntity(pos);
         if (!(tileEntity instanceof ConverterTileentity)) {
-            return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
+            return super.use(state, worldIn, pos, player, handIn, hit);
         }
         ConverterTileentity converter = (ConverterTileentity) tileEntity;
 
-        player.openContainer(new INamedContainerProvider() {
+        player.openMenu(new INamedContainerProvider() {
             @Override
             public ITextComponent getDisplayName() {
-                return new TranslationTextComponent(state.getBlock().getTranslationKey());
+                return new TranslationTextComponent(state.getBlock().getDescriptionId());
             }
 
             @Nullable
@@ -71,29 +71,29 @@ public class ConverterBlock extends VillagerBlockBase implements ITileEntityProv
     }
 
     @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-        TileEntity tile = worldIn.getTileEntity(pos);
+    public void setPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+        TileEntity tile = worldIn.getBlockEntity(pos);
         if (tile instanceof ConverterTileentity && placer != null) {
             ConverterTileentity converter = (ConverterTileentity) tile;
-            converter.setOwner(placer.getUniqueID());
+            converter.setOwner(placer.getUUID());
         }
-        super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
+        super.setPlacedBy(worldIn, pos, state, placer, stack);
     }
 
     @Nullable
     @Override
-    public TileEntity createNewTileEntity(IBlockReader world) {
+    public TileEntity newBlockEntity(IBlockReader world) {
         return new ConverterTileentity();
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
+    public BlockRenderType getRenderShape(BlockState state) {
         return BlockRenderType.INVISIBLE;
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public float getAmbientOcclusionLightValue(BlockState state, IBlockReader worldIn, BlockPos pos) {
+    public float getShadeBrightness(BlockState state, IBlockReader worldIn, BlockPos pos) {
         return 1F;
     }
 

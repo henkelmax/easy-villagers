@@ -68,7 +68,7 @@ public class GuiEvents {
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
     public void onKeyInput(InputEvent.KeyInputEvent event) {
-        if (event.getKey() != Main.CYCLE_TRADES_KEY.getKey().getKeyCode() || event.getAction() != 0) {
+        if (event.getKey() != Main.CYCLE_TRADES_KEY.getKey().getValue() || event.getAction() != 0) {
             return;
         }
 
@@ -77,7 +77,7 @@ public class GuiEvents {
         }
 
         Minecraft mc = Minecraft.getInstance();
-        Screen currentScreen = mc.currentScreen;
+        Screen currentScreen = mc.screen;
 
         if (!(currentScreen instanceof MerchantScreen)) {
             return;
@@ -85,12 +85,12 @@ public class GuiEvents {
 
         MerchantScreen screen = (MerchantScreen) currentScreen;
 
-        if (!screen.getContainer().func_217042_i() /* hasXpBar */ || screen.getContainer().getXp() > 0) {
+        if (!screen.getMenu().showProgressBar() || screen.getMenu().getTraderXp() > 0) {
             return;
         }
 
         Main.SIMPLE_CHANNEL.sendToServer(new MessageCycleTrades());
-        mc.getSoundHandler().play(SimpleSound.master(SoundEvents.UI_BUTTON_CLICK, 1F));
+        mc.getSoundManager().play(SimpleSound.forUI(SoundEvents.UI_BUTTON_CLICK, 1F));
     }
 
     public static void onCycleTrades(ServerPlayerEntity player) {
@@ -98,10 +98,10 @@ public class GuiEvents {
             return;
         }
 
-        if (!(player.openContainer instanceof MerchantContainer)) {
+        if (!(player.containerMenu instanceof MerchantContainer)) {
             return;
         }
-        MerchantContainer container = (MerchantContainer) player.openContainer;
+        MerchantContainer container = (MerchantContainer) player.containerMenu;
         IMerchant merchant;
         try {
             merchant = (IMerchant) MERCHANT.get(container);
@@ -110,7 +110,7 @@ public class GuiEvents {
             return;
         }
 
-        if (merchant.getXp() > 0) {
+        if (merchant.getVillagerXp() > 0) {
             return;
         }
 
@@ -121,7 +121,7 @@ public class GuiEvents {
         try {
             OFFERS.set(villager, null);
             EasyVillagerEntity.recalculateOffers(villager);
-            player.openMerchantContainer(container.windowId, villager.getOffers(), villager.getVillagerData().getLevel(), villager.getXp(), villager.hasXPBar(), villager.canRestockTrades());
+            player.sendMerchantOffers(container.containerId, villager.getOffers(), villager.getVillagerData().getLevel(), villager.getVillagerXp(), villager.showProgressBar(), villager.canRestock());
         } catch (Exception e) {
             e.printStackTrace();
         }

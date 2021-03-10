@@ -36,41 +36,41 @@ public class VillagerItem extends Item {
     private final CachedMap<ItemStack, EasyVillagerEntity> cachedVillagers;
 
     public VillagerItem() {
-        super(new Item.Properties().maxStackSize(1).setISTER(() -> VillagerItemRenderer::new));
+        super(new Item.Properties().stacksTo(1).setISTER(() -> VillagerItemRenderer::new));
         cachedVillagers = new CachedMap<>(10_000, ItemUtils.ITEM_COMPARATOR);
 
-        DispenserBlock.registerDispenseBehavior(this, (source, stack) -> {
-            Direction direction = source.getBlockState().get(DispenserBlock.FACING);
-            BlockPos blockpos = source.getBlockPos().offset(direction);
-            World world = source.getWorld();
+        DispenserBlock.registerBehavior(this, (source, stack) -> {
+            Direction direction = source.getBlockState().getValue(DispenserBlock.FACING);
+            BlockPos blockpos = source.getPos().relative(direction);
+            World world = source.getLevel();
             EasyVillagerEntity villager = getVillager(world, stack);
-            villager.setPositionAndRotation(blockpos.getX() + 0.5D, blockpos.getY(), blockpos.getZ() + 0.5D, direction.getHorizontalAngle(), 0F);
-            world.addEntity(villager);
+            villager.absMoveTo(blockpos.getX() + 0.5D, blockpos.getY(), blockpos.getZ() + 0.5D, direction.toYRot(), 0F);
+            world.addFreshEntity(villager);
             stack.shrink(1);
             return stack;
         });
     }
 
     @Override
-    public ActionResultType onItemUse(ItemUseContext context) {
-        World world = context.getWorld();
-        if (world.isRemote) {
+    public ActionResultType useOn(ItemUseContext context) {
+        World world = context.getLevel();
+        if (world.isClientSide) {
             return ActionResultType.SUCCESS;
         } else {
-            ItemStack itemstack = context.getItem();
-            BlockPos blockpos = context.getPos();
-            Direction direction = context.getFace();
+            ItemStack itemstack = context.getItemInHand();
+            BlockPos blockpos = context.getClickedPos();
+            Direction direction = context.getClickedFace();
             BlockState blockstate = world.getBlockState(blockpos);
 
             if (!blockstate.getCollisionShape(world, blockpos).isEmpty()) {
-                blockpos = blockpos.offset(direction);
+                blockpos = blockpos.relative(direction);
             }
 
             EasyVillagerEntity villager = getVillager(world, itemstack);
 
-            villager.setPosition(blockpos.getX() + 0.5D, blockpos.getY(), blockpos.getZ() + 0.5);
+            villager.setPos(blockpos.getX() + 0.5D, blockpos.getY(), blockpos.getZ() + 0.5);
 
-            if (world.addEntity(villager)) {
+            if (world.addFreshEntity(villager)) {
                 itemstack.shrink(1);
             }
 
@@ -79,19 +79,19 @@ public class VillagerItem extends Item {
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        super.addInformation(stack, worldIn, tooltip, flagIn);
+    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public ITextComponent getDisplayName(ItemStack stack) {
-        World world = Minecraft.getInstance().world;
+    public ITextComponent getName(ItemStack stack) {
+        World world = Minecraft.getInstance().level;
         if (world == null) {
-            return super.getDisplayName(stack);
+            return super.getName(stack);
         } else {
             EasyVillagerEntity villager = getVillagerFast(world, stack);
-            if (!villager.hasCustomName() && villager.isChild()) {
+            if (!villager.hasCustomName() && villager.isBaby()) {
                 return new TranslationTextComponent("item.easy_villagers.baby_villager");
             }
             return villager.getDisplayName();
@@ -101,39 +101,39 @@ public class VillagerItem extends Item {
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int itemSlot, boolean isSelected) {
         super.inventoryTick(stack, world, entity, itemSlot, isSelected);
-        if (!(entity instanceof PlayerEntity) || world.isRemote) {
+        if (!(entity instanceof PlayerEntity) || world.isClientSide) {
             return;
         }
         if (!Main.SERVER_CONFIG.villagerInventorySounds.get()) {
             return;
         }
-        VillagerBlockBase.playRandomVillagerSound((PlayerEntity) entity, SoundEvents.ENTITY_VILLAGER_AMBIENT);
+        VillagerBlockBase.playRandomVillagerSound((PlayerEntity) entity, SoundEvents.VILLAGER_AMBIENT);
     }
 
     public void setVillager(ItemStack stack, VillagerEntity villager) {
-        CompoundNBT compound = stack.getOrCreateChildTag("villager");
-        villager.writeAdditional(compound);
+        CompoundNBT compound = stack.getOrCreateTagElement("villager");
+        villager.addAdditionalSaveData(compound);
         if (villager.hasCustomName()) {
-            stack.setDisplayName(villager.getCustomName());
+            stack.setHoverName(villager.getCustomName());
         }
     }
 
     public EasyVillagerEntity getVillager(World world, ItemStack stack) {
-        CompoundNBT compound = stack.getChildTag("villager");
+        CompoundNBT compound = stack.getTagElement("villager");
         if (compound == null) {
             compound = new CompoundNBT();
         }
 
         EasyVillagerEntity villager = new EasyVillagerEntity(EntityType.VILLAGER, world);
-        villager.readAdditional(compound);
+        villager.readAdditionalSaveData(compound);
 
-        if (stack.hasDisplayName()) {
+        if (stack.hasCustomHoverName()) {
             villager.setCustomName(stack.getDisplayName());
         }
 
         villager.hurtTime = 0;
-        villager.rotationYawHead = 0F;
-        villager.prevRotationYawHead = 0F;
+        villager.yHeadRot = 0F;
+        villager.yHeadRotO = 0F;
         return villager;
     }
 
@@ -144,8 +144,8 @@ public class VillagerItem extends Item {
     @OnlyIn(Dist.CLIENT)
     public static ItemStack getBabyVillager() {
         ItemStack babyVillager = new ItemStack(ModItems.VILLAGER);
-        EasyVillagerEntity villager = new EasyVillagerEntity(EntityType.VILLAGER, Minecraft.getInstance().world);
-        villager.setGrowingAge(-24000);
+        EasyVillagerEntity villager = new EasyVillagerEntity(EntityType.VILLAGER, Minecraft.getInstance().level);
+        villager.setAge(-24000);
         ModItems.VILLAGER.setVillager(babyVillager, villager);
         return babyVillager;
     }

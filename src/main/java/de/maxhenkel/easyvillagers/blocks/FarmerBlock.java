@@ -38,27 +38,27 @@ import javax.annotation.Nullable;
 public class FarmerBlock extends VillagerBlockBase implements ITileEntityProvider, IItemBlock {
 
     public FarmerBlock() {
-        super(Properties.create(Material.IRON).hardnessAndResistance(2.5F).sound(SoundType.METAL).notSolid());
+        super(Properties.of(Material.METAL).strength(2.5F).sound(SoundType.METAL).noOcclusion());
         setRegistryName(new ResourceLocation(Main.MODID, "farmer"));
     }
 
     @Override
     public Item toItem() {
-        return new BlockItem(this, new Item.Properties().group(ModItemGroups.TAB_EASY_VILLAGERS).setISTER(() -> FarmerItemRenderer::new)).setRegistryName(getRegistryName());
+        return new BlockItem(this, new Item.Properties().tab(ModItemGroups.TAB_EASY_VILLAGERS).setISTER(() -> FarmerItemRenderer::new)).setRegistryName(getRegistryName());
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        ItemStack heldItem = player.getHeldItem(handIn);
-        TileEntity tileEntity = worldIn.getTileEntity(pos);
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        ItemStack heldItem = player.getItemInHand(handIn);
+        TileEntity tileEntity = worldIn.getBlockEntity(pos);
         if (!(tileEntity instanceof FarmerTileentity)) {
-            return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
+            return super.use(state, worldIn, pos, player, handIn, hit);
         }
         FarmerTileentity farmer = (FarmerTileentity) tileEntity;
         if (!farmer.hasVillager() && heldItem.getItem() instanceof VillagerItem) {
             farmer.setVillager(heldItem.copy());
             ItemUtils.decrItemStack(heldItem, player);
-            VillagerBlockBase.playVillagerSound(worldIn, pos, SoundEvents.ENTITY_VILLAGER_YES);
+            VillagerBlockBase.playVillagerSound(worldIn, pos, SoundEvents.VILLAGER_YES);
             return ActionResultType.SUCCESS;
         } else if (farmer.getCrop() == null && farmer.isValidSeed(heldItem.getItem())) {
             Item seed = heldItem.getItem();
@@ -66,41 +66,41 @@ public class FarmerBlock extends VillagerBlockBase implements ITileEntityProvide
             ItemUtils.decrItemStack(heldItem, player);
             VillagerEntity villagerEntity = farmer.getVillagerEntity();
             if (villagerEntity != null) {
-                VillagerBlockBase.playVillagerSound(worldIn, pos, SoundEvents.ENTITY_VILLAGER_WORK_FARMER);
+                VillagerBlockBase.playVillagerSound(worldIn, pos, SoundEvents.VILLAGER_WORK_FARMER);
             }
-            VillagerBlockBase.playVillagerSound(worldIn, pos, SoundEvents.ITEM_CROP_PLANT);
+            VillagerBlockBase.playVillagerSound(worldIn, pos, SoundEvents.CROP_PLANTED);
             return ActionResultType.SUCCESS;
-        } else if (player.isSneaking() && farmer.getCrop() != null) {
+        } else if (player.isShiftKeyDown() && farmer.getCrop() != null) {
             ItemStack blockStack = new ItemStack(farmer.removeSeed());
             if (heldItem.isEmpty()) {
-                player.setHeldItem(handIn, blockStack);
+                player.setItemInHand(handIn, blockStack);
             } else {
-                if (!player.inventory.addItemStackToInventory(blockStack)) {
-                    Direction direction = state.get(FarmerBlock.FACING);
-                    InventoryHelper.spawnItemStack(worldIn, direction.getXOffset() + pos.getX() + 0.5D, pos.getY() + 0.5D, direction.getZOffset() + pos.getZ() + 0.5D, blockStack);
+                if (!player.inventory.add(blockStack)) {
+                    Direction direction = state.getValue(FarmerBlock.FACING);
+                    InventoryHelper.dropItemStack(worldIn, direction.getStepX() + pos.getX() + 0.5D, pos.getY() + 0.5D, direction.getStepZ() + pos.getZ() + 0.5D, blockStack);
                 }
             }
             if (farmer.hasVillager()) {
-                VillagerBlockBase.playVillagerSound(worldIn, pos, SoundEvents.ENTITY_VILLAGER_NO);
+                VillagerBlockBase.playVillagerSound(worldIn, pos, SoundEvents.VILLAGER_NO);
             }
             return ActionResultType.SUCCESS;
-        } else if (player.isSneaking() && farmer.hasVillager()) {
+        } else if (player.isShiftKeyDown() && farmer.hasVillager()) {
             ItemStack stack = farmer.removeVillager();
             if (heldItem.isEmpty()) {
-                player.setHeldItem(handIn, stack);
+                player.setItemInHand(handIn, stack);
             } else {
-                if (!player.inventory.addItemStackToInventory(stack)) {
-                    Direction direction = state.get(FarmerBlock.FACING);
-                    InventoryHelper.spawnItemStack(worldIn, direction.getXOffset() + pos.getX() + 0.5D, pos.getY() + 0.5D, direction.getZOffset() + pos.getZ() + 0.5D, stack);
+                if (!player.inventory.add(stack)) {
+                    Direction direction = state.getValue(FarmerBlock.FACING);
+                    InventoryHelper.dropItemStack(worldIn, direction.getStepX() + pos.getX() + 0.5D, pos.getY() + 0.5D, direction.getStepZ() + pos.getZ() + 0.5D, stack);
                 }
             }
-            VillagerBlockBase.playVillagerSound(worldIn, pos, SoundEvents.ENTITY_VILLAGER_CELEBRATE);
+            VillagerBlockBase.playVillagerSound(worldIn, pos, SoundEvents.VILLAGER_CELEBRATE);
             return ActionResultType.SUCCESS;
         } else {
-            player.openContainer(new INamedContainerProvider() {
+            player.openMenu(new INamedContainerProvider() {
                 @Override
                 public ITextComponent getDisplayName() {
-                    return new TranslationTextComponent(state.getBlock().getTranslationKey());
+                    return new TranslationTextComponent(state.getBlock().getDescriptionId());
                 }
 
                 @Nullable
@@ -115,18 +115,18 @@ public class FarmerBlock extends VillagerBlockBase implements ITileEntityProvide
 
     @Nullable
     @Override
-    public TileEntity createNewTileEntity(IBlockReader world) {
+    public TileEntity newBlockEntity(IBlockReader world) {
         return new FarmerTileentity();
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
+    public BlockRenderType getRenderShape(BlockState state) {
         return BlockRenderType.INVISIBLE;
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public float getAmbientOcclusionLightValue(BlockState state, IBlockReader worldIn, BlockPos pos) {
+    public float getShadeBrightness(BlockState state, IBlockReader worldIn, BlockPos pos) {
         return 1F;
     }
 

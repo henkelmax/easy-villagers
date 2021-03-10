@@ -17,18 +17,18 @@ public class VillagerBlockBase extends HorizontalRotatableBlock {
     }
 
     public boolean overrideClick(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, Event.Result itemResult) {
-        return player.isSneaking() && player.getHeldItemMainhand().isEmpty();
+        return player.isShiftKeyDown() && player.getMainHandItem().isEmpty();
     }
 
     public static void playRandomVillagerSound(World world, BlockPos pos, SoundEvent soundEvent) {
-        if (world.getGameTime() % Main.SERVER_CONFIG.villagerSoundAmount.get() == 0 && world.rand.nextInt(40) == 0) {
+        if (world.getGameTime() % Main.SERVER_CONFIG.villagerSoundAmount.get() == 0 && world.random.nextInt(40) == 0) {
             playVillagerSound(world, pos, soundEvent);
         }
     }
 
     public static void playRandomVillagerSound(PlayerEntity player, SoundEvent soundEvent) {
-        if (player.world.getGameTime() % Main.SERVER_CONFIG.villagerSoundAmount.get() == 0 && player.world.rand.nextInt(40) == 0) {
-            player.playSound(soundEvent, SoundCategory.BLOCKS, 1F, 1F);
+        if (player.level.getGameTime() % Main.SERVER_CONFIG.villagerSoundAmount.get() == 0 && player.level.random.nextInt(40) == 0) {
+            player.playNotifySound(soundEvent, SoundCategory.BLOCKS, 1F, 1F);
         }
     }
 

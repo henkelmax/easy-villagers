@@ -28,7 +28,7 @@ public class MessageVillagerParticles implements Message<MessageVillagerParticle
 
     @Override
     public void executeClientSide(NetworkEvent.Context context) { //TODO check server crash
-        TileEntity tileEntity = Minecraft.getInstance().world.getTileEntity(pos);
+        TileEntity tileEntity = Minecraft.getInstance().level.getBlockEntity(pos);
         if (tileEntity instanceof BreederTileentity) {
             BreederTileentity breeder = (BreederTileentity) tileEntity;
             breeder.spawnParticles();

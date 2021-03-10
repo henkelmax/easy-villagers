@@ -51,8 +51,8 @@ public class EasyVillagerEntity extends VillagerEntity {
 
     public static int getUniversalReputation(VillagerEntity villager) {
         try {
-            Map<UUID, Object> map = (Map<UUID, Object>) UUID_GOSSIPS_MAPPING.get(villager.getGossip());
-            return map.keySet().stream().map(uuid -> villager.getGossip().getReputation(uuid, (gossipType) -> true)).reduce(0, Integer::sum);
+            Map<UUID, Object> map = (Map<UUID, Object>) UUID_GOSSIPS_MAPPING.get(villager.getGossips());
+            return map.keySet().stream().map(uuid -> villager.getGossips().getReputation(uuid, (gossipType) -> true)).reduce(0, Integer::sum);
         } catch (Exception e) {
             e.printStackTrace();
             return 0;
@@ -65,11 +65,11 @@ public class EasyVillagerEntity extends VillagerEntity {
     }
 
     @Override
-    public int getGrowingAge() {
-        if (world.isRemote) {
-            return super.getGrowingAge() < 0 ? -24000 : 1;
+    public int getAge() {
+        if (level.isClientSide) {
+            return super.getAge() < 0 ? -24000 : 1;
         } else {
-            return growingAge;
+            return age;
         }
     }
 
@@ -80,7 +80,7 @@ public class EasyVillagerEntity extends VillagerEntity {
 
     private static void resetOffers(VillagerEntity villager) {
         for (MerchantOffer merchantoffer : villager.getOffers()) {
-            merchantoffer.resetSpecialPrice();
+            merchantoffer.resetSpecialPriceDiff();
         }
     }
 
@@ -88,7 +88,7 @@ public class EasyVillagerEntity extends VillagerEntity {
         int i = getReputation(villager);
         if (i != 0) {
             for (MerchantOffer merchantoffer : villager.getOffers()) {
-                merchantoffer.increaseSpecialPrice(-MathHelper.floor((float) i * merchantoffer.getPriceMultiplier()));
+                merchantoffer.addToSpecialPriceDiff(-MathHelper.floor((float) i * merchantoffer.getPriceMultiplier()));
             }
         }
     }
@@ -97,9 +97,9 @@ public class EasyVillagerEntity extends VillagerEntity {
         VillagerData villagerData = getVillagerData();
         VillagerProfession profession = villagerData.getProfession();
         if (profession.equals(VillagerProfession.NONE) || profession.equals(VillagerProfession.NITWIT)) {
-            return getName().deepCopy().mergeStyle(TextFormatting.GRAY);
+            return getName().copy().withStyle(TextFormatting.GRAY);
         } else {
-            return new TranslationTextComponent("tooltip.easy_villagers.villager_profession", getName().deepCopy(), new TranslationTextComponent("merchant.level." + villagerData.getLevel())).mergeStyle(TextFormatting.GRAY);
+            return new TranslationTextComponent("tooltip.easy_villagers.villager_profession", getName().copy(), new TranslationTextComponent("merchant.level." + villagerData.getLevel())).withStyle(TextFormatting.GRAY);
         }
     }
 

@@ -33,17 +33,17 @@ public class BlockItemRendererBase<T extends TileEntityRenderer<U>, U extends Fa
     }
 
     @Override
-    public void func_239207_a_(ItemStack itemStack, ItemCameraTransforms.TransformType transformType, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn) {
+    public void renderByItem(ItemStack itemStack, ItemCameraTransforms.TransformType transformType, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLightIn, int combinedOverlayIn) {
         if (renderer == null) {
             renderer = rendererSupplier.apply(TileEntityRendererDispatcher.instance);
         }
 
-        CompoundNBT blockEntityTag = itemStack.getChildTag("BlockEntityTag");
+        CompoundNBT blockEntityTag = itemStack.getTagElement("BlockEntityTag");
         U tileEntity = cachedMap.get(itemStack, () -> {
             U te = tileEntitySupplier.get();
-            te.setFakeWorld(minecraft.world);
+            te.setFakeWorld(minecraft.level);
             if (blockEntityTag != null) {
-                te.read(null, blockEntityTag);
+                te.load(null, blockEntityTag);
             }
             return te;
         });

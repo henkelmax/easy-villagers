@@ -39,7 +39,7 @@ public class BreederTileentity extends FakeWorldTileentity implements ITickableT
     private EasyVillagerEntity villagerEntity2;
 
     public BreederTileentity() {
-        super(ModTileEntities.BREEDER, ModBlocks.BREEDER.getDefaultState());
+        super(ModTileEntities.BREEDER, ModBlocks.BREEDER.defaultBlockState());
         foodInventory = NonNullList.withSize(4, ItemStack.EMPTY);
         outputInventory = NonNullList.withSize(4, ItemStack.EMPTY);
         villager1 = ItemStack.EMPTY;
@@ -64,14 +64,14 @@ public class BreederTileentity extends FakeWorldTileentity implements ITickableT
 
     public EasyVillagerEntity getVillagerEntity1() {
         if (villagerEntity1 == null && !villager1.isEmpty()) {
-            villagerEntity1 = ModItems.VILLAGER.getVillager(world, villager1);
+            villagerEntity1 = ModItems.VILLAGER.getVillager(level, villager1);
         }
         return villagerEntity1;
     }
 
     public EasyVillagerEntity getVillagerEntity2() {
         if (villagerEntity2 == null && !villager2.isEmpty()) {
-            villagerEntity2 = ModItems.VILLAGER.getVillager(world, villager2);
+            villagerEntity2 = ModItems.VILLAGER.getVillager(level, villager2);
         }
         return villagerEntity2;
     }
@@ -82,9 +82,9 @@ public class BreederTileentity extends FakeWorldTileentity implements ITickableT
         if (villager.isEmpty()) {
             villagerEntity1 = null;
         } else {
-            villagerEntity1 = ModItems.VILLAGER.getVillager(world, villager);
+            villagerEntity1 = ModItems.VILLAGER.getVillager(level, villager);
         }
-        markDirty();
+        setChanged();
         sync();
     }
 
@@ -94,9 +94,9 @@ public class BreederTileentity extends FakeWorldTileentity implements ITickableT
         if (villager.isEmpty()) {
             villagerEntity2 = null;
         } else {
-            villagerEntity2 = ModItems.VILLAGER.getVillager(world, villager);
+            villagerEntity2 = ModItems.VILLAGER.getVillager(level, villager);
         }
-        markDirty();
+        setChanged();
         sync();
     }
 
@@ -114,7 +114,7 @@ public class BreederTileentity extends FakeWorldTileentity implements ITickableT
 
     @Override
     public void tick() {
-        if (world.isRemote) {
+        if (level.isClientSide) {
             return;
         }
 
@@ -124,11 +124,11 @@ public class BreederTileentity extends FakeWorldTileentity implements ITickableT
             sync();
         }
         if (hasVillager1() || hasVillager2()) {
-            markDirty();
-            VillagerBlockBase.playRandomVillagerSound(world, getPos(), SoundEvents.ENTITY_VILLAGER_AMBIENT);
+            setChanged();
+            VillagerBlockBase.playRandomVillagerSound(level, getBlockPos(), SoundEvents.VILLAGER_AMBIENT);
         }
 
-        if (world.getGameTime() % Main.SERVER_CONFIG.breedingTime.get() == 0) {
+        if (level.getGameTime() % Main.SERVER_CONFIG.breedingTime.get() == 0) {
             tryBreed();
         }
     }
@@ -136,32 +136,32 @@ public class BreederTileentity extends FakeWorldTileentity implements ITickableT
     public void tryBreed() {
         if (canBreed() && addVillager()) {
             removeBreedingItems();
-            VillagerBlockBase.playVillagerSound(world, pos, SoundEvents.ENTITY_VILLAGER_CELEBRATE);
+            VillagerBlockBase.playVillagerSound(level, worldPosition, SoundEvents.VILLAGER_CELEBRATE);
             spawnParticles();
         }
     }
 
     public void spawnParticles() {
-        if (world.isRemote) {
+        if (level.isClientSide) {
             for (int i = 0; i < 5; i++) {
-                world.addParticle(ParticleTypes.HEART,
-                        pos.getX() + (world.rand.nextDouble() - 0.5D) + 0.5D,
-                        pos.getY() + world.rand.nextDouble() + 1D,
-                        pos.getZ() + (world.rand.nextDouble() - 0.5D) + 0.5D,
+                level.addParticle(ParticleTypes.HEART,
+                        worldPosition.getX() + (level.random.nextDouble() - 0.5D) + 0.5D,
+                        worldPosition.getY() + level.random.nextDouble() + 1D,
+                        worldPosition.getZ() + (level.random.nextDouble() - 0.5D) + 0.5D,
                         0D, 0D, 0D);
             }
         } else {
-            MessageVillagerParticles msg = new MessageVillagerParticles(pos);
-            EntityUtils.forEachPlayerAround((ServerWorld) world, pos, 128, playerEntity -> NetUtils.sendTo(Main.SIMPLE_CHANNEL, playerEntity, msg));
+            MessageVillagerParticles msg = new MessageVillagerParticles(worldPosition);
+            EntityUtils.forEachPlayerAround((ServerWorld) level, worldPosition, 128, playerEntity -> NetUtils.sendTo(Main.SIMPLE_CHANNEL, playerEntity, msg));
         }
     }
 
     private boolean addVillager() {
         for (int i = 0; i < outputInventory.size(); i++) {
             if (outputInventory.get(i).isEmpty()) {
-                EasyVillagerEntity villagerEntity = new EasyVillagerEntity(EntityType.VILLAGER, world);
-                villagerEntity.setVillagerData(villagerEntity.getVillagerData().withType(VillagerType.func_242371_a(world.func_242406_i(getPos()))));
-                villagerEntity.setGrowingAge(-24000);
+                EasyVillagerEntity villagerEntity = new EasyVillagerEntity(EntityType.VILLAGER, level);
+                villagerEntity.setVillagerData(villagerEntity.getVillagerData().setType(VillagerType.byBiome(level.getBiomeName(getBlockPos()))));
+                villagerEntity.setAge(-24000);
                 ItemStack villager = new ItemStack(ModItems.VILLAGER);
                 ModItems.VILLAGER.setVillager(villager, villagerEntity);
                 outputInventory.set(i, villager);
@@ -175,12 +175,12 @@ public class BreederTileentity extends FakeWorldTileentity implements ITickableT
         if (!hasVillager1() || !hasVillager2()) {
             return false;
         }
-        if (getVillagerEntity1().isChild() || getVillagerEntity2().isChild()) {
+        if (getVillagerEntity1().isBaby() || getVillagerEntity2().isBaby()) {
             return false;
         }
         int value = 0;
         for (ItemStack stack : foodInventory) {
-            value += VillagerEntity.FOOD_VALUES.getOrDefault(stack.getItem(), 0) * stack.getCount();
+            value += VillagerEntity.FOOD_POINTS.getOrDefault(stack.getItem(), 0) * stack.getCount();
         }
         return value >= 24;
     }
@@ -189,7 +189,7 @@ public class BreederTileentity extends FakeWorldTileentity implements ITickableT
         int value = 0;
         for (ItemStack stack : foodInventory) {
             for (int i = 0; i < stack.getCount(); i++) {
-                value += VillagerEntity.FOOD_VALUES.getOrDefault(stack.getItem(), 0);
+                value += VillagerEntity.FOOD_POINTS.getOrDefault(stack.getItem(), 0);
                 stack.shrink(1);
                 if (value >= 24) {
                     return;
@@ -199,13 +199,13 @@ public class BreederTileentity extends FakeWorldTileentity implements ITickableT
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
+    public CompoundNBT save(CompoundNBT compound) {
         if (hasVillager1()) {
             CompoundNBT comp = new CompoundNBT();
             if (villagerEntity1 != null) {
                 ModItems.VILLAGER.setVillager(villager1, villagerEntity1);
             }
-            villager1.write(comp);
+            villager1.save(comp);
             compound.put("Villager1", comp);
         }
         if (hasVillager2()) {
@@ -213,46 +213,46 @@ public class BreederTileentity extends FakeWorldTileentity implements ITickableT
             if (villagerEntity2 != null) {
                 ModItems.VILLAGER.setVillager(villager2, villagerEntity2);
             }
-            villager2.write(comp);
+            villager2.save(comp);
             compound.put("Villager2", comp);
         }
         compound.put("FoodInventory", ItemStackHelper.saveAllItems(new CompoundNBT(), foodInventory, true));
         compound.put("OutputInventory", ItemStackHelper.saveAllItems(new CompoundNBT(), outputInventory, true));
-        return super.write(compound);
+        return super.save(compound);
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT compound) {
+    public void load(BlockState state, CompoundNBT compound) {
         if (compound.contains("Villager1")) {
             CompoundNBT comp = compound.getCompound("Villager1");
-            villager1 = ItemStack.read(comp);
+            villager1 = ItemStack.of(comp);
             villagerEntity1 = null;
         } else {
             removeVillager1();
         }
         if (compound.contains("Villager2")) {
             CompoundNBT comp = compound.getCompound("Villager2");
-            villager2 = ItemStack.read(comp);
+            villager2 = ItemStack.of(comp);
             villagerEntity2 = null;
         } else {
             removeVillager2();
         }
         ItemStackHelper.loadAllItems(compound.getCompound("FoodInventory"), foodInventory);
         ItemStackHelper.loadAllItems(compound.getCompound("OutputInventory"), outputInventory);
-        super.read(state, compound);
+        super.load(state, compound);
     }
 
     public IInventory getFoodInventory() {
-        return new ItemListInventory(foodInventory, this::markDirty);
+        return new ItemListInventory(foodInventory, this::setChanged);
     }
 
     public IInventory getOutputInventory() {
-        return new ItemListInventory(outputInventory, this::markDirty);
+        return new ItemListInventory(outputInventory, this::setChanged);
     }
 
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-        if (!removed && cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+        if (!remove && cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             if (side != null && side.equals(Direction.DOWN)) {
                 return LazyOptional.of(this::getOutputInventoryItemHandler).cast();
             } else {

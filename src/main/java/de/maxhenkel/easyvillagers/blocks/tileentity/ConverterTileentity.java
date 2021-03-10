@@ -38,14 +38,14 @@ public class ConverterTileentity extends VillagerTileentity implements ITickable
     private UUID owner;
 
     public ConverterTileentity() {
-        super(ModTileEntities.CONVERTER, ModBlocks.CONVERTER.getDefaultState());
+        super(ModTileEntities.CONVERTER, ModBlocks.CONVERTER.defaultBlockState());
         inputInventory = NonNullList.withSize(4, ItemStack.EMPTY);
         outputInventory = NonNullList.withSize(4, ItemStack.EMPTY);
     }
 
     @Override
     public void tick() {
-        if (world.isRemote) {
+        if (level.isClientSide) {
             return;
         }
 
@@ -66,13 +66,13 @@ public class ConverterTileentity extends VillagerTileentity implements ITickable
                 sync();
             }
             if (timer == getZombifyTime()) {
-                VillagerBlockBase.playVillagerSound(world, pos, SoundEvents.ENTITY_ZOMBIE_INFECT);
+                VillagerBlockBase.playVillagerSound(level, worldPosition, SoundEvents.ZOMBIE_INFECT);
                 sync();
             } else if (timer == getCureTime()) {
-                VillagerBlockBase.playVillagerSound(world, pos, SoundEvents.ENTITY_ZOMBIE_VILLAGER_CURE);
+                VillagerBlockBase.playVillagerSound(level, worldPosition, SoundEvents.ZOMBIE_VILLAGER_CURE);
                 sync();
             } else if (timer == getConvertTime()) {
-                VillagerBlockBase.playVillagerSound(world, pos, SoundEvents.ENTITY_ZOMBIE_VILLAGER_CONVERTED);
+                VillagerBlockBase.playVillagerSound(level, worldPosition, SoundEvents.ZOMBIE_VILLAGER_CONVERTED);
                 sync();
             } else if (timer >= getFinalizeTime()) {
                 PlayerEntity ownerPlayer = getOwnerPlayer();
@@ -81,7 +81,7 @@ public class ConverterTileentity extends VillagerTileentity implements ITickable
                         ItemStack stack = outputInventory.get(i);
                         if (stack.isEmpty()) {
                             EasyVillagerEntity villagerEntity = getVillagerEntity();
-                            villagerEntity.updateReputation(IReputationType.ZOMBIE_VILLAGER_CURED, ownerPlayer);
+                            villagerEntity.onReputationEventFrom(IReputationType.ZOMBIE_VILLAGER_CURED, ownerPlayer);
                             outputInventory.set(i, removeVillager().copy());
                             timer = 0L;
                             sync();
@@ -92,16 +92,16 @@ public class ConverterTileentity extends VillagerTileentity implements ITickable
             }
 
             timer++;
-            markDirty();
+            setChanged();
             if (timer < getZombifyTime() || timer >= getConvertTime()) {
-                VillagerBlockBase.playRandomVillagerSound(world, getPos(), SoundEvents.ENTITY_VILLAGER_AMBIENT);
+                VillagerBlockBase.playRandomVillagerSound(level, getBlockPos(), SoundEvents.VILLAGER_AMBIENT);
             } else {
-                VillagerBlockBase.playRandomVillagerSound(world, getPos(), SoundEvents.ENTITY_ZOMBIE_VILLAGER_AMBIENT);
+                VillagerBlockBase.playRandomVillagerSound(level, getBlockPos(), SoundEvents.ZOMBIE_VILLAGER_AMBIENT);
             }
-            VillagerBlockBase.playRandomVillagerSound(world, getPos(), SoundEvents.ENTITY_ZOMBIE_AMBIENT);
+            VillagerBlockBase.playRandomVillagerSound(level, getBlockPos(), SoundEvents.ZOMBIE_AMBIENT);
         } else if (timer != 0L) {
             timer = 0L;
-            markDirty();
+            setChanged();
         }
     }
 
@@ -127,7 +127,7 @@ public class ConverterTileentity extends VillagerTileentity implements ITickable
     }
 
     public static boolean isWeakness(ItemStack stack) {
-        return PotionUtils.getEffectsFromStack(stack).stream().anyMatch(effectInstance -> effectInstance.getPotion().equals(Effects.WEAKNESS));
+        return PotionUtils.getMobEffects(stack).stream().anyMatch(effectInstance -> effectInstance.getEffect().equals(Effects.WEAKNESS));
     }
 
     public long getTimer() {
@@ -142,11 +142,11 @@ public class ConverterTileentity extends VillagerTileentity implements ITickable
         if (owner == null) {
             return null;
         }
-        if (world instanceof ServerWorld) {
-            ServerWorld serverWorld = (ServerWorld) world;
-            return serverWorld.getServer().getPlayerList().getPlayerByUUID(owner);
+        if (level instanceof ServerWorld) {
+            ServerWorld serverWorld = (ServerWorld) level;
+            return serverWorld.getServer().getPlayerList().getPlayer(owner);
         } else {
-            return world.getPlayerByUuid(owner);
+            return level.getPlayerByUUID(owner);
         }
     }
 
@@ -155,40 +155,40 @@ public class ConverterTileentity extends VillagerTileentity implements ITickable
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
+    public CompoundNBT save(CompoundNBT compound) {
         compound.put("InputInventory", ItemStackHelper.saveAllItems(new CompoundNBT(), inputInventory, true));
         compound.put("OutputInventory", ItemStackHelper.saveAllItems(new CompoundNBT(), outputInventory, true));
         compound.putLong("Timer", timer);
         if (owner != null) {
-            compound.putUniqueId("Owner", owner);
+            compound.putUUID("Owner", owner);
         }
-        return super.write(compound);
+        return super.save(compound);
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT compound) {
+    public void load(BlockState state, CompoundNBT compound) {
         ItemStackHelper.loadAllItems(compound.getCompound("InputInventory"), inputInventory);
         ItemStackHelper.loadAllItems(compound.getCompound("OutputInventory"), outputInventory);
         timer = compound.getLong("Timer");
         if (compound.contains("Owner")) {
-            owner = compound.getUniqueId("Owner");
+            owner = compound.getUUID("Owner");
         } else {
             owner = null;
         }
-        super.read(state, compound);
+        super.load(state, compound);
     }
 
     public IInventory getInputInventory() {
-        return new ItemListInventory(inputInventory, this::markDirty);
+        return new ItemListInventory(inputInventory, this::setChanged);
     }
 
     public IInventory getOutputInventory() {
-        return new ItemListInventory(outputInventory, this::markDirty);
+        return new ItemListInventory(outputInventory, this::setChanged);
     }
 
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-        if (!removed && cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+        if (!remove && cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             if (side != null && side.equals(Direction.DOWN)) {
                 return LazyOptional.of(this::getOutputInventoryItemHandler).cast();
             } else {

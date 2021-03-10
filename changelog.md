@@ -1,1 +1,1 @@
-- Added incubator JEI recipes
+- Updated to official mappings

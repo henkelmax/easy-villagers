@@ -11,13 +11,13 @@ public class ModItemGroups {
     public static final ItemGroup TAB_EASY_VILLAGERS = new ItemGroup("easy_villagers") {
 
         @Override
-        public ItemStack createIcon() {
+        public ItemStack makeIcon() {
             return new ItemStack(ModItems.VILLAGER);
         }
 
         @Override
-        public void fill(NonNullList<ItemStack> list) {
-            super.fill(list);
+        public void fillItemList(NonNullList<ItemStack> list) {
+            super.fillItemList(list);
             list.add(new ItemStack(ModItems.VILLAGER));
             list.add(VillagerItem.getBabyVillager());
         }

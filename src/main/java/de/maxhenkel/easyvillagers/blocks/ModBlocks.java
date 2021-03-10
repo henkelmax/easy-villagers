@@ -30,13 +30,13 @@ public class ModBlocks {
         );
 
         if (FMLEnvironment.dist == Dist.CLIENT) {
-            RenderTypeLookup.setRenderLayer(TRADER, RenderType.getCutout());
-            RenderTypeLookup.setRenderLayer(AUTO_TRADER, RenderType.getCutout());
-            RenderTypeLookup.setRenderLayer(FARMER, RenderType.getCutout());
-            RenderTypeLookup.setRenderLayer(BREEDER, RenderType.getCutout());
-            RenderTypeLookup.setRenderLayer(CONVERTER, RenderType.getCutout());
-            RenderTypeLookup.setRenderLayer(IRON_FARM, RenderType.getCutout());
-            RenderTypeLookup.setRenderLayer(INCUBATOR, RenderType.getCutout());
+            RenderTypeLookup.setRenderLayer(TRADER, RenderType.cutout());
+            RenderTypeLookup.setRenderLayer(AUTO_TRADER, RenderType.cutout());
+            RenderTypeLookup.setRenderLayer(FARMER, RenderType.cutout());
+            RenderTypeLookup.setRenderLayer(BREEDER, RenderType.cutout());
+            RenderTypeLookup.setRenderLayer(CONVERTER, RenderType.cutout());
+            RenderTypeLookup.setRenderLayer(IRON_FARM, RenderType.cutout());
+            RenderTypeLookup.setRenderLayer(INCUBATOR, RenderType.cutout());
         }
     }
 

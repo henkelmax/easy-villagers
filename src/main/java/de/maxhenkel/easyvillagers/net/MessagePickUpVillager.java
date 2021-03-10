@@ -31,19 +31,19 @@ public class MessagePickUpVillager implements Message<MessagePickUpVillager> {
     @Override
     public void executeServerSide(NetworkEvent.Context context) {
         ServerPlayerEntity player = context.getSender();
-        player.world.getEntitiesWithinAABB(VillagerEntity.class, player.getBoundingBox().grow(8D), v -> v.getUniqueID().equals(villager)).stream().filter(LivingEntity::isAlive).findAny().ifPresent(villagerEntity -> {
+        player.level.getEntitiesOfClass(VillagerEntity.class, player.getBoundingBox().inflate(8D), v -> v.getUUID().equals(villager)).stream().filter(LivingEntity::isAlive).findAny().ifPresent(villagerEntity -> {
             VillagerEvents.pickUp(villagerEntity, player);
         });
     }
 
     @Override
     public MessagePickUpVillager fromBytes(PacketBuffer packetBuffer) {
-        villager = packetBuffer.readUniqueId();
+        villager = packetBuffer.readUUID();
         return this;
     }
 
     @Override
     public void toBytes(PacketBuffer packetBuffer) {
-        packetBuffer.writeUniqueId(villager);
+        packetBuffer.writeUUID(villager);
     }
 }

@@ -35,27 +35,27 @@ import javax.annotation.Nullable;
 public class IncubatorBlock extends VillagerBlockBase implements ITileEntityProvider, IItemBlock {
 
     public IncubatorBlock() {
-        super(Properties.create(Material.IRON).hardnessAndResistance(2.5F).sound(SoundType.METAL).notSolid());
+        super(Properties.of(Material.METAL).strength(2.5F).sound(SoundType.METAL).noOcclusion());
         setRegistryName(new ResourceLocation(Main.MODID, "incubator"));
     }
 
     @Override
     public Item toItem() {
-        return new BlockItem(this, new Item.Properties().group(ModItemGroups.TAB_EASY_VILLAGERS).setISTER(() -> IncubatorItemRenderer::new)).setRegistryName(getRegistryName());
+        return new BlockItem(this, new Item.Properties().tab(ModItemGroups.TAB_EASY_VILLAGERS).setISTER(() -> IncubatorItemRenderer::new)).setRegistryName(getRegistryName());
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        TileEntity tileEntity = worldIn.getTileEntity(pos);
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        TileEntity tileEntity = worldIn.getBlockEntity(pos);
         if (!(tileEntity instanceof IncubatorTileentity)) {
-            return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
+            return super.use(state, worldIn, pos, player, handIn, hit);
         }
         IncubatorTileentity incubator = (IncubatorTileentity) tileEntity;
 
-        player.openContainer(new INamedContainerProvider() {
+        player.openMenu(new INamedContainerProvider() {
             @Override
             public ITextComponent getDisplayName() {
-                return new TranslationTextComponent(state.getBlock().getTranslationKey());
+                return new TranslationTextComponent(state.getBlock().getDescriptionId());
             }
 
             @Nullable
@@ -70,18 +70,18 @@ public class IncubatorBlock extends VillagerBlockBase implements ITileEntityProv
 
     @Nullable
     @Override
-    public TileEntity createNewTileEntity(IBlockReader world) {
+    public TileEntity newBlockEntity(IBlockReader world) {
         return new IncubatorTileentity();
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
+    public BlockRenderType getRenderShape(BlockState state) {
         return BlockRenderType.INVISIBLE;
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public float getAmbientOcclusionLightValue(BlockState state, IBlockReader worldIn, BlockPos pos) {
+    public float getShadeBrightness(BlockState state, IBlockReader worldIn, BlockPos pos) {
         return 1F;
     }
 

@@ -33,8 +33,8 @@ public class HUDHandlerVillager implements IComponentProvider {
     public ItemStack getStack(IDataAccessor accessor, IPluginConfig config) {
         TileEntity te = accessor.getTileEntity();
         ItemStack stack = new ItemStack(te.getBlockState().getBlock().asItem());
-        CompoundNBT blockEntityTag = stack.getOrCreateChildTag("BlockEntityTag");
-        te.write(blockEntityTag);
+        CompoundNBT blockEntityTag = stack.getOrCreateTagElement("BlockEntityTag");
+        te.save(blockEntityTag);
         return stack;
     }
 }

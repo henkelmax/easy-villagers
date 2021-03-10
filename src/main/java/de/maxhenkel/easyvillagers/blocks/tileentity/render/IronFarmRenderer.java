@@ -27,47 +27,47 @@ public class IronFarmRenderer extends VillagerRendererBase<IronFarmTileentity> {
     @Override
     public void render(IronFarmTileentity farm, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
         super.render(farm, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
-        matrixStack.push();
+        matrixStack.pushPose();
 
         if (zombieRenderer == null) {
-            zombieRenderer = new ZombieRenderer(minecraft.getRenderManager());
-            zombie = new ZombieEntity(minecraft.world);
+            zombieRenderer = new ZombieRenderer(minecraft.getEntityRenderDispatcher());
+            zombie = new ZombieEntity(minecraft.level);
         }
 
         if (ironGolemRenderer == null) {
-            ironGolemRenderer = new IronGolemRenderer(minecraft.getRenderManager());
-            ironGolem = new IronGolemEntity(EntityType.IRON_GOLEM, minecraft.world);
+            ironGolemRenderer = new IronGolemRenderer(minecraft.getEntityRenderDispatcher());
+            ironGolem = new IronGolemEntity(EntityType.IRON_GOLEM, minecraft.level);
         }
 
         Direction direction = Direction.SOUTH;
         if (!farm.isFakeWorld()) {
-            direction = farm.getBlockState().get(TraderBlock.FACING);
+            direction = farm.getBlockState().getValue(TraderBlock.FACING);
         }
 
         if (farm.getVillagerEntity() != null) {
-            matrixStack.push();
+            matrixStack.pushPose();
             matrixStack.translate(0.5D, 1D / 16D, 0.5D);
-            matrixStack.rotate(Vector3f.YP.rotationDegrees(-direction.getHorizontalAngle()));
+            matrixStack.mulPose(Vector3f.YP.rotationDegrees(-direction.toYRot()));
             matrixStack.translate(-5D / 16D, 0D, -5D / 16D);
-            matrixStack.rotate(Vector3f.YP.rotationDegrees(90));
+            matrixStack.mulPose(Vector3f.YP.rotationDegrees(90));
             matrixStack.scale(0.3F, 0.3F, 0.3F);
             villagerRenderer.render(farm.getVillagerEntity(), 0F, 1F, matrixStack, buffer, combinedLight);
-            matrixStack.pop();
+            matrixStack.popPose();
         }
 
-        matrixStack.push();
+        matrixStack.pushPose();
         matrixStack.translate(0.5D, 1D / 16D, 0.5D);
-        matrixStack.rotate(Vector3f.YP.rotationDegrees(-direction.getHorizontalAngle()));
+        matrixStack.mulPose(Vector3f.YP.rotationDegrees(-direction.toYRot()));
         matrixStack.translate(5D / 16D, 0D, -5D / 16D);
-        matrixStack.rotate(Vector3f.YP.rotationDegrees(-90));
+        matrixStack.mulPose(Vector3f.YP.rotationDegrees(-90));
         matrixStack.scale(0.3F, 0.3F, 0.3F);
         zombieRenderer.render(zombie, 0F, 1F, matrixStack, buffer, combinedLight);
-        matrixStack.pop();
+        matrixStack.popPose();
 
         if (farm.getTimer() >= IronFarmTileentity.getGolemSpawnTime() && farm.getTimer() < IronFarmTileentity.getGolemKillTime()) {
-            matrixStack.push();
+            matrixStack.pushPose();
             matrixStack.translate(0.5D, 1D / 16D, 0.5D);
-            matrixStack.rotate(Vector3f.YP.rotationDegrees(-direction.getHorizontalAngle()));
+            matrixStack.mulPose(Vector3f.YP.rotationDegrees(-direction.toYRot()));
             matrixStack.translate(0D, 0D, 3D / 16D);
             matrixStack.scale(0.3F, 0.3F, 0.3F);
             if (farm.getTimer() % 20 < 10) {
@@ -76,10 +76,10 @@ public class IronFarmRenderer extends VillagerRendererBase<IronFarmTileentity> {
                 ironGolem.hurtTime = 0;
             }
             ironGolemRenderer.render(ironGolem, 0F, 1F, matrixStack, buffer, combinedLight);
-            matrixStack.pop();
+            matrixStack.popPose();
         }
 
-        matrixStack.pop();
+        matrixStack.popPose();
     }
 
 }

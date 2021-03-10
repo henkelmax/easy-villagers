@@ -22,7 +22,7 @@ public class TraderBlock extends TraderBlockBase {
 
     @Override
     public Item toItem() {
-        return new BlockItem(this, new Item.Properties().group(ModItemGroups.TAB_EASY_VILLAGERS).setISTER(() -> TraderItemRenderer::new)).setRegistryName(getRegistryName());
+        return new BlockItem(this, new Item.Properties().tab(ModItemGroups.TAB_EASY_VILLAGERS).setISTER(() -> TraderItemRenderer::new)).setRegistryName(getRegistryName());
     }
 
     @Override
@@ -32,7 +32,7 @@ public class TraderBlock extends TraderBlockBase {
 
     @Nullable
     @Override
-    public TileEntity createNewTileEntity(IBlockReader world) {
+    public TileEntity newBlockEntity(IBlockReader world) {
         return new TraderTileentity();
     }
 

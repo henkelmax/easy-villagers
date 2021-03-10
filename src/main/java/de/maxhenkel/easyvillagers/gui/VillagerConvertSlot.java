@@ -14,7 +14,7 @@ public class VillagerConvertSlot extends Slot {
     }
 
     @Override
-    public boolean isItemValid(ItemStack stack) {
+    public boolean mayPlace(ItemStack stack) {
         if (stack.getItem() instanceof VillagerItem) {
             return true;
         } else if (stack.getItem() == Items.GOLDEN_APPLE) {

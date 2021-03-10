@@ -26,18 +26,18 @@ import javax.annotation.Nullable;
 public abstract class TraderBlockBase extends VillagerBlockBase implements ITileEntityProvider, IItemBlock {
 
     public TraderBlockBase() {
-        super(Properties.create(Material.IRON).hardnessAndResistance(2.5F).sound(SoundType.METAL).notSolid());
+        super(Properties.of(Material.METAL).strength(2.5F).sound(SoundType.METAL).noOcclusion());
     }
 
     @Override
     public abstract Item toItem();
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        ItemStack heldItem = player.getHeldItem(handIn);
-        TileEntity tileEntity = worldIn.getTileEntity(pos);
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        ItemStack heldItem = player.getItemInHand(handIn);
+        TileEntity tileEntity = worldIn.getBlockEntity(pos);
         if (!(tileEntity instanceof TraderTileentityBase)) {
-            return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
+            return super.use(state, worldIn, pos, player, handIn, hit);
         }
         TraderTileentityBase trader = (TraderTileentityBase) tileEntity;
         if (!trader.hasVillager() && heldItem.getItem() instanceof VillagerItem) {
@@ -49,7 +49,7 @@ public abstract class TraderBlockBase extends VillagerBlockBase implements ITile
                     playWorkstationSound(worldIn, pos, trader);
                 }
             } else {
-                playVillagerSound(worldIn, pos, SoundEvents.ENTITY_VILLAGER_CELEBRATE);
+                playVillagerSound(worldIn, pos, SoundEvents.VILLAGER_CELEBRATE);
             }
             return ActionResultType.SUCCESS;
         } else if (!trader.hasWorkstation() && heldItem.getItem() instanceof BlockItem && trader.isValidBlock(((BlockItem) heldItem.getItem()).getBlock())) {
@@ -60,33 +60,33 @@ public abstract class TraderBlockBase extends VillagerBlockBase implements ITile
             if (villagerEntity != null) {
                 playWorkstationSound(worldIn, pos, trader);
             }
-            SoundType type = block.getSoundType(block.getDefaultState());
+            SoundType type = block.getSoundType(block.defaultBlockState());
             worldIn.playSound(null, pos, type.getPlaceSound(), SoundCategory.BLOCKS, type.getVolume(), type.getPitch());
             return ActionResultType.SUCCESS;
-        } else if (player.isSneaking() && trader.hasVillager()) {
+        } else if (player.isShiftKeyDown() && trader.hasVillager()) {
             ItemStack stack = trader.removeVillager();
             if (heldItem.isEmpty()) {
-                player.setHeldItem(handIn, stack);
+                player.setItemInHand(handIn, stack);
             } else {
-                if (!player.inventory.addItemStackToInventory(stack)) {
-                    Direction direction = state.get(TraderBlockBase.FACING);
-                    InventoryHelper.spawnItemStack(worldIn, direction.getXOffset() + pos.getX() + 0.5D, pos.getY() + 0.5D, direction.getZOffset() + pos.getZ() + 0.5D, stack);
+                if (!player.inventory.add(stack)) {
+                    Direction direction = state.getValue(TraderBlockBase.FACING);
+                    InventoryHelper.dropItemStack(worldIn, direction.getStepX() + pos.getX() + 0.5D, pos.getY() + 0.5D, direction.getStepZ() + pos.getZ() + 0.5D, stack);
                 }
             }
-            playVillagerSound(worldIn, pos, SoundEvents.ENTITY_VILLAGER_CELEBRATE);
+            playVillagerSound(worldIn, pos, SoundEvents.VILLAGER_CELEBRATE);
             return ActionResultType.SUCCESS;
-        } else if (player.isSneaking() && trader.hasWorkstation()) {
+        } else if (player.isShiftKeyDown() && trader.hasWorkstation()) {
             ItemStack blockStack = new ItemStack(trader.removeWorkstation());
             if (heldItem.isEmpty()) {
-                player.setHeldItem(handIn, blockStack);
+                player.setItemInHand(handIn, blockStack);
             } else {
-                if (!player.inventory.addItemStackToInventory(blockStack)) {
-                    Direction direction = state.get(TraderBlockBase.FACING);
-                    InventoryHelper.spawnItemStack(worldIn, direction.getXOffset() + pos.getX() + 0.5D, pos.getY() + 0.5D, direction.getZOffset() + pos.getZ() + 0.5D, blockStack);
+                if (!player.inventory.add(blockStack)) {
+                    Direction direction = state.getValue(TraderBlockBase.FACING);
+                    InventoryHelper.dropItemStack(worldIn, direction.getStepX() + pos.getX() + 0.5D, pos.getY() + 0.5D, direction.getStepZ() + pos.getZ() + 0.5D, blockStack);
                 }
             }
             if (trader.hasVillager()) {
-                playVillagerSound(worldIn, pos, SoundEvents.ENTITY_VILLAGER_NO);
+                playVillagerSound(worldIn, pos, SoundEvents.VILLAGER_NO);
             }
             return ActionResultType.SUCCESS;
         } else if (openGUI(trader, player)) {
@@ -101,25 +101,25 @@ public abstract class TraderBlockBase extends VillagerBlockBase implements ITile
         VillagerEntity villagerEntity = trader.getVillagerEntity();
         if (villagerEntity != null) {
             if (trader.getWorkstationProfession().equals(villagerEntity.getVillagerData().getProfession())) {
-                playVillagerSound(world, pos, trader.getWorkstationProfession().getSound());
+                playVillagerSound(world, pos, trader.getWorkstationProfession().getWorkSound());
             } else {
-                playVillagerSound(world, pos, SoundEvents.ENTITY_VILLAGER_NO);
+                playVillagerSound(world, pos, SoundEvents.VILLAGER_NO);
             }
         }
     }
 
     @Nullable
     @Override
-    public abstract TileEntity createNewTileEntity(IBlockReader world);
+    public abstract TileEntity newBlockEntity(IBlockReader world);
 
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
+    public BlockRenderType getRenderShape(BlockState state) {
         return BlockRenderType.INVISIBLE;
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public float getAmbientOcclusionLightValue(BlockState state, IBlockReader worldIn, BlockPos pos) {
+    public float getShadeBrightness(BlockState state, IBlockReader worldIn, BlockPos pos) {
         return 1F;
     }
 

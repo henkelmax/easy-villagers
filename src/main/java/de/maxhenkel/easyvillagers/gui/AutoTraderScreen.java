@@ -20,19 +20,19 @@ public class AutoTraderScreen extends ScreenBase<AutoTraderContainer> {
     public AutoTraderScreen(AutoTraderContainer container, PlayerInventory playerInventory, ITextComponent name) {
         super(BACKGROUND, container, playerInventory, name);
         this.playerInventory = playerInventory;
-        xSize = 176;
-        ySize = 202;
+        imageWidth = 176;
+        imageHeight = 202;
     }
 
     @Override
     protected void init() {
         super.init();
 
-        addButton(new Button(guiLeft + 8, guiTop + 19, 16, 20, new StringTextComponent(""), button -> {
+        addButton(new Button(leftPos + 8, topPos + 19, 16, 20, new StringTextComponent(""), button -> {
             Main.SIMPLE_CHANNEL.sendToServer(new MessageSelectTrade(false));
         }));
 
-        addButton(new Button(guiLeft + xSize - 16 - 8, guiTop + 19, 16, 20, new StringTextComponent(""), button -> {
+        addButton(new Button(leftPos + imageWidth - 16 - 8, topPos + 19, 16, 20, new StringTextComponent(""), button -> {
             Main.SIMPLE_CHANNEL.sendToServer(new MessageSelectTrade(true));
         }));
     }
@@ -40,23 +40,23 @@ public class AutoTraderScreen extends ScreenBase<AutoTraderContainer> {
     @Override
     public void render(MatrixStack matrixStack, int x, int y, float partialTicks) {
         super.render(matrixStack, x, y, partialTicks);
-        minecraft.getTextureManager().bindTexture(BACKGROUND);
-        blit(matrixStack, guiLeft + 14, guiTop + 25, 176, 7, 4, 7);
-        blit(matrixStack, guiLeft + xSize - 14 - 4, guiTop + 25, 176, 0, 4, 7);
+        minecraft.getTextureManager().bind(BACKGROUND);
+        blit(matrixStack, leftPos + 14, topPos + 25, 176, 7, 4, 7);
+        blit(matrixStack, leftPos + imageWidth - 14 - 4, topPos + 25, 176, 0, 4, 7);
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(MatrixStack matrixStack, int x, int y) {
-        super.drawGuiContainerForegroundLayer(matrixStack, x, y);
-        drawCentered(matrixStack, title, 6, FONT_COLOR);
-        drawCentered(matrixStack, new TranslationTextComponent("gui.easy_villagers.input"), 45, FONT_COLOR);
-        drawCentered(matrixStack, new TranslationTextComponent("gui.easy_villagers.output"), 77, FONT_COLOR);
-        font.func_243248_b(matrixStack, playerInventory.getDisplayName(), 8F, (float) (ySize - 96 + 3), FONT_COLOR);
+    protected void renderLabels(MatrixStack matrixStack, int x, int y) {
+        super.renderLabels(matrixStack, x, y);
+        drawCenteredText(matrixStack, title, 6, FONT_COLOR);
+        drawCenteredText(matrixStack, new TranslationTextComponent("gui.easy_villagers.input"), 45, FONT_COLOR);
+        drawCenteredText(matrixStack, new TranslationTextComponent("gui.easy_villagers.output"), 77, FONT_COLOR);
+        font.draw(matrixStack, playerInventory.getDisplayName(), 8F, (float) (imageHeight - 96 + 3), FONT_COLOR);
     }
 
-    protected void drawCentered(MatrixStack matrixStack, ITextComponent text, int y, int color) {
-        int width = font.getStringPropertyWidth(text);
-        font.func_243248_b(matrixStack, text, xSize / 2F - width / 2F, y, color);
+    protected void drawCenteredText(MatrixStack matrixStack, ITextComponent text, int y, int color) {
+        int width = font.width(text);
+        font.draw(matrixStack, text, imageWidth / 2F - width / 2F, y, color);
     }
 
 }

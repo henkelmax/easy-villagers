@@ -44,15 +44,15 @@ public class FarmerTileentity extends VillagerTileentity implements ITickableTil
     private NonNullList<ItemStack> inventory;
 
     public FarmerTileentity() {
-        super(ModTileEntities.FARMER, ModBlocks.FARMER.getDefaultState());
+        super(ModTileEntities.FARMER, ModBlocks.FARMER.defaultBlockState());
         inventory = NonNullList.withSize(4, ItemStack.EMPTY);
     }
 
     @Override
     protected void onAddVillager(EasyVillagerEntity villager) {
         super.onAddVillager(villager);
-        if (villager.getXp() <= 0) {
-            villager.setVillagerData(villager.getVillagerData().withProfession(VillagerProfession.FARMER));
+        if (villager.getVillagerXp() <= 0) {
+            villager.setVillagerData(villager.getVillagerData().setProfession(VillagerProfession.FARMER));
         }
     }
 
@@ -62,7 +62,7 @@ public class FarmerTileentity extends VillagerTileentity implements ITickableTil
         } else {
             this.crop = getSeedCrop(seed);
         }
-        markDirty();
+        setChanged();
         sync();
     }
 
@@ -81,17 +81,17 @@ public class FarmerTileentity extends VillagerTileentity implements ITickableTil
 
     public BlockState getSeedCrop(Item seed) {
         if (seed == Items.WHEAT_SEEDS) {
-            return Blocks.WHEAT.getDefaultState();
+            return Blocks.WHEAT.defaultBlockState();
         } else if (seed == Items.POTATO) {
-            return Blocks.POTATOES.getDefaultState();
+            return Blocks.POTATOES.defaultBlockState();
         } else if (seed == Items.CARROT) {
-            return Blocks.CARROTS.getDefaultState();
+            return Blocks.CARROTS.defaultBlockState();
         } else if (seed == Items.BEETROOT_SEEDS) {
-            return Blocks.BEETROOTS.getDefaultState();
+            return Blocks.BEETROOTS.defaultBlockState();
         } else if (seed instanceof IPlantable) {
             IPlantable plantable = (IPlantable) seed;
-            if (plantable.getPlantType(world, getPos()) == PlantType.CROP) { //TODO fake world
-                return plantable.getPlant(world, getPos());
+            if (plantable.getPlantType(level, getBlockPos()) == PlantType.CROP) { //TODO fake world
+                return plantable.getPlant(level, getBlockPos());
             }
         }
         return null;
@@ -104,23 +104,23 @@ public class FarmerTileentity extends VillagerTileentity implements ITickableTil
 
     @Override
     public void tick() {
-        if (world.isRemote) {
+        if (level.isClientSide) {
             return;
         }
         EasyVillagerEntity v = getVillagerEntity();
         if (v != null) {
-            VillagerBlockBase.playRandomVillagerSound(world, getPos(), SoundEvents.ENTITY_VILLAGER_AMBIENT);
+            VillagerBlockBase.playRandomVillagerSound(level, getBlockPos(), SoundEvents.VILLAGER_AMBIENT);
 
             if (advanceAge()) {
                 sync();
             }
-            markDirty();
+            setChanged();
         }
 
-        if (world.getGameTime() % 20 == 0 && world.rand.nextInt(Main.SERVER_CONFIG.farmSpeed.get()) == 0) {
+        if (level.getGameTime() % 20 == 0 && level.random.nextInt(Main.SERVER_CONFIG.farmSpeed.get()) == 0) {
             if (ageCrop(v)) {
                 sync();
-                markDirty();
+                setChanged();
             }
         }
     }
@@ -138,15 +138,15 @@ public class FarmerTileentity extends VillagerTileentity implements ITickableTil
         }
 
         IntegerProperty p = (IntegerProperty) ageProp.get();
-        Integer max = p.getAllowedValues().stream().max(Integer::compare).get();
+        Integer max = p.getPossibleValues().stream().max(Integer::compare).get();
 
-        int age = c.get(p);
+        int age = c.getValue(p);
 
         if (age >= max) {
-            if (villager == null || villager.isChild() || !villager.getVillagerData().getProfession().equals(VillagerProfession.FARMER)) {
+            if (villager == null || villager.isBaby() || !villager.getVillagerData().getProfession().equals(VillagerProfession.FARMER)) {
                 return false;
             }
-            LootContext.Builder context = new LootContext.Builder((ServerWorld) world).withParameter(LootParameters.field_237457_g_, new Vector3d(pos.getX(), pos.getY(), pos.getZ())).withParameter(LootParameters.BLOCK_STATE, c).withParameter(LootParameters.TOOL, ItemStack.EMPTY);
+            LootContext.Builder context = new LootContext.Builder((ServerWorld) level).withParameter(LootParameters.ORIGIN, new Vector3d(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ())).withParameter(LootParameters.BLOCK_STATE, c).withParameter(LootParameters.TOOL, ItemStack.EMPTY);
             List<ItemStack> drops = c.getDrops(context);
             IItemHandlerModifiable itemHandler = getItemHandler();
             for (ItemStack stack : drops) {
@@ -155,30 +155,30 @@ public class FarmerTileentity extends VillagerTileentity implements ITickableTil
                 }
             }
 
-            crop = crop.with(p, 0);
-            VillagerBlockBase.playVillagerSound(world, getPos(), SoundEvents.ENTITY_VILLAGER_WORK_FARMER);
+            crop = crop.setValue(p, 0);
+            VillagerBlockBase.playVillagerSound(level, getBlockPos(), SoundEvents.VILLAGER_WORK_FARMER);
             return true;
         } else {
-            crop = crop.with(p, age + 1);
+            crop = crop.setValue(p, age + 1);
             return true;
         }
     }
 
     public IInventory getOutputInventory() {
-        return new ItemListInventory(inventory, this::markDirty);
+        return new ItemListInventory(inventory, this::setChanged);
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
+    public CompoundNBT save(CompoundNBT compound) {
         if (crop != null) {
             compound.put("Crop", NBTUtil.writeBlockState(crop));
         }
         ItemStackHelper.saveAllItems(compound, inventory, false);
-        return super.write(compound);
+        return super.save(compound);
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT compound) {
+    public void load(BlockState state, CompoundNBT compound) {
         if (compound.contains("Crop")) {
             crop = NBTUtil.readBlockState(compound.getCompound("Crop"));
         } else {
@@ -186,14 +186,14 @@ public class FarmerTileentity extends VillagerTileentity implements ITickableTil
         }
 
         ItemStackHelper.loadAllItems(compound, inventory);
-        super.read(state, compound);
+        super.load(state, compound);
     }
 
     private IItemHandlerModifiable handler;
 
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-        if (!removed && cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+        if (!remove && cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             return LazyOptional.of(this::getItemHandler).cast();
         }
         return super.getCapability(cap, side);

@@ -28,12 +28,12 @@ public class AutoTraderBlock extends TraderBlockBase {
 
     @Override
     public Item toItem() {
-        return new BlockItem(this, new Item.Properties().group(ModItemGroups.TAB_EASY_VILLAGERS).setISTER(() -> AutoTraderItemRenderer::new)).setRegistryName(getRegistryName());
+        return new BlockItem(this, new Item.Properties().tab(ModItemGroups.TAB_EASY_VILLAGERS).setISTER(() -> AutoTraderItemRenderer::new)).setRegistryName(getRegistryName());
     }
 
     @Override
     protected boolean openGUI(TraderTileentityBase trader, PlayerEntity player) {
-        player.openContainer(new INamedContainerProvider() {
+        player.openMenu(new INamedContainerProvider() {
             @Override
             public ITextComponent getDisplayName() {
                 return new TranslationTextComponent("block.easy_villagers.auto_trader");
@@ -51,7 +51,7 @@ public class AutoTraderBlock extends TraderBlockBase {
 
     @Nullable
     @Override
-    public TileEntity createNewTileEntity(IBlockReader world) {
+    public TileEntity newBlockEntity(IBlockReader world) {
         return new AutoTraderTileentity();
     }
 

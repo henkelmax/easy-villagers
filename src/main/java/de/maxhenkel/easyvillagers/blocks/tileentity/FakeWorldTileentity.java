@@ -15,7 +15,7 @@ public class FakeWorldTileentity extends SyncableTileentity {
     }
 
     public void setFakeWorld(World w) {
-        world = w;
+        level = w;
         fakeWorld = true;
     }
 

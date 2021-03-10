@@ -30,7 +30,7 @@ public class VillagerTileentity extends FakeWorldTileentity {
 
     public EasyVillagerEntity getVillagerEntity() {
         if (villagerEntity == null && !villager.isEmpty()) {
-            villagerEntity = ModItems.VILLAGER.getVillager(world, villager);
+            villagerEntity = ModItems.VILLAGER.getVillager(level, villager);
         }
         return villagerEntity;
     }
@@ -41,10 +41,10 @@ public class VillagerTileentity extends FakeWorldTileentity {
         if (villager.isEmpty()) {
             villagerEntity = null;
         } else {
-            villagerEntity = ModItems.VILLAGER.getVillager(world, villager);
+            villagerEntity = ModItems.VILLAGER.getVillager(level, villager);
             onAddVillager(villagerEntity);
         }
-        markDirty();
+        setChanged();
         sync();
     }
 
@@ -70,9 +70,9 @@ public class VillagerTileentity extends FakeWorldTileentity {
         if (villagerEntity == null) {
             return false;
         }
-        int prevAge = villagerEntity.getGrowingAge();
+        int prevAge = villagerEntity.getAge();
         int age = prevAge + amount;
-        villagerEntity.setGrowingAge(age);
+        villagerEntity.setAge(age);
         return prevAge < 0 && age >= 0;
     }
 
@@ -81,25 +81,25 @@ public class VillagerTileentity extends FakeWorldTileentity {
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
+    public CompoundNBT save(CompoundNBT compound) {
         if (hasVillager()) {
             CompoundNBT comp = new CompoundNBT();
-            getVillager().write(comp);
+            getVillager().save(comp);
             compound.put("Villager", comp);
         }
-        return super.write(compound);
+        return super.save(compound);
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT compound) {
+    public void load(BlockState state, CompoundNBT compound) {
         if (compound.contains("Villager")) {
             CompoundNBT comp = compound.getCompound("Villager");
-            villager = ItemStack.read(comp);
+            villager = ItemStack.of(comp);
             villagerEntity = null;
         } else {
             removeVillager();
         }
-        super.read(state, compound);
+        super.load(state, compound);
     }
 
 }

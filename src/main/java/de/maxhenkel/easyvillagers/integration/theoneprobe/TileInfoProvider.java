@@ -20,7 +20,7 @@ public class TileInfoProvider implements IProbeInfoProvider {
 
     @Override
     public void addProbeInfo(ProbeMode probeMode, IProbeInfo iProbeInfo, PlayerEntity playerEntity, World world, BlockState blockState, IProbeHitData iProbeHitData) {
-        TileEntity te = world.getTileEntity(iProbeHitData.getPos());
+        TileEntity te = world.getBlockEntity(iProbeHitData.getPos());
 
         if (te instanceof VillagerTileentity) {
             VillagerTileentity villagerTileentity = (VillagerTileentity) te;

@@ -52,7 +52,7 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
             fixProfession();
         }
 
-        markDirty();
+        setChanged();
         sync();
     }
 
@@ -63,11 +63,11 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
     }
 
     public boolean isValidBlock(Block block) {
-        return PointOfInterestType.forState(block.getDefaultState()).isPresent();
+        return PointOfInterestType.forState(block.defaultBlockState()).isPresent();
     }
 
     public VillagerProfession getWorkstationProfession() {
-        return PointOfInterestType.forState(workstation.getDefaultState()).flatMap(pointOfInterestType -> ForgeRegistries.PROFESSIONS.getValues().stream().filter(villagerProfession -> villagerProfession.getPointOfInterest() == pointOfInterestType).findFirst()).orElse(VillagerProfession.NONE);
+        return PointOfInterestType.forState(workstation.defaultBlockState()).flatMap(pointOfInterestType -> ForgeRegistries.PROFESSIONS.getValues().stream().filter(villagerProfession -> villagerProfession.getJobPoiType() == pointOfInterestType).findFirst()).orElse(VillagerProfession.NONE);
     }
 
     @Override
@@ -81,10 +81,10 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
 
     private void fixProfession() {
         EasyVillagerEntity v = getVillagerEntity();
-        if (v == null || v.getXp() > 0) {
+        if (v == null || v.getVillagerXp() > 0) {
             return;
         }
-        v.setVillagerData(v.getVillagerData().withProfession(getWorkstationProfession()));
+        v.setVillagerData(v.getVillagerData().setProfession(getWorkstationProfession()));
     }
 
     public boolean openTradingGUI(PlayerEntity playerEntity) {
@@ -93,7 +93,7 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
             return false;
         }
 
-        if (villagerEntity.isChild()) {
+        if (villagerEntity.isBaby()) {
             return false;
         }
 
@@ -102,11 +102,11 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
             return false;
         }
 
-        if (villagerEntity.hasCustomer()) {
+        if (villagerEntity.isTrading()) {
             return false;
         }
 
-        villagerEntity.setPosition(getPos().getX() + 0.5D, getPos().getY() + 1D, getPos().getZ() + 0.5D);
+        villagerEntity.setPos(getBlockPos().getX() + 0.5D, getBlockPos().getY() + 1D, getBlockPos().getZ() + 0.5D);
 
         try {
             DISPLAY_MERCHANT_GUI.invoke(villagerEntity, playerEntity);
@@ -119,7 +119,7 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
 
     @Override
     public void tick() {
-        if (world.isRemote) {
+        if (level.isClientSide) {
             return;
         }
         EasyVillagerEntity v = getVillagerEntity();
@@ -130,11 +130,11 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
         if (advanceAge()) {
             sync();
         }
-        markDirty();
+        setChanged();
 
-        VillagerBlockBase.playRandomVillagerSound(world, getPos(), SoundEvents.ENTITY_VILLAGER_AMBIENT);
+        VillagerBlockBase.playRandomVillagerSound(level, getBlockPos(), SoundEvents.VILLAGER_AMBIENT);
 
-        if (!v.hasCustomer()) {
+        if (!v.isTrading()) {
             try {
                 if ((Boolean) LEVELED_UP.get(v)) {
                     LEVEL_UP.invoke(v);
@@ -145,7 +145,7 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
                 e.printStackTrace();
             }
 
-            if (world.getGameTime() - getLastRestock() > nextRestock && v.getVillagerData().getProfession().equals(getWorkstationProfession())) {
+            if (level.getGameTime() - getLastRestock() > nextRestock && v.getVillagerData().getProfession().equals(getWorkstationProfession())) {
                 restock();
                 nextRestock = calculateNextRestock();
             }
@@ -153,7 +153,7 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
     }
 
     protected long calculateNextRestock() {
-        return Main.SERVER_CONFIG.traderMinRestockTime.get() + world.rand.nextInt(Math.max(Main.SERVER_CONFIG.traderMaxRestockTime.get() - Main.SERVER_CONFIG.traderMinRestockTime.get(), 1));
+        return Main.SERVER_CONFIG.traderMinRestockTime.get() + level.random.nextInt(Math.max(Main.SERVER_CONFIG.traderMaxRestockTime.get() - Main.SERVER_CONFIG.traderMinRestockTime.get(), 1));
     }
 
     protected void restock() {
@@ -163,7 +163,7 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
         }
         try {
             villagerEntity.restock();
-            VillagerBlockBase.playVillagerSound(world, getPos(), villagerEntity.getVillagerData().getProfession().getSound());
+            VillagerBlockBase.playVillagerSound(level, getBlockPos(), villagerEntity.getVillagerData().getProfession().getWorkSound());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -183,23 +183,23 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
+    public CompoundNBT save(CompoundNBT compound) {
         if (hasWorkstation()) {
             compound.putString("Workstation", workstation.getRegistryName().toString());
         }
         compound.putLong("NextRestock", nextRestock);
-        return super.write(compound);
+        return super.save(compound);
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT compound) {
+    public void load(BlockState state, CompoundNBT compound) {
         if (compound.contains("Workstation")) {
             workstation = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(compound.getString("Workstation")));
         } else {
             removeWorkstation();
         }
         nextRestock = compound.getLong("NextRestock");
-        super.read(state, compound);
+        super.load(state, compound);
     }
 
 }

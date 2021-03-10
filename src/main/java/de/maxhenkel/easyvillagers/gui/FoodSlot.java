@@ -12,8 +12,8 @@ public class FoodSlot extends Slot {
     }
 
     @Override
-    public boolean isItemValid(ItemStack stack) {
-        return VillagerEntity.FOOD_VALUES.getOrDefault(stack.getItem(), 0) > 0;
+    public boolean mayPlace(ItemStack stack) {
+        return VillagerEntity.FOOD_POINTS.getOrDefault(stack.getItem(), 0) > 0;
     }
 
 }

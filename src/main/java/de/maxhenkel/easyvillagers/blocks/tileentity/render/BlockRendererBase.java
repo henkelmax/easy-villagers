@@ -29,8 +29,8 @@ public class BlockRendererBase<T extends FakeWorldTileentity> extends TileEntity
     protected void renderBlock(T tileEntity, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
         BlockState state = tileEntity.getBlockState();
         int color = minecraft.getBlockColors().getColor(state, null, null, 0);
-        BlockRendererDispatcher dispatcher = minecraft.getBlockRendererDispatcher();
-        dispatcher.getBlockModelRenderer().renderModel(matrixStack.getLast(), buffer.getBuffer(RenderType.getCutoutMipped()), state, dispatcher.getModelForState(state), RenderUtils.getRed(color), RenderUtils.getGreen(color), RenderUtils.getBlue(color), combinedLight, combinedOverlay, EmptyModelData.INSTANCE);
+        BlockRendererDispatcher dispatcher = minecraft.getBlockRenderer();
+        dispatcher.getModelRenderer().renderModel(matrixStack.last(), buffer.getBuffer(RenderType.cutoutMipped()), state, dispatcher.getBlockModel(state), RenderUtils.getRed(color), RenderUtils.getGreen(color), RenderUtils.getBlue(color), combinedLight, combinedOverlay, EmptyModelData.INSTANCE);
     }
 
 }

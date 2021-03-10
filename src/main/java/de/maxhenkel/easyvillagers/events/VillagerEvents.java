@@ -30,7 +30,7 @@ public class VillagerEvents {
         VillagerEntity villager = (VillagerEntity) event.getTarget();
         PlayerEntity player = event.getPlayer();
 
-        if (player.world.isRemote || !player.isSneaking()) {
+        if (player.level.isClientSide || !player.isShiftKeyDown()) {
             return;
         }
 
@@ -47,17 +47,17 @@ public class VillagerEvents {
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
     public void onKeyInput(InputEvent.KeyInputEvent event) {
-        if (!Main.PICKUP_KEY.isPressed()) {
+        if (!Main.PICKUP_KEY.consumeClick()) {
             return;
         }
 
-        Entity pointedEntity = Minecraft.getInstance().pointedEntity;
+        Entity pointedEntity = Minecraft.getInstance().crosshairPickEntity;
 
         if (!(pointedEntity instanceof VillagerEntity) || !pointedEntity.isAlive()) {
             return;
         }
 
-        Main.SIMPLE_CHANNEL.sendToServer(new MessagePickUpVillager(pointedEntity.getUniqueID()));
+        Main.SIMPLE_CHANNEL.sendToServer(new MessagePickUpVillager(pointedEntity.getUUID()));
     }
 
     public static void pickUp(VillagerEntity villager, PlayerEntity player) {
@@ -65,7 +65,7 @@ public class VillagerEvents {
 
         ModItems.VILLAGER.setVillager(stack, villager);
 
-        if (player.inventory.addItemStackToInventory(stack)) {
+        if (player.inventory.add(stack)) {
             villager.remove();
         }
     }

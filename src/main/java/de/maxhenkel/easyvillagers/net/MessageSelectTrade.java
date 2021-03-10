@@ -27,8 +27,8 @@ public class MessageSelectTrade implements Message<MessageSelectTrade> {
     @Override
     public void executeServerSide(NetworkEvent.Context context) {
         ServerPlayerEntity player = context.getSender();
-        if (player.openContainer instanceof AutoTraderContainer) {
-            AutoTraderContainer container = (AutoTraderContainer) player.openContainer;
+        if (player.containerMenu instanceof AutoTraderContainer) {
+            AutoTraderContainer container = (AutoTraderContainer) player.containerMenu;
             if (next) {
                 container.getTrader().nextTrade();
             } else {

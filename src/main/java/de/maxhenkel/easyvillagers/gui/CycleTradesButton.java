@@ -28,17 +28,17 @@ public class CycleTradesButton extends Button {
 
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        visible = screen.getContainer().func_217042_i() /* hasXpBar */ && screen.getContainer().getXp() <= 0;
+        visible = screen.getMenu().showProgressBar() && screen.getMenu().getTraderXp() <= 0;
         super.render(matrixStack, mouseX, mouseY, partialTicks);
     }
 
     @Override
     public void renderButton(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         RenderSystem.color4f(1F, 1F, 1F, 1F);
-        Minecraft.getInstance().getTextureManager().bindTexture(ARROW_BUTTON);
+        Minecraft.getInstance().getTextureManager().bind(ARROW_BUTTON);
         if (isHovered()) {
             blit(matrixStack, x, y, 0, 14, WIDTH, HEIGHT, 32, 32);
-            screen.renderToolTip(matrixStack, Collections.singletonList(new TranslationTextComponent("tooltip.easy_villagers.cycle_trades").func_241878_f()), mouseX, mouseY, screen.getMinecraft().fontRenderer);
+            screen.renderToolTip(matrixStack, Collections.singletonList(new TranslationTextComponent("tooltip.easy_villagers.cycle_trades").getVisualOrderText()), mouseX, mouseY, screen.getMinecraft().font);
         } else {
             blit(matrixStack, x, y, 0, 0, WIDTH, HEIGHT, 32, 32);
         }

@@ -18,7 +18,7 @@ public class VillagerRendererBase<T extends FakeWorldTileentity> extends BlockRe
     @Override
     public void render(T tileEntity, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
         if (villagerRenderer == null) {
-            villagerRenderer = new VillagerRenderer(minecraft.getRenderManager(), (IReloadableResourceManager) minecraft.getResourceManager());
+            villagerRenderer = new VillagerRenderer(minecraft.getEntityRenderDispatcher(), (IReloadableResourceManager) minecraft.getResourceManager());
         }
         super.render(tileEntity, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
     }

@@ -43,8 +43,8 @@ public class IncubatorCategory implements IRecipeCategory<ItemStack> {
 
     private ItemStack getOutput(ItemStack input) {
         ItemStack out = input.copy();
-        EasyVillagerEntity villager = ModItems.VILLAGER.getVillager(Minecraft.getInstance().world, out);
-        villager.setGrowingAge(0);
+        EasyVillagerEntity villager = ModItems.VILLAGER.getVillager(Minecraft.getInstance().level, out);
+        villager.setAge(0);
         ModItems.VILLAGER.setVillager(out, villager);
         return out;
     }
