@@ -1,1 +1,1 @@
-- Updated to official mappings
+- Fixed nitwits changing profession

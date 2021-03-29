@@ -51,7 +51,7 @@ public class FarmerTileentity extends VillagerTileentity implements ITickableTil
     @Override
     protected void onAddVillager(EasyVillagerEntity villager) {
         super.onAddVillager(villager);
-        if (villager.getVillagerXp() <= 0) {
+        if (villager.getVillagerXp() <= 0 && !villager.getVillagerData().getProfession().equals(VillagerProfession.NITWIT)) {
             villager.setVillagerData(villager.getVillagerData().setProfession(VillagerProfession.FARMER));
         }
     }

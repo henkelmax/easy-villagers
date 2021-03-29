@@ -81,7 +81,7 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
 
     private void fixProfession() {
         EasyVillagerEntity v = getVillagerEntity();
-        if (v == null || v.getVillagerXp() > 0) {
+        if (v == null || v.getVillagerXp() > 0 || v.getVillagerData().getProfession().equals(VillagerProfession.NITWIT)) {
             return;
         }
         v.setVillagerData(v.getVillagerData().setProfession(getWorkstationProfession()));

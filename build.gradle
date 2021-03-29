@@ -94,6 +94,8 @@ dependencies {
     runtimeOnly fg.deobf("de.maxhenkel.corelib:corelib:${mod_minecraft_version}-${corelib_version}:javadoc")
 
     compile fg.deobf("mcp.mobius.waila:Hwyla:${hwyla_version}")
+
+    implementation 'com.google.code.findbugs:jsr305:3.0.2'
 }
 
 jar {
