@@ -1,1 +1,2 @@
-- Fixed nitwits changing profession
+- Fixed villager names with brackets
+- Fixed potential crash

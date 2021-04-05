@@ -128,7 +128,7 @@ public class VillagerItem extends Item {
         villager.readAdditionalSaveData(compound);
 
         if (stack.hasCustomHoverName()) {
-            villager.setCustomName(stack.getDisplayName());
+            villager.setCustomName(stack.getHoverName());
         }
 
         villager.hurtTime = 0;
