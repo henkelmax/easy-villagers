@@ -1,2 +1,1 @@
-- Fixed villager names with brackets
-- Fixed potential crash
+- Fixed trader rendering

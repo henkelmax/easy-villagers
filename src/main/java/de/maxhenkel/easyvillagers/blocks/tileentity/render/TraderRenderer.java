@@ -1,31 +1,41 @@
 package de.maxhenkel.easyvillagers.blocks.tileentity.render;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import de.maxhenkel.corelib.CachedMap;
 import de.maxhenkel.corelib.client.RenderUtils;
+import de.maxhenkel.corelib.helpers.Pair;
 import de.maxhenkel.easyvillagers.blocks.TraderBlock;
 import de.maxhenkel.easyvillagers.blocks.tileentity.TraderTileentity;
 import de.maxhenkel.easyvillagers.blocks.tileentity.TraderTileentityBase;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.GrindstoneBlock;
+import net.minecraft.block.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.entity.VillagerRenderer;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.state.properties.AttachFace;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.client.model.data.EmptyModelData;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
 public class TraderRenderer extends VillagerRendererBase<TraderTileentity> {
+
+    private static final CachedMap<BlockState, Pair<TileEntityRenderer<TileEntity>, TileEntity>> tileEntityCache = new CachedMap<>(10_000);
+    private static final CachedMap<Block, BlockState> blockStateCache = new CachedMap<>(10_000);
+
+    private static final Field BLOCK_STATE = ObfuscationReflectionHelper.findField(TileEntity.class, "field_195045_e");
 
     public TraderRenderer(TileEntityRendererDispatcher rendererDispatcher) {
         super(rendererDispatcher);
@@ -34,10 +44,10 @@ public class TraderRenderer extends VillagerRendererBase<TraderTileentity> {
     @Override
     public void render(TraderTileentity trader, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
         super.render(trader, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
-        renderTraderBase(minecraft, villagerRenderer, trader, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
+        renderTraderBase(villagerRenderer, trader, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
     }
 
-    public static void renderTraderBase(Minecraft minecraft, VillagerRenderer renderer, TraderTileentityBase trader, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
+    public static void renderTraderBase(VillagerRenderer renderer, TraderTileentityBase trader, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
         matrixStack.pushPose();
         Direction direction = Direction.SOUTH;
         if (!trader.isFakeWorld()) {
@@ -66,14 +76,13 @@ public class TraderRenderer extends VillagerRendererBase<TraderTileentity> {
             matrixStack.translate(0.5D / 0.45D - 0.5D, 0D, 0.5D / 0.45D - 0.5D);
 
             BlockState workstation = getState(trader.getWorkstation());
-            BlockRendererDispatcher dispatcher = minecraft.getBlockRenderer();
-            int color = minecraft.getBlockColors().getColor(workstation, null, null, 0);
-            dispatcher.getModelRenderer().renderModel(matrixStack.last(), buffer.getBuffer(RenderTypeLookup.getMovingBlockRenderType(workstation)), workstation, dispatcher.getBlockModel(workstation), RenderUtils.getRed(color), RenderUtils.getGreen(color), RenderUtils.getBlue(color), combinedLight, combinedOverlay, EmptyModelData.INSTANCE);
+
+            renderBlock(workstation, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
+
             BlockState topBlock = getTopBlock(workstation);
             if (!topBlock.isAir()) {
                 matrixStack.translate(0D, 1D, 0D);
-                int topColor = minecraft.getBlockColors().getColor(topBlock, null, null, 0);
-                dispatcher.getModelRenderer().renderModel(matrixStack.last(), buffer.getBuffer(RenderTypeLookup.getMovingBlockRenderType(topBlock)), topBlock, dispatcher.getBlockModel(topBlock), RenderUtils.getRed(topColor), RenderUtils.getGreen(topColor), RenderUtils.getBlue(topColor), combinedLight, combinedOverlay, EmptyModelData.INSTANCE);
+                renderBlock(topBlock, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
             }
             matrixStack.popPose();
         }
@@ -81,17 +90,39 @@ public class TraderRenderer extends VillagerRendererBase<TraderTileentity> {
         matrixStack.popPose();
     }
 
-    private static final Map<Block, BlockState> BLOCK_CACHE = new HashMap<>();
+    public static void renderBlock(BlockState state, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
+        if (state.getBlock().getRenderShape(state) == BlockRenderType.MODEL) {
+            BlockRendererDispatcher dispatcher = Minecraft.getInstance().getBlockRenderer();
+            int color = Minecraft.getInstance().getBlockColors().getColor(state, null, null, 0);
+            RenderType renderType = RenderTypeLookup.getRenderType(state, false);
+            dispatcher.getModelRenderer().renderModel(matrixStack.last(), buffer.getBuffer(renderType), state, dispatcher.getBlockModel(state), RenderUtils.getRed(color), RenderUtils.getGreen(color), RenderUtils.getBlue(color), combinedLight, OverlayTexture.NO_OVERLAY, EmptyModelData.INSTANCE);
+        } else {
+            Pair<TileEntityRenderer<TileEntity>, TileEntity> renderer = getRenderer(state);
+            if (renderer != null) {
+                renderer.getKey().render(renderer.getValue(), partialTicks, matrixStack, buffer, combinedLight, OverlayTexture.NO_OVERLAY);
+            }
+        }
+    }
 
     public static BlockState getState(Block block) {
-        BlockState state = BLOCK_CACHE.get(block);
-        if (state == null) {
-            BlockState fittingState = getFittingState(block);
-            BLOCK_CACHE.put(block, fittingState);
-            return fittingState;
-        } else {
-            return state;
-        }
+        return blockStateCache.get(block, () -> getFittingState(block));
+    }
+
+    public static Pair<TileEntityRenderer<TileEntity>, TileEntity> getRenderer(BlockState state) {
+        return tileEntityCache.get(state, () -> {
+            TileEntity tileEntity = state.createTileEntity(Minecraft.getInstance().level);
+            if (tileEntity != null) {
+                TileEntityRenderer<TileEntity> renderer = TileEntityRendererDispatcher.instance.getRenderer(tileEntity);
+                if (renderer != null) {
+                    try {
+                        BLOCK_STATE.set(tileEntity, state);
+                    } catch (IllegalAccessException e) {
+                    }
+                    return new Pair<>(renderer, tileEntity);
+                }
+            }
+            return null;
+        });
     }
 
     protected static BlockState getFittingState(Block block) {

@@ -53,7 +53,7 @@ public class FarmerRenderer extends VillagerRendererBase<FarmerTileentity> {
 
             BlockRendererDispatcher dispatcher = minecraft.getBlockRenderer();
             int color = minecraft.getBlockColors().getColor(crop, null, null, 0);
-            dispatcher.getModelRenderer().renderModel(matrixStack.last(), buffer.getBuffer(RenderTypeLookup.getMovingBlockRenderType(crop)), crop, dispatcher.getBlockModel(crop), RenderUtils.getRed(color), RenderUtils.getGreen(color), RenderUtils.getBlue(color), combinedLight, combinedOverlay, EmptyModelData.INSTANCE);
+            dispatcher.getModelRenderer().renderModel(matrixStack.last(), buffer.getBuffer(RenderTypeLookup.getRenderType(crop, false)), crop, dispatcher.getBlockModel(crop), RenderUtils.getRed(color), RenderUtils.getGreen(color), RenderUtils.getBlue(color), combinedLight, combinedOverlay, EmptyModelData.INSTANCE);
             matrixStack.popPose();
         }
 

@@ -14,7 +14,7 @@ public class AutoTraderRenderer extends VillagerRendererBase<AutoTraderTileentit
     @Override
     public void render(AutoTraderTileentity trader, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
         super.render(trader, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
-        TraderRenderer.renderTraderBase(minecraft, villagerRenderer, trader, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
+        TraderRenderer.renderTraderBase(villagerRenderer, trader, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
     }
 
 }
