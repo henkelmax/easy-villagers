@@ -1,1 +1,1 @@
-- Fixed trader rendering
+- Fixed converter sometimes not consuming potion

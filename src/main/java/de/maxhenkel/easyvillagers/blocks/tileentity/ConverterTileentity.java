@@ -14,8 +14,8 @@ import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.potion.Effects;
 import net.minecraft.potion.PotionUtils;
+import net.minecraft.potion.Potions;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.NonNullList;
@@ -127,7 +127,7 @@ public class ConverterTileentity extends VillagerTileentity implements ITickable
     }
 
     public static boolean isWeakness(ItemStack stack) {
-        return PotionUtils.getMobEffects(stack).stream().anyMatch(effectInstance -> effectInstance.getEffect().equals(Effects.WEAKNESS));
+        return PotionUtils.getPotion(stack).equals(Potions.WEAKNESS);//getMobEffects(stack).stream().anyMatch(effectInstance -> effectInstance.getEffect().equals(Effects.WEAKNESS));
     }
 
     public long getTimer() {
