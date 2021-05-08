@@ -23,10 +23,8 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.client.model.data.EmptyModelData;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,8 +32,6 @@ public class TraderRenderer extends VillagerRendererBase<TraderTileentity> {
 
     private static final CachedMap<BlockState, Pair<TileEntityRenderer<TileEntity>, TileEntity>> tileEntityCache = new CachedMap<>(10_000);
     private static final CachedMap<Block, BlockState> blockStateCache = new CachedMap<>(10_000);
-
-    private static final Field BLOCK_STATE = ObfuscationReflectionHelper.findField(TileEntity.class, "field_195045_e");
 
     public TraderRenderer(TileEntityRendererDispatcher rendererDispatcher) {
         super(rendererDispatcher);
@@ -114,10 +110,7 @@ public class TraderRenderer extends VillagerRendererBase<TraderTileentity> {
             if (tileEntity != null) {
                 TileEntityRenderer<TileEntity> renderer = TileEntityRendererDispatcher.instance.getRenderer(tileEntity);
                 if (renderer != null) {
-                    try {
-                        BLOCK_STATE.set(tileEntity, state);
-                    } catch (IllegalAccessException e) {
-                    }
+                    tileEntity.blockState = state;
                     return new Pair<>(renderer, tileEntity);
                 }
             }

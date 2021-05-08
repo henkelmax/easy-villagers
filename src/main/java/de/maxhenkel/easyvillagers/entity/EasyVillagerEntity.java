@@ -12,17 +12,9 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.village.GossipManager;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-
-import java.lang.reflect.Field;
-import java.util.Map;
-import java.util.UUID;
 
 public class EasyVillagerEntity extends VillagerEntity {
-
-    public static final Field UUID_GOSSIPS_MAPPING = ObfuscationReflectionHelper.findField(GossipManager.class, "field_220928_a");
 
     public EasyVillagerEntity(EntityType<? extends VillagerEntity> type, World worldIn) {
         super(type, worldIn);
@@ -50,13 +42,7 @@ public class EasyVillagerEntity extends VillagerEntity {
     }
 
     public static int getUniversalReputation(VillagerEntity villager) {
-        try {
-            Map<UUID, Object> map = (Map<UUID, Object>) UUID_GOSSIPS_MAPPING.get(villager.getGossips());
-            return map.keySet().stream().map(uuid -> villager.getGossips().getReputation(uuid, (gossipType) -> true)).reduce(0, Integer::sum);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return 0;
-        }
+        return villager.getGossips().gossips.keySet().stream().map(uuid -> villager.getGossips().getReputation(uuid, (gossipType) -> true)).reduce(0, Integer::sum);
     }
 
     public void recalculateOffers() {

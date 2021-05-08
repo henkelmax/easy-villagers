@@ -6,7 +6,6 @@ import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.merchant.villager.VillagerProfession;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -15,19 +14,9 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.village.PointOfInterestType;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-
 public abstract class TraderTileentityBase extends VillagerTileentity implements ITickableTileEntity {
-
-    public static final Field LAST_RESTOCK = ObfuscationReflectionHelper.findField(VillagerEntity.class, "field_213785_bP");
-    public static final Field LEVELED_UP = ObfuscationReflectionHelper.findField(VillagerEntity.class, "field_213777_bF");
-    public static final Method LEVEL_UP = ObfuscationReflectionHelper.findMethod(VillagerEntity.class, "func_175554_cu");
-    public static final Method DISPLAY_MERCHANT_GUI = ObfuscationReflectionHelper.findMethod(VillagerEntity.class, "func_213740_f", PlayerEntity.class);
-    public static final Method CAN_LEVEL_UP = ObfuscationReflectionHelper.findMethod(VillagerEntity.class, "func_213741_eu");
 
     private Block workstation;
     private long nextRestock;
@@ -107,14 +96,8 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
         }
 
         villagerEntity.setPos(getBlockPos().getX() + 0.5D, getBlockPos().getY() + 1D, getBlockPos().getZ() + 0.5D);
-
-        try {
-            DISPLAY_MERCHANT_GUI.invoke(villagerEntity, playerEntity);
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
+        villagerEntity.startTrading(playerEntity);
+        return true;
     }
 
     @Override
@@ -135,14 +118,10 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
         VillagerBlockBase.playRandomVillagerSound(level, getBlockPos(), SoundEvents.VILLAGER_AMBIENT);
 
         if (!v.isTrading()) {
-            try {
-                if ((Boolean) LEVELED_UP.get(v)) {
-                    LEVEL_UP.invoke(v);
-                    LEVELED_UP.set(v, false);
-                    sync();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+            if (v.increaseProfessionLevelOnUpdate) {
+                v.increaseMerchantCareer();
+                v.increaseProfessionLevelOnUpdate = false;
+                sync();
             }
 
             if (level.getGameTime() - getLastRestock() > nextRestock && v.getVillagerData().getProfession().equals(getWorkstationProfession())) {
@@ -174,12 +153,7 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
         if (villagerEntity == null) {
             return 0L;
         }
-        try {
-            return (long) LAST_RESTOCK.get(villagerEntity);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return 0L;
-        }
+        return villagerEntity.lastRestockGameTime;
     }
 
     @Override

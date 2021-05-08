@@ -9,8 +9,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SimpleSound;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.inventory.MerchantScreen;
-import net.minecraft.entity.merchant.IMerchant;
-import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.MerchantContainer;
@@ -20,14 +18,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-
-import java.lang.reflect.Field;
 
 public class GuiEvents {
-
-    public static final Field MERCHANT = ObfuscationReflectionHelper.findField(MerchantContainer.class, "field_75178_e");
-    public static final Field OFFERS = ObfuscationReflectionHelper.findField(AbstractVillagerEntity.class, "field_213724_bz");
 
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
@@ -102,29 +94,18 @@ public class GuiEvents {
             return;
         }
         MerchantContainer container = (MerchantContainer) player.containerMenu;
-        IMerchant merchant;
-        try {
-            merchant = (IMerchant) MERCHANT.get(container);
-        } catch (Exception e) {
-            e.printStackTrace();
+
+        if (container.trader.getVillagerXp() > 0) {
             return;
         }
 
-        if (merchant.getVillagerXp() > 0) {
+        if (!(container.trader instanceof VillagerEntity)) {
             return;
         }
-
-        if (!(merchant instanceof VillagerEntity)) {
-            return;
-        }
-        VillagerEntity villager = (VillagerEntity) merchant;
-        try {
-            OFFERS.set(villager, null);
-            EasyVillagerEntity.recalculateOffers(villager);
-            player.sendMerchantOffers(container.containerId, villager.getOffers(), villager.getVillagerData().getLevel(), villager.getVillagerXp(), villager.showProgressBar(), villager.canRestock());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        VillagerEntity villager = (VillagerEntity) container.trader;
+        villager.offers = null;
+        EasyVillagerEntity.recalculateOffers(villager);
+        player.sendMerchantOffers(container.containerId, villager.getOffers(), villager.getVillagerData().getLevel(), villager.getVillagerXp(), villager.showProgressBar(), villager.canRestock());
     }
 
 }

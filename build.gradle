@@ -42,6 +42,8 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(8)
 minecraft {
     mappings channel: 'official', version: mod_minecraft_version
 
+    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+
     runs {
         client {
             workingDirectory project.file('run').canonicalPath

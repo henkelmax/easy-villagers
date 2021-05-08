@@ -73,13 +73,9 @@ public class AutoTraderTileentity extends TraderTileentityBase {
 
         // villager.onTrade(offer) spawns XP, so we manually do all necessary stuff
         offer.increaseUses();
-        try {
-            villager.setVillagerXp(villager.getVillagerXp() + offer.getXp());
-            if ((boolean) CAN_LEVEL_UP.invoke(villager)) {
-                LEVELED_UP.set(villager, true);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        villager.setVillagerXp(villager.getVillagerXp() + offer.getXp());
+        if (villager.shouldIncreaseLevel()) {
+            villager.increaseProfessionLevelOnUpdate = true;
         }
 
         setChanged();
