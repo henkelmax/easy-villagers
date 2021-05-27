@@ -1,1 +1,1 @@
-- Replaced reflection with access transformers
+- Updated russian translation
