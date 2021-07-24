@@ -5,18 +5,19 @@ import de.maxhenkel.corelib.item.ItemUtils;
 import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.merchant.villager.VillagerEntity;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.MerchantOffer;
-import net.minecraft.item.MerchantOffers;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
-import net.minecraft.util.NonNullList;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.Container;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.trading.MerchantOffer;
+import net.minecraft.world.item.trading.MerchantOffers;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -27,25 +28,22 @@ import javax.annotation.Nullable;
 
 public class AutoTraderTileentity extends TraderTileentityBase {
 
-    protected IInventory tradeGuiInv;
+    protected Container tradeGuiInv;
 
     private final NonNullList<ItemStack> inputInventory;
     private final NonNullList<ItemStack> outputInventory;
 
     protected int tradeIndex;
 
-    public AutoTraderTileentity() {
-        super(ModTileEntities.AUTO_TRADER, ModBlocks.AUTO_TRADER.defaultBlockState());
-        tradeGuiInv = new Inventory(3);
+    public AutoTraderTileentity(BlockPos pos, BlockState state) {
+        super(ModTileEntities.AUTO_TRADER, ModBlocks.AUTO_TRADER.defaultBlockState(), pos, state);
+        tradeGuiInv = new SimpleContainer(3);
 
         inputInventory = NonNullList.withSize(4, ItemStack.EMPTY);
         outputInventory = NonNullList.withSize(4, ItemStack.EMPTY);
     }
 
-    @Override
     public void tick() {
-        super.tick();
-
         if (!hasVillager()) {
             return;
         }
@@ -59,7 +57,7 @@ public class AutoTraderTileentity extends TraderTileentityBase {
             return;
         }
 
-        VillagerEntity villager = getVillagerEntity();
+        Villager villager = getVillagerEntity();
 
         if (!hasEnoughItems(offer.getCostA(), false)
                 || !hasEnoughItems(offer.getCostB(), false)
@@ -117,7 +115,7 @@ public class AutoTraderTileentity extends TraderTileentityBase {
         return stack.isEmpty();
     }
 
-    public IInventory getTradeGuiInv() {
+    public Container getTradeGuiInv() {
         updateTradeInv();
         return tradeGuiInv;
     }
@@ -177,7 +175,7 @@ public class AutoTraderTileentity extends TraderTileentityBase {
 
     @Nullable
     public MerchantOffer getOffer() {
-        VillagerEntity villagerEntity = getVillagerEntity();
+        Villager villagerEntity = getVillagerEntity();
         if (villagerEntity == null) {
             return null;
         }
@@ -189,7 +187,7 @@ public class AutoTraderTileentity extends TraderTileentityBase {
     }
 
     protected int getTradeCount() {
-        VillagerEntity villagerEntity = getVillagerEntity();
+        Villager villagerEntity = getVillagerEntity();
         if (villagerEntity == null) {
             return 0;
         }
@@ -202,26 +200,26 @@ public class AutoTraderTileentity extends TraderTileentityBase {
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT compound) {
+    public CompoundTag save(CompoundTag compound) {
         compound.putInt("Trade", tradeIndex);
-        compound.put("InputInventory", ItemStackHelper.saveAllItems(new CompoundNBT(), inputInventory, true));
-        compound.put("OutputInventory", ItemStackHelper.saveAllItems(new CompoundNBT(), outputInventory, true));
+        compound.put("InputInventory", ContainerHelper.saveAllItems(new CompoundTag(), inputInventory, true));
+        compound.put("OutputInventory", ContainerHelper.saveAllItems(new CompoundTag(), outputInventory, true));
         return super.save(compound);
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT compound) {
-        super.load(state, compound);
+    public void load(CompoundTag compound) {
+        super.load(compound);
         tradeIndex = compound.getInt("Trade");
-        ItemStackHelper.loadAllItems(compound.getCompound("InputInventory"), inputInventory);
-        ItemStackHelper.loadAllItems(compound.getCompound("OutputInventory"), outputInventory);
+        ContainerHelper.loadAllItems(compound.getCompound("InputInventory"), inputInventory);
+        ContainerHelper.loadAllItems(compound.getCompound("OutputInventory"), outputInventory);
     }
 
-    public IInventory getInputInventory() {
+    public Container getInputInventory() {
         return new ItemListInventory(inputInventory, this::setChanged);
     }
 
-    public IInventory getOutputInventory() {
+    public Container getOutputInventory() {
         return new ItemListInventory(outputInventory, this::setChanged);
     }
 

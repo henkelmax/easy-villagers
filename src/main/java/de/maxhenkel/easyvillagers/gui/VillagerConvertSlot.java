@@ -2,14 +2,14 @@ package de.maxhenkel.easyvillagers.gui;
 
 import de.maxhenkel.easyvillagers.blocks.tileentity.ConverterTileentity;
 import de.maxhenkel.easyvillagers.items.VillagerItem;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.world.Container;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 public class VillagerConvertSlot extends Slot {
 
-    public VillagerConvertSlot(IInventory inventoryIn, int index, int xPosition, int yPosition) {
+    public VillagerConvertSlot(Container inventoryIn, int index, int xPosition, int yPosition) {
         super(inventoryIn, index, xPosition, yPosition);
     }
 

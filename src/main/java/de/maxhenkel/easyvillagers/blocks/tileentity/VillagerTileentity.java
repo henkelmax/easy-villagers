@@ -2,18 +2,19 @@ package de.maxhenkel.easyvillagers.blocks.tileentity;
 
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import de.maxhenkel.easyvillagers.items.ModItems;
-import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class VillagerTileentity extends FakeWorldTileentity {
 
     private ItemStack villager;
     private EasyVillagerEntity villagerEntity;
 
-    public VillagerTileentity(TileEntityType<?> tileEntityTypeIn, BlockState defaultState) {
-        super(tileEntityTypeIn, defaultState);
+    public VillagerTileentity(BlockEntityType<?> type, BlockState defaultState, BlockPos pos, BlockState state) {
+        super(type, defaultState, pos, state);
         villager = ItemStack.EMPTY;
     }
 
@@ -81,9 +82,9 @@ public class VillagerTileentity extends FakeWorldTileentity {
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT compound) {
+    public CompoundTag save(CompoundTag compound) {
         if (hasVillager()) {
-            CompoundNBT comp = new CompoundNBT();
+            CompoundTag comp = new CompoundTag();
             getVillager().save(comp);
             compound.put("Villager", comp);
         }
@@ -91,15 +92,15 @@ public class VillagerTileentity extends FakeWorldTileentity {
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT compound) {
+    public void load(CompoundTag compound) {
         if (compound.contains("Villager")) {
-            CompoundNBT comp = compound.getCompound("Villager");
+            CompoundTag comp = compound.getCompound("Villager");
             villager = ItemStack.of(comp);
             villagerEntity = null;
         } else {
             removeVillager();
         }
-        super.load(state, compound);
+        super.load(compound);
     }
 
 }

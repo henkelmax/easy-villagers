@@ -1,24 +1,24 @@
 package de.maxhenkel.easyvillagers.gui;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.player.Inventory;
 
 public class VillagerIOScreen extends InputOutputScreen<VillagerIOContainer> {
 
-    public VillagerIOScreen(VillagerIOContainer container, PlayerInventory playerInventory, ITextComponent name) {
+    public VillagerIOScreen(VillagerIOContainer container, Inventory playerInventory, Component name) {
         super(container, playerInventory, name);
     }
 
     @Override
-    protected IFormattableTextComponent getTopText() {
-        return new TranslationTextComponent("gui.easy_villagers.input_villagers");
+    protected MutableComponent getTopText() {
+        return new TranslatableComponent("gui.easy_villagers.input_villagers");
     }
 
     @Override
-    protected IFormattableTextComponent getBottomText() {
-        return new TranslationTextComponent("gui.easy_villagers.output_villagers");
+    protected MutableComponent getBottomText() {
+        return new TranslatableComponent("gui.easy_villagers.output_villagers");
     }
 
 }

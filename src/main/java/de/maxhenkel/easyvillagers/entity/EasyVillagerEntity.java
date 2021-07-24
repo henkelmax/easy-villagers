@@ -1,31 +1,31 @@
 package de.maxhenkel.easyvillagers.entity;
 
 import de.maxhenkel.easyvillagers.Main;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.merchant.villager.VillagerData;
-import net.minecraft.entity.merchant.villager.VillagerEntity;
-import net.minecraft.entity.merchant.villager.VillagerProfession;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.villager.VillagerType;
-import net.minecraft.item.MerchantOffer;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.npc.VillagerData;
+import net.minecraft.world.entity.npc.VillagerProfession;
+import net.minecraft.world.entity.npc.VillagerType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.trading.MerchantOffer;
+import net.minecraft.world.level.Level;
 
-public class EasyVillagerEntity extends VillagerEntity {
+public class EasyVillagerEntity extends Villager {
 
-    public EasyVillagerEntity(EntityType<? extends VillagerEntity> type, World worldIn) {
+    public EasyVillagerEntity(EntityType<? extends Villager> type, Level worldIn) {
         super(type, worldIn);
     }
 
-    public EasyVillagerEntity(EntityType<? extends VillagerEntity> type, World worldIn, VillagerType villagerType) {
+    public EasyVillagerEntity(EntityType<? extends Villager> type, Level worldIn, VillagerType villagerType) {
         super(type, worldIn, villagerType);
     }
 
     @Override
-    public int getPlayerReputation(PlayerEntity player) {
+    public int getPlayerReputation(Player player) {
         if (Main.SERVER_CONFIG.universalReputation.get()) {
             return getUniversalReputation(this);
         } else {
@@ -33,7 +33,7 @@ public class EasyVillagerEntity extends VillagerEntity {
         }
     }
 
-    public static int getReputation(VillagerEntity villager) {
+    public static int getReputation(Villager villager) {
         if (Main.SERVER_CONFIG.universalReputation.get()) {
             return getUniversalReputation(villager);
         } else {
@@ -41,8 +41,8 @@ public class EasyVillagerEntity extends VillagerEntity {
         }
     }
 
-    public static int getUniversalReputation(VillagerEntity villager) {
-        return villager.getGossips().gossips.keySet().stream().map(uuid -> villager.getGossips().getReputation(uuid, (gossipType) -> true)).reduce(0, Integer::sum);
+    public static int getUniversalReputation(Villager villager) {
+        return villager.getGossips().getGossipEntries().keySet().stream().map(uuid -> villager.getGossips().getReputation(uuid, (gossipType) -> true)).reduce(0, Integer::sum);
     }
 
     public void recalculateOffers() {
@@ -59,33 +59,33 @@ public class EasyVillagerEntity extends VillagerEntity {
         }
     }
 
-    public static void recalculateOffers(VillagerEntity villager) {
+    public static void recalculateOffers(Villager villager) {
         resetOffers(villager);
         calculateOffers(villager);
     }
 
-    private static void resetOffers(VillagerEntity villager) {
+    private static void resetOffers(Villager villager) {
         for (MerchantOffer merchantoffer : villager.getOffers()) {
             merchantoffer.resetSpecialPriceDiff();
         }
     }
 
-    private static void calculateOffers(VillagerEntity villager) {
+    private static void calculateOffers(Villager villager) {
         int i = getReputation(villager);
         if (i != 0) {
             for (MerchantOffer merchantoffer : villager.getOffers()) {
-                merchantoffer.addToSpecialPriceDiff(-MathHelper.floor((float) i * merchantoffer.getPriceMultiplier()));
+                merchantoffer.addToSpecialPriceDiff(-Mth.floor((float) i * merchantoffer.getPriceMultiplier()));
             }
         }
     }
 
-    public ITextComponent getAdvancedName() {
+    public Component getAdvancedName() {
         VillagerData villagerData = getVillagerData();
         VillagerProfession profession = villagerData.getProfession();
         if (profession.equals(VillagerProfession.NONE) || profession.equals(VillagerProfession.NITWIT)) {
-            return getName().copy().withStyle(TextFormatting.GRAY);
+            return getName().copy().withStyle(ChatFormatting.GRAY);
         } else {
-            return new TranslationTextComponent("tooltip.easy_villagers.villager_profession", getName().copy(), new TranslationTextComponent("merchant.level." + villagerData.getLevel())).withStyle(TextFormatting.GRAY);
+            return new TranslatableComponent("tooltip.easy_villagers.villager_profession", getName().copy(), new TranslatableComponent("merchant.level." + villagerData.getLevel())).withStyle(ChatFormatting.GRAY);
         }
     }
 

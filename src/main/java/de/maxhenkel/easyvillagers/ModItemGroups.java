@@ -2,13 +2,13 @@ package de.maxhenkel.easyvillagers;
 
 import de.maxhenkel.easyvillagers.items.ModItems;
 import de.maxhenkel.easyvillagers.items.VillagerItem;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
 
 public class ModItemGroups {
 
-    public static final ItemGroup TAB_EASY_VILLAGERS = new ItemGroup("easy_villagers") {
+    public static final CreativeModeTab TAB_EASY_VILLAGERS = new CreativeModeTab("easy_villagers") {
 
         @Override
         public ItemStack makeIcon() {

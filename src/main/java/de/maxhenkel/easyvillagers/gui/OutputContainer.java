@@ -2,13 +2,13 @@ package de.maxhenkel.easyvillagers.gui;
 
 import de.maxhenkel.corelib.inventory.ContainerBase;
 import de.maxhenkel.corelib.inventory.LockedSlot;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Inventory;
+import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.player.Inventory;
 
 public class OutputContainer extends ContainerBase {
 
-    public OutputContainer(int id, PlayerInventory playerInventory, IInventory outputInventory) {
+    public OutputContainer(int id, Inventory playerInventory, Container outputInventory) {
         super(Containers.OUTPUT_CONTAINER, id, playerInventory, outputInventory);
 
         for (int i = 0; i < 4; i++) {
@@ -18,8 +18,8 @@ public class OutputContainer extends ContainerBase {
         addPlayerInventorySlots();
     }
 
-    public OutputContainer(int id, PlayerInventory playerInventory) {
-        this(id, playerInventory, new Inventory(4));
+    public OutputContainer(int id, Inventory playerInventory) {
+        this(id, playerInventory, new SimpleContainer(4));
     }
 
     @Override

@@ -2,10 +2,10 @@ package de.maxhenkel.easyvillagers.net;
 
 import de.maxhenkel.corelib.net.Message;
 import de.maxhenkel.easyvillagers.gui.AutoTraderContainer;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 public class MessageSelectTrade implements Message<MessageSelectTrade> {
 
@@ -26,7 +26,7 @@ public class MessageSelectTrade implements Message<MessageSelectTrade> {
 
     @Override
     public void executeServerSide(NetworkEvent.Context context) {
-        ServerPlayerEntity player = context.getSender();
+        ServerPlayer player = context.getSender();
         if (player.containerMenu instanceof AutoTraderContainer) {
             AutoTraderContainer container = (AutoTraderContainer) player.containerMenu;
             if (next) {
@@ -38,13 +38,13 @@ public class MessageSelectTrade implements Message<MessageSelectTrade> {
     }
 
     @Override
-    public MessageSelectTrade fromBytes(PacketBuffer packetBuffer) {
+    public MessageSelectTrade fromBytes(FriendlyByteBuf packetBuffer) {
         next = packetBuffer.readBoolean();
         return this;
     }
 
     @Override
-    public void toBytes(PacketBuffer packetBuffer) {
+    public void toBytes(FriendlyByteBuf packetBuffer) {
         packetBuffer.writeBoolean(next);
     }
 }

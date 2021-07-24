@@ -9,27 +9,27 @@ import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import de.maxhenkel.easyvillagers.items.ModItems;
 import de.maxhenkel.easyvillagers.net.MessageVillagerParticles;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.merchant.villager.VillagerEntity;
-import net.minecraft.entity.villager.VillagerType;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.Container;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.npc.VillagerType;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class BreederTileentity extends FakeWorldTileentity implements ITickableTileEntity {
+public class BreederTileentity extends FakeWorldTileentity {
 
     private NonNullList<ItemStack> foodInventory;
     private NonNullList<ItemStack> outputInventory;
@@ -38,8 +38,8 @@ public class BreederTileentity extends FakeWorldTileentity implements ITickableT
     private ItemStack villager2;
     private EasyVillagerEntity villagerEntity2;
 
-    public BreederTileentity() {
-        super(ModTileEntities.BREEDER, ModBlocks.BREEDER.defaultBlockState());
+    public BreederTileentity(BlockPos pos, BlockState state) {
+        super(ModTileEntities.BREEDER, ModBlocks.BREEDER.defaultBlockState(), pos, state);
         foodInventory = NonNullList.withSize(4, ItemStack.EMPTY);
         outputInventory = NonNullList.withSize(4, ItemStack.EMPTY);
         villager1 = ItemStack.EMPTY;
@@ -112,8 +112,7 @@ public class BreederTileentity extends FakeWorldTileentity implements ITickableT
         return v;
     }
 
-    @Override
-    public void tick() {
+    public void tickServer() {
         if (level.isClientSide) {
             return;
         }
@@ -152,7 +151,7 @@ public class BreederTileentity extends FakeWorldTileentity implements ITickableT
             }
         } else {
             MessageVillagerParticles msg = new MessageVillagerParticles(worldPosition);
-            EntityUtils.forEachPlayerAround((ServerWorld) level, worldPosition, 128, playerEntity -> NetUtils.sendTo(Main.SIMPLE_CHANNEL, playerEntity, msg));
+            EntityUtils.forEachPlayerAround((ServerLevel) level, worldPosition, 128, playerEntity -> NetUtils.sendTo(Main.SIMPLE_CHANNEL, playerEntity, msg));
         }
     }
 
@@ -180,7 +179,7 @@ public class BreederTileentity extends FakeWorldTileentity implements ITickableT
         }
         int value = 0;
         for (ItemStack stack : foodInventory) {
-            value += VillagerEntity.FOOD_POINTS.getOrDefault(stack.getItem(), 0) * stack.getCount();
+            value += Villager.FOOD_POINTS.getOrDefault(stack.getItem(), 0) * stack.getCount();
         }
         return value >= 24;
     }
@@ -189,7 +188,7 @@ public class BreederTileentity extends FakeWorldTileentity implements ITickableT
         int value = 0;
         for (ItemStack stack : foodInventory) {
             for (int i = 0; i < stack.getCount(); i++) {
-                value += VillagerEntity.FOOD_POINTS.getOrDefault(stack.getItem(), 0);
+                value += Villager.FOOD_POINTS.getOrDefault(stack.getItem(), 0);
                 stack.shrink(1);
                 if (value >= 24) {
                     return;
@@ -199,9 +198,9 @@ public class BreederTileentity extends FakeWorldTileentity implements ITickableT
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT compound) {
+    public CompoundTag save(CompoundTag compound) {
         if (hasVillager1()) {
-            CompoundNBT comp = new CompoundNBT();
+            CompoundTag comp = new CompoundTag();
             if (villagerEntity1 != null) {
                 ModItems.VILLAGER.setVillager(villager1, villagerEntity1);
             }
@@ -209,44 +208,44 @@ public class BreederTileentity extends FakeWorldTileentity implements ITickableT
             compound.put("Villager1", comp);
         }
         if (hasVillager2()) {
-            CompoundNBT comp = new CompoundNBT();
+            CompoundTag comp = new CompoundTag();
             if (villagerEntity2 != null) {
                 ModItems.VILLAGER.setVillager(villager2, villagerEntity2);
             }
             villager2.save(comp);
             compound.put("Villager2", comp);
         }
-        compound.put("FoodInventory", ItemStackHelper.saveAllItems(new CompoundNBT(), foodInventory, true));
-        compound.put("OutputInventory", ItemStackHelper.saveAllItems(new CompoundNBT(), outputInventory, true));
+        compound.put("FoodInventory", ContainerHelper.saveAllItems(new CompoundTag(), foodInventory, true));
+        compound.put("OutputInventory", ContainerHelper.saveAllItems(new CompoundTag(), outputInventory, true));
         return super.save(compound);
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT compound) {
+    public void load(CompoundTag compound) {
         if (compound.contains("Villager1")) {
-            CompoundNBT comp = compound.getCompound("Villager1");
+            CompoundTag comp = compound.getCompound("Villager1");
             villager1 = ItemStack.of(comp);
             villagerEntity1 = null;
         } else {
             removeVillager1();
         }
         if (compound.contains("Villager2")) {
-            CompoundNBT comp = compound.getCompound("Villager2");
+            CompoundTag comp = compound.getCompound("Villager2");
             villager2 = ItemStack.of(comp);
             villagerEntity2 = null;
         } else {
             removeVillager2();
         }
-        ItemStackHelper.loadAllItems(compound.getCompound("FoodInventory"), foodInventory);
-        ItemStackHelper.loadAllItems(compound.getCompound("OutputInventory"), outputInventory);
-        super.load(state, compound);
+        ContainerHelper.loadAllItems(compound.getCompound("FoodInventory"), foodInventory);
+        ContainerHelper.loadAllItems(compound.getCompound("OutputInventory"), outputInventory);
+        super.load(compound);
     }
 
-    public IInventory getFoodInventory() {
+    public Container getFoodInventory() {
         return new ItemListInventory(foodInventory, this::setChanged);
     }
 
-    public IInventory getOutputInventory() {
+    public Container getOutputInventory() {
         return new ItemListInventory(outputInventory, this::setChanged);
     }
 

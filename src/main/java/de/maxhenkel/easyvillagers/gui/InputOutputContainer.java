@@ -2,15 +2,15 @@ package de.maxhenkel.easyvillagers.gui;
 
 import de.maxhenkel.corelib.inventory.ContainerBase;
 import de.maxhenkel.corelib.inventory.LockedSlot;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.Slot;
+import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
 
 public abstract class InputOutputContainer extends ContainerBase {
 
-    public InputOutputContainer(ContainerType type, int id, PlayerInventory playerInventory, IInventory inputInventory, IInventory outputInventory) {
+    public InputOutputContainer(MenuType type, int id, Inventory playerInventory, Container inputInventory, Container outputInventory) {
         super(type, id, playerInventory, null);
 
         for (int i = 0; i < 4; i++) {
@@ -24,8 +24,8 @@ public abstract class InputOutputContainer extends ContainerBase {
         addPlayerInventorySlots();
     }
 
-    public InputOutputContainer(ContainerType type, int id, PlayerInventory playerInventory) {
-        this(type, id, playerInventory, new Inventory(4), new Inventory(4));
+    public InputOutputContainer(MenuType type, int id, Inventory playerInventory) {
+        this(type, id, playerInventory, new SimpleContainer(4), new SimpleContainer(4));
     }
 
     @Override
@@ -38,6 +38,6 @@ public abstract class InputOutputContainer extends ContainerBase {
         return 8;
     }
 
-    public abstract Slot getInputSlot(IInventory inventory, int id, int x, int y);
+    public abstract Slot getInputSlot(Container inventory, int id, int x, int y);
 
 }

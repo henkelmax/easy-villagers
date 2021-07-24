@@ -1,7 +1,7 @@
 package de.maxhenkel.easyvillagers.items;
 
 import de.maxhenkel.easyvillagers.Main;
-import net.minecraft.item.Item;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.event.RegistryEvent;
 
 public class ModItems {

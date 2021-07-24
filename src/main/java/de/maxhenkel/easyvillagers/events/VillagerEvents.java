@@ -4,11 +4,11 @@ import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.items.ModItems;
 import de.maxhenkel.easyvillagers.net.MessagePickUpVillager;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.merchant.villager.VillagerEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResultType;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.InputEvent;
@@ -19,7 +19,7 @@ public class VillagerEvents {
 
     @SubscribeEvent
     public void onClick(PlayerInteractEvent.EntityInteract event) {
-        if (!(event.getTarget() instanceof VillagerEntity)) {
+        if (!(event.getTarget() instanceof Villager)) {
             return;
         }
 
@@ -27,8 +27,8 @@ public class VillagerEvents {
             return;
         }
 
-        VillagerEntity villager = (VillagerEntity) event.getTarget();
-        PlayerEntity player = event.getPlayer();
+        Villager villager = (Villager) event.getTarget();
+        Player player = event.getPlayer();
 
         if (player.level.isClientSide || !player.isShiftKeyDown()) {
             return;
@@ -40,7 +40,7 @@ public class VillagerEvents {
 
         pickUp(villager, player);
 
-        event.setCancellationResult(ActionResultType.SUCCESS);
+        event.setCancellationResult(InteractionResult.SUCCESS);
         event.setCanceled(true);
     }
 
@@ -53,20 +53,20 @@ public class VillagerEvents {
 
         Entity pointedEntity = Minecraft.getInstance().crosshairPickEntity;
 
-        if (!(pointedEntity instanceof VillagerEntity) || !pointedEntity.isAlive()) {
+        if (!(pointedEntity instanceof Villager) || !pointedEntity.isAlive()) {
             return;
         }
 
         Main.SIMPLE_CHANNEL.sendToServer(new MessagePickUpVillager(pointedEntity.getUUID()));
     }
 
-    public static void pickUp(VillagerEntity villager, PlayerEntity player) {
+    public static void pickUp(Villager villager, Player player) {
         ItemStack stack = new ItemStack(ModItems.VILLAGER);
 
         ModItems.VILLAGER.setVillager(stack, villager);
 
-        if (player.inventory.add(stack)) {
-            villager.remove();
+        if (player.getInventory().add(stack)) {
+            villager.discard();
         }
     }
 

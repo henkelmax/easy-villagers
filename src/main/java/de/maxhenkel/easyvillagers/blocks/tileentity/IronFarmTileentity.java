@@ -5,21 +5,25 @@ import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.passive.IronGolemEntity;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.loot.LootContext;
-import net.minecraft.loot.LootParameterSets;
-import net.minecraft.loot.LootParameters;
-import net.minecraft.loot.LootTable;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.util.*;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.Container;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.animal.IronGolem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -29,7 +33,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import java.util.Collections;
 import java.util.List;
 
-public class IronFarmTileentity extends VillagerTileentity implements ITickableTileEntity {
+public class IronFarmTileentity extends VillagerTileentity {
 
     private static final ResourceLocation GOLEM_LOOT_TABLE = new ResourceLocation("entities/iron_golem");
 
@@ -37,8 +41,8 @@ public class IronFarmTileentity extends VillagerTileentity implements ITickableT
 
     private long timer;
 
-    public IronFarmTileentity() {
-        super(ModTileEntities.IRON_FARM, ModBlocks.IRON_FARM.defaultBlockState());
+    public IronFarmTileentity(BlockPos pos, BlockState state) {
+        super(ModTileEntities.IRON_FARM, ModBlocks.IRON_FARM.defaultBlockState(), pos, state);
         inventory = NonNullList.withSize(4, ItemStack.EMPTY);
     }
 
@@ -46,7 +50,6 @@ public class IronFarmTileentity extends VillagerTileentity implements ITickableT
         return timer;
     }
 
-    @Override
     public void tick() {
         EasyVillagerEntity v = getVillagerEntity();
         if (v != null) {
@@ -86,40 +89,40 @@ public class IronFarmTileentity extends VillagerTileentity implements ITickableT
     }
 
     private List<ItemStack> getDrops() {
-        if (!(level instanceof ServerWorld)) {
+        if (!(level instanceof ServerLevel)) {
             return Collections.emptyList();
         }
-        ServerWorld serverWorld = (ServerWorld) level;
+        ServerLevel serverWorld = (ServerLevel) level;
 
         LootContext.Builder builder = new LootContext.Builder(serverWorld)
                 .withRandom(serverWorld.random)
-                .withParameter(LootParameters.THIS_ENTITY, new IronGolemEntity(EntityType.IRON_GOLEM, level))
-                .withParameter(LootParameters.ORIGIN, new Vector3d(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ()))
-                .withParameter(LootParameters.DAMAGE_SOURCE, DamageSource.LAVA);
+                .withParameter(LootContextParams.THIS_ENTITY, new IronGolem(EntityType.IRON_GOLEM, level))
+                .withParameter(LootContextParams.ORIGIN, new Vec3(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ()))
+                .withParameter(LootContextParams.DAMAGE_SOURCE, DamageSource.LAVA);
 
-        LootContext lootContext = builder.create(LootParameterSets.ENTITY);
+        LootContext lootContext = builder.create(LootContextParamSets.ENTITY);
 
         LootTable lootTable = serverWorld.getServer().getLootTables().get(GOLEM_LOOT_TABLE);
 
         return lootTable.getRandomItems(lootContext);
     }
 
-    public IInventory getOutputInventory() {
+    public Container getOutputInventory() {
         return new ItemListInventory(inventory, this::setChanged);
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT compound) {
-        ItemStackHelper.saveAllItems(compound, inventory, false);
+    public CompoundTag save(CompoundTag compound) {
+        ContainerHelper.saveAllItems(compound, inventory, false);
         compound.putLong("Timer", timer);
         return super.save(compound);
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT compound) {
-        ItemStackHelper.loadAllItems(compound, inventory);
+    public void load(CompoundTag compound) {
+        ContainerHelper.loadAllItems(compound, inventory);
         timer = compound.getLong("Timer");
-        super.load(state, compound);
+        super.load(compound);
     }
 
     private IItemHandlerModifiable handler;

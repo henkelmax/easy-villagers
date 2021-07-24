@@ -3,11 +3,11 @@ package de.maxhenkel.easyvillagers.net;
 import de.maxhenkel.corelib.net.Message;
 import de.maxhenkel.easyvillagers.blocks.tileentity.BreederTileentity;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 public class MessageVillagerParticles implements Message<MessageVillagerParticles> {
 
@@ -28,7 +28,7 @@ public class MessageVillagerParticles implements Message<MessageVillagerParticle
 
     @Override
     public void executeClientSide(NetworkEvent.Context context) { //TODO check server crash
-        TileEntity tileEntity = Minecraft.getInstance().level.getBlockEntity(pos);
+        BlockEntity tileEntity = Minecraft.getInstance().level.getBlockEntity(pos);
         if (tileEntity instanceof BreederTileentity) {
             BreederTileentity breeder = (BreederTileentity) tileEntity;
             breeder.spawnParticles();
@@ -36,13 +36,13 @@ public class MessageVillagerParticles implements Message<MessageVillagerParticle
     }
 
     @Override
-    public MessageVillagerParticles fromBytes(PacketBuffer packetBuffer) {
+    public MessageVillagerParticles fromBytes(FriendlyByteBuf packetBuffer) {
         pos = packetBuffer.readBlockPos();
         return this;
     }
 
     @Override
-    public void toBytes(PacketBuffer packetBuffer) {
+    public void toBytes(FriendlyByteBuf packetBuffer) {
         packetBuffer.writeBlockPos(pos);
     }
 }

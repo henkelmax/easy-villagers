@@ -6,43 +6,46 @@ import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import de.maxhenkel.easyvillagers.items.render.VillagerItemRenderer;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.DispenserBlock;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.merchant.villager.VillagerEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.IItemRenderProperties;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class VillagerItem extends Item {
 
     private final CachedMap<ItemStack, EasyVillagerEntity> cachedVillagers;
 
     public VillagerItem() {
-        super(new Item.Properties().stacksTo(1).setISTER(() -> VillagerItemRenderer::new));
+        super(new Item.Properties().stacksTo(1));
         cachedVillagers = new CachedMap<>(10_000, ItemUtils.ITEM_COMPARATOR);
 
         DispenserBlock.registerBehavior(this, (source, stack) -> {
             Direction direction = source.getBlockState().getValue(DispenserBlock.FACING);
             BlockPos blockpos = source.getPos().relative(direction);
-            World world = source.getLevel();
+            Level world = source.getLevel();
             EasyVillagerEntity villager = getVillager(world, stack);
             villager.absMoveTo(blockpos.getX() + 0.5D, blockpos.getY(), blockpos.getZ() + 0.5D, direction.toYRot(), 0F);
             world.addFreshEntity(villager);
@@ -52,10 +55,20 @@ public class VillagerItem extends Item {
     }
 
     @Override
-    public ActionResultType useOn(ItemUseContext context) {
-        World world = context.getLevel();
+    public void initializeClient(Consumer<IItemRenderProperties> consumer) {
+        consumer.accept(new IItemRenderProperties() {
+            @Override
+            public BlockEntityWithoutLevelRenderer getItemStackRenderer() {
+                return new VillagerItemRenderer(Minecraft.getInstance().getBlockEntityRenderDispatcher(), Minecraft.getInstance().getEntityModels());
+            }
+        });
+    }
+
+    @Override
+    public InteractionResult useOn(UseOnContext context) {
+        Level world = context.getLevel();
         if (world.isClientSide) {
-            return ActionResultType.SUCCESS;
+            return InteractionResult.SUCCESS;
         } else {
             ItemStack itemstack = context.getItemInHand();
             BlockPos blockpos = context.getClickedPos();
@@ -74,54 +87,54 @@ public class VillagerItem extends Item {
                 itemstack.shrink(1);
             }
 
-            return ActionResultType.CONSUME;
+            return InteractionResult.CONSUME;
         }
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public ITextComponent getName(ItemStack stack) {
-        World world = Minecraft.getInstance().level;
+    public Component getName(ItemStack stack) {
+        Level world = Minecraft.getInstance().level;
         if (world == null) {
             return super.getName(stack);
         } else {
             EasyVillagerEntity villager = getVillagerFast(world, stack);
             if (!villager.hasCustomName() && villager.isBaby()) {
-                return new TranslationTextComponent("item.easy_villagers.baby_villager");
+                return new TranslatableComponent("item.easy_villagers.baby_villager");
             }
             return villager.getDisplayName();
         }
     }
 
     @Override
-    public void inventoryTick(ItemStack stack, World world, Entity entity, int itemSlot, boolean isSelected) {
+    public void inventoryTick(ItemStack stack, Level world, Entity entity, int itemSlot, boolean isSelected) {
         super.inventoryTick(stack, world, entity, itemSlot, isSelected);
-        if (!(entity instanceof PlayerEntity) || world.isClientSide) {
+        if (!(entity instanceof Player) || world.isClientSide) {
             return;
         }
         if (!Main.SERVER_CONFIG.villagerInventorySounds.get()) {
             return;
         }
-        VillagerBlockBase.playRandomVillagerSound((PlayerEntity) entity, SoundEvents.VILLAGER_AMBIENT);
+        VillagerBlockBase.playRandomVillagerSound((Player) entity, SoundEvents.VILLAGER_AMBIENT);
     }
 
-    public void setVillager(ItemStack stack, VillagerEntity villager) {
-        CompoundNBT compound = stack.getOrCreateTagElement("villager");
+    public void setVillager(ItemStack stack, Villager villager) {
+        CompoundTag compound = stack.getOrCreateTagElement("villager");
         villager.addAdditionalSaveData(compound);
         if (villager.hasCustomName()) {
             stack.setHoverName(villager.getCustomName());
         }
     }
 
-    public EasyVillagerEntity getVillager(World world, ItemStack stack) {
-        CompoundNBT compound = stack.getTagElement("villager");
+    public EasyVillagerEntity getVillager(Level world, ItemStack stack) {
+        CompoundTag compound = stack.getTagElement("villager");
         if (compound == null) {
-            compound = new CompoundNBT();
+            compound = new CompoundTag();
         }
 
         EasyVillagerEntity villager = new EasyVillagerEntity(EntityType.VILLAGER, world);
@@ -137,7 +150,7 @@ public class VillagerItem extends Item {
         return villager;
     }
 
-    public EasyVillagerEntity getVillagerFast(World world, ItemStack stack) {
+    public EasyVillagerEntity getVillagerFast(Level world, ItemStack stack) {
         return cachedVillagers.get(stack, () -> getVillager(world, stack));
     }
 

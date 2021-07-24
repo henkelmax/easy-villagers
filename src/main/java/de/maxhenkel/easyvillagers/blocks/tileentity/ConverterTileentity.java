@@ -6,21 +6,21 @@ import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import de.maxhenkel.easyvillagers.items.VillagerItem;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.merchant.IReputationType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.potion.PotionUtils;
-import net.minecraft.potion.Potions;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.Container;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.entity.ai.village.ReputationEventType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -29,7 +29,7 @@ import net.minecraftforge.items.ItemStackHandler;
 
 import java.util.UUID;
 
-public class ConverterTileentity extends VillagerTileentity implements ITickableTileEntity {
+public class ConverterTileentity extends VillagerTileentity {
 
     private NonNullList<ItemStack> inputInventory;
     private NonNullList<ItemStack> outputInventory;
@@ -37,18 +37,13 @@ public class ConverterTileentity extends VillagerTileentity implements ITickable
     private long timer;
     private UUID owner;
 
-    public ConverterTileentity() {
-        super(ModTileEntities.CONVERTER, ModBlocks.CONVERTER.defaultBlockState());
+    public ConverterTileentity(BlockPos pos, BlockState state) {
+        super(ModTileEntities.CONVERTER, ModBlocks.CONVERTER.defaultBlockState(), pos, state);
         inputInventory = NonNullList.withSize(4, ItemStack.EMPTY);
         outputInventory = NonNullList.withSize(4, ItemStack.EMPTY);
     }
 
-    @Override
-    public void tick() {
-        if (level.isClientSide) {
-            return;
-        }
-
+    public void tickServer() {
         if (timer <= 0L && !hasVillager()) {
             for (ItemStack stack : inputInventory) {
                 if (stack.getItem() instanceof VillagerItem && consumeConvertItems()) {
@@ -75,13 +70,13 @@ public class ConverterTileentity extends VillagerTileentity implements ITickable
                 VillagerBlockBase.playVillagerSound(level, worldPosition, SoundEvents.ZOMBIE_VILLAGER_CONVERTED);
                 sync();
             } else if (timer >= getFinalizeTime()) {
-                PlayerEntity ownerPlayer = getOwnerPlayer();
+                Player ownerPlayer = getOwnerPlayer();
                 if (ownerPlayer != null) {
                     for (int i = 0; i < outputInventory.size(); i++) {
                         ItemStack stack = outputInventory.get(i);
                         if (stack.isEmpty()) {
                             EasyVillagerEntity villagerEntity = getVillagerEntity();
-                            villagerEntity.onReputationEventFrom(IReputationType.ZOMBIE_VILLAGER_CURED, ownerPlayer);
+                            villagerEntity.onReputationEventFrom(ReputationEventType.ZOMBIE_VILLAGER_CURED, ownerPlayer);
                             outputInventory.set(i, removeVillager().copy());
                             timer = 0L;
                             sync();
@@ -138,12 +133,12 @@ public class ConverterTileentity extends VillagerTileentity implements ITickable
         return owner;
     }
 
-    public PlayerEntity getOwnerPlayer() {
+    public Player getOwnerPlayer() {
         if (owner == null) {
             return null;
         }
-        if (level instanceof ServerWorld) {
-            ServerWorld serverWorld = (ServerWorld) level;
+        if (level instanceof ServerLevel) {
+            ServerLevel serverWorld = (ServerLevel) level;
             return serverWorld.getServer().getPlayerList().getPlayer(owner);
         } else {
             return level.getPlayerByUUID(owner);
@@ -155,9 +150,9 @@ public class ConverterTileentity extends VillagerTileentity implements ITickable
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT compound) {
-        compound.put("InputInventory", ItemStackHelper.saveAllItems(new CompoundNBT(), inputInventory, true));
-        compound.put("OutputInventory", ItemStackHelper.saveAllItems(new CompoundNBT(), outputInventory, true));
+    public CompoundTag save(CompoundTag compound) {
+        compound.put("InputInventory", ContainerHelper.saveAllItems(new CompoundTag(), inputInventory, true));
+        compound.put("OutputInventory", ContainerHelper.saveAllItems(new CompoundTag(), outputInventory, true));
         compound.putLong("Timer", timer);
         if (owner != null) {
             compound.putUUID("Owner", owner);
@@ -166,23 +161,23 @@ public class ConverterTileentity extends VillagerTileentity implements ITickable
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT compound) {
-        ItemStackHelper.loadAllItems(compound.getCompound("InputInventory"), inputInventory);
-        ItemStackHelper.loadAllItems(compound.getCompound("OutputInventory"), outputInventory);
+    public void load(CompoundTag compound) {
+        ContainerHelper.loadAllItems(compound.getCompound("InputInventory"), inputInventory);
+        ContainerHelper.loadAllItems(compound.getCompound("OutputInventory"), outputInventory);
         timer = compound.getLong("Timer");
         if (compound.contains("Owner")) {
             owner = compound.getUUID("Owner");
         } else {
             owner = null;
         }
-        super.load(state, compound);
+        super.load(compound);
     }
 
-    public IInventory getInputInventory() {
+    public Container getInputInventory() {
         return new ItemListInventory(inputInventory, this::setChanged);
     }
 
-    public IInventory getOutputInventory() {
+    public Container getOutputInventory() {
         return new ItemListInventory(outputInventory, this::setChanged);
     }
 

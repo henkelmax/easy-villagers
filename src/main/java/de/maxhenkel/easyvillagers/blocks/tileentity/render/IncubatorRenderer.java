@@ -1,21 +1,22 @@
 package de.maxhenkel.easyvillagers.blocks.tileentity.render;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
 import de.maxhenkel.easyvillagers.blocks.TraderBlock;
 import de.maxhenkel.easyvillagers.blocks.tileentity.IncubatorTileentity;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.core.Direction;
 
 public class IncubatorRenderer extends VillagerRendererBase<IncubatorTileentity> {
 
-    public IncubatorRenderer(TileEntityRendererDispatcher rendererDispatcher) {
-        super(rendererDispatcher);
+
+    public IncubatorRenderer(BlockEntityRendererProvider.Context renderer) {
+        super(renderer);
     }
 
     @Override
-    public void render(IncubatorTileentity incubator, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
+    public void render(IncubatorTileentity incubator, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
         super.render(incubator, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
         matrixStack.pushPose();
 

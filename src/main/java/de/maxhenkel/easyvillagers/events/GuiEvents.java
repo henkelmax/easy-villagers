@@ -6,13 +6,13 @@ import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import de.maxhenkel.easyvillagers.gui.CycleTradesButton;
 import de.maxhenkel.easyvillagers.net.MessageCycleTrades;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.audio.SimpleSound;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.inventory.MerchantScreen;
-import net.minecraft.entity.merchant.villager.VillagerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.MerchantContainer;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.MerchantScreen;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.inventory.MerchantMenu;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.GuiScreenEvent;
@@ -82,27 +82,27 @@ public class GuiEvents {
         }
 
         Main.SIMPLE_CHANNEL.sendToServer(new MessageCycleTrades());
-        mc.getSoundManager().play(SimpleSound.forUI(SoundEvents.UI_BUTTON_CLICK, 1F));
+        mc.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1F));
     }
 
-    public static void onCycleTrades(ServerPlayerEntity player) {
+    public static void onCycleTrades(ServerPlayer player) {
         if (!Main.SERVER_CONFIG.tradeCycling.get()) {
             return;
         }
 
-        if (!(player.containerMenu instanceof MerchantContainer)) {
+        if (!(player.containerMenu instanceof MerchantMenu)) {
             return;
         }
-        MerchantContainer container = (MerchantContainer) player.containerMenu;
+        MerchantMenu container = (MerchantMenu) player.containerMenu;
 
         if (container.trader.getVillagerXp() > 0) {
             return;
         }
 
-        if (!(container.trader instanceof VillagerEntity)) {
+        if (!(container.trader instanceof Villager)) {
             return;
         }
-        VillagerEntity villager = (VillagerEntity) container.trader;
+        Villager villager = (Villager) container.trader;
         villager.offers = null;
         EasyVillagerEntity.recalculateOffers(villager);
         player.sendMerchantOffers(container.containerId, villager.getOffers(), villager.getVillagerData().getLevel(), villager.getVillagerXp(), villager.showProgressBar(), villager.canRestock());

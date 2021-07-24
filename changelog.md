@@ -1,1 +1,1 @@
-- Updated russian translation
+- Updated to 1.17.1

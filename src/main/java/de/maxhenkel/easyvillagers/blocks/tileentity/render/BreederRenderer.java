@@ -1,33 +1,34 @@
 package de.maxhenkel.easyvillagers.blocks.tileentity.render;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
 import de.maxhenkel.easyvillagers.blocks.TraderBlock;
 import de.maxhenkel.easyvillagers.blocks.tileentity.BreederTileentity;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.tileentity.BedTileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.item.DyeColor;
-import net.minecraft.tileentity.BedTileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.blockentity.BedRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BedBlockEntity;
 
 public class BreederRenderer extends VillagerRendererBase<BreederTileentity> {
 
-    private BedTileEntityRenderer bedRenderer;
-    private BedTileEntity bed;
+    private BedRenderer bedRenderer;
+    private BedBlockEntity bed;
 
-    public BreederRenderer(TileEntityRendererDispatcher rendererDispatcher) {
-        super(rendererDispatcher);
+    public BreederRenderer(BlockEntityRendererProvider.Context renderer) {
+        super(renderer);
     }
 
     @Override
-    public void render(BreederTileentity breeder, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
+    public void render(BreederTileentity breeder, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
         super.render(breeder, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
         matrixStack.pushPose();
 
         if (bedRenderer == null) {
-            bedRenderer = new BedTileEntityRenderer(TileEntityRendererDispatcher.instance);
-            bed = new BedTileEntity(DyeColor.RED);
+            bedRenderer = new BedRenderer(renderer);
+            bed = new BedBlockEntity(BlockPos.ZERO, Blocks.RED_BED.defaultBlockState());
         }
 
         Direction direction = Direction.SOUTH;

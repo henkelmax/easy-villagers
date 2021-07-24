@@ -5,27 +5,27 @@ import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.merchant.villager.VillagerProfession;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.loot.LootContext;
-import net.minecraft.loot.LootParameters;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.state.IntegerProperty;
-import net.minecraft.state.Property;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.Container;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.entity.npc.VillagerProfession;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.PlantType;
 import net.minecraftforge.common.capabilities.Capability;
@@ -38,13 +38,13 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
 
-public class FarmerTileentity extends VillagerTileentity implements ITickableTileEntity {
+public class FarmerTileentity extends VillagerTileentity {
 
     private BlockState crop;
     private NonNullList<ItemStack> inventory;
 
-    public FarmerTileentity() {
-        super(ModTileEntities.FARMER, ModBlocks.FARMER.defaultBlockState());
+    public FarmerTileentity(BlockPos pos, BlockState state) {
+        super(ModTileEntities.FARMER, ModBlocks.FARMER.defaultBlockState(), pos, state);
         inventory = NonNullList.withSize(4, ItemStack.EMPTY);
     }
 
@@ -102,11 +102,7 @@ public class FarmerTileentity extends VillagerTileentity implements ITickableTil
         return crop;
     }
 
-    @Override
-    public void tick() {
-        if (level.isClientSide) {
-            return;
-        }
+    public void tickServer() {
         EasyVillagerEntity v = getVillagerEntity();
         if (v != null) {
             VillagerBlockBase.playRandomVillagerSound(level, getBlockPos(), SoundEvents.VILLAGER_AMBIENT);
@@ -146,7 +142,7 @@ public class FarmerTileentity extends VillagerTileentity implements ITickableTil
             if (villager == null || villager.isBaby() || !villager.getVillagerData().getProfession().equals(VillagerProfession.FARMER)) {
                 return false;
             }
-            LootContext.Builder context = new LootContext.Builder((ServerWorld) level).withParameter(LootParameters.ORIGIN, new Vector3d(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ())).withParameter(LootParameters.BLOCK_STATE, c).withParameter(LootParameters.TOOL, ItemStack.EMPTY);
+            LootContext.Builder context = new LootContext.Builder((ServerLevel) level).withParameter(LootContextParams.ORIGIN, new Vec3(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ())).withParameter(LootContextParams.BLOCK_STATE, c).withParameter(LootContextParams.TOOL, ItemStack.EMPTY);
             List<ItemStack> drops = c.getDrops(context);
             IItemHandlerModifiable itemHandler = getItemHandler();
             for (ItemStack stack : drops) {
@@ -164,29 +160,29 @@ public class FarmerTileentity extends VillagerTileentity implements ITickableTil
         }
     }
 
-    public IInventory getOutputInventory() {
+    public Container getOutputInventory() {
         return new ItemListInventory(inventory, this::setChanged);
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT compound) {
+    public CompoundTag save(CompoundTag compound) {
         if (crop != null) {
-            compound.put("Crop", NBTUtil.writeBlockState(crop));
+            compound.put("Crop", NbtUtils.writeBlockState(crop));
         }
-        ItemStackHelper.saveAllItems(compound, inventory, false);
+        ContainerHelper.saveAllItems(compound, inventory, false);
         return super.save(compound);
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT compound) {
+    public void load(CompoundTag compound) {
         if (compound.contains("Crop")) {
-            crop = NBTUtil.readBlockState(compound.getCompound("Crop"));
+            crop = NbtUtils.readBlockState(compound.getCompound("Crop"));
         } else {
             removeSeed();
         }
 
-        ItemStackHelper.loadAllItems(compound, inventory);
-        super.load(state, compound);
+        ContainerHelper.loadAllItems(compound, inventory);
+        super.load(compound);
     }
 
     private IItemHandlerModifiable handler;

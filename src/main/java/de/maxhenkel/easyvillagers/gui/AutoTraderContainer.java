@@ -3,18 +3,18 @@ package de.maxhenkel.easyvillagers.gui;
 import de.maxhenkel.corelib.inventory.ContainerBase;
 import de.maxhenkel.corelib.inventory.LockedSlot;
 import de.maxhenkel.easyvillagers.blocks.tileentity.AutoTraderTileentity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 
 public class AutoTraderContainer extends ContainerBase {
 
     private AutoTraderTileentity trader;
 
-    public AutoTraderContainer(int id, PlayerInventory playerInventory, IInventory tradeSlots, AutoTraderTileentity trader, IInventory inputItems, IInventory outputItems) {
+    public AutoTraderContainer(int id, Inventory playerInventory, Container tradeSlots, AutoTraderTileentity trader, Container inputItems, Container outputItems) {
         super(Containers.AUTO_TRADER_CONTAINER, id, playerInventory, null);
         this.trader = trader;
         addSlot(new LockedSlot(tradeSlots, 0, 36, 21, true, true));
@@ -32,12 +32,12 @@ public class AutoTraderContainer extends ContainerBase {
         addPlayerInventorySlots();
     }
 
-    public AutoTraderContainer(int id, PlayerInventory playerInventory, AutoTraderTileentity trader, IInventory inputItems, IInventory outputItems) {
+    public AutoTraderContainer(int id, Inventory playerInventory, AutoTraderTileentity trader, Container inputItems, Container outputItems) {
         this(id, playerInventory, trader.getTradeGuiInv(), trader, inputItems, outputItems);
     }
 
-    public AutoTraderContainer(int id, PlayerInventory playerInventory) {
-        this(id, playerInventory, new Inventory(3), null, new Inventory(4), new Inventory(4));
+    public AutoTraderContainer(int id, Inventory playerInventory) {
+        this(id, playerInventory, new SimpleContainer(3), null, new SimpleContainer(4), new SimpleContainer(4));
     }
 
     @Override
@@ -55,7 +55,7 @@ public class AutoTraderContainer extends ContainerBase {
     }
 
     @Override
-    public ItemStack quickMoveStack(PlayerEntity playerIn, int index) {
+    public ItemStack quickMoveStack(Player playerIn, int index) {
         ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = slots.get(index);
         if (slot != null && slot.hasItem()) {

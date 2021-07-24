@@ -3,26 +3,26 @@ package de.maxhenkel.easyvillagers.blocks.tileentity;
 import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.merchant.villager.VillagerProfession;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.village.PointOfInterestType;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.ai.village.poi.PoiType;
+import net.minecraft.world.entity.npc.VillagerProfession;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public abstract class TraderTileentityBase extends VillagerTileentity implements ITickableTileEntity {
+public abstract class TraderTileentityBase extends VillagerTileentity {
 
     private Block workstation;
     private long nextRestock;
 
-    public TraderTileentityBase(TileEntityType type, BlockState defaultState) {
-        super(type, defaultState);
+    public TraderTileentityBase(BlockEntityType<?> type, BlockState defaultState, BlockPos pos, BlockState state) {
+        super(type, defaultState, pos, state);
         workstation = Blocks.AIR;
     }
 
@@ -52,11 +52,11 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
     }
 
     public boolean isValidBlock(Block block) {
-        return PointOfInterestType.forState(block.defaultBlockState()).isPresent();
+        return PoiType.forState(block.defaultBlockState()).isPresent();
     }
 
     public VillagerProfession getWorkstationProfession() {
-        return PointOfInterestType.forState(workstation.defaultBlockState()).flatMap(pointOfInterestType -> ForgeRegistries.PROFESSIONS.getValues().stream().filter(villagerProfession -> villagerProfession.getJobPoiType() == pointOfInterestType).findFirst()).orElse(VillagerProfession.NONE);
+        return PoiType.forState(workstation.defaultBlockState()).flatMap(pointOfInterestType -> ForgeRegistries.PROFESSIONS.getValues().stream().filter(villagerProfession -> villagerProfession.getJobPoiType() == pointOfInterestType).findFirst()).orElse(VillagerProfession.NONE);
     }
 
     @Override
@@ -76,7 +76,7 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
         v.setVillagerData(v.getVillagerData().setProfession(getWorkstationProfession()));
     }
 
-    public boolean openTradingGUI(PlayerEntity playerEntity) {
+    public boolean openTradingGUI(Player playerEntity) {
         EasyVillagerEntity villagerEntity = getVillagerEntity();
         if (villagerEntity == null) {
             return false;
@@ -100,11 +100,7 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
         return true;
     }
 
-    @Override
-    public void tick() {
-        if (level.isClientSide) {
-            return;
-        }
+    public void tickServer() {
         EasyVillagerEntity v = getVillagerEntity();
         if (v == null) {
             return;
@@ -157,7 +153,7 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT compound) {
+    public CompoundTag save(CompoundTag compound) {
         if (hasWorkstation()) {
             compound.putString("Workstation", workstation.getRegistryName().toString());
         }
@@ -166,14 +162,14 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT compound) {
+    public void load(CompoundTag compound) {
         if (compound.contains("Workstation")) {
             workstation = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(compound.getString("Workstation")));
         } else {
             removeWorkstation();
         }
         nextRestock = compound.getLong("NextRestock");
-        super.load(state, compound);
+        super.load(compound);
     }
 
 }

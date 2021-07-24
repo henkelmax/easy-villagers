@@ -1,44 +1,43 @@
 package de.maxhenkel.easyvillagers.blocks.tileentity.render;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
 import de.maxhenkel.easyvillagers.blocks.TraderBlock;
 import de.maxhenkel.easyvillagers.blocks.tileentity.ConverterTileentity;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ZombieRenderer;
 import net.minecraft.client.renderer.entity.ZombieVillagerRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.monster.ZombieEntity;
-import net.minecraft.entity.monster.ZombieVillagerEntity;
-import net.minecraft.resources.IReloadableResourceManager;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.monster.Zombie;
+import net.minecraft.world.entity.monster.ZombieVillager;
 
 public class ConverterRenderer extends VillagerRendererBase<ConverterTileentity> {
 
-    private ZombieEntity zombie;
+    private Zombie zombie;
     private ZombieRenderer zombieRenderer;
     private ZombieVillagerRenderer zombieVillagerRenderer;
-    private ZombieVillagerEntity zombieVillager;
+    private ZombieVillager zombieVillager;
 
-    public ConverterRenderer(TileEntityRendererDispatcher rendererDispatcher) {
-        super(rendererDispatcher);
+    public ConverterRenderer(BlockEntityRendererProvider.Context renderer) {
+        super(renderer);
     }
 
     @Override
-    public void render(ConverterTileentity converter, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
+    public void render(ConverterTileentity converter, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
         super.render(converter, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
         matrixStack.pushPose();
 
         if (zombieRenderer == null) {
-            zombieRenderer = new ZombieRenderer(minecraft.getEntityRenderDispatcher());
-            zombie = new ZombieEntity(minecraft.level);
+            zombieRenderer = new ZombieRenderer(getEntityRenderer());
+            zombie = new Zombie(minecraft.level);
         }
 
         if (zombieVillagerRenderer == null) {
-            zombieVillagerRenderer = new ZombieVillagerRenderer(minecraft.getEntityRenderDispatcher(), (IReloadableResourceManager) minecraft.getResourceManager());
-            zombieVillager = new ZombieVillagerEntity(EntityType.ZOMBIE_VILLAGER, minecraft.level);
+            zombieVillagerRenderer = new ZombieVillagerRenderer(getEntityRenderer());
+            zombieVillager = new ZombieVillager(EntityType.ZOMBIE_VILLAGER, minecraft.level);
         }
 
         Direction direction = Direction.SOUTH;

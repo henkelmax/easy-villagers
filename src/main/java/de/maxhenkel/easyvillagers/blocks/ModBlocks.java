@@ -1,9 +1,9 @@
 package de.maxhenkel.easyvillagers.blocks;
 
-import net.minecraft.block.Block;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
-import net.minecraft.item.Item;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.loading.FMLEnvironment;
@@ -30,13 +30,13 @@ public class ModBlocks {
         );
 
         if (FMLEnvironment.dist == Dist.CLIENT) {
-            RenderTypeLookup.setRenderLayer(TRADER, RenderType.cutout());
-            RenderTypeLookup.setRenderLayer(AUTO_TRADER, RenderType.cutout());
-            RenderTypeLookup.setRenderLayer(FARMER, RenderType.cutout());
-            RenderTypeLookup.setRenderLayer(BREEDER, RenderType.cutout());
-            RenderTypeLookup.setRenderLayer(CONVERTER, RenderType.cutout());
-            RenderTypeLookup.setRenderLayer(IRON_FARM, RenderType.cutout());
-            RenderTypeLookup.setRenderLayer(INCUBATOR, RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(TRADER, RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(AUTO_TRADER, RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(FARMER, RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(BREEDER, RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(CONVERTER, RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(IRON_FARM, RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(INCUBATOR, RenderType.cutout());
         }
     }
 
