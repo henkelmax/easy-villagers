@@ -1,5 +1,6 @@
 package de.maxhenkel.easyvillagers.blocks.tileentity;
 
+import de.maxhenkel.corelib.blockentity.IServerTickableBlockEntity;
 import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
@@ -16,7 +17,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public abstract class TraderTileentityBase extends VillagerTileentity {
+public abstract class TraderTileentityBase extends VillagerTileentity implements IServerTickableBlockEntity {
 
     private Block workstation;
     private long nextRestock;
@@ -100,6 +101,7 @@ public abstract class TraderTileentityBase extends VillagerTileentity {
         return true;
     }
 
+    @Override
     public void tickServer() {
         EasyVillagerEntity v = getVillagerEntity();
         if (v == null) {

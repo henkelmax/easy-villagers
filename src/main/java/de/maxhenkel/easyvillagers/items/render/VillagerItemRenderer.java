@@ -1,33 +1,24 @@
 package de.maxhenkel.easyvillagers.items.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import de.maxhenkel.corelib.client.ItemRenderer;
+import de.maxhenkel.corelib.client.RendererProviders;
 import de.maxhenkel.easyvillagers.items.ModItems;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.geom.EntityModelSet;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
-import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.VillagerRenderer;
 import net.minecraft.world.item.ItemStack;
 
-public class VillagerItemRenderer extends BlockEntityWithoutLevelRenderer {
+public class VillagerItemRenderer extends ItemRenderer {
 
-    private Minecraft minecraft;
     private VillagerRenderer renderer;
 
-    public VillagerItemRenderer(BlockEntityRenderDispatcher renderDispatcher, EntityModelSet entityModelSet) {
-        super(renderDispatcher, entityModelSet);
-        minecraft = Minecraft.getInstance();
-    }
-
     @Override
-    public void renderByItem(ItemStack itemStackIn, ItemTransforms.TransformType transformType, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
+    public void renderByItem(ItemStack itemStack, ItemTransforms.TransformType transformType, PoseStack stack, MultiBufferSource source, int light, int overlay) {
         if (renderer == null) {
-            renderer = new VillagerRenderer(new EntityRendererProvider.Context(minecraft.getEntityRenderDispatcher(), minecraft.getItemRenderer(), minecraft.getResourceManager(), minecraft.getEntityModels(), minecraft.font));
+            renderer = new VillagerRenderer(RendererProviders.createEntityRendererContext());
         }
-        renderer.render(ModItems.VILLAGER.getVillagerFast(minecraft.level, itemStackIn), 0F, 1F, matrixStackIn, bufferIn, combinedLightIn);
+        renderer.render(ModItems.VILLAGER.getVillagerFast(minecraft.level, itemStack), 0F, 1F, stack, source, light);
     }
 
 

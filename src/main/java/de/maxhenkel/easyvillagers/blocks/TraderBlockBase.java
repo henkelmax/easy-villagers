@@ -1,6 +1,7 @@
 package de.maxhenkel.easyvillagers.blocks;
 
 import de.maxhenkel.corelib.block.IItemBlock;
+import de.maxhenkel.corelib.blockentity.SimpleBlockEntityTicker;
 import de.maxhenkel.corelib.item.ItemUtils;
 import de.maxhenkel.easyvillagers.blocks.tileentity.TraderTileentityBase;
 import de.maxhenkel.easyvillagers.items.VillagerItem;
@@ -23,6 +24,8 @@ import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
@@ -112,6 +115,12 @@ public abstract class TraderBlockBase extends VillagerBlockBase implements Entit
                 playVillagerSound(world, pos, SoundEvents.VILLAGER_NO);
             }
         }
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level1, BlockState state, BlockEntityType<T> type) {
+        return new SimpleBlockEntityTicker<>();
     }
 
     @Nullable

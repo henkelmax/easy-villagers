@@ -1,5 +1,6 @@
 package de.maxhenkel.easyvillagers.blocks.tileentity;
 
+import de.maxhenkel.corelib.blockentity.ITickableBlockEntity;
 import de.maxhenkel.corelib.inventory.ItemListInventory;
 import de.maxhenkel.corelib.item.ItemUtils;
 import de.maxhenkel.easyvillagers.Main;
@@ -26,7 +27,7 @@ import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nullable;
 
-public class AutoTraderTileentity extends TraderTileentityBase {
+public class AutoTraderTileentity extends TraderTileentityBase implements ITickableBlockEntity {
 
     protected Container tradeGuiInv;
 
@@ -43,6 +44,7 @@ public class AutoTraderTileentity extends TraderTileentityBase {
         outputInventory = NonNullList.withSize(4, ItemStack.EMPTY);
     }
 
+    @Override
     public void tick() {
         if (!hasVillager()) {
             return;

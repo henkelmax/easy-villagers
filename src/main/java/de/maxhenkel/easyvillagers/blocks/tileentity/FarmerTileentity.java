@@ -1,5 +1,6 @@
 package de.maxhenkel.easyvillagers.blocks.tileentity;
 
+import de.maxhenkel.corelib.blockentity.IServerTickableBlockEntity;
 import de.maxhenkel.corelib.inventory.ItemListInventory;
 import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.blocks.ModBlocks;
@@ -38,7 +39,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
 
-public class FarmerTileentity extends VillagerTileentity {
+public class FarmerTileentity extends VillagerTileentity implements IServerTickableBlockEntity {
 
     private BlockState crop;
     private NonNullList<ItemStack> inventory;
@@ -102,6 +103,7 @@ public class FarmerTileentity extends VillagerTileentity {
         return crop;
     }
 
+    @Override
     public void tickServer() {
         EasyVillagerEntity v = getVillagerEntity();
         if (v != null) {

@@ -1,12 +1,12 @@
 package de.maxhenkel.easyvillagers.blocks;
 
+import de.maxhenkel.corelib.client.CustomRendererBlockItem;
 import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.ModItemGroups;
 import de.maxhenkel.easyvillagers.blocks.tileentity.AutoTraderTileentity;
 import de.maxhenkel.easyvillagers.blocks.tileentity.TraderTileentityBase;
 import de.maxhenkel.easyvillagers.gui.AutoTraderContainer;
 import de.maxhenkel.easyvillagers.items.render.AutoTraderItemRenderer;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -15,17 +15,11 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityTicker;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.IItemRenderProperties;
 
 import javax.annotation.Nullable;
-import java.util.function.Consumer;
 
 public class AutoTraderBlock extends TraderBlockBase {
 
@@ -35,17 +29,7 @@ public class AutoTraderBlock extends TraderBlockBase {
 
     @Override
     public Item toItem() {
-        return new BlockItem(this, new Item.Properties().tab(ModItemGroups.TAB_EASY_VILLAGERS)) {
-            @Override
-            public void initializeClient(Consumer<IItemRenderProperties> consumer) {
-                consumer.accept(new IItemRenderProperties() {
-                    @Override
-                    public BlockEntityWithoutLevelRenderer getItemStackRenderer() {
-                        return new AutoTraderItemRenderer();
-                    }
-                });
-            }
-        }.setRegistryName(getRegistryName());
+        return new CustomRendererBlockItem(this, new Item.Properties().tab(ModItemGroups.TAB_EASY_VILLAGERS), AutoTraderItemRenderer::new).setRegistryName(getRegistryName());
     }
 
     @Override
@@ -64,19 +48,6 @@ public class AutoTraderBlock extends TraderBlockBase {
             }
         });
         return true;
-    }
-
-    @Nullable
-    @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level1, BlockState state, BlockEntityType<T> type) {
-        return (level, blockPos, blockState, t) -> {
-            if (t instanceof AutoTraderTileentity te) {
-                if (!level1.isClientSide) {
-                    te.tickServer();
-                }
-                te.tick();
-            }
-        };
     }
 
     @Nullable

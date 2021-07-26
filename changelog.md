@@ -1,2 +1,1 @@
-- Fixed extended weakness potions not working
-- Added Jade support
+- Updated dependencies

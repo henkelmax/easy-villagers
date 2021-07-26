@@ -1,5 +1,6 @@
 package de.maxhenkel.easyvillagers.blocks.tileentity;
 
+import de.maxhenkel.corelib.blockentity.IServerTickableBlockEntity;
 import de.maxhenkel.corelib.entity.EntityUtils;
 import de.maxhenkel.corelib.inventory.ItemListInventory;
 import de.maxhenkel.corelib.net.NetUtils;
@@ -29,7 +30,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class BreederTileentity extends FakeWorldTileentity {
+public class BreederTileentity extends FakeWorldTileentity implements IServerTickableBlockEntity {
 
     private NonNullList<ItemStack> foodInventory;
     private NonNullList<ItemStack> outputInventory;
@@ -112,6 +113,7 @@ public class BreederTileentity extends FakeWorldTileentity {
         return v;
     }
 
+    @Override
     public void tickServer() {
         if (level.isClientSide) {
             return;

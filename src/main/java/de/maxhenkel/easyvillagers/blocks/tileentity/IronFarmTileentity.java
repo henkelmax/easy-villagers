@@ -1,5 +1,6 @@
 package de.maxhenkel.easyvillagers.blocks.tileentity;
 
+import de.maxhenkel.corelib.blockentity.ITickableBlockEntity;
 import de.maxhenkel.corelib.inventory.ItemListInventory;
 import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.blocks.ModBlocks;
@@ -33,7 +34,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import java.util.Collections;
 import java.util.List;
 
-public class IronFarmTileentity extends VillagerTileentity {
+public class IronFarmTileentity extends VillagerTileentity implements ITickableBlockEntity {
 
     private static final ResourceLocation GOLEM_LOOT_TABLE = new ResourceLocation("entities/iron_golem");
 
@@ -50,6 +51,7 @@ public class IronFarmTileentity extends VillagerTileentity {
         return timer;
     }
 
+    @Override
     public void tick() {
         EasyVillagerEntity v = getVillagerEntity();
         if (v != null) {

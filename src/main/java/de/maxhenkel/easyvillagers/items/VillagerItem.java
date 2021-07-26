@@ -1,13 +1,13 @@
 package de.maxhenkel.easyvillagers.items;
 
 import de.maxhenkel.corelib.CachedMap;
+import de.maxhenkel.corelib.client.CustomRendererItem;
 import de.maxhenkel.corelib.item.ItemUtils;
 import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import de.maxhenkel.easyvillagers.items.render.VillagerItemRenderer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -28,18 +28,16 @@ import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.IItemRenderProperties;
 
 import javax.annotation.Nullable;
 import java.util.List;
-import java.util.function.Consumer;
 
-public class VillagerItem extends Item {
+public class VillagerItem extends CustomRendererItem {
 
     private final CachedMap<ItemStack, EasyVillagerEntity> cachedVillagers;
 
     public VillagerItem() {
-        super(new Item.Properties().stacksTo(1));
+        super(new Item.Properties().stacksTo(1), VillagerItemRenderer::new);
         cachedVillagers = new CachedMap<>(10_000, ItemUtils.ITEM_COMPARATOR);
 
         DispenserBlock.registerBehavior(this, (source, stack) -> {
@@ -51,16 +49,6 @@ public class VillagerItem extends Item {
             world.addFreshEntity(villager);
             stack.shrink(1);
             return stack;
-        });
-    }
-
-    @Override
-    public void initializeClient(Consumer<IItemRenderProperties> consumer) {
-        consumer.accept(new IItemRenderProperties() {
-            @Override
-            public BlockEntityWithoutLevelRenderer getItemStackRenderer() {
-                return new VillagerItemRenderer(Minecraft.getInstance().getBlockEntityRenderDispatcher(), Minecraft.getInstance().getEntityModels());
-            }
         });
     }
 

@@ -1,6 +1,8 @@
 package de.maxhenkel.easyvillagers.blocks;
 
 import de.maxhenkel.corelib.block.IItemBlock;
+import de.maxhenkel.corelib.blockentity.SimpleBlockEntityTicker;
+import de.maxhenkel.corelib.client.CustomRendererBlockItem;
 import de.maxhenkel.corelib.item.ItemUtils;
 import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.ModItemGroups;
@@ -8,7 +10,6 @@ import de.maxhenkel.easyvillagers.blocks.tileentity.FarmerTileentity;
 import de.maxhenkel.easyvillagers.gui.OutputContainer;
 import de.maxhenkel.easyvillagers.items.VillagerItem;
 import de.maxhenkel.easyvillagers.items.render.FarmerItemRenderer;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -23,7 +24,6 @@ import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -39,10 +39,8 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.IItemRenderProperties;
 
 import javax.annotation.Nullable;
-import java.util.function.Consumer;
 
 public class FarmerBlock extends VillagerBlockBase implements EntityBlock, IItemBlock {
 
@@ -53,17 +51,7 @@ public class FarmerBlock extends VillagerBlockBase implements EntityBlock, IItem
 
     @Override
     public Item toItem() {
-        return new BlockItem(this, new Item.Properties().tab(ModItemGroups.TAB_EASY_VILLAGERS)) {
-            @Override
-            public void initializeClient(Consumer<IItemRenderProperties> consumer) {
-                consumer.accept(new IItemRenderProperties() {
-                    @Override
-                    public BlockEntityWithoutLevelRenderer getItemStackRenderer() {
-                        return new FarmerItemRenderer();
-                    }
-                });
-            }
-        }.setRegistryName(getRegistryName());
+        return new CustomRendererBlockItem(this, new Item.Properties().tab(ModItemGroups.TAB_EASY_VILLAGERS), FarmerItemRenderer::new).setRegistryName(getRegistryName());
     }
 
     @Override
@@ -135,14 +123,7 @@ public class FarmerBlock extends VillagerBlockBase implements EntityBlock, IItem
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level1, BlockState state, BlockEntityType<T> type) {
-        if (level1.isClientSide) {
-            return null;
-        }
-        return (level, blockPos, blockState, t) -> {
-            if (t instanceof FarmerTileentity te) {
-                te.tickServer();
-            }
-        };
+        return new SimpleBlockEntityTicker<>();
     }
 
     @Nullable

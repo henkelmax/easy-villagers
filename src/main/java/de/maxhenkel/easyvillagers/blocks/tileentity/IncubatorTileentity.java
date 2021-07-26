@@ -1,5 +1,6 @@
 package de.maxhenkel.easyvillagers.blocks.tileentity;
 
+import de.maxhenkel.corelib.blockentity.IServerTickableBlockEntity;
 import de.maxhenkel.corelib.inventory.ItemListInventory;
 import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.blocks.ModBlocks;
@@ -21,7 +22,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 
-public class IncubatorTileentity extends VillagerTileentity {
+public class IncubatorTileentity extends VillagerTileentity implements IServerTickableBlockEntity {
 
     private NonNullList<ItemStack> inputInventory;
     private NonNullList<ItemStack> outputInventory;
@@ -32,6 +33,7 @@ public class IncubatorTileentity extends VillagerTileentity {
         outputInventory = NonNullList.withSize(4, ItemStack.EMPTY);
     }
 
+    @Override
     public void tickServer() {
         if (!hasVillager()) {
             for (ItemStack stack : inputInventory) {
