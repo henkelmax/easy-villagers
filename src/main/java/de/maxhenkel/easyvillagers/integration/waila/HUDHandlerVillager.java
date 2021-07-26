@@ -2,39 +2,39 @@ package de.maxhenkel.easyvillagers.integration.waila;
 
 import de.maxhenkel.easyvillagers.blocks.tileentity.VillagerTileentity;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
+import mcp.mobius.waila.api.BlockAccessor;
 import mcp.mobius.waila.api.IComponentProvider;
-import mcp.mobius.waila.api.IDataAccessor;
-import mcp.mobius.waila.api.IPluginConfig;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.text.ITextComponent;
+import mcp.mobius.waila.api.ITooltip;
+import mcp.mobius.waila.api.config.IPluginConfig;
+import mcp.mobius.waila.api.ui.IElement;
+import mcp.mobius.waila.impl.ui.ItemStackElement;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
-import java.util.List;
+import javax.annotation.Nullable;
 
 public class HUDHandlerVillager implements IComponentProvider {
 
-    static final HUDHandlerVillager INSTANCE = new HUDHandlerVillager();
+    public static final HUDHandlerVillager INSTANCE = new HUDHandlerVillager();
 
     @Override
-    public void appendBody(List<ITextComponent> tooltip, IDataAccessor accessor, IPluginConfig config) {
-        if (!(accessor.getTileEntity() instanceof VillagerTileentity)) {
-            return;
-        }
-        VillagerTileentity tileEntity = (VillagerTileentity) accessor.getTileEntity();
-
-        EasyVillagerEntity villager = tileEntity.getVillagerEntity();
-        if (villager != null) {
-            tooltip.add(villager.getAdvancedName());
+    public void appendTooltip(ITooltip iTooltip, BlockAccessor blockAccessor, IPluginConfig iPluginConfig) {
+        if (blockAccessor.getBlockEntity() instanceof VillagerTileentity blockEntity) {
+            EasyVillagerEntity villager = blockEntity.getVillagerEntity();
+            if (villager != null) {
+                iTooltip.add(villager.getAdvancedName());
+            }
         }
     }
 
+    @Nullable
     @Override
-    public ItemStack getStack(IDataAccessor accessor, IPluginConfig config) {
-        TileEntity te = accessor.getTileEntity();
+    public IElement getIcon(BlockAccessor accessor, IPluginConfig config, IElement currentIcon) {
+        BlockEntity te = accessor.getBlockEntity();
         ItemStack stack = new ItemStack(te.getBlockState().getBlock().asItem());
-        CompoundNBT blockEntityTag = stack.getOrCreateTagElement("BlockEntityTag");
+        CompoundTag blockEntityTag = stack.getOrCreateTagElement("BlockEntityTag");
         te.save(blockEntityTag);
-        return stack;
+        return ItemStackElement.of(stack);
     }
 }

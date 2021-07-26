@@ -1,1 +1,2 @@
-- Fixed trade cycle button not working
+- Fixed extended weakness potions not working
+- Added Jade support

@@ -122,7 +122,7 @@ public class ConverterTileentity extends VillagerTileentity {
     }
 
     public static boolean isWeakness(ItemStack stack) {
-        return PotionUtils.getPotion(stack).equals(Potions.WEAKNESS);//getMobEffects(stack).stream().anyMatch(effectInstance -> effectInstance.getEffect().equals(Effects.WEAKNESS));
+        return PotionUtils.getPotion(stack).equals(Potions.WEAKNESS) || PotionUtils.getPotion(stack).equals(Potions.LONG_WEAKNESS);
     }
 
     public long getTimer() {

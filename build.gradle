@@ -5,7 +5,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.9', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.12', changing: true
         classpath group: 'de.maxhenkel.forge-update', name: 'forge-update', version: '1.0.4'
     }
 }
@@ -76,6 +76,40 @@ minecraft {
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
+repositories {
+    mavenLocal()
+    maven {
+        name 'tterrag maven'
+        url "https://maven.tterrag.com/"
+    }
+    maven {
+        name = "Progwml6 maven"
+        url = "https://dvs1.progwml6.com/files/maven/"
+    }
+    maven {
+        name = "ModMaven"
+        url = "https://modmaven.k-4u.nl"
+    }
+    maven {
+        name = "Hwyla"
+        url = "https://maven.tehnut.info"
+    }
+    maven {
+        name = "henkelmax.public"
+        url = 'https://maven.maxhenkel.de/repository/public'
+    }
+    maven {
+        url "https://www.cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
+}
+
+configurations {
+    runtimeMod { transitive = false }
+}
+
 dependencies {
     minecraft "net.minecraftforge:forge:${mod_minecraft_version}-${forge_version}"
 
@@ -85,13 +119,42 @@ dependencies {
 //    compileOnly fg.deobf("mcjty.theoneprobe:TheOneProbe-${theoneprobe_mc_version}:${theoneprobe_mc_version}-${theoneprobe_version}:api")
 //    runtimeOnly fg.deobf("mcjty.theoneprobe:TheOneProbe-${theoneprobe_mc_version}:${theoneprobe_mc_version}-${theoneprobe_version}")
 
-//    shadow fg.deobf("de.maxhenkel.corelib:corelib:${mod_minecraft_version}-${corelib_version}:api")
-//    runtimeOnly fg.deobf("de.maxhenkel.corelib:corelib:${mod_minecraft_version}-${corelib_version}")
-//    runtimeOnly fg.deobf("de.maxhenkel.corelib:corelib:${mod_minecraft_version}-${corelib_version}:javadoc")
+    compileOnly fg.deobf("curse.maven:jade-324717:${jade_id}")
+    runtimeMod fg.deobf("curse.maven:jade-324717:${jade_id}")
 
-//    compile fg.deobf("mcp.mobius.waila:Hwyla:${hwyla_version}")
+    runtimeMod fg.deobf("de.maxhenkel.corelib:corelib:${mod_minecraft_version}-${corelib_version}")
+    shadow fg.deobf("de.maxhenkel.corelib:corelib:${mod_minecraft_version}-${corelib_version}:api")
+    compileOnly fg.deobf("de.maxhenkel.corelib:corelib:${mod_minecraft_version}-${corelib_version}")
+    compileOnly fg.deobf("de.maxhenkel.corelib:corelib:${mod_minecraft_version}-${corelib_version}:javadoc")
 
     implementation 'com.google.code.findbugs:jsr305:3.0.2'
+}
+
+// https://github.com/Crimix/ServerTabInfo/blob/a297661ae5d40e082aecf3598d8467cfbef8e6d6/build.gradle
+project.afterEvaluate {
+    task copyMods {
+        doLast {
+            delete fileTree('run/mods') {
+                include '*.jar'
+            }
+            delete fileTree('run/server/mods') {
+                include '*.jar'
+            }
+            copy {
+                from configurations.runtimeMod.files
+                into file("run/mods")
+            }
+            copy {
+                from configurations.runtimeMod.files
+                into file("run/server/mods")
+            }
+        }
+    }
+
+    tasks.forEach {
+        if (it.name.startsWith("prepareRun"))
+            it.dependsOn copyMods
+    }
 }
 
 jar {
@@ -133,6 +196,8 @@ curseforge {
         changelog = file('changelog.md')
         releaseType = curse_release_type
         addGameVersion mod_minecraft_version
+        addGameVersion 'Forge'
+        addGameVersion 'Java 16'
         mainArtifact(jar) {
             displayName = "[${mod_minecraft_version}] ${mod_name} ${mod_version}"
         }
@@ -161,30 +226,6 @@ forgeUpdate {
     updateMessages = messages
     releaseType = curse_release_type
     tags = recommended == 'true' ? ['recommended'] : []
-}
-
-repositories {
-    mavenLocal()
-    maven {
-        name 'tterrag maven'
-        url "https://maven.tterrag.com/"
-    }
-    maven {
-        name = "Progwml6 maven"
-        url = "https://dvs1.progwml6.com/files/maven/"
-    }
-    maven {
-        name = "ModMaven"
-        url = "https://modmaven.k-4u.nl"
-    }
-    maven {
-        name = "Hwyla"
-        url = "https://maven.tehnut.info"
-    }
-    maven {
-        name = "henkelmax.public"
-        url = 'https://maven.maxhenkel.de/repository/public'
-    }
 }
 
 javadoc {
@@ -238,7 +279,9 @@ reobf {
 sourceSets {
     main {
         java {
-            exclude 'de/maxhenkel/easyvillagers/integration/**'
+            exclude 'de/maxhenkel/easyvillagers/integration/jei/**'
+            exclude 'de/maxhenkel/easyvillagers/integration/theoneprobe/**'
+            exclude 'de/maxhenkel/easyvillagers/integration/IMC.java'
         }
     }
 }
