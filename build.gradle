@@ -117,7 +117,10 @@ dependencies {
 //    runtimeOnly fg.deobf("mezz.jei:jei-${jei_mc_version}:${jei_version}")
 
 //    compileOnly fg.deobf("mcjty.theoneprobe:TheOneProbe-${theoneprobe_mc_version}:${theoneprobe_mc_version}-${theoneprobe_version}:api")
-//    runtimeOnly fg.deobf("mcjty.theoneprobe:TheOneProbe-${theoneprobe_mc_version}:${theoneprobe_mc_version}-${theoneprobe_version}")
+//    runtimeMod fg.deobf("mcjty.theoneprobe:TheOneProbe-${theoneprobe_mc_version}:${theoneprobe_mc_version}-${theoneprobe_version}")
+
+    compileOnly fg.deobf("curse.maven:the-one-probe-245211:3402482")
+    runtimeMod fg.deobf("curse.maven:the-one-probe-245211:3402482")
 
     compileOnly fg.deobf("curse.maven:jade-324717:${jade_id}")
     runtimeMod fg.deobf("curse.maven:jade-324717:${jade_id}")
@@ -280,8 +283,6 @@ sourceSets {
     main {
         java {
             exclude 'de/maxhenkel/easyvillagers/integration/jei/**'
-            exclude 'de/maxhenkel/easyvillagers/integration/theoneprobe/**'
-            exclude 'de/maxhenkel/easyvillagers/integration/IMC.java'
         }
     }
 }

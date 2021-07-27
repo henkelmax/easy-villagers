@@ -6,10 +6,10 @@ import de.maxhenkel.easyvillagers.blocks.tileentity.ConverterTileentity;
 import de.maxhenkel.easyvillagers.blocks.tileentity.VillagerTileentity;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import mcjty.theoneprobe.api.*;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TileInfoProvider implements IProbeInfoProvider {
 
@@ -19,22 +19,19 @@ public class TileInfoProvider implements IProbeInfoProvider {
     }
 
     @Override
-    public void addProbeInfo(ProbeMode probeMode, IProbeInfo iProbeInfo, PlayerEntity playerEntity, World world, BlockState blockState, IProbeHitData iProbeHitData) {
-        TileEntity te = world.getBlockEntity(iProbeHitData.getPos());
+    public void addProbeInfo(ProbeMode probeMode, IProbeInfo iProbeInfo, Player playerEntity, Level world, BlockState blockState, IProbeHitData iProbeHitData) {
+        BlockEntity te = world.getBlockEntity(iProbeHitData.getPos());
 
-        if (te instanceof VillagerTileentity) {
-            VillagerTileentity villagerTileentity = (VillagerTileentity) te;
-            addVillager(villagerTileentity.getVillagerEntity(), iProbeInfo);
-        } else if (te instanceof BreederTileentity) {
+        if (te instanceof VillagerTileentity v) {
+            addVillager(v.getVillagerEntity(), iProbeInfo);
+        } else if (te instanceof BreederTileentity breeder) {
             if (probeMode.equals(ProbeMode.EXTENDED)) {
-                BreederTileentity breederTileentity = (BreederTileentity) te;
-                addVillager(breederTileentity.getVillagerEntity1(), iProbeInfo);
-                addVillager(breederTileentity.getVillagerEntity2(), iProbeInfo);
+                addVillager(breeder.getVillagerEntity1(), iProbeInfo);
+                addVillager(breeder.getVillagerEntity2(), iProbeInfo);
             }
         }
 
-        if (te instanceof ConverterTileentity) {
-            ConverterTileentity converter = (ConverterTileentity) te;
+        if (te instanceof ConverterTileentity converter) {
             long timer = converter.getTimer();
             if (timer >= 0 && converter.hasVillager()) {
                 iProbeInfo.progress(timer, ConverterTileentity.getConvertTime(), iProbeInfo.defaultProgressStyle().showText(false));
