@@ -5,7 +5,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.12', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.14', changing: true
         classpath group: 'de.maxhenkel.forge-update', name: 'forge-update', version: '1.0.4'
     }
 }
@@ -106,10 +106,6 @@ repositories {
     }
 }
 
-configurations {
-    runtimeMod { transitive = false }
-}
-
 dependencies {
     minecraft "net.minecraftforge:forge:${mod_minecraft_version}-${forge_version}"
 
@@ -119,45 +115,15 @@ dependencies {
 //    compileOnly fg.deobf("mcjty.theoneprobe:TheOneProbe-${theoneprobe_mc_version}:${theoneprobe_mc_version}-${theoneprobe_version}:api")
 //    runtimeMod fg.deobf("mcjty.theoneprobe:TheOneProbe-${theoneprobe_mc_version}:${theoneprobe_mc_version}-${theoneprobe_version}")
 
-    compileOnly fg.deobf("curse.maven:the-one-probe-245211:3402482")
-    runtimeMod fg.deobf("curse.maven:the-one-probe-245211:3402482")
+    implementation fg.deobf("curse.maven:the-one-probe-245211:3402482")
 
-    compileOnly fg.deobf("curse.maven:jade-324717:${jade_id}")
-    runtimeMod fg.deobf("curse.maven:jade-324717:${jade_id}")
+    implementation fg.deobf("curse.maven:jade-324717:${jade_id}")
 
-    runtimeMod fg.deobf("de.maxhenkel.corelib:corelib:${mod_minecraft_version}-${corelib_version}")
     shadow fg.deobf("de.maxhenkel.corelib:corelib:${mod_minecraft_version}-${corelib_version}:api")
-    compileOnly fg.deobf("de.maxhenkel.corelib:corelib:${mod_minecraft_version}-${corelib_version}")
-    compileOnly fg.deobf("de.maxhenkel.corelib:corelib:${mod_minecraft_version}-${corelib_version}:javadoc")
+    runtimeOnly fg.deobf("de.maxhenkel.corelib:corelib:${mod_minecraft_version}-${corelib_version}")
+    runtimeOnly fg.deobf("de.maxhenkel.corelib:corelib:${mod_minecraft_version}-${corelib_version}:javadoc")
 
     implementation 'com.google.code.findbugs:jsr305:3.0.2'
-}
-
-// https://github.com/Crimix/ServerTabInfo/blob/a297661ae5d40e082aecf3598d8467cfbef8e6d6/build.gradle
-project.afterEvaluate {
-    task copyMods {
-        doLast {
-            delete fileTree('run/mods') {
-                include '*.jar'
-            }
-            delete fileTree('run/server/mods') {
-                include '*.jar'
-            }
-            copy {
-                from configurations.runtimeMod.files
-                into file("run/mods")
-            }
-            copy {
-                from configurations.runtimeMod.files
-                into file("run/server/mods")
-            }
-        }
-    }
-
-    tasks.forEach {
-        if (it.name.startsWith("prepareRun"))
-            it.dependsOn copyMods
-    }
 }
 
 jar {
