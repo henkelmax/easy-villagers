@@ -2,6 +2,7 @@ package de.maxhenkel.easyvillagers.items;
 
 import de.maxhenkel.corelib.CachedMap;
 import de.maxhenkel.corelib.client.CustomRendererItem;
+import de.maxhenkel.corelib.client.ItemRenderer;
 import de.maxhenkel.corelib.item.ItemUtils;
 import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
@@ -37,7 +38,7 @@ public class VillagerItem extends CustomRendererItem {
     private final CachedMap<ItemStack, EasyVillagerEntity> cachedVillagers;
 
     public VillagerItem() {
-        super(new Item.Properties().stacksTo(1), VillagerItemRenderer::new);
+        super(new Item.Properties().stacksTo(1));
         cachedVillagers = new CachedMap<>(10_000, ItemUtils.ITEM_COMPARATOR);
 
         DispenserBlock.registerBehavior(this, (source, stack) -> {
@@ -50,6 +51,12 @@ public class VillagerItem extends CustomRendererItem {
             stack.shrink(1);
             return stack;
         });
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public ItemRenderer createItemRenderer() {
+        return new VillagerItemRenderer();
     }
 
     @Override
@@ -150,5 +157,4 @@ public class VillagerItem extends CustomRendererItem {
         ModItems.VILLAGER.setVillager(babyVillager, villager);
         return babyVillager;
     }
-
 }

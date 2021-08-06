@@ -3,6 +3,7 @@ package de.maxhenkel.easyvillagers.blocks;
 import de.maxhenkel.corelib.block.IItemBlock;
 import de.maxhenkel.corelib.blockentity.SimpleBlockEntityTicker;
 import de.maxhenkel.corelib.client.CustomRendererBlockItem;
+import de.maxhenkel.corelib.client.ItemRenderer;
 import de.maxhenkel.corelib.item.ItemUtils;
 import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.ModItemGroups;
@@ -51,7 +52,13 @@ public class FarmerBlock extends VillagerBlockBase implements EntityBlock, IItem
 
     @Override
     public Item toItem() {
-        return new CustomRendererBlockItem(this, new Item.Properties().tab(ModItemGroups.TAB_EASY_VILLAGERS), FarmerItemRenderer::new).setRegistryName(getRegistryName());
+        return new CustomRendererBlockItem(this, new Item.Properties().tab(ModItemGroups.TAB_EASY_VILLAGERS)) {
+            @OnlyIn(Dist.CLIENT)
+            @Override
+            public ItemRenderer createItemRenderer() {
+                return new FarmerItemRenderer();
+            }
+        }.setRegistryName(getRegistryName());
     }
 
     @Override
