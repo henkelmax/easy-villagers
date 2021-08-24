@@ -1,1 +1,1 @@
-- Fixed crash on servers
+- Fixed crash with The One Probe

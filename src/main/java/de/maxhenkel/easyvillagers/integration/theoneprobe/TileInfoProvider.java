@@ -6,6 +6,7 @@ import de.maxhenkel.easyvillagers.blocks.tileentity.ConverterTileentity;
 import de.maxhenkel.easyvillagers.blocks.tileentity.VillagerTileentity;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import mcjty.theoneprobe.api.*;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -13,9 +14,11 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class TileInfoProvider implements IProbeInfoProvider {
 
+    public static final ResourceLocation ID = new ResourceLocation(Main.MODID, "probeinfoprovider");
+
     @Override
-    public String getID() {
-        return Main.MODID + ":probeinfoprovider";
+    public ResourceLocation getID() {
+        return ID;
     }
 
     @Override
