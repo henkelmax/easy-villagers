@@ -1,1 +1,1 @@
-- Fixed crash with The One Probe
+- Re added JEI compatibility

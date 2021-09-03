@@ -13,9 +13,10 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 
 public class IncubatorCategory implements IRecipeCategory<ItemStack> {
 
@@ -50,8 +51,8 @@ public class IncubatorCategory implements IRecipeCategory<ItemStack> {
     }
 
     @Override
-    public String getTitle() {
-        return new TranslationTextComponent("jei.easy_villagers.incubating").getString();
+    public Component getTitle() {
+        return new TranslatableComponent("jei.easy_villagers.incubating");
     }
 
     @Override

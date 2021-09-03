@@ -12,10 +12,11 @@ import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 public class ConverterCategory implements IRecipeCategory<ItemStack> {
 
@@ -42,8 +43,8 @@ public class ConverterCategory implements IRecipeCategory<ItemStack> {
     }
 
     @Override
-    public String getTitle() {
-        return new TranslationTextComponent("jei.easy_villagers.converting").getString();
+    public Component getTitle() {
+        return new TranslatableComponent("jei.easy_villagers.converting");
     }
 
     @Override
