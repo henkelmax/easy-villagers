@@ -1,1 +1,1 @@
-- Re added JEI compatibility
+- Fixed a crash with the latest Forge version

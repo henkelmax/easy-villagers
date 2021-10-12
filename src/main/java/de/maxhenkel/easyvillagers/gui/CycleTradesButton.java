@@ -39,7 +39,7 @@ public class CycleTradesButton extends Button {
         RenderSystem.setShaderTexture(0, ARROW_BUTTON);
         if (isHovered()) {
             blit(matrixStack, x, y, 0, 14, WIDTH, HEIGHT, 32, 32);
-            screen.renderToolTip(matrixStack, Collections.singletonList(new TranslatableComponent("tooltip.easy_villagers.cycle_trades").getVisualOrderText()), mouseX, mouseY, screen.getMinecraft().font);
+            screen.renderTooltip(matrixStack, Collections.singletonList(new TranslatableComponent("tooltip.easy_villagers.cycle_trades").getVisualOrderText()), mouseX, mouseY, screen.getMinecraft().font);
         } else {
             blit(matrixStack, x, y, 0, 0, WIDTH, HEIGHT, 32, 32);
         }
