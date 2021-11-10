@@ -5,9 +5,11 @@ import de.maxhenkel.corelib.blockentity.SimpleBlockEntityTicker;
 import de.maxhenkel.corelib.client.CustomRendererBlockItem;
 import de.maxhenkel.corelib.client.ItemRenderer;
 import de.maxhenkel.corelib.item.ItemUtils;
+import de.maxhenkel.easyvillagers.ItemTileEntityCache;
 import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.ModItemGroups;
 import de.maxhenkel.easyvillagers.blocks.tileentity.BreederTileentity;
+import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import de.maxhenkel.easyvillagers.gui.BreederContainer;
 import de.maxhenkel.easyvillagers.items.VillagerItem;
 import de.maxhenkel.easyvillagers.items.render.BreederItemRenderer;
@@ -26,6 +28,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.EntityBlock;
@@ -41,6 +44,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 public class BreederBlock extends VillagerBlockBase implements EntityBlock, IItemBlock {
 
@@ -58,6 +62,20 @@ public class BreederBlock extends VillagerBlockBase implements EntityBlock, IIte
                 return new BreederItemRenderer();
             }
         }.setRegistryName(getRegistryName());
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, @Nullable BlockGetter blockGetter, List<Component> components, TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, blockGetter, components, tooltipFlag);
+        BreederTileentity trader = ItemTileEntityCache.getTileEntity(stack, () -> new BreederTileentity(BlockPos.ZERO, ModBlocks.TRADER.defaultBlockState()));
+        EasyVillagerEntity villager1 = trader.getVillagerEntity1();
+        if (villager1 != null) {
+            components.add(villager1.getAdvancedName());
+        }
+        EasyVillagerEntity villager2 = trader.getVillagerEntity2();
+        if (villager2 != null) {
+            components.add(villager2.getAdvancedName());
+        }
     }
 
     @Override

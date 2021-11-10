@@ -4,9 +4,11 @@ import de.maxhenkel.corelib.block.IItemBlock;
 import de.maxhenkel.corelib.blockentity.SimpleBlockEntityTicker;
 import de.maxhenkel.corelib.client.CustomRendererBlockItem;
 import de.maxhenkel.corelib.client.ItemRenderer;
+import de.maxhenkel.easyvillagers.ItemTileEntityCache;
 import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.ModItemGroups;
 import de.maxhenkel.easyvillagers.blocks.tileentity.IncubatorTileentity;
+import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import de.maxhenkel.easyvillagers.gui.VillagerIOContainer;
 import de.maxhenkel.easyvillagers.items.render.IncubatorItemRenderer;
 import net.minecraft.core.BlockPos;
@@ -20,6 +22,8 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.EntityBlock;
@@ -35,6 +39,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 public class IncubatorBlock extends VillagerBlockBase implements EntityBlock, IItemBlock {
 
@@ -52,6 +57,16 @@ public class IncubatorBlock extends VillagerBlockBase implements EntityBlock, II
                 return new IncubatorItemRenderer();
             }
         }.setRegistryName(getRegistryName());
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, @Nullable BlockGetter blockGetter, List<Component> components, TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, blockGetter, components, tooltipFlag);
+        IncubatorTileentity trader = ItemTileEntityCache.getTileEntity(stack, () -> new IncubatorTileentity(BlockPos.ZERO, ModBlocks.TRADER.defaultBlockState()));
+        EasyVillagerEntity villager = trader.getVillagerEntity();
+        if (villager != null) {
+            components.add(villager.getAdvancedName());
+        }
     }
 
     @Override

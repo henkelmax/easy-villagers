@@ -79,14 +79,22 @@ public class EasyVillagerEntity extends Villager {
         }
     }
 
-    public Component getAdvancedName() {
+    @Override
+    public Component getName() {
+        if (hasCustomName()) {
+            return super.getName();
+        }
         VillagerData villagerData = getVillagerData();
         VillagerProfession profession = villagerData.getProfession();
-        if (profession.equals(VillagerProfession.NONE) || profession.equals(VillagerProfession.NITWIT)) {
-            return getName().copy().withStyle(ChatFormatting.GRAY);
+        if (profession.equals(VillagerProfession.NONE)) {
+            return EntityType.VILLAGER.getDescription().copy();
         } else {
-            return new TranslatableComponent("tooltip.easy_villagers.villager_profession", getName().copy(), new TranslatableComponent("merchant.level." + villagerData.getLevel())).withStyle(ChatFormatting.GRAY);
+            return getTypeName();
         }
+    }
+
+    public Component getAdvancedName() {
+        return new TranslatableComponent("tooltip.easy_villagers.villager_profession", getName().copy(), new TranslatableComponent("merchant.level." + getVillagerData().getLevel())).withStyle(ChatFormatting.GRAY);
     }
 
 }

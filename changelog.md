@@ -1,1 +1,2 @@
-- Fixed a crash with the latest Forge version
+- Fixed unemployed villager names
+- Added villager names to block item tooltips

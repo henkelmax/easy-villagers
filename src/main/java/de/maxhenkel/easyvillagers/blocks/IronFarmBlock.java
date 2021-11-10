@@ -5,9 +5,11 @@ import de.maxhenkel.corelib.blockentity.SimpleBlockEntityTicker;
 import de.maxhenkel.corelib.client.CustomRendererBlockItem;
 import de.maxhenkel.corelib.client.ItemRenderer;
 import de.maxhenkel.corelib.item.ItemUtils;
+import de.maxhenkel.easyvillagers.ItemTileEntityCache;
 import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.ModItemGroups;
 import de.maxhenkel.easyvillagers.blocks.tileentity.IronFarmTileentity;
+import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import de.maxhenkel.easyvillagers.gui.OutputContainer;
 import de.maxhenkel.easyvillagers.items.VillagerItem;
 import de.maxhenkel.easyvillagers.items.render.IronFarmItemRenderer;
@@ -26,6 +28,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.EntityBlock;
@@ -41,6 +44,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 public class IronFarmBlock extends VillagerBlockBase implements EntityBlock, IItemBlock {
 
@@ -58,6 +62,16 @@ public class IronFarmBlock extends VillagerBlockBase implements EntityBlock, IIt
                 return new IronFarmItemRenderer();
             }
         }.setRegistryName(getRegistryName());
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, @Nullable BlockGetter blockGetter, List<Component> components, TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, blockGetter, components, tooltipFlag);
+        IronFarmTileentity trader = ItemTileEntityCache.getTileEntity(stack, () -> new IronFarmTileentity(BlockPos.ZERO, ModBlocks.TRADER.defaultBlockState()));
+        EasyVillagerEntity villager = trader.getVillagerEntity();
+        if (villager != null) {
+            components.add(villager.getAdvancedName());
+        }
     }
 
     @Override
