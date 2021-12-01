@@ -15,20 +15,20 @@ import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.inventory.MerchantMenu;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.InputEvent;
+import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class GuiEvents {
 
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
-    public void onOpenScreen(GuiScreenEvent.InitGuiEvent.Post event) {
+    public void onOpenScreen(ScreenEvent.InitScreenEvent.Post event) {
         if (!Main.SERVER_CONFIG.tradeCycling.get()) {
             return;
         }
 
-        if (!(event.getGui() instanceof MerchantScreen)) {
+        if (!(event.getScreen() instanceof MerchantScreen)) {
             return;
         }
 
@@ -38,7 +38,7 @@ public class GuiEvents {
             return;
         }
 
-        MerchantScreen merchantScreen = (MerchantScreen) event.getGui();
+        MerchantScreen merchantScreen = (MerchantScreen) event.getScreen();
 
         int posX;
 
@@ -52,7 +52,7 @@ public class GuiEvents {
                 break;
         }
 
-        event.addWidget(new CycleTradesButton(posX, merchantScreen.getGuiTop() + 8, b -> {
+        event.addListener(new CycleTradesButton(posX, merchantScreen.getGuiTop() + 8, b -> {
             Main.SIMPLE_CHANNEL.sendToServer(new MessageCycleTrades());
         }, merchantScreen));
     }

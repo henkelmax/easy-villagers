@@ -1,2 +1,1 @@
-- Fixed unemployed villager names
-- Added villager names to block item tooltips
+- Updated to 1.18

@@ -4,7 +4,7 @@ import de.maxhenkel.corelib.net.Message;
 import de.maxhenkel.easyvillagers.events.GuiEvents;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.fmllegacy.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 
 public class MessageCycleTrades implements Message<MessageCycleTrades> {
 
