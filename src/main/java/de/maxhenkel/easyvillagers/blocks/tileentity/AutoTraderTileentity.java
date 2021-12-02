@@ -202,11 +202,12 @@ public class AutoTraderTileentity extends TraderTileentityBase implements ITicka
     }
 
     @Override
-    public CompoundTag save(CompoundTag compound) {
+    protected void saveAdditional(CompoundTag compound) {
+        super.saveAdditional(compound);
+
         compound.putInt("Trade", tradeIndex);
         compound.put("InputInventory", ContainerHelper.saveAllItems(new CompoundTag(), inputInventory, true));
         compound.put("OutputInventory", ContainerHelper.saveAllItems(new CompoundTag(), outputInventory, true));
-        return super.save(compound);
     }
 
     @Override

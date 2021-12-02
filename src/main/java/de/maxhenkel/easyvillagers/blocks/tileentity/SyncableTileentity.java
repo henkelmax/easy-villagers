@@ -1,15 +1,18 @@
 package de.maxhenkel.easyvillagers.blocks.tileentity;
 
-import de.maxhenkel.corelib.entity.EntityUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.LevelChunk;
 
 public class SyncableTileentity extends BlockEntity {
 
@@ -18,8 +21,11 @@ public class SyncableTileentity extends BlockEntity {
     }
 
     public void sync() {
-        if (level instanceof ServerLevel) {
-            EntityUtils.forEachPlayerAround((ServerLevel) level, getBlockPos(), 128D, this::syncContents);
+        if (level instanceof ServerLevel serverLevel) {
+            LevelChunk chunk = serverLevel.getChunkAt(getBlockPos());
+            if (chunk.getLevel().getChunkSource() instanceof ServerChunkCache chunkCache) {
+                chunkCache.chunkMap.getPlayers(chunk.getPos(), false).forEach(this::syncContents);
+            }
         }
     }
 
@@ -28,8 +34,8 @@ public class SyncableTileentity extends BlockEntity {
     }
 
     @Override
-    public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this, BlockEntity::getUpdateTag);
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
@@ -39,7 +45,9 @@ public class SyncableTileentity extends BlockEntity {
 
     @Override
     public CompoundTag getUpdateTag() {
-        return save(new CompoundTag());
+        CompoundTag updateTag = new CompoundTag();
+        saveAdditional(updateTag);
+        return updateTag;
     }
 
 }

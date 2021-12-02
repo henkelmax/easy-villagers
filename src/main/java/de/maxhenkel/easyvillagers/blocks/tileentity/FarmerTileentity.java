@@ -167,12 +167,13 @@ public class FarmerTileentity extends VillagerTileentity implements IServerTicka
     }
 
     @Override
-    public CompoundTag save(CompoundTag compound) {
+    protected void saveAdditional(CompoundTag compound) {
+        super.saveAdditional(compound);
+
         if (crop != null) {
             compound.put("Crop", NbtUtils.writeBlockState(crop));
         }
         ContainerHelper.saveAllItems(compound, inventory, false);
-        return super.save(compound);
     }
 
     @Override

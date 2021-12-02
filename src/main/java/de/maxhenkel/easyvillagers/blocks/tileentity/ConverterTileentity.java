@@ -152,14 +152,15 @@ public class ConverterTileentity extends VillagerTileentity implements IServerTi
     }
 
     @Override
-    public CompoundTag save(CompoundTag compound) {
+    protected void saveAdditional(CompoundTag compound) {
+        super.saveAdditional(compound);
+
         compound.put("InputInventory", ContainerHelper.saveAllItems(new CompoundTag(), inputInventory, true));
         compound.put("OutputInventory", ContainerHelper.saveAllItems(new CompoundTag(), outputInventory, true));
         compound.putLong("Timer", timer);
         if (owner != null) {
             compound.putUUID("Owner", owner);
         }
-        return super.save(compound);
     }
 
     @Override

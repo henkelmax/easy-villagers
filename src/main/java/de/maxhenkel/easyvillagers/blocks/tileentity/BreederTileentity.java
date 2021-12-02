@@ -200,7 +200,9 @@ public class BreederTileentity extends FakeWorldTileentity implements IServerTic
     }
 
     @Override
-    public CompoundTag save(CompoundTag compound) {
+    protected void saveAdditional(CompoundTag compound) {
+        super.saveAdditional(compound);
+
         if (hasVillager1()) {
             CompoundTag comp = new CompoundTag();
             if (villagerEntity1 != null) {
@@ -219,7 +221,6 @@ public class BreederTileentity extends FakeWorldTileentity implements IServerTic
         }
         compound.put("FoodInventory", ContainerHelper.saveAllItems(new CompoundTag(), foodInventory, true));
         compound.put("OutputInventory", ContainerHelper.saveAllItems(new CompoundTag(), outputInventory, true));
-        return super.save(compound);
     }
 
     @Override

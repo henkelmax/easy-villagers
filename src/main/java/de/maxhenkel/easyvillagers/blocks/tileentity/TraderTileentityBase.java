@@ -155,12 +155,13 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
     }
 
     @Override
-    public CompoundTag save(CompoundTag compound) {
+    protected void saveAdditional(CompoundTag compound) {
+        super.saveAdditional(compound);
+
         if (hasWorkstation()) {
             compound.putString("Workstation", workstation.getRegistryName().toString());
         }
         compound.putLong("NextRestock", nextRestock);
-        return super.save(compound);
     }
 
     @Override

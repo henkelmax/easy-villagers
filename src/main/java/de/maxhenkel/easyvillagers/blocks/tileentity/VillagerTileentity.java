@@ -82,13 +82,14 @@ public class VillagerTileentity extends FakeWorldTileentity {
     }
 
     @Override
-    public CompoundTag save(CompoundTag compound) {
+    protected void saveAdditional(CompoundTag compound) {
+        super.saveAdditional(compound);
+
         if (hasVillager()) {
             CompoundTag comp = new CompoundTag();
             getVillager().save(comp);
             compound.put("Villager", comp);
         }
-        return super.save(compound);
     }
 
     @Override

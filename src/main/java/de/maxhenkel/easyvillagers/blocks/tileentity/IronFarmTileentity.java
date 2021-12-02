@@ -114,10 +114,11 @@ public class IronFarmTileentity extends VillagerTileentity implements ITickableB
     }
 
     @Override
-    public CompoundTag save(CompoundTag compound) {
+    protected void saveAdditional(CompoundTag compound) {
+        super.saveAdditional(compound);
+
         ContainerHelper.saveAllItems(compound, inventory, false);
         compound.putLong("Timer", timer);
-        return super.save(compound);
     }
 
     @Override

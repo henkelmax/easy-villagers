@@ -117,7 +117,7 @@ dependencies {
 
 //    implementation fg.deobf("curse.maven:the-one-probe-245211:3430022")
 
-//    implementation fg.deobf("curse.maven:jade-324717:${jade_id}")
+    implementation fg.deobf("curse.maven:jade-324717:${jade_id}")
 
     shadow fg.deobf("de.maxhenkel.corelib:corelib:${mod_minecraft_version}-${corelib_version}:api")
     runtimeOnly fg.deobf("de.maxhenkel.corelib:corelib:${mod_minecraft_version}-${corelib_version}")
@@ -169,6 +169,9 @@ curseforge {
         addGameVersion 'Java 17'
         mainArtifact(jar) {
             displayName = "[${mod_minecraft_version}] ${mod_name} ${mod_version}"
+            relations {
+                optionalDependency 'jade'
+            }
         }
     }
 }
@@ -248,7 +251,8 @@ reobf {
 sourceSets {
     main {
         java {
-            exclude 'de/maxhenkel/easyvillagers/integration/*/**'
+            exclude 'de/maxhenkel/easyvillagers/integration/theoneprobe/*/**'
+            exclude 'de/maxhenkel/easyvillagers/integration/jei/*/**'
         }
     }
 }

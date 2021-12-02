@@ -1,1 +1,2 @@
-- Updated to 1.18
+- Fixed blocks not saving
+- Re added Jade support
