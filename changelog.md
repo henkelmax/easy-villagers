@@ -1,2 +1,1 @@
-- Fixed blocks not saving
-- Re added Jade support
+- Fixed forge version requirement
