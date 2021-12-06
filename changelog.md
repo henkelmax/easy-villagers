@@ -1,1 +1,1 @@
-- Fixed forge version requirement
+- Re added JEI and The One Probe integration

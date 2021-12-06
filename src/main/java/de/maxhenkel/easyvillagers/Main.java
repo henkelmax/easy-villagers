@@ -9,7 +9,7 @@ import de.maxhenkel.easyvillagers.events.GuiEvents;
 import de.maxhenkel.easyvillagers.events.ModSoundEvents;
 import de.maxhenkel.easyvillagers.events.VillagerEvents;
 import de.maxhenkel.easyvillagers.gui.Containers;
-//import de.maxhenkel.easyvillagers.integration.IMC;
+import de.maxhenkel.easyvillagers.integration.IMC;
 import de.maxhenkel.easyvillagers.items.ModItems;
 import de.maxhenkel.easyvillagers.net.MessageCycleTrades;
 import de.maxhenkel.easyvillagers.net.MessagePickUpVillager;
@@ -56,7 +56,7 @@ public class Main {
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(BlockEntityType.class, ModTileEntities::registerTileEntities);
         FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(MenuType.class, Containers::registerContainers);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
-//        FMLJavaModLoadingContext.get().getModEventBus().addListener(IMC::enqueueIMC);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(IMC::enqueueIMC);
 
         SERVER_CONFIG = CommonRegistry.registerConfig(ModConfig.Type.SERVER, ServerConfig.class);
         CLIENT_CONFIG = CommonRegistry.registerConfig(ModConfig.Type.CLIENT, ClientConfig.class);
