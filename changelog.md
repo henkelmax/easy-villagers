@@ -1,1 +1,1 @@
-- Re added JEI and The One Probe integration
+- Updated to 1.18.1
