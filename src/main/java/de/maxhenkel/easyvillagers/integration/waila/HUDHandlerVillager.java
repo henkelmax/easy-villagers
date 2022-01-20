@@ -33,8 +33,8 @@ public class HUDHandlerVillager implements IComponentProvider {
     public IElement getIcon(BlockAccessor accessor, IPluginConfig config, IElement currentIcon) {
         BlockEntity te = accessor.getBlockEntity();
         ItemStack stack = new ItemStack(te.getBlockState().getBlock().asItem());
-        CompoundTag blockEntityTag = stack.getOrCreateTagElement("BlockEntityTag");
-        te.save(blockEntityTag);
+        CompoundTag blockEntityTag = te.saveWithoutMetadata();
+        stack.getOrCreateTag().put("BlockEntityTag", blockEntityTag);
         return ItemStackElement.of(stack);
     }
 }
