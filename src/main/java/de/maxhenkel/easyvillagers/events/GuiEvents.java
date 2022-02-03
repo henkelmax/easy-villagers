@@ -95,7 +95,7 @@ public class GuiEvents {
         }
         MerchantContainer container = (MerchantContainer) player.containerMenu;
 
-        if (!CycleTradesButton.canCycle(container)) {
+        if (container.getTraderXp() > 0 && container.tradeContainer.getActiveOffer() != null) {
             return;
         }
 

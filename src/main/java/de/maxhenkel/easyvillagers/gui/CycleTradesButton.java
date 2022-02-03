@@ -6,6 +6,7 @@ import de.maxhenkel.easyvillagers.Main;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.MerchantScreen;
 import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.inventory.container.MerchantContainer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -44,7 +45,7 @@ public class CycleTradesButton extends Button {
         }
     }
 
-    public static boolean canCycle(MerchantMenu menu) {
+    public static boolean canCycle(MerchantContainer menu) {
         return menu.showProgressBar() && menu.getTraderXp() <= 0 && menu.tradeContainer.getActiveOffer() == null;
     }
 
