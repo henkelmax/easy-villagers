@@ -28,7 +28,7 @@ public class CycleTradesButton extends Button {
 
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        visible = screen.getMenu().showProgressBar() && screen.getMenu().getTraderXp() <= 0;
+        visible = canCycle(screen.getMenu());
         super.render(matrixStack, mouseX, mouseY, partialTicks);
     }
 
@@ -43,4 +43,9 @@ public class CycleTradesButton extends Button {
             blit(matrixStack, x, y, 0, 0, WIDTH, HEIGHT, 32, 32);
         }
     }
+
+    public static boolean canCycle(MerchantMenu menu) {
+        return menu.showProgressBar() && menu.getTraderXp() <= 0 && menu.tradeContainer.getActiveOffer() == null;
+    }
+
 }

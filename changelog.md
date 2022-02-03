@@ -1,1 +1,1 @@
-- Updated russian translation
+- Fixed duplication bug
