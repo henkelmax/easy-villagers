@@ -77,7 +77,7 @@ public class GuiEvents {
 
         MerchantScreen screen = (MerchantScreen) currentScreen;
 
-        if (!screen.getMenu().showProgressBar() || screen.getMenu().getTraderXp() > 0) {
+        if (!CycleTradesButton.canCycle(screen.getMenu())) {
             return;
         }
 
@@ -95,7 +95,7 @@ public class GuiEvents {
         }
         MerchantMenu container = (MerchantMenu) player.containerMenu;
 
-        if (container.trader.getVillagerXp() > 0) {
+        if (!CycleTradesButton.canCycle(container)) {
             return;
         }
 
