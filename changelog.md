@@ -1,1 +1,1 @@
-- Fixed crash with jade
+- Fixed duplication bug
