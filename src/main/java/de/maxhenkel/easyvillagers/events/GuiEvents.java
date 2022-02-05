@@ -95,7 +95,7 @@ public class GuiEvents {
         }
         MerchantContainer container = (MerchantContainer) player.containerMenu;
 
-        if (container.getTraderXp() > 0 && container.tradeContainer.getActiveOffer() != null) {
+        if (container.trader.getVillagerXp() > 0 && container.tradeContainer.getActiveOffer() != null) {
             return;
         }
 
