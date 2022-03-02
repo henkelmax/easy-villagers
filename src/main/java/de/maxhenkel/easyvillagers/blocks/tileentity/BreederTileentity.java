@@ -161,7 +161,7 @@ public class BreederTileentity extends FakeWorldTileentity implements IServerTic
         for (int i = 0; i < outputInventory.size(); i++) {
             if (outputInventory.get(i).isEmpty()) {
                 EasyVillagerEntity villagerEntity = new EasyVillagerEntity(EntityType.VILLAGER, level);
-                villagerEntity.setVillagerData(villagerEntity.getVillagerData().setType(VillagerType.byBiome(level.getBiomeName(getBlockPos()))));
+                villagerEntity.setVillagerData(villagerEntity.getVillagerData().setType(VillagerType.byBiome(level.getBiome(getBlockPos()))));
                 villagerEntity.setAge(-24000);
                 ItemStack villager = new ItemStack(ModItems.VILLAGER);
                 ModItems.VILLAGER.setVillager(villager, villagerEntity);
