@@ -1,1 +1,1 @@
-- Updated to 1.18.2
+- Re add JEI, Jade and The one Probe integration
