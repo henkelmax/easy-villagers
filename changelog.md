@@ -1,1 +1,2 @@
-- Re add JEI, Jade and The one Probe integration
+- Added French translation
+- Updated JEI plugin

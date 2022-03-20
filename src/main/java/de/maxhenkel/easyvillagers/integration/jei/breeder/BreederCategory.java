@@ -5,11 +5,12 @@ import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.integration.jei.JEIPlugin;
 import de.maxhenkel.easyvillagers.items.VillagerItem;
 import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.gui.IRecipeLayout;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
-import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -31,13 +32,20 @@ public class BreederCategory implements IRecipeCategory<ItemStack> {
 
     @Override
     public IDrawable getIcon() {
-        return helper.createDrawableIngredient(new ItemStack(ModBlocks.BREEDER));
+        return helper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.BREEDER));
     }
 
     @Override
-    public void setIngredients(ItemStack recipe, IIngredients ingredients) {
-        ingredients.setInput(VanillaTypes.ITEM, recipe);
-        ingredients.setOutput(VanillaTypes.ITEM, VillagerItem.getBabyVillager());
+    public void setRecipe(IRecipeLayoutBuilder builder, ItemStack recipe, IFocusGroup focuses) {
+        builder.addSlot(RecipeIngredientRole.INPUT, 1, 1).addIngredient(VanillaTypes.ITEM, recipe);
+        builder.addSlot(RecipeIngredientRole.INPUT, 19, 1);
+        builder.addSlot(RecipeIngredientRole.INPUT, 37, 1);
+        builder.addSlot(RecipeIngredientRole.INPUT, 55, 1);
+
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 1, 32).addIngredient(VanillaTypes.ITEM, VillagerItem.getBabyVillager());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 19, 32);
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 37, 32);
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 55, 32);
     }
 
     @Override
@@ -46,8 +54,13 @@ public class BreederCategory implements IRecipeCategory<ItemStack> {
     }
 
     @Override
-    public ResourceLocation getUid() {
+    public RecipeType<ItemStack> getRecipeType() {
         return JEIPlugin.CATEGORY_BREEDING;
+    }
+
+    @Override
+    public ResourceLocation getUid() {
+        return new ResourceLocation(Main.MODID, "breeding");
     }
 
     @Override
@@ -55,19 +68,5 @@ public class BreederCategory implements IRecipeCategory<ItemStack> {
         return ItemStack.class;
     }
 
-    @Override
-    public void setRecipe(IRecipeLayout layout, ItemStack wrapper, IIngredients ingredients) {
-        IGuiItemStackGroup group = layout.getItemStacks();
-        group.init(0, true, 0, 0);
-        group.set(0, wrapper);
-        group.init(1, true, 18, 0);
-        group.init(2, true, 36, 0);
-        group.init(3, true, 54, 0);
-        group.init(4, true, 0, 31);
-        group.set(4, VillagerItem.getBabyVillager());
-        group.init(5, true, 18, 31);
-        group.init(6, true, 36, 31);
-        group.init(7, true, 54, 31);
-    }
 
 }

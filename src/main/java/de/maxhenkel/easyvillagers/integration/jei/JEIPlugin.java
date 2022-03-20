@@ -8,6 +8,8 @@ import de.maxhenkel.easyvillagers.integration.jei.incubator.IncubatorCategory;
 import de.maxhenkel.easyvillagers.items.VillagerItem;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
+import mezz.jei.api.constants.VanillaTypes;
+import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
@@ -19,16 +21,15 @@ import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.stream.Collectors;
+import java.util.List;
 
 @JeiPlugin
 public class JEIPlugin implements IModPlugin {
 
-    public static final ResourceLocation CATEGORY_BREEDING = new ResourceLocation(Main.MODID, "breeding");
-    public static final ResourceLocation CATEGORY_CONVERTING = new ResourceLocation(Main.MODID, "converting");
-    public static final ResourceLocation CATEGORY_INCUBATING = new ResourceLocation(Main.MODID, "incubating");
+    public static final RecipeType<ItemStack> CATEGORY_BREEDING = RecipeType.create(Main.MODID, "breeding", ItemStack.class);
+    public static final RecipeType<ItemStack> CATEGORY_CONVERTING = RecipeType.create(Main.MODID, "converting", ItemStack.class);
+    public static final RecipeType<ItemStack> CATEGORY_INCUBATING = RecipeType.create(Main.MODID, "incubating", ItemStack.class);
 
     @Override
     public ResourceLocation getPluginUid() {
@@ -37,9 +38,9 @@ public class JEIPlugin implements IModPlugin {
 
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
-        registration.addRecipeCatalyst(new ItemStack(ModBlocks.BREEDER), CATEGORY_BREEDING);
-        registration.addRecipeCatalyst(new ItemStack(ModBlocks.CONVERTER), CATEGORY_CONVERTING);
-        registration.addRecipeCatalyst(new ItemStack(ModBlocks.INCUBATOR), CATEGORY_INCUBATING);
+        registration.addRecipeCatalyst(VanillaTypes.ITEM, new ItemStack(ModBlocks.BREEDER), CATEGORY_BREEDING);
+        registration.addRecipeCatalyst(VanillaTypes.ITEM, new ItemStack(ModBlocks.CONVERTER), CATEGORY_CONVERTING);
+        registration.addRecipeCatalyst(VanillaTypes.ITEM, new ItemStack(ModBlocks.INCUBATOR), CATEGORY_INCUBATING);
     }
 
     @Override
@@ -51,19 +52,19 @@ public class JEIPlugin implements IModPlugin {
 
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
-        Collection<ItemStack> foods = Villager.FOOD_POINTS.entrySet().stream().map(itemIntegerEntry -> new ItemStack(itemIntegerEntry.getKey(), (int) Math.ceil(24D / (double) itemIntegerEntry.getValue()))).collect(Collectors.toList());
-        registration.addRecipes(foods, CATEGORY_BREEDING);
+        List<ItemStack> foods = Villager.FOOD_POINTS.entrySet().stream().map(itemIntegerEntry -> new ItemStack(itemIntegerEntry.getKey(), (int) Math.ceil(24D / (double) itemIntegerEntry.getValue()))).toList();
+        registration.addRecipes(CATEGORY_BREEDING, foods);
 
-        Collection<ItemStack> potions = new ArrayList<>();
+        List<ItemStack> potions = new ArrayList<>();
         potions.add(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WEAKNESS));
         potions.add(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.LONG_WEAKNESS));
         potions.add(PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), Potions.WEAKNESS));
         potions.add(PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), Potions.LONG_WEAKNESS));
         potions.add(PotionUtils.setPotion(new ItemStack(Items.LINGERING_POTION), Potions.WEAKNESS));
         potions.add(PotionUtils.setPotion(new ItemStack(Items.LINGERING_POTION), Potions.LONG_WEAKNESS));
-        registration.addRecipes(potions, CATEGORY_CONVERTING);
+        registration.addRecipes(CATEGORY_CONVERTING, potions);
 
-        registration.addRecipes(Collections.singletonList(VillagerItem.getBabyVillager()), CATEGORY_INCUBATING);
+        registration.addRecipes(CATEGORY_INCUBATING, Collections.singletonList(VillagerItem.getBabyVillager()));
     }
 
 }
