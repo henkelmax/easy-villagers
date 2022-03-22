@@ -1,2 +1,1 @@
-- Added French translation
-- Updated JEI plugin
+- Add villager to the currently selected slot when picking it up

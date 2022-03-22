@@ -4,6 +4,7 @@ import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.items.ModItems;
 import de.maxhenkel.easyvillagers.net.MessagePickUpVillager;
 import net.minecraft.client.Minecraft;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.npc.Villager;
@@ -65,8 +66,13 @@ public class VillagerEvents {
 
         ModItems.VILLAGER.setVillager(stack, villager);
 
-        if (player.getInventory().add(stack)) {
+        if (player.getMainHandItem().isEmpty()) {
+            player.setItemInHand(InteractionHand.MAIN_HAND, stack);
             villager.discard();
+        } else {
+            if (player.getInventory().add(stack)) {
+                villager.discard();
+            }
         }
     }
 
