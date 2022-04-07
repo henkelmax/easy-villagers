@@ -1,1 +1,1 @@
-- Add villager to the currently selected slot when picking it up
+- Added korean translation
