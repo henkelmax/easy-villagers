@@ -1,1 +1,1 @@
-- Added korean translation
+- Fixed block breaking speeds

@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "easy_villagers:auto_trader",
+    "easy_villagers:breeder",
+    "easy_villagers:converter",
+    "easy_villagers:farmer",
+    "easy_villagers:incubator",
+    "easy_villagers:iron_farm",
+    "easy_villagers:trader"
+  ]
+}
