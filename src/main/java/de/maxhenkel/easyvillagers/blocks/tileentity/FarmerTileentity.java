@@ -3,6 +3,7 @@ package de.maxhenkel.easyvillagers.blocks.tileentity;
 import de.maxhenkel.corelib.blockentity.IServerTickableBlockEntity;
 import de.maxhenkel.corelib.inventory.ItemListInventory;
 import de.maxhenkel.easyvillagers.Main;
+import de.maxhenkel.easyvillagers.OutputItemHandler;
 import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
@@ -33,7 +34,6 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -41,12 +41,16 @@ import java.util.Optional;
 
 public class FarmerTileentity extends VillagerTileentity implements IServerTickableBlockEntity {
 
-    private BlockState crop;
-    private NonNullList<ItemStack> inventory;
+    protected BlockState crop;
+    protected NonNullList<ItemStack> inventory;
+
+    protected LazyOptional<OutputItemHandler> itemHandler;
 
     public FarmerTileentity(BlockPos pos, BlockState state) {
         super(ModTileEntities.FARMER, ModBlocks.FARMER.defaultBlockState(), pos, state);
         inventory = NonNullList.withSize(4, ItemStack.EMPTY);
+
+        itemHandler = LazyOptional.of(() -> new OutputItemHandler(inventory));
     }
 
     @Override
@@ -146,7 +150,7 @@ public class FarmerTileentity extends VillagerTileentity implements IServerTicka
             }
             LootContext.Builder context = new LootContext.Builder((ServerLevel) level).withParameter(LootContextParams.ORIGIN, new Vec3(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ())).withParameter(LootContextParams.BLOCK_STATE, c).withParameter(LootContextParams.TOOL, ItemStack.EMPTY);
             List<ItemStack> drops = c.getDrops(context);
-            IItemHandlerModifiable itemHandler = getItemHandler();
+            IItemHandlerModifiable itemHandler = this.itemHandler.orElse(null);
             for (ItemStack stack : drops) {
                 for (int i = 0; i < itemHandler.getSlots(); i++) {
                     stack = itemHandler.insertItem(i, stack, false);
@@ -188,21 +192,18 @@ public class FarmerTileentity extends VillagerTileentity implements IServerTicka
         super.load(compound);
     }
 
-    private IItemHandlerModifiable handler;
-
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
         if (!remove && cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            return LazyOptional.of(this::getItemHandler).cast();
+            return itemHandler.cast();
         }
         return super.getCapability(cap, side);
     }
 
-    public IItemHandlerModifiable getItemHandler() {
-        if (handler == null) {
-            handler = new ItemStackHandler(inventory);
-        }
-        return handler;
+    @Override
+    public void setRemoved() {
+        itemHandler.invalidate();
+        super.setRemoved();
     }
 
 }

@@ -19,8 +19,8 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public abstract class TraderTileentityBase extends VillagerTileentity implements IServerTickableBlockEntity {
 
-    private Block workstation;
-    private long nextRestock;
+    protected Block workstation;
+    protected long nextRestock;
 
     public TraderTileentityBase(BlockEntityType<?> type, BlockState defaultState, BlockPos pos, BlockState state) {
         super(type, defaultState, pos, state);

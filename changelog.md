@@ -1,1 +1,1 @@
-- Fixed picking up sleeping villagers
+- Reworked item handling of villager blocks

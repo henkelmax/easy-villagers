@@ -3,9 +3,11 @@ package de.maxhenkel.easyvillagers.blocks.tileentity;
 import de.maxhenkel.corelib.blockentity.IServerTickableBlockEntity;
 import de.maxhenkel.corelib.inventory.ItemListInventory;
 import de.maxhenkel.easyvillagers.Main;
+import de.maxhenkel.easyvillagers.MultiItemStackHandler;
 import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
+import de.maxhenkel.easyvillagers.gui.VillagerConvertSlot;
 import de.maxhenkel.easyvillagers.items.VillagerItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -25,23 +27,25 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemStackHandler;
 
 import java.util.UUID;
 
 public class ConverterTileentity extends VillagerTileentity implements IServerTickableBlockEntity {
 
-    private NonNullList<ItemStack> inputInventory;
-    private NonNullList<ItemStack> outputInventory;
+    protected NonNullList<ItemStack> inputInventory;
+    protected NonNullList<ItemStack> outputInventory;
 
-    private long timer;
-    private UUID owner;
+    protected long timer;
+    protected UUID owner;
+
+    protected LazyOptional<MultiItemStackHandler> itemHandler;
 
     public ConverterTileentity(BlockPos pos, BlockState state) {
         super(ModTileEntities.CONVERTER, ModBlocks.CONVERTER.defaultBlockState(), pos, state);
         inputInventory = NonNullList.withSize(4, ItemStack.EMPTY);
         outputInventory = NonNullList.withSize(4, ItemStack.EMPTY);
+
+        itemHandler = LazyOptional.of(() -> new MultiItemStackHandler(inputInventory, outputInventory, VillagerConvertSlot::isValid));
     }
 
     @Override
@@ -187,32 +191,9 @@ public class ConverterTileentity extends VillagerTileentity implements IServerTi
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
         if (!remove && cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            if (side != null && side.equals(Direction.DOWN)) {
-                return LazyOptional.of(this::getOutputInventoryItemHandler).cast();
-            } else {
-                return LazyOptional.of(this::getInputInventoryItemHandler).cast();
-            }
-
+            return itemHandler.cast();
         }
         return super.getCapability(cap, side);
-    }
-
-    private IItemHandlerModifiable foodInventoryHandler;
-
-    public IItemHandlerModifiable getInputInventoryItemHandler() {
-        if (foodInventoryHandler == null) {
-            foodInventoryHandler = new ItemStackHandler(inputInventory);
-        }
-        return foodInventoryHandler;
-    }
-
-    private IItemHandlerModifiable outputInventoryHandler;
-
-    public IItemHandlerModifiable getOutputInventoryItemHandler() {
-        if (outputInventoryHandler == null) {
-            outputInventoryHandler = new ItemStackHandler(outputInventory);
-        }
-        return outputInventoryHandler;
     }
 
     public static int getZombifyTime() {
@@ -229,6 +210,12 @@ public class ConverterTileentity extends VillagerTileentity implements IServerTi
 
     public static int getFinalizeTime() {
         return getConvertTime() + 20 * 3;
+    }
+
+    @Override
+    public void setRemoved() {
+        itemHandler.invalidate();
+        super.setRemoved();
     }
 
 }

@@ -13,6 +13,10 @@ public class FoodSlot extends Slot {
 
     @Override
     public boolean mayPlace(ItemStack stack) {
+        return isValid(stack);
+    }
+
+    public static boolean isValid(ItemStack stack) {
         return Villager.FOOD_POINTS.getOrDefault(stack.getItem(), 0) > 0;
     }
 

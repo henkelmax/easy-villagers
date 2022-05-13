@@ -7,8 +7,8 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class FakeWorldTileentity extends SyncableTileentity {
 
-    private boolean fakeWorld;
-    private BlockState defaultState;
+    protected boolean fakeWorld;
+    protected BlockState defaultState;
 
     public FakeWorldTileentity(BlockEntityType<?> type, BlockState defaultState, BlockPos pos, BlockState state) {
         super(type, pos, state);

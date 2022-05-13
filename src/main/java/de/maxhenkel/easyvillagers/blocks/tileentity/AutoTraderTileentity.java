@@ -4,6 +4,7 @@ import de.maxhenkel.corelib.blockentity.ITickableBlockEntity;
 import de.maxhenkel.corelib.inventory.ItemListInventory;
 import de.maxhenkel.corelib.item.ItemUtils;
 import de.maxhenkel.easyvillagers.Main;
+import de.maxhenkel.easyvillagers.MultiItemStackHandler;
 import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import net.minecraft.core.BlockPos;
@@ -22,7 +23,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nullable;
@@ -31,10 +31,12 @@ public class AutoTraderTileentity extends TraderTileentityBase implements ITicka
 
     protected Container tradeGuiInv;
 
-    private final NonNullList<ItemStack> inputInventory;
-    private final NonNullList<ItemStack> outputInventory;
+    protected final NonNullList<ItemStack> inputInventory;
+    protected final NonNullList<ItemStack> outputInventory;
 
     protected int tradeIndex;
+    protected LazyOptional<MultiItemStackHandler> itemHandler;
+    protected ItemStackHandler outputHandler;
 
     public AutoTraderTileentity(BlockPos pos, BlockState state) {
         super(ModTileEntities.AUTO_TRADER, ModBlocks.AUTO_TRADER.defaultBlockState(), pos, state);
@@ -42,6 +44,9 @@ public class AutoTraderTileentity extends TraderTileentityBase implements ITicka
 
         inputInventory = NonNullList.withSize(4, ItemStack.EMPTY);
         outputInventory = NonNullList.withSize(4, ItemStack.EMPTY);
+
+        itemHandler = LazyOptional.of(() -> new MultiItemStackHandler(inputInventory, outputInventory));
+        outputHandler = new ItemStackHandler(outputInventory);
     }
 
     @Override
@@ -106,9 +111,9 @@ public class AutoTraderTileentity extends TraderTileentityBase implements ITicka
             return true;
         }
         ItemStack stack = insert.copy();
-        IItemHandlerModifiable itemHandler = getOutputInventoryItemHandler();
-        for (int i = 0; i < itemHandler.getSlots(); i++) {
-            stack = itemHandler.insertItem(i, stack, !doInsert);
+
+        for (int i = 0; i < outputHandler.getSlots(); i++) {
+            stack = outputHandler.insertItem(i, stack, !doInsert);
             if (stack.isEmpty()) {
                 break;
             }
@@ -229,32 +234,15 @@ public class AutoTraderTileentity extends TraderTileentityBase implements ITicka
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
         if (!remove && cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            if (side != null && side.equals(Direction.DOWN)) {
-                return LazyOptional.of(this::getOutputInventoryItemHandler).cast();
-            } else {
-                return LazyOptional.of(this::getInputInventoryItemHandler).cast();
-            }
+            return itemHandler.cast();
 
         }
         return super.getCapability(cap, side);
     }
 
-    private IItemHandlerModifiable foodInventoryHandler;
-
-    public IItemHandlerModifiable getInputInventoryItemHandler() {
-        if (foodInventoryHandler == null) {
-            foodInventoryHandler = new ItemStackHandler(inputInventory);
-        }
-        return foodInventoryHandler;
+    @Override
+    public void setRemoved() {
+        itemHandler.invalidate();
+        super.setRemoved();
     }
-
-    private IItemHandlerModifiable outputInventoryHandler;
-
-    public IItemHandlerModifiable getOutputInventoryItemHandler() {
-        if (outputInventoryHandler == null) {
-            outputInventoryHandler = new ItemStackHandler(outputInventory);
-        }
-        return outputInventoryHandler;
-    }
-
 }

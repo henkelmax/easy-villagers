@@ -5,9 +5,11 @@ import de.maxhenkel.corelib.entity.EntityUtils;
 import de.maxhenkel.corelib.inventory.ItemListInventory;
 import de.maxhenkel.corelib.net.NetUtils;
 import de.maxhenkel.easyvillagers.Main;
+import de.maxhenkel.easyvillagers.MultiItemStackHandler;
 import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
+import de.maxhenkel.easyvillagers.gui.FoodSlot;
 import de.maxhenkel.easyvillagers.items.ModItems;
 import de.maxhenkel.easyvillagers.net.MessageVillagerParticles;
 import net.minecraft.core.BlockPos;
@@ -27,17 +29,17 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandlerModifiable;
-import net.minecraftforge.items.ItemStackHandler;
 
 public class BreederTileentity extends FakeWorldTileentity implements IServerTickableBlockEntity {
 
-    private NonNullList<ItemStack> foodInventory;
-    private NonNullList<ItemStack> outputInventory;
-    private ItemStack villager1;
-    private EasyVillagerEntity villagerEntity1;
-    private ItemStack villager2;
-    private EasyVillagerEntity villagerEntity2;
+    protected NonNullList<ItemStack> foodInventory;
+    protected NonNullList<ItemStack> outputInventory;
+    protected ItemStack villager1;
+    protected EasyVillagerEntity villagerEntity1;
+    protected ItemStack villager2;
+    protected EasyVillagerEntity villagerEntity2;
+
+    protected LazyOptional<MultiItemStackHandler> itemHandler;
 
     public BreederTileentity(BlockPos pos, BlockState state) {
         super(ModTileEntities.BREEDER, ModBlocks.BREEDER.defaultBlockState(), pos, state);
@@ -45,6 +47,8 @@ public class BreederTileentity extends FakeWorldTileentity implements IServerTic
         outputInventory = NonNullList.withSize(4, ItemStack.EMPTY);
         villager1 = ItemStack.EMPTY;
         villager2 = ItemStack.EMPTY;
+
+        itemHandler = LazyOptional.of(() -> new MultiItemStackHandler(foodInventory, outputInventory, FoodSlot::isValid));
     }
 
     public ItemStack getVillager1() {
@@ -255,32 +259,15 @@ public class BreederTileentity extends FakeWorldTileentity implements IServerTic
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
         if (!remove && cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            if (side != null && side.equals(Direction.DOWN)) {
-                return LazyOptional.of(this::getOutputInventoryItemHandler).cast();
-            } else {
-                return LazyOptional.of(this::getFoodInventoryItemHandler).cast();
-            }
-
+            return itemHandler.cast();
         }
         return super.getCapability(cap, side);
     }
 
-    private IItemHandlerModifiable foodInventoryHandler;
-
-    public IItemHandlerModifiable getFoodInventoryItemHandler() {
-        if (foodInventoryHandler == null) {
-            foodInventoryHandler = new ItemStackHandler(foodInventory);
-        }
-        return foodInventoryHandler;
-    }
-
-    private IItemHandlerModifiable outputInventoryHandler;
-
-    public IItemHandlerModifiable getOutputInventoryItemHandler() {
-        if (outputInventoryHandler == null) {
-            outputInventoryHandler = new ItemStackHandler(outputInventory);
-        }
-        return outputInventoryHandler;
+    @Override
+    public void setRemoved() {
+        itemHandler.invalidate();
+        super.setRemoved();
     }
 
 }
