@@ -12,14 +12,16 @@ public class Containers {
 
     public static MenuType<AutoTraderContainer> AUTO_TRADER_CONTAINER;
     public static MenuType<BreederContainer> BREEDER_CONTAINER;
-    public static MenuType<VillagerIOContainer> VILLAGER_IO_CONTAINER;
+    public static MenuType<ConverterContainer> CONVERTER_CONTAINER;
+    public static MenuType<IncubatorContainer> INCUBATOR_CONTAINER;
     public static MenuType<OutputContainer> OUTPUT_CONTAINER;
 
     @OnlyIn(Dist.CLIENT)
     public static void clientSetup() {
         ClientRegistry.<AutoTraderContainer, AutoTraderScreen>registerScreen(AUTO_TRADER_CONTAINER, AutoTraderScreen::new);
         ClientRegistry.<BreederContainer, BreederScreen>registerScreen(BREEDER_CONTAINER, BreederScreen::new);
-        ClientRegistry.<VillagerIOContainer, VillagerIOScreen>registerScreen(VILLAGER_IO_CONTAINER, VillagerIOScreen::new);
+        ClientRegistry.<ConverterContainer, ConverterScreen>registerScreen(CONVERTER_CONTAINER, ConverterScreen::new);
+        ClientRegistry.<IncubatorContainer, IncubatorScreen>registerScreen(INCUBATOR_CONTAINER, IncubatorScreen::new);
         ClientRegistry.<OutputContainer, OutputScreen>registerScreen(OUTPUT_CONTAINER, OutputScreen::new);
     }
 
@@ -32,9 +34,13 @@ public class Containers {
         BREEDER_CONTAINER.setRegistryName(new ResourceLocation(Main.MODID, "breeder"));
         event.getRegistry().register(BREEDER_CONTAINER);
 
-        VILLAGER_IO_CONTAINER = new MenuType<>(VillagerIOContainer::new);
-        VILLAGER_IO_CONTAINER.setRegistryName(new ResourceLocation(Main.MODID, "converter"));
-        event.getRegistry().register(VILLAGER_IO_CONTAINER);
+        CONVERTER_CONTAINER = new MenuType<>(ConverterContainer::new);
+        CONVERTER_CONTAINER.setRegistryName(new ResourceLocation(Main.MODID, "converter"));
+        event.getRegistry().register(CONVERTER_CONTAINER);
+
+        INCUBATOR_CONTAINER = new MenuType<>(IncubatorContainer::new);
+        INCUBATOR_CONTAINER.setRegistryName(new ResourceLocation(Main.MODID, "incubator"));
+        event.getRegistry().register(INCUBATOR_CONTAINER);
 
         OUTPUT_CONTAINER = new MenuType<>(OutputContainer::new);
         OUTPUT_CONTAINER.setRegistryName(new ResourceLocation(Main.MODID, "output"));

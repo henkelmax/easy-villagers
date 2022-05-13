@@ -6,7 +6,7 @@ import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.MultiItemStackHandler;
 import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
-import de.maxhenkel.easyvillagers.gui.VillagerConvertSlot;
+import de.maxhenkel.easyvillagers.gui.VillagerIncubateSlot;
 import de.maxhenkel.easyvillagers.items.VillagerItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -34,7 +34,7 @@ public class IncubatorTileentity extends VillagerTileentity implements IServerTi
         inputInventory = NonNullList.withSize(4, ItemStack.EMPTY);
         outputInventory = NonNullList.withSize(4, ItemStack.EMPTY);
 
-        itemHandler = LazyOptional.of(() -> new MultiItemStackHandler(inputInventory, outputInventory, VillagerConvertSlot::isValid));
+        itemHandler = LazyOptional.of(() -> new MultiItemStackHandler(inputInventory, outputInventory, VillagerIncubateSlot::isValid));
     }
 
     @Override

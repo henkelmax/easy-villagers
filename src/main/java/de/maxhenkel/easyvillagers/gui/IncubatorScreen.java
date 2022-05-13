@@ -5,9 +5,9 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Inventory;
 
-public class VillagerIOScreen extends InputOutputScreen<VillagerIOContainer> {
+public class IncubatorScreen extends InputOutputScreen<IncubatorContainer> {
 
-    public VillagerIOScreen(VillagerIOContainer container, Inventory playerInventory, Component name) {
+    public IncubatorScreen(IncubatorContainer container, Inventory playerInventory, Component name) {
         super(container, playerInventory, name);
     }
 

@@ -9,7 +9,7 @@ import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.ModItemGroups;
 import de.maxhenkel.easyvillagers.blocks.tileentity.ConverterTileentity;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
-import de.maxhenkel.easyvillagers.gui.VillagerIOContainer;
+import de.maxhenkel.easyvillagers.gui.ConverterContainer;
 import de.maxhenkel.easyvillagers.items.render.ConverterItemRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -87,7 +87,7 @@ public class ConverterBlock extends VillagerBlockBase implements EntityBlock, II
             @Nullable
             @Override
             public AbstractContainerMenu createMenu(int id, Inventory playerInventory, Player player) {
-                return new VillagerIOContainer(id, playerInventory, converter.getInputInventory(), converter.getOutputInventory());
+                return new ConverterContainer(id, playerInventory, converter.getInputInventory(), converter.getOutputInventory());
             }
         });
 

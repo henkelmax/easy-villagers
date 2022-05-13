@@ -9,7 +9,7 @@ import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.ModItemGroups;
 import de.maxhenkel.easyvillagers.blocks.tileentity.IncubatorTileentity;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
-import de.maxhenkel.easyvillagers.gui.VillagerIOContainer;
+import de.maxhenkel.easyvillagers.gui.IncubatorContainer;
 import de.maxhenkel.easyvillagers.items.render.IncubatorItemRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -86,7 +86,7 @@ public class IncubatorBlock extends VillagerBlockBase implements EntityBlock, II
             @Nullable
             @Override
             public AbstractContainerMenu createMenu(int id, Inventory playerInventory, Player player) {
-                return new VillagerIOContainer(id, playerInventory, incubator.getInputInventory(), incubator.getOutputInventory());
+                return new IncubatorContainer(id, playerInventory, incubator.getInputInventory(), incubator.getOutputInventory());
             }
         });
 
