@@ -35,7 +35,7 @@ public class VillagerEvents {
             return;
         }
 
-        if (!villager.isAlive()) {
+        if (!arePickupConditionsMet(villager)) {
             return;
         }
 
@@ -54,11 +54,11 @@ public class VillagerEvents {
 
         Entity pointedEntity = Minecraft.getInstance().crosshairPickEntity;
 
-        if (!(pointedEntity instanceof Villager) || !pointedEntity.isAlive()) {
+        if (!(pointedEntity instanceof Villager villager) || !arePickupConditionsMet(villager)) {
             return;
         }
 
-        Main.SIMPLE_CHANNEL.sendToServer(new MessagePickUpVillager(pointedEntity.getUUID()));
+        Main.SIMPLE_CHANNEL.sendToServer(new MessagePickUpVillager(villager.getUUID()));
     }
 
     public static void pickUp(Villager villager, Player player) {
@@ -74,6 +74,17 @@ public class VillagerEvents {
                 villager.discard();
             }
         }
+    }
+
+    public static boolean arePickupConditionsMet(Villager villager) {
+        if (!villager.isAlive()) {
+            return false;
+        }
+        if (villager.isSleeping()) {
+            return false;
+        }
+
+        return true;
     }
 
 }

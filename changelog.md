@@ -1,1 +1,1 @@
-- Fixed block breaking speeds
+- Fixed picking up sleeping villagers
