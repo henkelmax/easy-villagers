@@ -33,7 +33,7 @@ import net.minecraftforge.common.PlantType;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandlerModifiable;
+import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -44,13 +44,15 @@ public class FarmerTileentity extends VillagerTileentity implements IServerTicka
     protected BlockState crop;
     protected NonNullList<ItemStack> inventory;
 
-    protected LazyOptional<OutputItemHandler> itemHandler;
+    protected LazyOptional<OutputItemHandler> outputItemHandler;
+    protected ItemStackHandler itemHandler;
 
     public FarmerTileentity(BlockPos pos, BlockState state) {
         super(ModTileEntities.FARMER, ModBlocks.FARMER.defaultBlockState(), pos, state);
         inventory = NonNullList.withSize(4, ItemStack.EMPTY);
 
-        itemHandler = LazyOptional.of(() -> new OutputItemHandler(inventory));
+        outputItemHandler = LazyOptional.of(() -> new OutputItemHandler(inventory));
+        itemHandler = new ItemStackHandler(inventory);
     }
 
     @Override
@@ -150,7 +152,6 @@ public class FarmerTileentity extends VillagerTileentity implements IServerTicka
             }
             LootContext.Builder context = new LootContext.Builder((ServerLevel) level).withParameter(LootContextParams.ORIGIN, new Vec3(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ())).withParameter(LootContextParams.BLOCK_STATE, c).withParameter(LootContextParams.TOOL, ItemStack.EMPTY);
             List<ItemStack> drops = c.getDrops(context);
-            IItemHandlerModifiable itemHandler = this.itemHandler.orElse(null);
             for (ItemStack stack : drops) {
                 for (int i = 0; i < itemHandler.getSlots(); i++) {
                     stack = itemHandler.insertItem(i, stack, false);
@@ -195,14 +196,14 @@ public class FarmerTileentity extends VillagerTileentity implements IServerTicka
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
         if (!remove && cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            return itemHandler.cast();
+            return outputItemHandler.cast();
         }
         return super.getCapability(cap, side);
     }
 
     @Override
     public void setRemoved() {
-        itemHandler.invalidate();
+        outputItemHandler.invalidate();
         super.setRemoved();
     }
 

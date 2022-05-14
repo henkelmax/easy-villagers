@@ -29,7 +29,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandlerModifiable;
+import net.minecraftforge.items.ItemStackHandler;
 
 import java.util.Collections;
 import java.util.List;
@@ -42,13 +42,15 @@ public class IronFarmTileentity extends VillagerTileentity implements ITickableB
 
     protected long timer;
 
-    protected LazyOptional<OutputItemHandler> itemHandler;
+    protected LazyOptional<OutputItemHandler> outputItemHandler;
+    protected ItemStackHandler itemHandler;
 
     public IronFarmTileentity(BlockPos pos, BlockState state) {
         super(ModTileEntities.IRON_FARM, ModBlocks.IRON_FARM.defaultBlockState(), pos, state);
         inventory = NonNullList.withSize(4, ItemStack.EMPTY);
 
-        itemHandler = LazyOptional.of(() -> new OutputItemHandler(inventory));
+        outputItemHandler = LazyOptional.of(() -> new OutputItemHandler(inventory));
+        itemHandler = new ItemStackHandler(inventory);
     }
 
     public long getTimer() {
@@ -78,7 +80,6 @@ public class IronFarmTileentity extends VillagerTileentity implements ITickableB
                 }
             } else if (timer >= getGolemKillTime()) {
                 VillagerBlockBase.playVillagerSound(level, getBlockPos(), SoundEvents.IRON_GOLEM_DEATH);
-                IItemHandlerModifiable itemHandler = this.itemHandler.orElse(null);
                 for (ItemStack drop : getDrops()) {
                     for (int i = 0; i < itemHandler.getSlots(); i++) {
                         drop = itemHandler.insertItem(i, drop, false);
@@ -135,7 +136,7 @@ public class IronFarmTileentity extends VillagerTileentity implements ITickableB
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
         if (!remove && cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            return itemHandler.cast();
+            return outputItemHandler.cast();
         }
         return super.getCapability(cap, side);
     }
@@ -150,7 +151,7 @@ public class IronFarmTileentity extends VillagerTileentity implements ITickableB
 
     @Override
     public void setRemoved() {
-        itemHandler.invalidate();
+        outputItemHandler.invalidate();
         super.setRemoved();
     }
 
