@@ -74,7 +74,7 @@ public class VillagerItem extends CustomRendererItem {
                 blockpos = blockpos.relative(direction);
             }
 
-            EasyVillagerEntity villager = getVillager(world, itemstack);
+            Villager villager = convertToVillager(getVillager(world, itemstack));
 
             villager.setPos(blockpos.getX() + 0.5D, blockpos.getY(), blockpos.getZ() + 0.5);
 
@@ -142,6 +142,14 @@ public class VillagerItem extends CustomRendererItem {
         villager.hurtTime = 0;
         villager.yHeadRot = 0F;
         villager.yHeadRotO = 0F;
+        return villager;
+    }
+
+    public static Villager convertToVillager(EasyVillagerEntity easyVillager) {
+        Villager villager = new Villager(EntityType.VILLAGER, easyVillager.level);
+
+        CompoundTag data = easyVillager.serializeNBT();
+        villager.deserializeNBT(data);
         return villager;
     }
 

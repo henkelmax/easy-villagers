@@ -6,6 +6,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.gossip.GossipType;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.npc.VillagerData;
 import net.minecraft.world.entity.npc.VillagerProfession;
@@ -42,7 +43,14 @@ public class EasyVillagerEntity extends Villager {
     }
 
     public static int getUniversalReputation(Villager villager) {
-        return villager.getGossips().getGossipEntries().keySet().stream().map(uuid -> villager.getGossips().getReputation(uuid, (gossipType) -> true)).reduce(0, Integer::sum);
+        return villager.getGossips().getGossipEntries().keySet().stream().map(uuid -> villager.getGossips().getReputation(uuid, EasyVillagerEntity::isPositive)).reduce(0, Integer::sum);
+    }
+
+    public static boolean isPositive(GossipType gossipType) {
+        return switch (gossipType) {
+            case MAJOR_NEGATIVE, MINOR_NEGATIVE -> false;
+            default -> true;
+        };
     }
 
     public void recalculateOffers() {
