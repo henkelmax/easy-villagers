@@ -29,6 +29,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class TraderRenderer extends VillagerRendererBase<TraderTileentity> {
 
@@ -75,6 +76,7 @@ public class TraderRenderer extends VillagerRendererBase<TraderTileentity> {
 
             BlockState workstation = getState(trader.getWorkstation());
 
+            getTransforms(workstation).accept(matrixStack);
             renderBlock(workstation, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
 
             BlockState topBlock = getTopBlock(workstation);
@@ -128,11 +130,34 @@ public class TraderRenderer extends VillagerRendererBase<TraderTileentity> {
         return block.defaultBlockState();
     }
 
+    public static final Map<ResourceLocation, Consumer<PoseStack>> TRANSFORMS = new HashMap<>();
+    private static final Map<Block, Consumer<PoseStack>> TRANSFORMS_CACHE = new HashMap<>();
+
     public static final Map<ResourceLocation, ResourceLocation> TOP_BLOCKS = new HashMap<>();
     private static final Map<Block, BlockState> TOP_BLOCK_CACHE = new HashMap<>();
 
     static {
+        Consumer<PoseStack> immersiveEngineering = stack -> {
+            stack.translate(-0.5D, 0D, 0D);
+        };
+        TRANSFORMS.put(new ResourceLocation("immersiveengineering", "workbench"), immersiveEngineering);
+        TRANSFORMS.put(new ResourceLocation("immersiveengineering", "circuit_table"), immersiveEngineering);
+
         TOP_BLOCKS.put(new ResourceLocation("car", "gas_station"), new ResourceLocation("car", "gas_station_top"));
+    }
+
+    protected static Consumer<PoseStack> getTransforms(BlockState block) {
+        Consumer<PoseStack> cached = TRANSFORMS_CACHE.get(block.getBlock());
+        if (cached != null) {
+            return cached;
+        }
+        Consumer<PoseStack> transform = TRANSFORMS.get(block.getBlock().getRegistryName());
+        if (transform == null) {
+            transform = (stack) -> {
+            };
+        }
+        TRANSFORMS_CACHE.put(block.getBlock(), transform);
+        return transform;
     }
 
     protected static BlockState getTopBlock(BlockState bottom) {
