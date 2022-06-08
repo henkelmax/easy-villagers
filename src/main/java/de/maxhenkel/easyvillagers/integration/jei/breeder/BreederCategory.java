@@ -13,7 +13,6 @@ import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
@@ -32,7 +31,7 @@ public class BreederCategory implements IRecipeCategory<ItemStack> {
 
     @Override
     public IDrawable getIcon() {
-        return helper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.BREEDER));
+        return helper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.BREEDER.get()));
     }
 
     @Override
@@ -50,7 +49,7 @@ public class BreederCategory implements IRecipeCategory<ItemStack> {
 
     @Override
     public Component getTitle() {
-        return new TranslatableComponent("jei.easy_villagers.breeding");
+        return Component.translatable("jei.easy_villagers.breeding");
     }
 
     @Override

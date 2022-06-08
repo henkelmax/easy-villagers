@@ -8,7 +8,7 @@ import net.minecraft.core.BlockPos;
 public class IncubatorItemRenderer extends BlockItemRendererBase<IncubatorRenderer, IncubatorTileentity> {
 
     public IncubatorItemRenderer() {
-        super(IncubatorRenderer::new, () -> new IncubatorTileentity(BlockPos.ZERO, ModBlocks.INCUBATOR.defaultBlockState()));
+        super(IncubatorRenderer::new, () -> new IncubatorTileentity(BlockPos.ZERO, ModBlocks.INCUBATOR.get().defaultBlockState()));
     }
 
 }

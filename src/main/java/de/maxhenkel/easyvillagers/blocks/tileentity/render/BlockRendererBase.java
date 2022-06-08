@@ -36,7 +36,7 @@ public class BlockRendererBase<T extends FakeWorldTileentity> implements BlockEn
     }
 
     public EntityRendererProvider.Context getEntityRenderer() {
-        return new EntityRendererProvider.Context(minecraft.getEntityRenderDispatcher(), minecraft.getItemRenderer(), minecraft.getResourceManager(), minecraft.getEntityModels(), minecraft.font);
+        return new EntityRendererProvider.Context(minecraft.getEntityRenderDispatcher(), minecraft.getItemRenderer(), minecraft.getBlockRenderer(), minecraft.gameRenderer.itemInHandRenderer, minecraft.getResourceManager(), minecraft.getEntityModels(), minecraft.font);
     }
 
 }

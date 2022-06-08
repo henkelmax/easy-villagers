@@ -2,49 +2,46 @@ package de.maxhenkel.easyvillagers.gui;
 
 import de.maxhenkel.corelib.ClientRegistry;
 import de.maxhenkel.easyvillagers.Main;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.common.extensions.IForgeMenuType;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 public class Containers {
 
-    public static MenuType<AutoTraderContainer> AUTO_TRADER_CONTAINER;
-    public static MenuType<BreederContainer> BREEDER_CONTAINER;
-    public static MenuType<ConverterContainer> CONVERTER_CONTAINER;
-    public static MenuType<IncubatorContainer> INCUBATOR_CONTAINER;
-    public static MenuType<OutputContainer> OUTPUT_CONTAINER;
+    private static final DeferredRegister<MenuType<?>> MENU_TYPE_REGISTER = DeferredRegister.create(ForgeRegistries.CONTAINERS, Main.MODID);
+
+    public static final RegistryObject<MenuType<AutoTraderContainer>> AUTO_TRADER_CONTAINER = MENU_TYPE_REGISTER.register("auto_trader", () ->
+            IForgeMenuType.create((windowId, inv, data) -> new AutoTraderContainer(windowId, inv))
+    );
+    public static final RegistryObject<MenuType<BreederContainer>> BREEDER_CONTAINER = MENU_TYPE_REGISTER.register("breeder", () ->
+            IForgeMenuType.create((windowId, inv, data) -> new BreederContainer(windowId, inv))
+    );
+    public static final RegistryObject<MenuType<ConverterContainer>> CONVERTER_CONTAINER = MENU_TYPE_REGISTER.register("converter", () ->
+            IForgeMenuType.create((windowId, inv, data) -> new ConverterContainer(windowId, inv))
+    );
+    public static final RegistryObject<MenuType<IncubatorContainer>> INCUBATOR_CONTAINER = MENU_TYPE_REGISTER.register("incubator", () ->
+            IForgeMenuType.create((windowId, inv, data) -> new IncubatorContainer(windowId, inv))
+    );
+    public static final RegistryObject<MenuType<OutputContainer>> OUTPUT_CONTAINER = MENU_TYPE_REGISTER.register("output", () ->
+            IForgeMenuType.create((windowId, inv, data) -> new OutputContainer(windowId, inv))
+    );
+
+    public static void init() {
+        MENU_TYPE_REGISTER.register(FMLJavaModLoadingContext.get().getModEventBus());
+    }
 
     @OnlyIn(Dist.CLIENT)
     public static void clientSetup() {
-        ClientRegistry.<AutoTraderContainer, AutoTraderScreen>registerScreen(AUTO_TRADER_CONTAINER, AutoTraderScreen::new);
-        ClientRegistry.<BreederContainer, BreederScreen>registerScreen(BREEDER_CONTAINER, BreederScreen::new);
-        ClientRegistry.<ConverterContainer, ConverterScreen>registerScreen(CONVERTER_CONTAINER, ConverterScreen::new);
-        ClientRegistry.<IncubatorContainer, IncubatorScreen>registerScreen(INCUBATOR_CONTAINER, IncubatorScreen::new);
-        ClientRegistry.<OutputContainer, OutputScreen>registerScreen(OUTPUT_CONTAINER, OutputScreen::new);
-    }
-
-    public static void registerContainers(RegistryEvent.Register<MenuType<?>> event) {
-        AUTO_TRADER_CONTAINER = new MenuType<>(AutoTraderContainer::new);
-        AUTO_TRADER_CONTAINER.setRegistryName(new ResourceLocation(Main.MODID, "auto_trader"));
-        event.getRegistry().register(AUTO_TRADER_CONTAINER);
-
-        BREEDER_CONTAINER = new MenuType<>(BreederContainer::new);
-        BREEDER_CONTAINER.setRegistryName(new ResourceLocation(Main.MODID, "breeder"));
-        event.getRegistry().register(BREEDER_CONTAINER);
-
-        CONVERTER_CONTAINER = new MenuType<>(ConverterContainer::new);
-        CONVERTER_CONTAINER.setRegistryName(new ResourceLocation(Main.MODID, "converter"));
-        event.getRegistry().register(CONVERTER_CONTAINER);
-
-        INCUBATOR_CONTAINER = new MenuType<>(IncubatorContainer::new);
-        INCUBATOR_CONTAINER.setRegistryName(new ResourceLocation(Main.MODID, "incubator"));
-        event.getRegistry().register(INCUBATOR_CONTAINER);
-
-        OUTPUT_CONTAINER = new MenuType<>(OutputContainer::new);
-        OUTPUT_CONTAINER.setRegistryName(new ResourceLocation(Main.MODID, "output"));
-        event.getRegistry().register(OUTPUT_CONTAINER);
+        ClientRegistry.<AutoTraderContainer, AutoTraderScreen>registerScreen(AUTO_TRADER_CONTAINER.get(), AutoTraderScreen::new);
+        ClientRegistry.<BreederContainer, BreederScreen>registerScreen(BREEDER_CONTAINER.get(), BreederScreen::new);
+        ClientRegistry.<ConverterContainer, ConverterScreen>registerScreen(CONVERTER_CONTAINER.get(), ConverterScreen::new);
+        ClientRegistry.<IncubatorContainer, IncubatorScreen>registerScreen(INCUBATOR_CONTAINER.get(), IncubatorScreen::new);
+        ClientRegistry.<OutputContainer, OutputScreen>registerScreen(OUTPUT_CONTAINER.get(), OutputScreen::new);
     }
 
 }

@@ -42,7 +42,7 @@ public class BreederTileentity extends FakeWorldTileentity implements IServerTic
     protected LazyOptional<MultiItemStackHandler> itemHandler;
 
     public BreederTileentity(BlockPos pos, BlockState state) {
-        super(ModTileEntities.BREEDER, ModBlocks.BREEDER.defaultBlockState(), pos, state);
+        super(ModTileEntities.BREEDER.get(), ModBlocks.BREEDER.get().defaultBlockState(), pos, state);
         foodInventory = NonNullList.withSize(4, ItemStack.EMPTY);
         outputInventory = NonNullList.withSize(4, ItemStack.EMPTY);
         villager1 = ItemStack.EMPTY;
@@ -69,14 +69,14 @@ public class BreederTileentity extends FakeWorldTileentity implements IServerTic
 
     public EasyVillagerEntity getVillagerEntity1() {
         if (villagerEntity1 == null && !villager1.isEmpty()) {
-            villagerEntity1 = ModItems.VILLAGER.getVillager(level, villager1);
+            villagerEntity1 = ModItems.VILLAGER.get().getVillager(level, villager1);
         }
         return villagerEntity1;
     }
 
     public EasyVillagerEntity getVillagerEntity2() {
         if (villagerEntity2 == null && !villager2.isEmpty()) {
-            villagerEntity2 = ModItems.VILLAGER.getVillager(level, villager2);
+            villagerEntity2 = ModItems.VILLAGER.get().getVillager(level, villager2);
         }
         return villagerEntity2;
     }
@@ -87,7 +87,7 @@ public class BreederTileentity extends FakeWorldTileentity implements IServerTic
         if (villager.isEmpty()) {
             villagerEntity1 = null;
         } else {
-            villagerEntity1 = ModItems.VILLAGER.getVillager(level, villager);
+            villagerEntity1 = ModItems.VILLAGER.get().getVillager(level, villager);
         }
         setChanged();
         sync();
@@ -99,7 +99,7 @@ public class BreederTileentity extends FakeWorldTileentity implements IServerTic
         if (villager.isEmpty()) {
             villagerEntity2 = null;
         } else {
-            villagerEntity2 = ModItems.VILLAGER.getVillager(level, villager);
+            villagerEntity2 = ModItems.VILLAGER.get().getVillager(level, villager);
         }
         setChanged();
         sync();
@@ -167,8 +167,8 @@ public class BreederTileentity extends FakeWorldTileentity implements IServerTic
                 EasyVillagerEntity villagerEntity = new EasyVillagerEntity(EntityType.VILLAGER, level);
                 villagerEntity.setVillagerData(villagerEntity.getVillagerData().setType(VillagerType.byBiome(level.getBiome(getBlockPos()))));
                 villagerEntity.setAge(-24000);
-                ItemStack villager = new ItemStack(ModItems.VILLAGER);
-                ModItems.VILLAGER.setVillager(villager, villagerEntity);
+                ItemStack villager = new ItemStack(ModItems.VILLAGER.get());
+                ModItems.VILLAGER.get().setVillager(villager, villagerEntity);
                 outputInventory.set(i, villager);
                 return true;
             }
@@ -210,7 +210,7 @@ public class BreederTileentity extends FakeWorldTileentity implements IServerTic
         if (hasVillager1()) {
             CompoundTag comp = new CompoundTag();
             if (villagerEntity1 != null) {
-                ModItems.VILLAGER.setVillager(villager1, villagerEntity1);
+                ModItems.VILLAGER.get().setVillager(villager1, villagerEntity1);
             }
             villager1.save(comp);
             compound.put("Villager1", comp);
@@ -218,7 +218,7 @@ public class BreederTileentity extends FakeWorldTileentity implements IServerTic
         if (hasVillager2()) {
             CompoundTag comp = new CompoundTag();
             if (villagerEntity2 != null) {
-                ModItems.VILLAGER.setVillager(villager2, villagerEntity2);
+                ModItems.VILLAGER.get().setVillager(villager2, villagerEntity2);
             }
             villager2.save(comp);
             compound.put("Villager2", comp);

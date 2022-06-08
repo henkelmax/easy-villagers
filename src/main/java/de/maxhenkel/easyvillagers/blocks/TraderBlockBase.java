@@ -110,7 +110,7 @@ public abstract class TraderBlockBase extends VillagerBlockBase implements Entit
         Villager villagerEntity = trader.getVillagerEntity();
         if (villagerEntity != null) {
             if (trader.getWorkstationProfession().equals(villagerEntity.getVillagerData().getProfession())) {
-                playVillagerSound(world, pos, trader.getWorkstationProfession().getWorkSound());
+                playVillagerSound(world, pos, trader.getWorkstationProfession().workSound());
             } else {
                 playVillagerSound(world, pos, SoundEvents.VILLAGER_NO);
             }

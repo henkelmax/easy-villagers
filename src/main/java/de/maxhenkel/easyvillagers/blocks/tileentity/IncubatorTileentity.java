@@ -30,7 +30,7 @@ public class IncubatorTileentity extends VillagerTileentity implements IServerTi
     protected LazyOptional<MultiItemStackHandler> itemHandler;
 
     public IncubatorTileentity(BlockPos pos, BlockState state) {
-        super(ModTileEntities.INCUBATOR, ModBlocks.INCUBATOR.defaultBlockState(), pos, state);
+        super(ModTileEntities.INCUBATOR.get(), ModBlocks.INCUBATOR.get().defaultBlockState(), pos, state);
         inputInventory = NonNullList.withSize(4, ItemStack.EMPTY);
         outputInventory = NonNullList.withSize(4, ItemStack.EMPTY);
 

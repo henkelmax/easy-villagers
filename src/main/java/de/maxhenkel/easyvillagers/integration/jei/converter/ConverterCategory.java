@@ -11,7 +11,6 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -31,17 +30,17 @@ public class ConverterCategory implements IRecipeCategory<ItemStack> {
 
     @Override
     public IDrawable getIcon() {
-        return helper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.CONVERTER));
+        return helper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.CONVERTER.get()));
     }
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, ItemStack recipe, IFocusGroup focuses) {
         builder.addSlot(RecipeIngredientRole.INPUT, 1, 1).addIngredient(VanillaTypes.ITEM, recipe);
         builder.addSlot(RecipeIngredientRole.INPUT, 19, 1).addIngredient(VanillaTypes.ITEM, new ItemStack(Items.GOLDEN_APPLE));
-        builder.addSlot(RecipeIngredientRole.INPUT, 37, 1).addIngredient(VanillaTypes.ITEM, new ItemStack(ModItems.VILLAGER));
+        builder.addSlot(RecipeIngredientRole.INPUT, 37, 1).addIngredient(VanillaTypes.ITEM, new ItemStack(ModItems.VILLAGER.get()));
         builder.addSlot(RecipeIngredientRole.INPUT, 55, 1);
 
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 1, 32).addIngredient(VanillaTypes.ITEM, new ItemStack(ModItems.VILLAGER));
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 1, 32).addIngredient(VanillaTypes.ITEM, new ItemStack(ModItems.VILLAGER.get()));
         builder.addSlot(RecipeIngredientRole.OUTPUT, 19, 32);
         builder.addSlot(RecipeIngredientRole.OUTPUT, 37, 32);
         builder.addSlot(RecipeIngredientRole.OUTPUT, 55, 32);
@@ -49,7 +48,7 @@ public class ConverterCategory implements IRecipeCategory<ItemStack> {
 
     @Override
     public Component getTitle() {
-        return new TranslatableComponent("jei.easy_villagers.converting");
+        return Component.translatable("jei.easy_villagers.converting");
     }
 
     @Override

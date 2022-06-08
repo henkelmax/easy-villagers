@@ -7,11 +7,11 @@ import net.minecraft.world.inventory.Slot;
 public class BreederContainer extends InputOutputContainer {
 
     public BreederContainer(int id, Inventory playerInventory, Container foodInventory, Container outputInventory) {
-        super(Containers.BREEDER_CONTAINER, id, playerInventory, foodInventory, outputInventory);
+        super(Containers.BREEDER_CONTAINER.get(), id, playerInventory, foodInventory, outputInventory);
     }
 
     public BreederContainer(int id, Inventory playerInventory) {
-        super(Containers.BREEDER_CONTAINER, id, playerInventory);
+        super(Containers.BREEDER_CONTAINER.get(), id, playerInventory);
     }
 
     @Override

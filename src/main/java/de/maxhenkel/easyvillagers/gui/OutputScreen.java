@@ -5,7 +5,6 @@ import de.maxhenkel.corelib.inventory.ScreenBase;
 import de.maxhenkel.easyvillagers.Main;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -24,7 +23,7 @@ public class OutputScreen extends ScreenBase<OutputContainer> {
 
     @Override
     protected void renderLabels(PoseStack matrixStack, int x, int y) {
-        drawCentered(matrixStack, new TranslatableComponent("gui.easy_villagers.output"), 9, FONT_COLOR);
+        drawCentered(matrixStack, Component.translatable("gui.easy_villagers.output"), 9, FONT_COLOR);
         font.draw(matrixStack, playerInventory.getDisplayName(), 8F, (float) (imageHeight - 96 + 3), FONT_COLOR);
     }
 

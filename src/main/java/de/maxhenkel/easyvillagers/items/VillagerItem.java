@@ -13,7 +13,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -100,7 +99,7 @@ public class VillagerItem extends CustomRendererItem {
         } else {
             EasyVillagerEntity villager = getVillagerFast(world, stack);
             if (!villager.hasCustomName() && villager.isBaby()) {
-                return new TranslatableComponent("item.easy_villagers.baby_villager");
+                return Component.translatable("item.easy_villagers.baby_villager");
             }
             return villager.getDisplayName();
         }
@@ -159,10 +158,10 @@ public class VillagerItem extends CustomRendererItem {
 
     @OnlyIn(Dist.CLIENT)
     public static ItemStack getBabyVillager() {
-        ItemStack babyVillager = new ItemStack(ModItems.VILLAGER);
+        ItemStack babyVillager = new ItemStack(ModItems.VILLAGER.get());
         EasyVillagerEntity villager = new EasyVillagerEntity(EntityType.VILLAGER, Minecraft.getInstance().level);
         villager.setAge(-24000);
-        ModItems.VILLAGER.setVillager(babyVillager, villager);
+        ModItems.VILLAGER.get().setVillager(babyVillager, villager);
         return babyVillager;
     }
 }

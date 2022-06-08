@@ -18,7 +18,7 @@ public class VillagerItemRenderer extends ItemRenderer {
         if (renderer == null) {
             renderer = new VillagerRenderer(RendererProviders.createEntityRendererContext());
         }
-        renderer.render(ModItems.VILLAGER.getVillagerFast(minecraft.level, itemStack), 0F, 1F, stack, source, light);
+        renderer.render(ModItems.VILLAGER.get().getVillagerFast(minecraft.level, itemStack), 0F, 1F, stack, source, light);
     }
 
 

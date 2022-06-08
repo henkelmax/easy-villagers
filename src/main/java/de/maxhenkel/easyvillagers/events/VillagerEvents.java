@@ -62,9 +62,9 @@ public class VillagerEvents {
     }
 
     public static void pickUp(Villager villager, Player player) {
-        ItemStack stack = new ItemStack(ModItems.VILLAGER);
+        ItemStack stack = new ItemStack(ModItems.VILLAGER.get());
 
-        ModItems.VILLAGER.setVillager(stack, villager);
+        ModItems.VILLAGER.get().setVillager(stack, villager);
 
         if (player.getMainHandItem().isEmpty()) {
             player.setItemInHand(InteractionHand.MAIN_HAND, stack);

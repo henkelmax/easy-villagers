@@ -6,7 +6,6 @@ import de.maxhenkel.corelib.client.CustomRendererBlockItem;
 import de.maxhenkel.corelib.client.ItemRenderer;
 import de.maxhenkel.corelib.item.ItemUtils;
 import de.maxhenkel.easyvillagers.ItemTileEntityCache;
-import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.ModItemGroups;
 import de.maxhenkel.easyvillagers.blocks.tileentity.BreederTileentity;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
@@ -16,8 +15,6 @@ import de.maxhenkel.easyvillagers.items.render.BreederItemRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
@@ -50,7 +47,6 @@ public class BreederBlock extends VillagerBlockBase implements EntityBlock, IIte
 
     public BreederBlock() {
         super(Properties.of(Material.METAL).strength(2.5F).sound(SoundType.METAL).noOcclusion());
-        setRegistryName(new ResourceLocation(Main.MODID, "breeder"));
     }
 
     @Override
@@ -61,13 +57,13 @@ public class BreederBlock extends VillagerBlockBase implements EntityBlock, IIte
             public ItemRenderer createItemRenderer() {
                 return new BreederItemRenderer();
             }
-        }.setRegistryName(getRegistryName());
+        };
     }
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable BlockGetter blockGetter, List<Component> components, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, blockGetter, components, tooltipFlag);
-        BreederTileentity trader = ItemTileEntityCache.getTileEntity(stack, () -> new BreederTileentity(BlockPos.ZERO, ModBlocks.TRADER.defaultBlockState()));
+        BreederTileentity trader = ItemTileEntityCache.getTileEntity(stack, () -> new BreederTileentity(BlockPos.ZERO, ModBlocks.TRADER.get().defaultBlockState()));
         EasyVillagerEntity villager1 = trader.getVillagerEntity1();
         if (villager1 != null) {
             components.add(villager1.getAdvancedName());
@@ -125,7 +121,7 @@ public class BreederBlock extends VillagerBlockBase implements EntityBlock, IIte
             player.openMenu(new MenuProvider() {
                 @Override
                 public Component getDisplayName() {
-                    return new TranslatableComponent(state.getBlock().getDescriptionId());
+                    return Component.translatable(state.getBlock().getDescriptionId());
                 }
 
                 @Nullable

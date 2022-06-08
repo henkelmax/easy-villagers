@@ -6,7 +6,6 @@ import de.maxhenkel.corelib.client.CustomRendererBlockItem;
 import de.maxhenkel.corelib.client.ItemRenderer;
 import de.maxhenkel.corelib.item.ItemUtils;
 import de.maxhenkel.easyvillagers.ItemTileEntityCache;
-import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.ModItemGroups;
 import de.maxhenkel.easyvillagers.blocks.tileentity.FarmerTileentity;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
@@ -16,8 +15,6 @@ import de.maxhenkel.easyvillagers.items.render.FarmerItemRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
@@ -51,7 +48,6 @@ public class FarmerBlock extends VillagerBlockBase implements EntityBlock, IItem
 
     public FarmerBlock() {
         super(Properties.of(Material.METAL).strength(2.5F).sound(SoundType.METAL).noOcclusion());
-        setRegistryName(new ResourceLocation(Main.MODID, "farmer"));
     }
 
     @Override
@@ -62,13 +58,13 @@ public class FarmerBlock extends VillagerBlockBase implements EntityBlock, IItem
             public ItemRenderer createItemRenderer() {
                 return new FarmerItemRenderer();
             }
-        }.setRegistryName(getRegistryName());
+        };
     }
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable BlockGetter blockGetter, List<Component> components, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, blockGetter, components, tooltipFlag);
-        FarmerTileentity trader = ItemTileEntityCache.getTileEntity(stack, () -> new FarmerTileentity(BlockPos.ZERO, ModBlocks.TRADER.defaultBlockState()));
+        FarmerTileentity trader = ItemTileEntityCache.getTileEntity(stack, () -> new FarmerTileentity(BlockPos.ZERO, ModBlocks.TRADER.get().defaultBlockState()));
         EasyVillagerEntity villager = trader.getVillagerEntity();
         if (villager != null) {
             components.add(villager.getAdvancedName());
@@ -128,7 +124,7 @@ public class FarmerBlock extends VillagerBlockBase implements EntityBlock, IItem
             player.openMenu(new MenuProvider() {
                 @Override
                 public Component getDisplayName() {
-                    return new TranslatableComponent(state.getBlock().getDescriptionId());
+                    return Component.translatable(state.getBlock().getDescriptionId());
                 }
 
                 @Nullable

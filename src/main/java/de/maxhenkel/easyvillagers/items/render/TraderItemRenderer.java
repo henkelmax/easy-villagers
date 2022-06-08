@@ -8,7 +8,7 @@ import net.minecraft.core.BlockPos;
 public class TraderItemRenderer extends BlockItemRendererBase<TraderRenderer, TraderTileentity> {
 
     public TraderItemRenderer() {
-        super(TraderRenderer::new, () -> new TraderTileentity(BlockPos.ZERO, ModBlocks.TRADER.defaultBlockState()));
+        super(TraderRenderer::new, () -> new TraderTileentity(BlockPos.ZERO, ModBlocks.TRADER.get().defaultBlockState()));
     }
 
 }

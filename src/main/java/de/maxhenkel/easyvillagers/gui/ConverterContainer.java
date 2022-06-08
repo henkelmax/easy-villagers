@@ -7,11 +7,11 @@ import net.minecraft.world.inventory.Slot;
 public class ConverterContainer extends InputOutputContainer {
 
     public ConverterContainer(int id, Inventory playerInventory, Container inputInventory, Container outputInventory) {
-        super(Containers.CONVERTER_CONTAINER, id, playerInventory, inputInventory, outputInventory);
+        super(Containers.CONVERTER_CONTAINER.get(), id, playerInventory, inputInventory, outputInventory);
     }
 
     public ConverterContainer(int id, Inventory playerInventory) {
-        super(Containers.CONVERTER_CONTAINER, id, playerInventory);
+        super(Containers.CONVERTER_CONTAINER.get(), id, playerInventory);
     }
 
     @Override

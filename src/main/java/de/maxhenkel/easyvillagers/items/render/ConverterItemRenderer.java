@@ -8,7 +8,7 @@ import net.minecraft.core.BlockPos;
 public class ConverterItemRenderer extends BlockItemRendererBase<ConverterRenderer, ConverterTileentity> {
 
     public ConverterItemRenderer() {
-        super(ConverterRenderer::new, () -> new ConverterTileentity(BlockPos.ZERO, ModBlocks.CONVERTER.defaultBlockState()));
+        super(ConverterRenderer::new, () -> new ConverterTileentity(BlockPos.ZERO, ModBlocks.CONVERTER.get().defaultBlockState()));
     }
 
 }

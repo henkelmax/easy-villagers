@@ -9,7 +9,7 @@ import net.minecraft.world.entity.player.Inventory;
 public class OutputContainer extends ContainerBase {
 
     public OutputContainer(int id, Inventory playerInventory, Container outputInventory) {
-        super(Containers.OUTPUT_CONTAINER, id, playerInventory, outputInventory);
+        super(Containers.OUTPUT_CONTAINER.get(), id, playerInventory, outputInventory);
 
         for (int i = 0; i < 4; i++) {
             addSlot(new LockedSlot(outputInventory, i, 52 + i * 18, 20, true, false));

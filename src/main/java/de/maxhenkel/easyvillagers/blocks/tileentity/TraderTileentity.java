@@ -7,7 +7,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TraderTileentity extends TraderTileentityBase {
 
     public TraderTileentity(BlockPos pos, BlockState state) {
-        super(ModTileEntities.TRADER, ModBlocks.TRADER.defaultBlockState(), pos, state);
+        super(ModTileEntities.TRADER.get(), ModBlocks.TRADER.get().defaultBlockState(), pos, state);
     }
 
 }

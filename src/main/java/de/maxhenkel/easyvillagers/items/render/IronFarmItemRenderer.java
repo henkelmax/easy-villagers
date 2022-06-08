@@ -8,7 +8,7 @@ import net.minecraft.core.BlockPos;
 public class IronFarmItemRenderer extends BlockItemRendererBase<IronFarmRenderer, IronFarmTileentity> {
 
     public IronFarmItemRenderer() {
-        super(IronFarmRenderer::new, () -> new IronFarmTileentity(BlockPos.ZERO, ModBlocks.IRON_FARM.defaultBlockState()));
+        super(IronFarmRenderer::new, () -> new IronFarmTileentity(BlockPos.ZERO, ModBlocks.IRON_FARM.get().defaultBlockState()));
     }
 
 }

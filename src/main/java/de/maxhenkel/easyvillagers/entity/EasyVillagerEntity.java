@@ -3,7 +3,6 @@ package de.maxhenkel.easyvillagers.entity;
 import de.maxhenkel.easyvillagers.Main;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.gossip.GossipType;
@@ -102,7 +101,7 @@ public class EasyVillagerEntity extends Villager {
     }
 
     public Component getAdvancedName() {
-        return new TranslatableComponent("tooltip.easy_villagers.villager_profession", getName().copy(), new TranslatableComponent("merchant.level." + getVillagerData().getLevel())).withStyle(ChatFormatting.GRAY);
+        return Component.translatable("tooltip.easy_villagers.villager_profession", getName().copy(), Component.translatable("merchant.level." + getVillagerData().getLevel())).withStyle(ChatFormatting.GRAY);
     }
 
 }

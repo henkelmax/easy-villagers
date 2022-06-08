@@ -8,7 +8,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.entity.ai.village.poi.PoiType;
+import net.minecraft.world.entity.ai.village.poi.PoiTypes;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
@@ -53,11 +53,11 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
     }
 
     public boolean isValidBlock(Block block) {
-        return PoiType.forState(block.defaultBlockState()).isPresent();
+        return PoiTypes.forState(block.defaultBlockState()).isPresent();
     }
 
     public VillagerProfession getWorkstationProfession() {
-        return PoiType.forState(workstation.defaultBlockState()).flatMap(pointOfInterestType -> ForgeRegistries.PROFESSIONS.getValues().stream().filter(villagerProfession -> villagerProfession.getJobPoiType() == pointOfInterestType).findFirst()).orElse(VillagerProfession.NONE);
+        return PoiTypes.forState(workstation.defaultBlockState()).flatMap(pointOfInterestType -> ForgeRegistries.PROFESSIONS.getValues().stream().filter(villagerProfession -> villagerProfession.heldJobSite().test(pointOfInterestType)).findFirst()).orElse(VillagerProfession.NONE);
     }
 
     @Override
@@ -140,7 +140,7 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
         }
         try {
             villagerEntity.restock();
-            VillagerBlockBase.playVillagerSound(level, getBlockPos(), villagerEntity.getVillagerData().getProfession().getWorkSound());
+            VillagerBlockBase.playVillagerSound(level, getBlockPos(), villagerEntity.getVillagerData().getProfession().workSound());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -159,7 +159,7 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
         super.saveAdditional(compound);
 
         if (hasWorkstation()) {
-            compound.putString("Workstation", workstation.getRegistryName().toString());
+            compound.putString("Workstation", ForgeRegistries.BLOCKS.getKey(workstation).toString());
         }
         compound.putLong("NextRestock", nextRestock);
     }

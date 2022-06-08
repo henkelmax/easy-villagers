@@ -1,16 +1,15 @@
 buildscript {
     repositories {
-        maven { url = 'https://maven.minecraftforge.net' }
         maven { url = 'https://maven.maxhenkel.de/repository/public' }
         mavenCentral()
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
         classpath group: 'de.maxhenkel.forge-update', name: 'forge-update', version: '1.0.4'
     }
 }
 
 plugins {
+    id 'net.minecraftforge.gradle' version '5.+'
     // https://github.com/matthewprenger/CurseGradle
     id "com.matthewprenger.cursegradle" version "1.4.0"
     id "com.github.johnrengelman.shadow" version "7.1.0"
@@ -109,15 +108,15 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:${mod_minecraft_version}-${forge_version}"
 
-    compileOnly fg.deobf("mezz.jei:jei-${jei_mc_version}:${jei_version}:api")
-    runtimeOnly fg.deobf("mezz.jei:jei-${jei_mc_version}:${jei_version}")
+//    compileOnly fg.deobf("mezz.jei:jei-${jei_mc_version}:${jei_version}:api")
+//    runtimeOnly fg.deobf("mezz.jei:jei-${jei_mc_version}:${jei_version}")
 
 //    compileOnly fg.deobf("mcjty.theoneprobe:TheOneProbe-${theoneprobe_mc_version}:${theoneprobe_mc_version}-${theoneprobe_version}:api")
 //    runtimeMod fg.deobf("mcjty.theoneprobe:TheOneProbe-${theoneprobe_mc_version}:${theoneprobe_mc_version}-${theoneprobe_version}")
 
-    implementation fg.deobf("curse.maven:the-one-probe-245211:3671753")
+//    implementation fg.deobf("curse.maven:the-one-probe-245211:3671753")
 
-    implementation fg.deobf("curse.maven:jade-324717:${jade_id}")
+//    implementation fg.deobf("curse.maven:jade-324717:${jade_id}")
 
     shadow fg.deobf("de.maxhenkel.corelib:corelib:${mod_minecraft_version}-${corelib_version}:api")
     runtimeOnly fg.deobf("de.maxhenkel.corelib:corelib:${mod_minecraft_version}-${corelib_version}")
@@ -148,6 +147,10 @@ processResources {
                 'mod_loader_version': mod_loader_version,
                 'mod_minecraft_version': mod_minecraft_version
     }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
 }
 
 curseforge {
@@ -248,4 +251,12 @@ shadowJar {
 
 reobf {
     shadowJar {}
+}
+
+sourceSets {
+    main {
+        java {
+            exclude 'de/maxhenkel/easyvillagers/integration/*/**'
+        }
+    }
 }

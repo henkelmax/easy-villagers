@@ -5,7 +5,6 @@ import de.maxhenkel.corelib.blockentity.SimpleBlockEntityTicker;
 import de.maxhenkel.corelib.client.CustomRendererBlockItem;
 import de.maxhenkel.corelib.client.ItemRenderer;
 import de.maxhenkel.easyvillagers.ItemTileEntityCache;
-import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.ModItemGroups;
 import de.maxhenkel.easyvillagers.blocks.tileentity.ConverterTileentity;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
@@ -13,8 +12,6 @@ import de.maxhenkel.easyvillagers.gui.ConverterContainer;
 import de.maxhenkel.easyvillagers.items.render.ConverterItemRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
@@ -46,7 +43,6 @@ public class ConverterBlock extends VillagerBlockBase implements EntityBlock, II
 
     public ConverterBlock() {
         super(Properties.of(Material.METAL).strength(2.5F).sound(SoundType.METAL).noOcclusion());
-        setRegistryName(new ResourceLocation(Main.MODID, "converter"));
     }
 
     @Override
@@ -57,13 +53,13 @@ public class ConverterBlock extends VillagerBlockBase implements EntityBlock, II
             public ItemRenderer createItemRenderer() {
                 return new ConverterItemRenderer();
             }
-        }.setRegistryName(getRegistryName());
+        };
     }
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable BlockGetter blockGetter, List<Component> components, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, blockGetter, components, tooltipFlag);
-        ConverterTileentity trader = ItemTileEntityCache.getTileEntity(stack, () -> new ConverterTileentity(BlockPos.ZERO, ModBlocks.TRADER.defaultBlockState()));
+        ConverterTileentity trader = ItemTileEntityCache.getTileEntity(stack, () -> new ConverterTileentity(BlockPos.ZERO, ModBlocks.TRADER.get().defaultBlockState()));
         EasyVillagerEntity villager = trader.getVillagerEntity();
         if (villager != null) {
             components.add(villager.getAdvancedName());
@@ -81,7 +77,7 @@ public class ConverterBlock extends VillagerBlockBase implements EntityBlock, II
         player.openMenu(new MenuProvider() {
             @Override
             public Component getDisplayName() {
-                return new TranslatableComponent(state.getBlock().getDescriptionId());
+                return Component.translatable(state.getBlock().getDescriptionId());
             }
 
             @Nullable

@@ -8,7 +8,7 @@ import net.minecraft.core.BlockPos;
 public class BreederItemRenderer extends BlockItemRendererBase<BreederRenderer, BreederTileentity> {
 
     public BreederItemRenderer() {
-        super(BreederRenderer::new, () -> new BreederTileentity(BlockPos.ZERO, ModBlocks.BREEDER.defaultBlockState()));
+        super(BreederRenderer::new, () -> new BreederTileentity(BlockPos.ZERO, ModBlocks.BREEDER.get().defaultBlockState()));
     }
 
 }

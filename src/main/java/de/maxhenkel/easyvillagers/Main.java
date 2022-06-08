@@ -9,17 +9,13 @@ import de.maxhenkel.easyvillagers.events.GuiEvents;
 import de.maxhenkel.easyvillagers.events.ModSoundEvents;
 import de.maxhenkel.easyvillagers.events.VillagerEvents;
 import de.maxhenkel.easyvillagers.gui.Containers;
-import de.maxhenkel.easyvillagers.integration.IMC;
+//import de.maxhenkel.easyvillagers.integration.IMC;
 import de.maxhenkel.easyvillagers.items.ModItems;
 import de.maxhenkel.easyvillagers.net.MessageCycleTrades;
 import de.maxhenkel.easyvillagers.net.MessagePickUpVillager;
 import de.maxhenkel.easyvillagers.net.MessageSelectTrade;
 import de.maxhenkel.easyvillagers.net.MessageVillagerParticles;
 import net.minecraft.client.KeyMapping;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
@@ -50,13 +46,13 @@ public class Main {
     public static KeyMapping CYCLE_TRADES_KEY;
 
     public Main() {
-        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Item.class, ModBlocks::registerItems);
-        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Item.class, ModItems::registerItems);
-        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(Block.class, ModBlocks::registerBlocks);
-        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(BlockEntityType.class, ModTileEntities::registerTileEntities);
-        FMLJavaModLoadingContext.get().getModEventBus().addGenericListener(MenuType.class, Containers::registerContainers);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(IMC::enqueueIMC);
+//        FMLJavaModLoadingContext.get().getModEventBus().addListener(IMC::enqueueIMC);
+
+        ModBlocks.init();
+        ModItems.init();
+        ModTileEntities.init();
+        Containers.init();
 
         SERVER_CONFIG = CommonRegistry.registerConfig(ModConfig.Type.SERVER, ServerConfig.class);
         CLIENT_CONFIG = CommonRegistry.registerConfig(ModConfig.Type.CLIENT, ClientConfig.class);
@@ -80,6 +76,7 @@ public class Main {
     public void clientSetup(FMLClientSetupEvent event) {
         ModTileEntities.clientSetup();
         Containers.clientSetup();
+        ModBlocks.clientSetup();
 
         MinecraftForge.EVENT_BUS.register(new ModSoundEvents());
         MinecraftForge.EVENT_BUS.register(new GuiEvents());

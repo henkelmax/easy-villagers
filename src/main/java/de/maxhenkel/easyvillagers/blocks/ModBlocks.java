@@ -1,55 +1,42 @@
 package de.maxhenkel.easyvillagers.blocks;
 
+import de.maxhenkel.easyvillagers.Main;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 public class ModBlocks {
 
-    public static final TraderBlock TRADER = new TraderBlock();
-    public static final AutoTraderBlock AUTO_TRADER = new AutoTraderBlock();
-    public static final FarmerBlock FARMER = new FarmerBlock();
-    public static final BreederBlock BREEDER = new BreederBlock();
-    public static final ConverterBlock CONVERTER = new ConverterBlock();
-    public static final IronFarmBlock IRON_FARM = new IronFarmBlock();
-    public static final IncubatorBlock INCUBATOR = new IncubatorBlock();
+    private static final DeferredRegister<Block> BLOCK_REGISTER = DeferredRegister.create(ForgeRegistries.BLOCKS, Main.MODID);
 
-    public static void registerBlocks(RegistryEvent.Register<Block> event) {
-        event.getRegistry().registerAll(
-                TRADER,
-                AUTO_TRADER,
-                FARMER,
-                BREEDER,
-                CONVERTER,
-                IRON_FARM,
-                INCUBATOR
-        );
+    public static final RegistryObject<TraderBlock> TRADER = BLOCK_REGISTER.register("trader", TraderBlock::new);
+    public static final RegistryObject<AutoTraderBlock> AUTO_TRADER = BLOCK_REGISTER.register("auto_trader", AutoTraderBlock::new);
+    public static final RegistryObject<FarmerBlock> FARMER = BLOCK_REGISTER.register("farmer", FarmerBlock::new);
+    public static final RegistryObject<BreederBlock> BREEDER = BLOCK_REGISTER.register("breeder", BreederBlock::new);
+    public static final RegistryObject<ConverterBlock> CONVERTER = BLOCK_REGISTER.register("converter", ConverterBlock::new);
+    public static final RegistryObject<IronFarmBlock> IRON_FARM = BLOCK_REGISTER.register("iron_farm", IronFarmBlock::new);
+    public static final RegistryObject<IncubatorBlock> INCUBATOR = BLOCK_REGISTER.register("incubator", IncubatorBlock::new);
 
-        if (FMLEnvironment.dist == Dist.CLIENT) {
-            ItemBlockRenderTypes.setRenderLayer(TRADER, RenderType.cutout());
-            ItemBlockRenderTypes.setRenderLayer(AUTO_TRADER, RenderType.cutout());
-            ItemBlockRenderTypes.setRenderLayer(FARMER, RenderType.cutout());
-            ItemBlockRenderTypes.setRenderLayer(BREEDER, RenderType.cutout());
-            ItemBlockRenderTypes.setRenderLayer(CONVERTER, RenderType.cutout());
-            ItemBlockRenderTypes.setRenderLayer(IRON_FARM, RenderType.cutout());
-            ItemBlockRenderTypes.setRenderLayer(INCUBATOR, RenderType.cutout());
-        }
+    public static void init() {
+        BLOCK_REGISTER.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
-    public static void registerItems(RegistryEvent.Register<Item> event) {
-        event.getRegistry().registerAll(
-                TRADER.toItem(),
-                AUTO_TRADER.toItem(),
-                FARMER.toItem(),
-                BREEDER.toItem(),
-                CONVERTER.toItem(),
-                IRON_FARM.toItem(),
-                INCUBATOR.toItem()
-        );
+    public static void clientSetup() {
+        if (FMLEnvironment.dist == Dist.CLIENT) {
+            ItemBlockRenderTypes.setRenderLayer(TRADER.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(AUTO_TRADER.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(FARMER.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(BREEDER.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(CONVERTER.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(IRON_FARM.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(INCUBATOR.get(), RenderType.cutout());
+        }
     }
 
 }

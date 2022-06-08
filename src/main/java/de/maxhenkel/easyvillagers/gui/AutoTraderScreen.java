@@ -8,8 +8,6 @@ import de.maxhenkel.easyvillagers.net.MessageSelectTrade;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -30,11 +28,11 @@ public class AutoTraderScreen extends ScreenBase<AutoTraderContainer> {
     protected void init() {
         super.init();
 
-        addRenderableWidget(new Button(leftPos + 8, topPos + 19, 16, 20, TextComponent.EMPTY, button -> {
+        addRenderableWidget(new Button(leftPos + 8, topPos + 19, 16, 20, Component.empty(), button -> {
             Main.SIMPLE_CHANNEL.sendToServer(new MessageSelectTrade(false));
         }));
 
-        addRenderableWidget(new Button(leftPos + imageWidth - 16 - 8, topPos + 19, 16, 20, TextComponent.EMPTY, button -> {
+        addRenderableWidget(new Button(leftPos + imageWidth - 16 - 8, topPos + 19, 16, 20, Component.empty(), button -> {
             Main.SIMPLE_CHANNEL.sendToServer(new MessageSelectTrade(true));
         }));
     }
@@ -53,8 +51,8 @@ public class AutoTraderScreen extends ScreenBase<AutoTraderContainer> {
     protected void renderLabels(PoseStack matrixStack, int x, int y) {
         super.renderLabels(matrixStack, x, y);
         drawCenteredText(matrixStack, title, 6, FONT_COLOR);
-        drawCenteredText(matrixStack, new TranslatableComponent("gui.easy_villagers.input"), 45, FONT_COLOR);
-        drawCenteredText(matrixStack, new TranslatableComponent("gui.easy_villagers.output"), 77, FONT_COLOR);
+        drawCenteredText(matrixStack, Component.translatable("gui.easy_villagers.input"), 45, FONT_COLOR);
+        drawCenteredText(matrixStack, Component.translatable("gui.easy_villagers.output"), 77, FONT_COLOR);
         font.draw(matrixStack, playerInventory.getDisplayName(), 8F, (float) (imageHeight - 96 + 3), FONT_COLOR);
     }
 

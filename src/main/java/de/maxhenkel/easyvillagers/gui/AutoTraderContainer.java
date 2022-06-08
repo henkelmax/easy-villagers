@@ -15,7 +15,7 @@ public class AutoTraderContainer extends ContainerBase {
     private AutoTraderTileentity trader;
 
     public AutoTraderContainer(int id, Inventory playerInventory, Container tradeSlots, AutoTraderTileentity trader, Container inputItems, Container outputItems) {
-        super(Containers.AUTO_TRADER_CONTAINER, id, playerInventory, null);
+        super(Containers.AUTO_TRADER_CONTAINER.get(), id, playerInventory, null);
         this.trader = trader;
         addSlot(new LockedSlot(tradeSlots, 0, 36, 21, true, true));
         addSlot(new LockedSlot(tradeSlots, 1, 62, 21, true, true));

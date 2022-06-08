@@ -6,8 +6,7 @@ import de.maxhenkel.easyvillagers.Main;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.MerchantScreen;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.MerchantMenu;
 
@@ -23,7 +22,7 @@ public class CycleTradesButton extends Button {
     private MerchantScreen screen;
 
     public CycleTradesButton(int x, int y, OnPress pressable, MerchantScreen screen) {
-        super(x, y, WIDTH, HEIGHT, TextComponent.EMPTY, pressable);
+        super(x, y, WIDTH, HEIGHT, Component.empty(), pressable);
         this.screen = screen;
     }
 
@@ -40,7 +39,7 @@ public class CycleTradesButton extends Button {
         RenderSystem.setShaderTexture(0, ARROW_BUTTON);
         if (isHovered) {
             blit(matrixStack, x, y, 0, 14, WIDTH, HEIGHT, 32, 32);
-            screen.renderTooltip(matrixStack, Collections.singletonList(new TranslatableComponent("tooltip.easy_villagers.cycle_trades").getVisualOrderText()), mouseX, mouseY, screen.getMinecraft().font);
+            screen.renderTooltip(matrixStack, Collections.singletonList(Component.translatable("tooltip.easy_villagers.cycle_trades").getVisualOrderText()), mouseX, mouseY, screen.getMinecraft().font);
         } else {
             blit(matrixStack, x, y, 0, 0, WIDTH, HEIGHT, 32, 32);
         }

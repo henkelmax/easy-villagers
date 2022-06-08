@@ -151,7 +151,7 @@ public class TraderRenderer extends VillagerRendererBase<TraderTileentity> {
         if (cached != null) {
             return cached;
         }
-        Consumer<PoseStack> transform = TRANSFORMS.get(block.getBlock().getRegistryName());
+        Consumer<PoseStack> transform = TRANSFORMS.get(ForgeRegistries.BLOCKS.getKey(block.getBlock()));
         if (transform == null) {
             transform = (stack) -> {
             };
@@ -165,7 +165,7 @@ public class TraderRenderer extends VillagerRendererBase<TraderTileentity> {
         if (cached != null) {
             return cached;
         }
-        ResourceLocation resourceLocation = TOP_BLOCKS.get(bottom.getBlock().getRegistryName());
+        ResourceLocation resourceLocation = TOP_BLOCKS.get(ForgeRegistries.BLOCKS.getKey(bottom.getBlock()));
         if (resourceLocation == null) {
             BlockState state = Blocks.AIR.defaultBlockState();
             TOP_BLOCK_CACHE.put(bottom.getBlock(), state);

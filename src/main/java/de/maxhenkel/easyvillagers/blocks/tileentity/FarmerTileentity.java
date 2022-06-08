@@ -48,7 +48,7 @@ public class FarmerTileentity extends VillagerTileentity implements IServerTicka
     protected ItemStackHandler itemHandler;
 
     public FarmerTileentity(BlockPos pos, BlockState state) {
-        super(ModTileEntities.FARMER, ModBlocks.FARMER.defaultBlockState(), pos, state);
+        super(ModTileEntities.FARMER.get(), ModBlocks.FARMER.get().defaultBlockState(), pos, state);
         inventory = NonNullList.withSize(4, ItemStack.EMPTY);
 
         outputItemHandler = LazyOptional.of(() -> new OutputItemHandler(inventory));

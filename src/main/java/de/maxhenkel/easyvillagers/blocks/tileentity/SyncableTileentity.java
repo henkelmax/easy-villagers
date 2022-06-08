@@ -40,7 +40,9 @@ public class SyncableTileentity extends BlockEntity {
 
     @Override
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        handleUpdateTag(pkt.getTag());
+        if (pkt.getTag() != null) {
+            handleUpdateTag(pkt.getTag());
+        }
     }
 
     @Override

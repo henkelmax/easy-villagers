@@ -12,13 +12,13 @@ public class ModItemGroups {
 
         @Override
         public ItemStack makeIcon() {
-            return new ItemStack(ModItems.VILLAGER);
+            return new ItemStack(ModItems.VILLAGER.get());
         }
 
         @Override
         public void fillItemList(NonNullList<ItemStack> list) {
             super.fillItemList(list);
-            list.add(new ItemStack(ModItems.VILLAGER));
+            list.add(new ItemStack(ModItems.VILLAGER.get()));
             list.add(VillagerItem.getBabyVillager());
         }
 

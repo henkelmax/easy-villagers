@@ -41,7 +41,7 @@ public class ConverterTileentity extends VillagerTileentity implements IServerTi
     protected LazyOptional<MultiItemStackHandler> itemHandler;
 
     public ConverterTileentity(BlockPos pos, BlockState state) {
-        super(ModTileEntities.CONVERTER, ModBlocks.CONVERTER.defaultBlockState(), pos, state);
+        super(ModTileEntities.CONVERTER.get(), ModBlocks.CONVERTER.get().defaultBlockState(), pos, state);
         inputInventory = NonNullList.withSize(4, ItemStack.EMPTY);
         outputInventory = NonNullList.withSize(4, ItemStack.EMPTY);
 

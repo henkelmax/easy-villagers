@@ -46,7 +46,7 @@ public class IronFarmTileentity extends VillagerTileentity implements ITickableB
     protected ItemStackHandler itemHandler;
 
     public IronFarmTileentity(BlockPos pos, BlockState state) {
-        super(ModTileEntities.IRON_FARM, ModBlocks.IRON_FARM.defaultBlockState(), pos, state);
+        super(ModTileEntities.IRON_FARM.get(), ModBlocks.IRON_FARM.get().defaultBlockState(), pos, state);
         inventory = NonNullList.withSize(4, ItemStack.EMPTY);
 
         outputItemHandler = LazyOptional.of(() -> new OutputItemHandler(inventory));

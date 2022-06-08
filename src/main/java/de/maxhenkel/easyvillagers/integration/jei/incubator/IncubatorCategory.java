@@ -13,7 +13,6 @@ import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
@@ -32,7 +31,7 @@ public class IncubatorCategory implements IRecipeCategory<ItemStack> {
 
     @Override
     public IDrawable getIcon() {
-        return helper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.INCUBATOR));
+        return helper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.INCUBATOR.get()));
     }
 
     @Override
@@ -50,15 +49,15 @@ public class IncubatorCategory implements IRecipeCategory<ItemStack> {
 
     private ItemStack getOutput(ItemStack input) {
         ItemStack out = input.copy();
-        EasyVillagerEntity villager = ModItems.VILLAGER.getVillager(Minecraft.getInstance().level, out);
+        EasyVillagerEntity villager = ModItems.VILLAGER.get().getVillager(Minecraft.getInstance().level, out);
         villager.setAge(0);
-        ModItems.VILLAGER.setVillager(out, villager);
+        ModItems.VILLAGER.get().setVillager(out, villager);
         return out;
     }
 
     @Override
     public Component getTitle() {
-        return new TranslatableComponent("jei.easy_villagers.incubating");
+        return Component.translatable("jei.easy_villagers.incubating");
     }
 
     @Override

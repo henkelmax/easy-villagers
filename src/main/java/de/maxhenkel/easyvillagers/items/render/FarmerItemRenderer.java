@@ -8,7 +8,7 @@ import net.minecraft.core.BlockPos;
 public class FarmerItemRenderer extends BlockItemRendererBase<FarmerRenderer, FarmerTileentity> {
 
     public FarmerItemRenderer() {
-        super(FarmerRenderer::new, () -> new FarmerTileentity(BlockPos.ZERO, ModBlocks.FARMER.defaultBlockState()));
+        super(FarmerRenderer::new, () -> new FarmerTileentity(BlockPos.ZERO, ModBlocks.FARMER.get().defaultBlockState()));
     }
 
 }

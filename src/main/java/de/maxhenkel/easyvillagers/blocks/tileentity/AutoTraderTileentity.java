@@ -39,7 +39,7 @@ public class AutoTraderTileentity extends TraderTileentityBase implements ITicka
     protected ItemStackHandler outputHandler;
 
     public AutoTraderTileentity(BlockPos pos, BlockState state) {
-        super(ModTileEntities.AUTO_TRADER, ModBlocks.AUTO_TRADER.defaultBlockState(), pos, state);
+        super(ModTileEntities.AUTO_TRADER.get(), ModBlocks.AUTO_TRADER.get().defaultBlockState(), pos, state);
         tradeGuiInv = new SimpleContainer(3);
 
         inputInventory = NonNullList.withSize(4, ItemStack.EMPTY);

@@ -4,15 +4,15 @@ import de.maxhenkel.easyvillagers.Main;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraftforge.event.entity.PlaySoundAtEntityEvent;
+import net.minecraftforge.event.PlayLevelSoundEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ModSoundEvents {
 
     @SubscribeEvent
-    public void onSound(PlaySoundAtEntityEvent event) {
-        if (event.getSound() != null && event.getCategory() != null && isVillagerSound(event.getSound()) && event.getCategory().equals(SoundSource.BLOCKS)) {
-            event.setVolume(Main.CLIENT_CONFIG.villagerVolume.get().floatValue());
+    public void onSound(PlayLevelSoundEvent.AtEntity event) {
+        if (event.getSound() != null && event.getSource() != null && isVillagerSound(event.getSound()) && event.getSource().equals(SoundSource.BLOCKS)) {
+            event.setNewVolume(Main.CLIENT_CONFIG.villagerVolume.get().floatValue());
         }
     }
 

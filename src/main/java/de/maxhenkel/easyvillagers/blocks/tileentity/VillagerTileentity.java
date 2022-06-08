@@ -20,7 +20,7 @@ public class VillagerTileentity extends FakeWorldTileentity {
 
     public ItemStack getVillager() {
         if (villagerEntity != null) {
-            ModItems.VILLAGER.setVillager(villager, villagerEntity);
+            ModItems.VILLAGER.get().setVillager(villager, villagerEntity);
         }
         return villager;
     }
@@ -31,7 +31,7 @@ public class VillagerTileentity extends FakeWorldTileentity {
 
     public EasyVillagerEntity getVillagerEntity() {
         if (villagerEntity == null && !villager.isEmpty()) {
-            villagerEntity = ModItems.VILLAGER.getVillager(level, villager);
+            villagerEntity = ModItems.VILLAGER.get().getVillager(level, villager);
         }
         return villagerEntity;
     }
@@ -42,7 +42,7 @@ public class VillagerTileentity extends FakeWorldTileentity {
         if (villager.isEmpty()) {
             villagerEntity = null;
         } else {
-            villagerEntity = ModItems.VILLAGER.getVillager(level, villager);
+            villagerEntity = ModItems.VILLAGER.get().getVillager(level, villager);
             onAddVillager(villagerEntity);
         }
         setChanged();

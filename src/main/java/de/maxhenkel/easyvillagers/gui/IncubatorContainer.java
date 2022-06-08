@@ -7,11 +7,11 @@ import net.minecraft.world.inventory.Slot;
 public class IncubatorContainer extends InputOutputContainer {
 
     public IncubatorContainer(int id, Inventory playerInventory, Container inputInventory, Container outputInventory) {
-        super(Containers.INCUBATOR_CONTAINER, id, playerInventory, inputInventory, outputInventory);
+        super(Containers.INCUBATOR_CONTAINER.get(), id, playerInventory, inputInventory, outputInventory);
     }
 
     public IncubatorContainer(int id, Inventory playerInventory) {
-        super(Containers.INCUBATOR_CONTAINER, id, playerInventory);
+        super(Containers.INCUBATOR_CONTAINER.get(), id, playerInventory);
     }
 
     @Override
