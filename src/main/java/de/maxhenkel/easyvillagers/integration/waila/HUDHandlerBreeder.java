@@ -1,15 +1,19 @@
 package de.maxhenkel.easyvillagers.integration.waila;
 
+import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.blocks.tileentity.BreederTileentity;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
-import mcp.mobius.waila.api.BlockAccessor;
-import mcp.mobius.waila.api.IComponentProvider;
-import mcp.mobius.waila.api.ITooltip;
-import mcp.mobius.waila.api.config.IPluginConfig;
+import net.minecraft.resources.ResourceLocation;
+import snownee.jade.api.BlockAccessor;
+import snownee.jade.api.IBlockComponentProvider;
+import snownee.jade.api.ITooltip;
+import snownee.jade.api.config.IPluginConfig;
 
-public class HUDHandlerBreeder implements IComponentProvider {
+public class HUDHandlerBreeder implements IBlockComponentProvider {
 
     public static final HUDHandlerBreeder INSTANCE = new HUDHandlerBreeder();
+
+    private static final ResourceLocation UID = new ResourceLocation(Main.MODID, "breeder");
 
     @Override
     public void appendTooltip(ITooltip iTooltip, BlockAccessor blockAccessor, IPluginConfig iPluginConfig) {
@@ -24,5 +28,10 @@ public class HUDHandlerBreeder implements IComponentProvider {
                 iTooltip.add(villager2.getAdvancedName());
             }
         }
+    }
+
+    @Override
+    public ResourceLocation getUid() {
+        return UID;
     }
 }

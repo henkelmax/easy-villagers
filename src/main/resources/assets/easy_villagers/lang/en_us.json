@@ -23,5 +23,8 @@
   "jei.easy_villagers.incubating": "Incubating",
   "key.easy_villagers.pick_up": "Pick Up",
   "key.easy_villagers.cycle_trades": "Cycle Trades",
-  "category.easy_villagers": "Easy Villagers"
+  "category.easy_villagers": "Easy Villagers",
+  "config.jade.plugin_easy_villagers.villager": "Villager",
+  "config.jade.plugin_easy_villagers.converter": "Converter",
+  "config.jade.plugin_easy_villagers.breeder": "Breeder"
 }

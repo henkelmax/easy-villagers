@@ -1,1 +1,2 @@
-- Updated to 1.19
+- Re added Jade support
+- Re added The One Probe support

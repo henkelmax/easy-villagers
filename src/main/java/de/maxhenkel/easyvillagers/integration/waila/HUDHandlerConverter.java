@@ -1,18 +1,21 @@
 package de.maxhenkel.easyvillagers.integration.waila;
 
+import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.blocks.tileentity.ConverterTileentity;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
-import mcp.mobius.waila.api.BlockAccessor;
-import mcp.mobius.waila.api.IComponentProvider;
-import mcp.mobius.waila.api.ITooltip;
-import mcp.mobius.waila.api.config.IPluginConfig;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.npc.VillagerProfession;
+import snownee.jade.api.BlockAccessor;
+import snownee.jade.api.IBlockComponentProvider;
+import snownee.jade.api.ITooltip;
+import snownee.jade.api.config.IPluginConfig;
 
-public class HUDHandlerConverter implements IComponentProvider {
+public class HUDHandlerConverter implements IBlockComponentProvider {
 
     public static final HUDHandlerConverter INSTANCE = new HUDHandlerConverter();
+
+    private static final ResourceLocation UID = new ResourceLocation(Main.MODID, "converter");
 
     @Override
     public void appendTooltip(ITooltip iTooltip, BlockAccessor blockAccessor, IPluginConfig iPluginConfig) {
@@ -22,10 +25,10 @@ public class HUDHandlerConverter implements IComponentProvider {
                 if (converter.getTimer() >= ConverterTileentity.getZombifyTime() && converter.getTimer() < ConverterTileentity.getConvertTime()) {
                     VillagerProfession profession = villagerEntity.getVillagerData().getProfession();
                     if (profession.equals(VillagerProfession.NONE)) {
-                        iTooltip.add(new TranslatableComponent("entity.minecraft.zombie_villager"));
+                        iTooltip.add(Component.translatable("entity.minecraft.zombie_villager"));
                     } else {
-                        iTooltip.add(new TranslatableComponent("tooltip.easy_villagers.zombie_villager_profession",
-                                new TranslatableComponent("entity.minecraft.zombie_villager"),
+                        iTooltip.add(Component.translatable("tooltip.easy_villagers.zombie_villager_profession",
+                                Component.translatable("entity.minecraft.zombie_villager"),
                                 villagerEntity.getAdvancedName()
                         ));
                     }
@@ -37,5 +40,10 @@ public class HUDHandlerConverter implements IComponentProvider {
                 }
             }
         }
+    }
+
+    @Override
+    public ResourceLocation getUid() {
+        return UID;
     }
 }

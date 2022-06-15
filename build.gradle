@@ -114,9 +114,9 @@ dependencies {
 //    compileOnly fg.deobf("mcjty.theoneprobe:TheOneProbe-${theoneprobe_mc_version}:${theoneprobe_mc_version}-${theoneprobe_version}:api")
 //    runtimeMod fg.deobf("mcjty.theoneprobe:TheOneProbe-${theoneprobe_mc_version}:${theoneprobe_mc_version}-${theoneprobe_version}")
 
-//    implementation fg.deobf("curse.maven:the-one-probe-245211:3671753")
+    implementation fg.deobf("curse.maven:the-one-probe-245211:3825695")
 
-//    implementation fg.deobf("curse.maven:jade-324717:${jade_id}")
+    implementation fg.deobf("curse.maven:jade-324717:${jade_id}")
 
     shadow fg.deobf("de.maxhenkel.corelib:corelib:${mod_minecraft_version}-${corelib_version}:api")
     runtimeOnly fg.deobf("de.maxhenkel.corelib:corelib:${mod_minecraft_version}-${corelib_version}")
@@ -256,7 +256,7 @@ reobf {
 sourceSets {
     main {
         java {
-            exclude 'de/maxhenkel/easyvillagers/integration/*/**'
+            exclude 'de/maxhenkel/easyvillagers/integration/jei/*/**'
         }
     }
 }
