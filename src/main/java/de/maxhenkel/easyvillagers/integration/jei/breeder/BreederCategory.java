@@ -31,17 +31,17 @@ public class BreederCategory implements IRecipeCategory<ItemStack> {
 
     @Override
     public IDrawable getIcon() {
-        return helper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.BREEDER.get()));
+        return helper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.BREEDER.get()));
     }
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, ItemStack recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 1, 1).addIngredient(VanillaTypes.ITEM, recipe);
+        builder.addSlot(RecipeIngredientRole.INPUT, 1, 1).addIngredient(VanillaTypes.ITEM_STACK, recipe);
         builder.addSlot(RecipeIngredientRole.INPUT, 19, 1);
         builder.addSlot(RecipeIngredientRole.INPUT, 37, 1);
         builder.addSlot(RecipeIngredientRole.INPUT, 55, 1);
 
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 1, 32).addIngredient(VanillaTypes.ITEM, VillagerItem.getBabyVillager());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 1, 32).addIngredient(VanillaTypes.ITEM_STACK, VillagerItem.getBabyVillager());
         builder.addSlot(RecipeIngredientRole.OUTPUT, 19, 32);
         builder.addSlot(RecipeIngredientRole.OUTPUT, 37, 32);
         builder.addSlot(RecipeIngredientRole.OUTPUT, 55, 32);
@@ -56,16 +56,5 @@ public class BreederCategory implements IRecipeCategory<ItemStack> {
     public RecipeType<ItemStack> getRecipeType() {
         return JEIPlugin.CATEGORY_BREEDING;
     }
-
-    @Override
-    public ResourceLocation getUid() {
-        return new ResourceLocation(Main.MODID, "breeding");
-    }
-
-    @Override
-    public Class<? extends ItemStack> getRecipeClass() {
-        return ItemStack.class;
-    }
-
 
 }

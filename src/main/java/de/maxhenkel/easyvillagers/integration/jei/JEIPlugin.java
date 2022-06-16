@@ -38,9 +38,9 @@ public class JEIPlugin implements IModPlugin {
 
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
-        registration.addRecipeCatalyst(VanillaTypes.ITEM, new ItemStack(ModBlocks.BREEDER.get()), CATEGORY_BREEDING);
-        registration.addRecipeCatalyst(VanillaTypes.ITEM, new ItemStack(ModBlocks.CONVERTER.get()), CATEGORY_CONVERTING);
-        registration.addRecipeCatalyst(VanillaTypes.ITEM, new ItemStack(ModBlocks.INCUBATOR.get()), CATEGORY_INCUBATING);
+        registration.addRecipeCatalyst(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.BREEDER.get()), CATEGORY_BREEDING);
+        registration.addRecipeCatalyst(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.CONVERTER.get()), CATEGORY_CONVERTING);
+        registration.addRecipeCatalyst(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.INCUBATOR.get()), CATEGORY_INCUBATING);
     }
 
     @Override
