@@ -1,3 +1,5 @@
+<!-- modrinth_exclude.start -->
+
 # Easy Villagers ![](http://cf.way2muchnoise.eu/full_400514_downloads.svg) ![](http://cf.way2muchnoise.eu/versions/400514.svg)
 
 ## Links
@@ -8,6 +10,8 @@
 - [Credits](https://modrepo.de/minecraft/easy_villagers/credits)
 
 ---
+
+<!-- modrinth_exclude.end -->
 
 This mod lets you pick up villagers as an item.
 There are also blocks that substitute every farm that includes villagers.

@@ -13,6 +13,7 @@ plugins {
     // https://github.com/matthewprenger/CurseGradle
     id "com.matthewprenger.cursegradle" version "1.4.0"
     id "com.github.johnrengelman.shadow" version "7.1.0"
+    id "com.modrinth.minotaur" version "2.+"
 }
 
 apply plugin: 'net.minecraftforge.gradle'
@@ -168,7 +169,7 @@ curseforge {
         id = curse_id
         changelogType = 'markdown'
         changelog = file('changelog.md')
-        releaseType = curse_release_type
+        releaseType = release_type
         addGameVersion mod_minecraft_version
         addGameVersion 'Forge'
         addGameVersion 'Java 17'
@@ -182,6 +183,27 @@ curseforge {
         }
     }
 }
+
+tasks.modrinth.configure({
+    group = 'upload'
+})
+tasks.modrinthSyncBody.configure({
+    group = 'upload'
+})
+
+modrinth {
+    token = file("${rootDir}/modrinth_token.txt").exists() ? file("${rootDir}/modrinth_token.txt").text : ''
+    projectId = modrinth_id
+    versionNumber = "forge-${mod_version}"
+    versionName = "[FORGE][${mod_minecraft_version}] ${mod_name} ${mod_version}"
+    uploadFile = jar
+    versionType = release_type.toUpperCase()
+    changelog = file("changelog.md").text
+    gameVersions = [mod_minecraft_version]
+    loaders = ['forge']
+    syncBodyFrom = file("readme.md").text
+}
+tasks.modrinth.dependsOn(build)
 
 forgeUpdate {
     def messages = []
@@ -203,7 +225,7 @@ forgeUpdate {
     gameVersion = mod_minecraft_version
     modVersion = mod_version
     updateMessages = messages
-    releaseType = curse_release_type
+    releaseType = release_type
     tags = recommended == 'true' ? ['recommended'] : []
 }
 
