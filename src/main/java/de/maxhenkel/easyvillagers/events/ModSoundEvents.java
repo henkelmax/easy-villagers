@@ -16,6 +16,13 @@ public class ModSoundEvents {
         }
     }
 
+    @SubscribeEvent
+    public void onSound(PlayLevelSoundEvent.AtPosition event) {
+        if (event.getSound() != null && event.getSource() != null && isVillagerSound(event.getSound()) && event.getSource().equals(SoundSource.BLOCKS)) {
+            event.setNewVolume(Main.CLIENT_CONFIG.villagerVolume.get().floatValue());
+        }
+    }
+
     private boolean isVillagerSound(SoundEvent event) {
         return event.equals(SoundEvents.VILLAGER_NO)
                 || event.equals(SoundEvents.VILLAGER_CELEBRATE)
