@@ -7,11 +7,12 @@ import de.maxhenkel.easyvillagers.blocks.TraderBlock;
 import de.maxhenkel.easyvillagers.blocks.tileentity.FarmerTileentity;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.EmptyModelData;
+import net.minecraftforge.client.model.data.ModelData;
 
 public class FarmerRenderer extends VillagerRendererBase<FarmerTileentity> {
 
@@ -53,7 +54,8 @@ public class FarmerRenderer extends VillagerRendererBase<FarmerTileentity> {
 
             BlockRenderDispatcher dispatcher = minecraft.getBlockRenderer();
             int color = minecraft.getBlockColors().getColor(crop, null, null, 0);
-            dispatcher.getModelRenderer().renderModel(matrixStack.last(), buffer.getBuffer(ItemBlockRenderTypes.getRenderType(crop, false)), crop, dispatcher.getBlockModel(crop), RenderUtils.getRed(color), RenderUtils.getGreen(color), RenderUtils.getBlue(color), combinedLight, combinedOverlay, EmptyModelData.INSTANCE);
+            RenderType renderType = ItemBlockRenderTypes.getRenderType(crop, false);
+            dispatcher.getModelRenderer().renderModel(matrixStack.last(), buffer.getBuffer(renderType), crop, dispatcher.getBlockModel(crop), RenderUtils.getRed(color), RenderUtils.getGreen(color), RenderUtils.getBlue(color), combinedLight, combinedOverlay, ModelData.EMPTY, renderType);
             matrixStack.popPose();
         }
 

@@ -47,7 +47,7 @@ public class VillagerEvents {
 
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
-    public void onKeyInput(InputEvent.KeyInputEvent event) {
+    public void onKeyInput(InputEvent.Key event) {
         if (!Main.PICKUP_KEY.consumeClick()) {
             return;
         }

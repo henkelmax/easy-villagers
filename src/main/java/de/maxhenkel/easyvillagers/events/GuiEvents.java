@@ -23,7 +23,10 @@ public class GuiEvents {
 
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
-    public void onOpenScreen(ScreenEvent.InitScreenEvent.Post event) {
+    public void onOpenScreen(ScreenEvent.Init.Post event) {
+        if (Minecraft.getInstance().player == null) {
+            return;
+        }
         if (!Main.SERVER_CONFIG.tradeCycling.get()) {
             return;
         }
@@ -59,7 +62,7 @@ public class GuiEvents {
 
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
-    public void onKeyInput(InputEvent.KeyInputEvent event) {
+    public void onKeyInput(InputEvent.Key event) {
         if (event.getKey() != Main.CYCLE_TRADES_KEY.getKey().getValue() || event.getAction() != 0) {
             return;
         }

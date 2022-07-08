@@ -24,7 +24,7 @@ import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.AttachFace;
-import net.minecraftforge.client.model.data.EmptyModelData;
+import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.HashMap;
@@ -95,7 +95,7 @@ public class TraderRenderer extends VillagerRendererBase<TraderTileentity> {
             BlockRenderDispatcher dispatcher = Minecraft.getInstance().getBlockRenderer();
             int color = Minecraft.getInstance().getBlockColors().getColor(state, null, null, 0);
             RenderType renderType = ItemBlockRenderTypes.getRenderType(state, false);
-            dispatcher.getModelRenderer().renderModel(matrixStack.last(), buffer.getBuffer(renderType), state, dispatcher.getBlockModel(state), RenderUtils.getRed(color), RenderUtils.getGreen(color), RenderUtils.getBlue(color), combinedLight, OverlayTexture.NO_OVERLAY, EmptyModelData.INSTANCE);
+            dispatcher.getModelRenderer().renderModel(matrixStack.last(), buffer.getBuffer(renderType), state, dispatcher.getBlockModel(state), RenderUtils.getRed(color), RenderUtils.getGreen(color), RenderUtils.getBlue(color), combinedLight, OverlayTexture.NO_OVERLAY, ModelData.EMPTY, renderType);
         } else {
             Pair<BlockEntityRenderer<BlockEntity>, BlockEntity> renderer = getRenderer(state);
             if (renderer != null) {

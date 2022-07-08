@@ -1,1 +1,1 @@
-- Re added JEI integration
+- Updated Forge version
