@@ -9,7 +9,6 @@ import de.maxhenkel.easyvillagers.events.ModSoundEvents;
 import de.maxhenkel.easyvillagers.events.VillagerEvents;
 import de.maxhenkel.easyvillagers.gui.Containers;
 import de.maxhenkel.easyvillagers.integration.IMC;
-import de.maxhenkel.easyvillagers.integration.IMC;
 import de.maxhenkel.easyvillagers.items.ModItems;
 import de.maxhenkel.easyvillagers.net.MessageCycleTrades;
 import de.maxhenkel.easyvillagers.net.MessagePickUpVillager;
@@ -80,7 +79,6 @@ public class Main {
     public void clientSetup(FMLClientSetupEvent event) {
         ModTileEntities.clientSetup();
         Containers.clientSetup();
-        ModBlocks.clientSetup();
 
         MinecraftForge.EVENT_BUS.register(new ModSoundEvents());
         MinecraftForge.EVENT_BUS.register(new GuiEvents());

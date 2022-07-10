@@ -1,6 +1,7 @@
 {
 	"parent": "block/block",
 	"ambientocclusion": false,
+	"render_type": "cutout",
 	"textures": {
 		"1": "minecraft:block/glass",
 		"2": "minecraft:block/iron_block",

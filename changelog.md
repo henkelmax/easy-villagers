@@ -1,1 +1,1 @@
-- Re-added mod integrations
+- Fixed block render types

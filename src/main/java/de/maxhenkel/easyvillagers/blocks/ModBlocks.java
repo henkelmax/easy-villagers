@@ -1,12 +1,8 @@
 package de.maxhenkel.easyvillagers.blocks;
 
 import de.maxhenkel.easyvillagers.Main;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -25,18 +21,6 @@ public class ModBlocks {
 
     public static void init() {
         BLOCK_REGISTER.register(FMLJavaModLoadingContext.get().getModEventBus());
-    }
-
-    public static void clientSetup() {
-        if (FMLEnvironment.dist == Dist.CLIENT) {
-            ItemBlockRenderTypes.setRenderLayer(TRADER.get(), RenderType.cutout());
-            ItemBlockRenderTypes.setRenderLayer(AUTO_TRADER.get(), RenderType.cutout());
-            ItemBlockRenderTypes.setRenderLayer(FARMER.get(), RenderType.cutout());
-            ItemBlockRenderTypes.setRenderLayer(BREEDER.get(), RenderType.cutout());
-            ItemBlockRenderTypes.setRenderLayer(CONVERTER.get(), RenderType.cutout());
-            ItemBlockRenderTypes.setRenderLayer(IRON_FARM.get(), RenderType.cutout());
-            ItemBlockRenderTypes.setRenderLayer(INCUBATOR.get(), RenderType.cutout());
-        }
     }
 
 }
