@@ -14,7 +14,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class ModTileEntities {
 
-    private static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_REGISTER = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, Main.MODID);
+    private static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_REGISTER = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, Main.MODID);
 
     public static final RegistryObject<BlockEntityType<TraderTileentity>> TRADER = BLOCK_ENTITY_REGISTER.register("trader", () ->
             BlockEntityType.Builder.of(TraderTileentity::new, ModBlocks.TRADER.get()).build(null)

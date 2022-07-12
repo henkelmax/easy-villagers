@@ -57,7 +57,7 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
     }
 
     public VillagerProfession getWorkstationProfession() {
-        return PoiTypes.forState(workstation.defaultBlockState()).flatMap(pointOfInterestType -> ForgeRegistries.PROFESSIONS.getValues().stream().filter(villagerProfession -> villagerProfession.heldJobSite().test(pointOfInterestType)).findFirst()).orElse(VillagerProfession.NONE);
+        return PoiTypes.forState(workstation.defaultBlockState()).flatMap(pointOfInterestType -> ForgeRegistries.VILLAGER_PROFESSIONS.getValues().stream().filter(villagerProfession -> villagerProfession.heldJobSite().test(pointOfInterestType)).findFirst()).orElse(VillagerProfession.NONE);
     }
 
     @Override

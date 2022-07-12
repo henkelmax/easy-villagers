@@ -29,7 +29,7 @@ public class VillagerEvents {
         }
 
         Villager villager = (Villager) event.getTarget();
-        Player player = event.getPlayer();
+        Player player = event.getEntity();
 
         if (player.level.isClientSide || !player.isShiftKeyDown()) {
             return;

@@ -13,7 +13,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class Containers {
 
-    private static final DeferredRegister<MenuType<?>> MENU_TYPE_REGISTER = DeferredRegister.create(ForgeRegistries.CONTAINERS, Main.MODID);
+    private static final DeferredRegister<MenuType<?>> MENU_TYPE_REGISTER = DeferredRegister.create(ForgeRegistries.MENU_TYPES, Main.MODID);
 
     public static final RegistryObject<MenuType<AutoTraderContainer>> AUTO_TRADER_CONTAINER = MENU_TYPE_REGISTER.register("auto_trader", () ->
             IForgeMenuType.create((windowId, inv, data) -> new AutoTraderContainer(windowId, inv))
