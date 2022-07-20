@@ -20,6 +20,9 @@ public class VillagerEvents {
 
     @SubscribeEvent
     public void onClick(PlayerInteractEvent.EntityInteract event) {
+        if (!event.getLevel().isClientSide) {
+            return;
+        }
         if (!(event.getTarget() instanceof Villager)) {
             return;
         }
@@ -31,7 +34,7 @@ public class VillagerEvents {
         Villager villager = (Villager) event.getTarget();
         Player player = event.getPlayer();
 
-        if (player.level.isClientSide || !player.isShiftKeyDown()) {
+        if (!player.isShiftKeyDown()) {
             return;
         }
 
@@ -39,7 +42,7 @@ public class VillagerEvents {
             return;
         }
 
-        pickUp(villager, player);
+        Main.SIMPLE_CHANNEL.sendToServer(new MessagePickUpVillager(villager.getUUID()));
 
         event.setCancellationResult(InteractionResult.SUCCESS);
         event.setCanceled(true);
@@ -62,6 +65,10 @@ public class VillagerEvents {
     }
 
     public static void pickUp(Villager villager, Player player) {
+        if (!arePickupConditionsMet(villager)) {
+            return;
+        }
+
         ItemStack stack = new ItemStack(ModItems.VILLAGER);
 
         ModItems.VILLAGER.setVillager(stack, villager);
