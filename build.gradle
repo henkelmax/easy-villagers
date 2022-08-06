@@ -79,22 +79,6 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 repositories {
     mavenLocal()
     maven {
-        name 'tterrag maven'
-        url "https://maven.tterrag.com/"
-    }
-    maven {
-        name = "Progwml6 maven"
-        url = "https://dvs1.progwml6.com/files/maven/"
-    }
-    maven {
-        name = "ModMaven"
-        url = "https://modmaven.k-4u.nl"
-    }
-    maven {
-        name = "Hwyla"
-        url = "https://maven.tehnut.info"
-    }
-    maven {
         name = "henkelmax.public"
         url = 'https://maven.maxhenkel.de/repository/public'
     }
@@ -109,15 +93,9 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:${mod_minecraft_version}-${forge_version}"
 
-//    compileOnly fg.deobf("mezz.jei:jei-${jei_mc_version}:${jei_version}:api")
-//    runtimeOnly fg.deobf("mezz.jei:jei-${jei_mc_version}:${jei_version}")
+    compileOnly fg.deobf("curse.maven:jei-238222:${jei_id}")
 
-    compileOnly fg.deobf("curse.maven:jei-238222:3903068")
-
-//    compileOnly fg.deobf("mcjty.theoneprobe:TheOneProbe-${theoneprobe_mc_version}:${theoneprobe_mc_version}-${theoneprobe_version}:api")
-//    runtimeMod fg.deobf("mcjty.theoneprobe:TheOneProbe-${theoneprobe_mc_version}:${theoneprobe_mc_version}-${theoneprobe_version}")
-
-    compileOnly fg.deobf("curse.maven:the-one-probe-245211:3871444")
+    compileOnly fg.deobf("curse.maven:the-one-probe-245211:${theoneprobe_id}")
 
     compileOnly fg.deobf("curse.maven:jade-324717:${jade_id}")
 
