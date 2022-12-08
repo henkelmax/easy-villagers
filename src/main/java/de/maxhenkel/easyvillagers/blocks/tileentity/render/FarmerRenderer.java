@@ -1,7 +1,7 @@
 package de.maxhenkel.easyvillagers.blocks.tileentity.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import de.maxhenkel.corelib.client.RenderUtils;
 import de.maxhenkel.easyvillagers.blocks.TraderBlock;
 import de.maxhenkel.easyvillagers.blocks.tileentity.FarmerTileentity;
@@ -34,7 +34,7 @@ public class FarmerRenderer extends VillagerRendererBase<FarmerTileentity> {
             matrixStack.pushPose();
 
             matrixStack.translate(0.5D, 1D / 16D, 0.5D);
-            matrixStack.mulPose(Vector3f.YP.rotationDegrees(-direction.toYRot()));
+            matrixStack.mulPose(Axis.YP.rotationDegrees(-direction.toYRot()));
             matrixStack.translate(0D, 0D, -4D / 16D);
             matrixStack.scale(0.45F, 0.45F, 0.45F);
             villagerRenderer.render(farmer.getVillagerEntity(), 0F, 1F, matrixStack, buffer, combinedLight);
@@ -46,7 +46,7 @@ public class FarmerRenderer extends VillagerRendererBase<FarmerTileentity> {
             matrixStack.pushPose();
 
             matrixStack.translate(0.5D, 1D / 16D, 0.5D);
-            matrixStack.mulPose(Vector3f.YP.rotationDegrees(-direction.toYRot()));
+            matrixStack.mulPose(Axis.YP.rotationDegrees(-direction.toYRot()));
             matrixStack.translate(0D, 0D, 2D / 16D);
             matrixStack.translate(-0.5D, 0D, -0.5D);
             matrixStack.scale(0.45F, 0.45F, 0.45F);

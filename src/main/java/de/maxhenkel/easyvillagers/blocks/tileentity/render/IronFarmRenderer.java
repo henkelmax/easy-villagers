@@ -1,7 +1,7 @@
 package de.maxhenkel.easyvillagers.blocks.tileentity.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import de.maxhenkel.easyvillagers.blocks.TraderBlock;
 import de.maxhenkel.easyvillagers.blocks.tileentity.IronFarmTileentity;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -47,9 +47,9 @@ public class IronFarmRenderer extends VillagerRendererBase<IronFarmTileentity> {
         if (farm.getVillagerEntity() != null) {
             matrixStack.pushPose();
             matrixStack.translate(0.5D, 1D / 16D, 0.5D);
-            matrixStack.mulPose(Vector3f.YP.rotationDegrees(-direction.toYRot()));
+            matrixStack.mulPose(Axis.YP.rotationDegrees(-direction.toYRot()));
             matrixStack.translate(-5D / 16D, 0D, -5D / 16D);
-            matrixStack.mulPose(Vector3f.YP.rotationDegrees(90));
+            matrixStack.mulPose(Axis.YP.rotationDegrees(90));
             matrixStack.scale(0.3F, 0.3F, 0.3F);
             villagerRenderer.render(farm.getVillagerEntity(), 0F, 1F, matrixStack, buffer, combinedLight);
             matrixStack.popPose();
@@ -57,9 +57,9 @@ public class IronFarmRenderer extends VillagerRendererBase<IronFarmTileentity> {
 
         matrixStack.pushPose();
         matrixStack.translate(0.5D, 1D / 16D, 0.5D);
-        matrixStack.mulPose(Vector3f.YP.rotationDegrees(-direction.toYRot()));
+        matrixStack.mulPose(Axis.YP.rotationDegrees(-direction.toYRot()));
         matrixStack.translate(5D / 16D, 0D, -5D / 16D);
-        matrixStack.mulPose(Vector3f.YP.rotationDegrees(-90));
+        matrixStack.mulPose(Axis.YP.rotationDegrees(-90));
         matrixStack.scale(0.3F, 0.3F, 0.3F);
         zombieRenderer.render(zombie, 0F, 1F, matrixStack, buffer, combinedLight);
         matrixStack.popPose();
@@ -67,7 +67,7 @@ public class IronFarmRenderer extends VillagerRendererBase<IronFarmTileentity> {
         if (farm.getTimer() >= IronFarmTileentity.getGolemSpawnTime() && farm.getTimer() < IronFarmTileentity.getGolemKillTime()) {
             matrixStack.pushPose();
             matrixStack.translate(0.5D, 1D / 16D, 0.5D);
-            matrixStack.mulPose(Vector3f.YP.rotationDegrees(-direction.toYRot()));
+            matrixStack.mulPose(Axis.YP.rotationDegrees(-direction.toYRot()));
             matrixStack.translate(0D, 0D, 3D / 16D);
             matrixStack.scale(0.3F, 0.3F, 0.3F);
             if (farm.getTimer() % 20 < 10) {

@@ -3,7 +3,9 @@ package de.maxhenkel.easyvillagers.gui;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.maxhenkel.easyvillagers.Main;
+import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.inventory.MerchantScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
@@ -11,8 +13,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.MerchantMenu;
 
 import java.util.Collections;
+import java.util.function.Consumer;
 
-public class CycleTradesButton extends Button {
+public class CycleTradesButton extends AbstractButton {
 
     private static final ResourceLocation ARROW_BUTTON = new ResourceLocation(Main.MODID, "textures/gui/container/arrow_button.png");
 
@@ -20,9 +23,11 @@ public class CycleTradesButton extends Button {
     public static final int HEIGHT = 14;
 
     private MerchantScreen screen;
+    private Consumer<CycleTradesButton> onPress;
 
-    public CycleTradesButton(int x, int y, OnPress pressable, MerchantScreen screen) {
-        super(x, y, WIDTH, HEIGHT, Component.empty(), pressable);
+    public CycleTradesButton(int x, int y, Consumer<CycleTradesButton> onPress, MerchantScreen screen) {
+        super(x, y, WIDTH, HEIGHT, Component.empty());
+        this.onPress = onPress;
         this.screen = screen;
     }
 
@@ -38,15 +43,24 @@ public class CycleTradesButton extends Button {
         RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
         RenderSystem.setShaderTexture(0, ARROW_BUTTON);
         if (isHovered) {
-            blit(matrixStack, x, y, 0, 14, WIDTH, HEIGHT, 32, 32);
+            blit(matrixStack, getX(), getY(), 0, 14, WIDTH, HEIGHT, 32, 32);
             screen.renderTooltip(matrixStack, Collections.singletonList(Component.translatable("tooltip.easy_villagers.cycle_trades").getVisualOrderText()), mouseX, mouseY, screen.getMinecraft().font);
         } else {
-            blit(matrixStack, x, y, 0, 0, WIDTH, HEIGHT, 32, 32);
+            blit(matrixStack, getX(), getY(), 0, 0, WIDTH, HEIGHT, 32, 32);
         }
+    }
+
+    @Override
+    protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
+        updateNarration(narrationElementOutput);
     }
 
     public static boolean canCycle(MerchantMenu menu) {
         return menu.showProgressBar() && menu.getTraderXp() <= 0 && menu.tradeContainer.getActiveOffer() == null;
     }
 
+    @Override
+    public void onPress() {
+        onPress.accept(this);
+    }
 }

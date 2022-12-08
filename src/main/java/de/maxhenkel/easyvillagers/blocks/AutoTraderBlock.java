@@ -3,7 +3,6 @@ package de.maxhenkel.easyvillagers.blocks;
 import de.maxhenkel.corelib.client.CustomRendererBlockItem;
 import de.maxhenkel.corelib.client.ItemRenderer;
 import de.maxhenkel.easyvillagers.ItemTileEntityCache;
-import de.maxhenkel.easyvillagers.ModItemGroups;
 import de.maxhenkel.easyvillagers.blocks.tileentity.AutoTraderTileentity;
 import de.maxhenkel.easyvillagers.blocks.tileentity.TraderTileentityBase;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
@@ -34,7 +33,7 @@ public class AutoTraderBlock extends TraderBlockBase {
 
     @Override
     public Item toItem() {
-        return new CustomRendererBlockItem(this, new Item.Properties().tab(ModItemGroups.TAB_EASY_VILLAGERS)) {
+        return new CustomRendererBlockItem(this, new Item.Properties()/*.tab(ModItemGroups.TAB_EASY_VILLAGERS)*/) { // TODO Fix creative tab
             @OnlyIn(Dist.CLIENT)
             @Override
             public ItemRenderer createItemRenderer() {

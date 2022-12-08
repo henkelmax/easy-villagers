@@ -1,7 +1,7 @@
 package de.maxhenkel.easyvillagers.blocks.tileentity.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import de.maxhenkel.easyvillagers.blocks.TraderBlock;
 import de.maxhenkel.easyvillagers.blocks.tileentity.ConverterTileentity;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
@@ -48,9 +48,9 @@ public class ConverterRenderer extends VillagerRendererBase<ConverterTileentity>
         if (villagerEntity != null) {
             matrixStack.pushPose();
             matrixStack.translate(0.5D, 1D / 16D, 0.5D);
-            matrixStack.mulPose(Vector3f.YP.rotationDegrees(-direction.toYRot()));
+            matrixStack.mulPose(Axis.YP.rotationDegrees(-direction.toYRot()));
             matrixStack.translate(-5D / 16D, 0D, 0D);
-            matrixStack.mulPose(Vector3f.YP.rotationDegrees(90));
+            matrixStack.mulPose(Axis.YP.rotationDegrees(90));
             matrixStack.scale(0.4F, 0.4F, 0.4F);
             if (converter.getTimer() >= ConverterTileentity.getZombifyTime() && converter.getTimer() < ConverterTileentity.getConvertTime()) {
                 zombieVillager.setVillagerData(villagerEntity.getVillagerData());
@@ -65,9 +65,9 @@ public class ConverterRenderer extends VillagerRendererBase<ConverterTileentity>
         matrixStack.pushPose();
 
         matrixStack.translate(0.5D, 1D / 16D, 0.5D);
-        matrixStack.mulPose(Vector3f.YP.rotationDegrees(-direction.toYRot()));
+        matrixStack.mulPose(Axis.YP.rotationDegrees(-direction.toYRot()));
         matrixStack.translate(5D / 16D, 0D, 0D);
-        matrixStack.mulPose(Vector3f.YP.rotationDegrees(-90));
+        matrixStack.mulPose(Axis.YP.rotationDegrees(-90));
         matrixStack.scale(0.4F, 0.4F, 0.4F);
         zombieRenderer.render(zombie, 0F, 1F, matrixStack, buffer, combinedLight);
         matrixStack.popPose();

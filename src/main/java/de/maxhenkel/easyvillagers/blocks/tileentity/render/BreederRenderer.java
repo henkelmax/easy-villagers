@@ -1,7 +1,7 @@
 package de.maxhenkel.easyvillagers.blocks.tileentity.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import de.maxhenkel.easyvillagers.blocks.TraderBlock;
 import de.maxhenkel.easyvillagers.blocks.tileentity.BreederTileentity;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -39,9 +39,9 @@ public class BreederRenderer extends VillagerRendererBase<BreederTileentity> {
         if (breeder.getVillagerEntity1() != null) {
             matrixStack.pushPose();
             matrixStack.translate(0.5D, 1D / 16D, 0.5D);
-            matrixStack.mulPose(Vector3f.YP.rotationDegrees(-direction.toYRot()));
+            matrixStack.mulPose(Axis.YP.rotationDegrees(-direction.toYRot()));
             matrixStack.translate(-5D / 16D, 0D, 0D);
-            matrixStack.mulPose(Vector3f.YP.rotationDegrees(90));
+            matrixStack.mulPose(Axis.YP.rotationDegrees(90));
             matrixStack.scale(0.45F, 0.45F, 0.45F);
             villagerRenderer.render(breeder.getVillagerEntity1(), 0F, 1F, matrixStack, buffer, combinedLight);
             matrixStack.popPose();
@@ -51,9 +51,9 @@ public class BreederRenderer extends VillagerRendererBase<BreederTileentity> {
             matrixStack.pushPose();
 
             matrixStack.translate(0.5D, 1D / 16D, 0.5D);
-            matrixStack.mulPose(Vector3f.YP.rotationDegrees(-direction.toYRot()));
+            matrixStack.mulPose(Axis.YP.rotationDegrees(-direction.toYRot()));
             matrixStack.translate(5D / 16D, 0D, 0D);
-            matrixStack.mulPose(Vector3f.YP.rotationDegrees(-90));
+            matrixStack.mulPose(Axis.YP.rotationDegrees(-90));
             matrixStack.scale(0.45F, 0.45F, 0.45F);
             villagerRenderer.render(breeder.getVillagerEntity2(), 0F, 1F, matrixStack, buffer, combinedLight);
             matrixStack.popPose();
@@ -61,7 +61,7 @@ public class BreederRenderer extends VillagerRendererBase<BreederTileentity> {
 
         matrixStack.pushPose();
         matrixStack.translate(0.5D, 1D / 16D, 0.5D);
-        matrixStack.mulPose(Vector3f.YP.rotationDegrees(-direction.toYRot()));
+        matrixStack.mulPose(Axis.YP.rotationDegrees(-direction.toYRot()));
         matrixStack.translate(0D, 0D, 3D / 16D);
         matrixStack.translate(-0.5D, 0D, -0.5D);
         matrixStack.scale(0.4F, 0.4F, 0.4F);

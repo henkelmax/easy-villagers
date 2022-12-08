@@ -27,8 +27,8 @@ import net.minecraft.world.entity.npc.VillagerType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
 
 public class BreederTileentity extends FakeWorldTileentity implements IServerTickableBlockEntity {
 
@@ -258,7 +258,7 @@ public class BreederTileentity extends FakeWorldTileentity implements IServerTic
 
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-        if (!remove && cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+        if (!remove && cap == ForgeCapabilities.ITEM_HANDLER) {
             return itemHandler.cast();
         }
         return super.getCapability(cap, side);

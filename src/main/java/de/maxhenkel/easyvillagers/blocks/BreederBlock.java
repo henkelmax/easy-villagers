@@ -6,7 +6,6 @@ import de.maxhenkel.corelib.client.CustomRendererBlockItem;
 import de.maxhenkel.corelib.client.ItemRenderer;
 import de.maxhenkel.corelib.item.ItemUtils;
 import de.maxhenkel.easyvillagers.ItemTileEntityCache;
-import de.maxhenkel.easyvillagers.ModItemGroups;
 import de.maxhenkel.easyvillagers.blocks.tileentity.BreederTileentity;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import de.maxhenkel.easyvillagers.gui.BreederContainer;
@@ -51,7 +50,7 @@ public class BreederBlock extends VillagerBlockBase implements EntityBlock, IIte
 
     @Override
     public Item toItem() {
-        return new CustomRendererBlockItem(this, new Item.Properties().tab(ModItemGroups.TAB_EASY_VILLAGERS)) {
+        return new CustomRendererBlockItem(this, new Item.Properties()/*.tab(ModItemGroups.TAB_EASY_VILLAGERS)*/) { // TODO Fix creative tab
             @OnlyIn(Dist.CLIENT)
             @Override
             public ItemRenderer createItemRenderer() {

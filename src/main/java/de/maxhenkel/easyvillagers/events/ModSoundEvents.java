@@ -11,14 +11,14 @@ public class ModSoundEvents {
 
     @SubscribeEvent
     public void onSound(PlayLevelSoundEvent.AtEntity event) {
-        if (event.getSound() != null && event.getSource() != null && isVillagerSound(event.getSound()) && event.getSource().equals(SoundSource.BLOCKS)) {
+        if (event.getSound() != null && event.getSource() != null && isVillagerSound(event.getSound().get()) && event.getSource().equals(SoundSource.BLOCKS)) {
             event.setNewVolume(Main.CLIENT_CONFIG.villagerVolume.get().floatValue());
         }
     }
 
     @SubscribeEvent
     public void onSound(PlayLevelSoundEvent.AtPosition event) {
-        if (event.getSound() != null && event.getSource() != null && isVillagerSound(event.getSound()) && event.getSource().equals(SoundSource.BLOCKS)) {
+        if (event.getSound() != null && event.getSource() != null && isVillagerSound(event.getSound().get()) && event.getSource().equals(SoundSource.BLOCKS)) {
             event.setNewVolume(Main.CLIENT_CONFIG.villagerVolume.get().floatValue());
         }
     }

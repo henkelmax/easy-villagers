@@ -28,13 +28,13 @@ public class AutoTraderScreen extends ScreenBase<AutoTraderContainer> {
     protected void init() {
         super.init();
 
-        addRenderableWidget(new Button(leftPos + 8, topPos + 19, 16, 20, Component.empty(), button -> {
+        addRenderableWidget(Button.builder(Component.empty(), button -> {
             Main.SIMPLE_CHANNEL.sendToServer(new MessageSelectTrade(false));
-        }));
+        }).bounds(leftPos + 8, topPos + 19, 16, 20).build());
 
-        addRenderableWidget(new Button(leftPos + imageWidth - 16 - 8, topPos + 19, 16, 20, Component.empty(), button -> {
+        addRenderableWidget(Button.builder(Component.empty(), button -> {
             Main.SIMPLE_CHANNEL.sendToServer(new MessageSelectTrade(true));
-        }));
+        }).bounds(leftPos + imageWidth - 16 - 8, topPos + 19, 16, 20).build());
     }
 
     @Override
