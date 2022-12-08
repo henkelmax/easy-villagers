@@ -45,7 +45,7 @@ public class IncubatorBlock extends VillagerBlockBase implements EntityBlock, II
 
     @Override
     public Item toItem() {
-        return new CustomRendererBlockItem(this, new Item.Properties()/*.tab(ModItemGroups.TAB_EASY_VILLAGERS)*/) { // TODO Fix creative tab
+        return new CustomRendererBlockItem(this, new Item.Properties()) {
             @OnlyIn(Dist.CLIENT)
             @Override
             public ItemRenderer createItemRenderer() {

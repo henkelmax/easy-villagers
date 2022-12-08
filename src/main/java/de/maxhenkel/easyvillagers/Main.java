@@ -3,10 +3,7 @@ package de.maxhenkel.easyvillagers;
 import de.maxhenkel.corelib.CommonRegistry;
 import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.blocks.tileentity.ModTileEntities;
-import de.maxhenkel.easyvillagers.events.BlockEvents;
-import de.maxhenkel.easyvillagers.events.GuiEvents;
-import de.maxhenkel.easyvillagers.events.ModSoundEvents;
-import de.maxhenkel.easyvillagers.events.VillagerEvents;
+import de.maxhenkel.easyvillagers.events.*;
 import de.maxhenkel.easyvillagers.gui.Containers;
 import de.maxhenkel.easyvillagers.integration.IMC;
 import de.maxhenkel.easyvillagers.items.ModItems;
@@ -48,6 +45,7 @@ public class Main {
     public Main() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(IMC::enqueueIMC);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(CreativeTabEvents::onCreativeModeTabRegister);
 
         ModBlocks.init();
         ModItems.init();
