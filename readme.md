@@ -4,9 +4,6 @@
 
 ## Links
 - [CurseForge](https://www.curseforge.com/minecraft/mc-mods/easy-villagers)
-- [ModRepo](https://modrepo.de/minecraft/easy_villagers/overview)
-- [GitHub](https://github.com/henkelmax/easy-villagers)
-- [FAQ](https://modrepo.de/minecraft/easy_villagers/faq)
 - [Credits](https://modrepo.de/minecraft/easy_villagers/credits)
 
 ---
