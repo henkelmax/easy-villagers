@@ -96,6 +96,7 @@ dependencies {
     compileOnly fg.deobf("curse.maven:jei-238222:${jei_id}")
 
     compileOnly fg.deobf("curse.maven:the-one-probe-245211:${theoneprobe_id}")
+    compileOnly fg.deobf("curse.maven:radium-reforged-570017:3949703")
 
     compileOnly fg.deobf("curse.maven:jade-324717:${jade_id}")
 
