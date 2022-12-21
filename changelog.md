@@ -1,1 +1,1 @@
-- Re-added creative tab
+- Fixed crash when cycling trades
