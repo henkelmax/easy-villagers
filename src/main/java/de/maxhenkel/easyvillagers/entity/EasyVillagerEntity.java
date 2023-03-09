@@ -59,7 +59,7 @@ public class EasyVillagerEntity extends Villager {
 
     @Override
     public int getAge() {
-        if (level.isClientSide) {
+        if (level != null && level.isClientSide) {
             return super.getAge() < 0 ? -24000 : 1;
         } else {
             return age;

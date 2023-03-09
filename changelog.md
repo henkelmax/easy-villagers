@@ -1,1 +1,1 @@
-- Fixed crash when cycling trades
+- Fixed crash with Minecolonies
