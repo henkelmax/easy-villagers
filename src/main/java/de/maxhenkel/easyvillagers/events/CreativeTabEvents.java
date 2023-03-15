@@ -20,7 +20,7 @@ public class CreativeTabEvents {
         TAB_EASY_VILLAGERS = event.registerCreativeModeTab(new ResourceLocation(Main.MODID, "easy_villagers"), builder -> {
             builder
                     .icon(() -> new ItemStack(ModItems.VILLAGER.get()))
-                    .displayItems((features, output, hasPermissions) -> {
+                    .displayItems((features, output) -> {
                         output.accept(new ItemStack(ModItems.VILLAGER.get()));
                         output.accept(VillagerItem.getBabyVillager());
 

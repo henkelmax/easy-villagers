@@ -105,7 +105,7 @@ public class IronFarmTileentity extends VillagerTileentity implements ITickableB
                 .withRandom(serverWorld.random)
                 .withParameter(LootContextParams.THIS_ENTITY, new IronGolem(EntityType.IRON_GOLEM, level))
                 .withParameter(LootContextParams.ORIGIN, new Vec3(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ()))
-                .withParameter(LootContextParams.DAMAGE_SOURCE, DamageSource.LAVA);
+                .withParameter(LootContextParams.DAMAGE_SOURCE, serverWorld.damageSources().lava());
 
         LootContext lootContext = builder.create(LootContextParamSets.ENTITY);
 
