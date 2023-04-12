@@ -3,8 +3,7 @@ package de.maxhenkel.easyvillagers.gui;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.maxhenkel.easyvillagers.Main;
-import net.minecraft.client.gui.components.AbstractButton;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.MerchantScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
@@ -44,10 +43,6 @@ public class CycleTradesButton extends Button {
         } else {
             blit(matrixStack, x, y, 0, 0, WIDTH, HEIGHT, 32, 32);
         }
-    }
-
-    @Override
-    protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
     }
 
     public static boolean canCycle(MerchantMenu menu) {
