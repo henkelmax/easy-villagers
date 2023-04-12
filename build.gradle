@@ -1,23 +1,10 @@
-buildscript {
-    repositories {
-        maven { url = 'https://maven.maxhenkel.de/repository/public' }
-        mavenCentral()
-    }
-    dependencies {
-        classpath group: 'de.maxhenkel.forge-update', name: 'forge-update', version: '1.0.4'
-    }
-}
-
 plugins {
     id 'net.minecraftforge.gradle' version '5.+'
-    // https://github.com/matthewprenger/CurseGradle
-    id "com.matthewprenger.cursegradle" version "1.4.0"
-    id "com.github.johnrengelman.shadow" version "7.1.0"
-    id "com.modrinth.minotaur" version "2.+"
+    id 'com.matthewprenger.cursegradle' version '1.4.0'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+    id 'com.modrinth.minotaur' version '2.+'
+    id 'mod-update' version '2.0.0'
 }
-
-apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'forge-update'
 apply plugin: 'idea'
 
 idea {
@@ -43,33 +30,11 @@ minecraft {
             workingDirectory project.file('run').canonicalPath
             property 'forge.logging.console.level', 'debug'
             args = ['--username', 'henkelmax']
-            source sourceSets.main
-            mods {
-                mod_id {
-                    source sourceSets.main
-                }
-            }
         }
 
         server {
             workingDirectory project.file('run/server').canonicalPath
             property 'forge.logging.console.level', 'debug'
-            source sourceSets.main
-            mods {
-                mod_id {
-                    source sourceSets.main
-                }
-            }
-        }
-        data {
-            workingDirectory project.file('run')
-            property 'forge.logging.console.level', 'debug'
-            args '--mod', mod_id, '--all', '--output', file('src/generated/resources/')
-            mods {
-                mod_id {
-                    source sourceSets.main
-                }
-            }
         }
     }
 }
@@ -78,12 +43,9 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
     mavenLocal()
+    maven { url = 'https://maven.maxhenkel.de/repository/public' }
     maven {
-        name = "henkelmax.public"
-        url = 'https://maven.maxhenkel.de/repository/public'
-    }
-    maven {
-        url "https://www.cursemaven.com"
+        url = 'https://www.cursemaven.com'
         content {
             includeGroup "curse.maven"
         }
@@ -96,7 +58,6 @@ dependencies {
     compileOnly fg.deobf("curse.maven:jei-238222:${jei_id}")
 
     compileOnly fg.deobf("curse.maven:the-one-probe-245211:${theoneprobe_id}")
-    compileOnly fg.deobf("curse.maven:radium-reforged-570017:3949703")
 
     compileOnly fg.deobf("curse.maven:jade-324717:${jade_id}")
 
@@ -109,18 +70,18 @@ dependencies {
 
 jar {
     manifest {
-        attributes(["Specification-Title"     : mod_name,
-                    "Specification-Vendor"    : mod_vendor,
-                    "Specification-Version"   : "1",
-                    "Implementation-Title"    : mod_name,
-                    "Implementation-Version"  : mod_version,
-                    "Implementation-Vendor"   : mod_vendor,
-                    "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")],)
+        attributes(['Specification-Title'     : mod_name,
+                    'Specification-Vendor'    : mod_vendor,
+                    'Specification-Version'   : '1',
+                    'Implementation-Title'    : mod_name,
+                    'Implementation-Version'  : mod_version,
+                    'Implementation-Vendor'   : mod_vendor,
+                    'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")],)
     }
 }
 
 processResources {
-    filesMatching("**/*.toml") {
+    filesMatching('**/*.toml') {
         expand 'mod_id': mod_id,
                 'mod_version': mod_version,
                 'mod_vendor': mod_vendor,
@@ -177,33 +138,19 @@ modrinth {
     versionName = "[FORGE][${mod_minecraft_version}] ${mod_name} ${mod_version}"
     uploadFile = jar
     versionType = release_type.toUpperCase()
-    changelog = file("changelog.md").text
+    changelog = file('changelog.md').text
     gameVersions = [mod_minecraft_version]
     loaders = ['forge']
-    syncBodyFrom = file("readme.md").text
+    syncBodyFrom = file('readme.md').text
 }
 tasks.modrinth.dependsOn(build)
 
-forgeUpdate {
-    def messages = []
-    file('changelog.md').eachLine { String line ->
-        if (line.trim().startsWith('-')) {
-            messages.add(line.replaceFirst('-', '').trim())
-        }
-    }
-    def apiKeyFile = file('forge_update_api_key.txt')
-    if (System.env.FORGE_UPDATE_API_KEY != null) {
-        apiKey = System.env.FORGE_UPDATE_API_KEY;
-    } else if (apiKeyFile.exists()) {
-        apiKey = apiKeyFile.text
-    } else {
-        apiKey = ""
-    }
+modUpdate {
     serverURL = 'https://update.maxhenkel.de/'
     modID = mod_id
     gameVersion = mod_minecraft_version
     modVersion = mod_version
-    updateMessages = messages
+    changelogFile = file('changelog.md')
     releaseType = release_type
     tags = recommended == 'true' ? ['recommended'] : []
 }
@@ -216,13 +163,13 @@ task deobfJar(type: Jar) {
     classifier 'deobf'
     from sourceSets.main.output
     manifest {
-        attributes(["Specification-Title"     : mod_name,
-                    "Specification-Vendor"    : mod_vendor,
-                    "Specification-Version"   : "1",
-                    "Implementation-Title"    : mod_name,
-                    "Implementation-Version"  : mod_version,
-                    "Implementation-Vendor"   : mod_vendor,
-                    "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")],)
+        attributes(['Specification-Title'     : mod_name,
+                    'Specification-Vendor'    : mod_vendor,
+                    'Specification-Version'   : '1',
+                    'Implementation-Title'    : mod_name,
+                    'Implementation-Version'  : mod_version,
+                    'Implementation-Vendor'   : mod_vendor,
+                    'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")],)
     }
 }
 
