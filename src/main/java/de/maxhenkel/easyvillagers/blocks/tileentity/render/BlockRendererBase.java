@@ -1,17 +1,13 @@
 package de.maxhenkel.easyvillagers.blocks.tileentity.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import de.maxhenkel.corelib.client.RenderUtils;
+import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.blocks.tileentity.FakeWorldTileentity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.ModelData;
 
 public class BlockRendererBase<T extends FakeWorldTileentity> implements BlockEntityRenderer<T> {
 
@@ -25,18 +21,15 @@ public class BlockRendererBase<T extends FakeWorldTileentity> implements BlockEn
 
     @Override
     public void render(T tileEntity, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
-        renderBlock(tileEntity, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
+
     }
 
-    protected void renderBlock(T tileEntity, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
-        BlockState state = tileEntity.getBlockState();
-        int color = minecraft.getBlockColors().getColor(state, null, null, 0);
-        BlockRenderDispatcher dispatcher = minecraft.getBlockRenderer();
-        dispatcher.getModelRenderer().renderModel(matrixStack.last(), buffer.getBuffer(RenderType.cutoutMipped()), state, dispatcher.getBlockModel(state), RenderUtils.getRed(color), RenderUtils.getGreen(color), RenderUtils.getBlue(color), combinedLight, combinedOverlay, ModelData.EMPTY, RenderType.cutoutMipped());
-    }
-
-    public EntityRendererProvider.Context getEntityRenderer() {
+    public EntityRendererProvider.Context createEntityRenderer() {
         return new EntityRendererProvider.Context(minecraft.getEntityRenderDispatcher(), minecraft.getItemRenderer(), minecraft.getBlockRenderer(), minecraft.gameRenderer.itemInHandRenderer, minecraft.getResourceManager(), minecraft.getEntityModels(), minecraft.font);
     }
 
+    @Override
+    public int getViewDistance() {
+        return Main.CLIENT_CONFIG.blockRenderDistance.get();
+    }
 }

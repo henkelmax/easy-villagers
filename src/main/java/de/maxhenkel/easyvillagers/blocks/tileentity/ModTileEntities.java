@@ -44,6 +44,9 @@ public class ModTileEntities {
 
     @OnlyIn(Dist.CLIENT)
     public static void clientSetup() {
+        if (!Main.CLIENT_CONFIG.renderBlockContents.get()) {
+            return;
+        }
         BlockEntityRenderers.register(ModTileEntities.TRADER.get(), TraderRenderer::new);
         BlockEntityRenderers.register(ModTileEntities.AUTO_TRADER.get(), AutoTraderRenderer::new);
         BlockEntityRenderers.register(ModTileEntities.FARMER.get(), FarmerRenderer::new);

@@ -30,12 +30,12 @@ public class IronFarmRenderer extends VillagerRendererBase<IronFarmTileentity> {
         matrixStack.pushPose();
 
         if (zombieRenderer == null) {
-            zombieRenderer = new ZombieRenderer(getEntityRenderer());
+            zombieRenderer = new ZombieRenderer(createEntityRenderer());
             zombie = new Zombie(minecraft.level);
         }
 
         if (ironGolemRenderer == null) {
-            ironGolemRenderer = new IronGolemRenderer(getEntityRenderer());
+            ironGolemRenderer = new IronGolemRenderer(createEntityRenderer());
             ironGolem = new IronGolem(EntityType.IRON_GOLEM, minecraft.level);
         }
 
