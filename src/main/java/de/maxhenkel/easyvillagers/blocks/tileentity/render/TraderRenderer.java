@@ -33,7 +33,8 @@ import java.util.function.Consumer;
 
 public class TraderRenderer extends VillagerRendererBase<TraderTileentity> {
 
-    private static final CachedMap<BlockState, Pair<BlockEntityRenderer<BlockEntity>, BlockEntity>> tileEntityCache = new CachedMap<>(10_000);
+    private static final Minecraft mc = Minecraft.getInstance();
+
     private static final CachedMap<Block, BlockState> blockStateCache = new CachedMap<>(10_000);
 
     public TraderRenderer(BlockEntityRendererProvider.Context renderer) {
@@ -77,12 +78,12 @@ public class TraderRenderer extends VillagerRendererBase<TraderTileentity> {
             BlockState workstation = getState(trader.getWorkstation());
 
             getTransforms(workstation).accept(matrixStack);
-            renderBlock(workstation, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
+            renderBlock(workstation, matrixStack, buffer, combinedLight, combinedOverlay);
 
             BlockState topBlock = getTopBlock(workstation);
             if (!topBlock.isAir()) {
                 matrixStack.translate(0D, 1D, 0D);
-                renderBlock(topBlock, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
+                renderBlock(topBlock, matrixStack, buffer, combinedLight, combinedOverlay);
             }
             matrixStack.popPose();
         }
@@ -90,37 +91,12 @@ public class TraderRenderer extends VillagerRendererBase<TraderTileentity> {
         matrixStack.popPose();
     }
 
-    public static void renderBlock(BlockState state, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
-        if (state.getBlock().getRenderShape(state) == RenderShape.MODEL) {
-            BlockRenderDispatcher dispatcher = Minecraft.getInstance().getBlockRenderer();
-            int color = Minecraft.getInstance().getBlockColors().getColor(state, null, null, 0);
-            RenderType renderType = ItemBlockRenderTypes.getRenderType(state, false);
-            dispatcher.getModelRenderer().renderModel(matrixStack.last(), buffer.getBuffer(renderType), state, dispatcher.getBlockModel(state), RenderUtils.getRed(color), RenderUtils.getGreen(color), RenderUtils.getBlue(color), combinedLight, OverlayTexture.NO_OVERLAY, ModelData.EMPTY, renderType);
-        } else {
-            Pair<BlockEntityRenderer<BlockEntity>, BlockEntity> renderer = getRenderer(state);
-            if (renderer != null) {
-                renderer.getKey().render(renderer.getValue(), partialTicks, matrixStack, buffer, combinedLight, OverlayTexture.NO_OVERLAY);
-            }
-        }
+    public static void renderBlock(BlockState state, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
+        mc.getBlockRenderer().renderSingleBlock(state, matrixStack, buffer, combinedLight, combinedOverlay);
     }
 
     public static BlockState getState(Block block) {
         return blockStateCache.get(block, () -> getFittingState(block));
-    }
-
-    public static Pair<BlockEntityRenderer<BlockEntity>, BlockEntity> getRenderer(BlockState state) {
-        return tileEntityCache.get(state, () -> {
-            if (state.getBlock() instanceof EntityBlock entityBlock) {
-                BlockEntity blockEntity = entityBlock.newBlockEntity(BlockPos.ZERO, state);
-                if (blockEntity != null) {
-                    BlockEntityRenderer<BlockEntity> renderer = Minecraft.getInstance().getBlockEntityRenderDispatcher().getRenderer(blockEntity);
-                    if (renderer != null) {
-                        return new Pair<>(renderer, blockEntity);
-                    }
-                }
-            }
-            return null;
-        });
     }
 
     protected static BlockState getFittingState(Block block) {
