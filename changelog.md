@@ -1,1 +1,3 @@
 - Fixed block rendering issues
+- Improved rendering performance
+- Added block render distance config option

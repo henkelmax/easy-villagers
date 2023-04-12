@@ -17,7 +17,7 @@ public class VillagerRendererBase<T extends FakeWorldTileentity> extends BlockRe
     @Override
     public void render(T tileEntity, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
         if (villagerRenderer == null) {
-            villagerRenderer = new VillagerRenderer(getEntityRenderer());
+            villagerRenderer = new VillagerRenderer(createEntityRenderer());
         }
         super.render(tileEntity, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
     }

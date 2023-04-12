@@ -129,7 +129,7 @@ public abstract class TraderBlockBase extends VillagerBlockBase implements Entit
 
     @Override
     public RenderShape getRenderShape(BlockState state) {
-        return RenderShape.INVISIBLE;
+        return RenderShape.MODEL;
     }
 
     @Override

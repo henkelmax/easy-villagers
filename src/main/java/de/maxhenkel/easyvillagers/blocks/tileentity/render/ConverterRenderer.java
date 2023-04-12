@@ -31,12 +31,12 @@ public class ConverterRenderer extends VillagerRendererBase<ConverterTileentity>
         matrixStack.pushPose();
 
         if (zombieRenderer == null) {
-            zombieRenderer = new ZombieRenderer(getEntityRenderer());
+            zombieRenderer = new ZombieRenderer(createEntityRenderer());
             zombie = new Zombie(minecraft.level);
         }
 
         if (zombieVillagerRenderer == null) {
-            zombieVillagerRenderer = new ZombieVillagerRenderer(getEntityRenderer());
+            zombieVillagerRenderer = new ZombieVillagerRenderer(createEntityRenderer());
             zombieVillager = new ZombieVillager(EntityType.ZOMBIE_VILLAGER, minecraft.level);
         }
 
