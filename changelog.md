@@ -1,1 +1,1 @@
-- Fixed crash with Minecolonies
+- Fixed block rendering issues
