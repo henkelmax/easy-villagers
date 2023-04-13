@@ -147,7 +147,7 @@ public class BreederBlock extends VillagerBlockBase implements EntityBlock, IIte
 
     @Override
     public RenderShape getRenderShape(BlockState state) {
-        return RenderShape.INVISIBLE;
+        return RenderShape.MODEL;
     }
 
     @OnlyIn(Dist.CLIENT)

@@ -150,7 +150,7 @@ public class FarmerBlock extends VillagerBlockBase implements EntityBlock, IItem
 
     @Override
     public RenderShape getRenderShape(BlockState state) {
-        return RenderShape.INVISIBLE;
+        return RenderShape.MODEL;
     }
 
     @OnlyIn(Dist.CLIENT)
