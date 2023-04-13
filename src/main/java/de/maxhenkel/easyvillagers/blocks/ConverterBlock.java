@@ -113,7 +113,7 @@ public class ConverterBlock extends VillagerBlockBase implements EntityBlock, II
 
     @Override
     public RenderShape getRenderShape(BlockState state) {
-        return RenderShape.INVISIBLE;
+        return RenderShape.MODEL;
     }
 
     @OnlyIn(Dist.CLIENT)
