@@ -1,16 +1,30 @@
 package de.maxhenkel.easyvillagers.blocks;
 
+import de.maxhenkel.corelib.block.VoxelUtils;
 import de.maxhenkel.easyvillagers.Main;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.eventbus.api.Event;
 
 public class VillagerBlockBase extends HorizontalRotatableBlock {
+
+    private static final VoxelShape SHAPE = VoxelUtils.combine(
+            Block.box(0D, 0D, 0D, 16D, 1D, 16D),
+            Block.box(0D, 15D, 0D, 16D, 16D, 16D),
+            Block.box(0D, 0D, 0D, 1D, 16D, 16D),
+            Block.box(15D, 0D, 0D, 16D, 16D, 16D),
+            Block.box(0D, 0D, 0D, 16D, 16D, 1D),
+            Block.box(0D, 0D, 15D, 16D, 16D, 16D)
+    );
 
     public VillagerBlockBase(Properties properties) {
         super(properties);
@@ -34,6 +48,11 @@ public class VillagerBlockBase extends HorizontalRotatableBlock {
 
     public static void playVillagerSound(Level world, BlockPos pos, SoundEvent soundEvent) {
         world.playSound(null, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, soundEvent, SoundSource.BLOCKS, 1F, 1F);
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState state, BlockGetter reader, BlockPos pos, CollisionContext context) {
+        return SHAPE;
     }
 
 }

@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.function.Function;
@@ -29,6 +30,9 @@ public class BlockItemRendererBase<T extends BlockEntityRenderer<U>, U extends F
     public void renderByItem(ItemStack itemStack, ItemTransforms.TransformType transformType, PoseStack matrixStack, MultiBufferSource buffer, int combinedLightIn, int combinedOverlayIn) {
         if (renderer == null) {
             renderer = rendererSupplier.apply(RendererProviders.createBlockEntityRendererContext());
+        }
+        if (itemStack.getItem() instanceof BlockItem blockItem) {
+            minecraft.getBlockRenderer().renderSingleBlock(blockItem.getBlock().defaultBlockState(), matrixStack, buffer, combinedLightIn, combinedOverlayIn);
         }
         renderer.render(ItemTileEntityCache.getTileEntity(itemStack, tileEntitySupplier), 0F, matrixStack, buffer, combinedLightIn, combinedOverlayIn);
     }
