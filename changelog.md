@@ -1,2 +1,1 @@
 - Fixed block rendering issues
-- Improved block shapes
