@@ -1,1 +1,1 @@
-- Fixed block rendering issues
+- Updated Chinese Simplified translation
