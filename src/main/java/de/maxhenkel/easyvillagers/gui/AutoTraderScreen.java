@@ -1,12 +1,9 @@
 package de.maxhenkel.easyvillagers.gui;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.maxhenkel.corelib.inventory.ScreenBase;
 import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.net.MessageSelectTrade;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -15,7 +12,7 @@ public class AutoTraderScreen extends ScreenBase<AutoTraderContainer> {
 
     public static final ResourceLocation BACKGROUND = new ResourceLocation(Main.MODID, "textures/gui/container/auto_trader.png");
 
-    private Inventory playerInventory;
+    private final Inventory playerInventory;
 
     public AutoTraderScreen(AutoTraderContainer container, Inventory playerInventory, Component name) {
         super(BACKGROUND, container, playerInventory, name);
@@ -28,23 +25,13 @@ public class AutoTraderScreen extends ScreenBase<AutoTraderContainer> {
     protected void init() {
         super.init();
 
-        addRenderableWidget(Button.builder(Component.empty(), button -> {
+        addRenderableWidget(new ArrowButton(leftPos + 8, topPos + 19, true, button -> {
             Main.SIMPLE_CHANNEL.sendToServer(new MessageSelectTrade(false));
         }).bounds(leftPos + 8, topPos + 19, 16, 20).build());
 
-        addRenderableWidget(Button.builder(Component.empty(), button -> {
+        addRenderableWidget(new ArrowButton(leftPos + imageWidth - 16 - 8, topPos + 19, false, button -> {
             Main.SIMPLE_CHANNEL.sendToServer(new MessageSelectTrade(true));
         }).bounds(leftPos + imageWidth - 16 - 8, topPos + 19, 16, 20).build());
-    }
-
-    @Override
-    public void render(PoseStack matrixStack, int x, int y, float partialTicks) {
-        super.render(matrixStack, x, y, partialTicks);
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
-        RenderSystem.setShaderTexture(0, BACKGROUND);
-        blit(matrixStack, leftPos + 14, topPos + 25, 176, 7, 4, 7);
-        blit(matrixStack, leftPos + imageWidth - 14 - 4, topPos + 25, 176, 0, 4, 7);
     }
 
     @Override

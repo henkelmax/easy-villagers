@@ -1,1 +1,1 @@
-- Updated Chinese Simplified translation
+- Fixed auto trader arrows on top of tooltip
