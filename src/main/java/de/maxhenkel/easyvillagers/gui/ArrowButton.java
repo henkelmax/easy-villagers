@@ -24,12 +24,12 @@ public class ArrowButton extends AbstractButton {
     }
 
     @Override
-    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float delta) {
-        super.renderButton(poseStack, mouseX, mouseY, delta);
+    public void render(PoseStack poseStack, int mouseX, int mouseY, float delta) {
+        super.render(poseStack, mouseX, mouseY, delta);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
         RenderSystem.setShaderTexture(0, left ? ARROW_LEFT : ARROW_RIGHT);
-        blit(poseStack, x, y + 2, 0, 0, width, height, 16, 16);
+        blit(poseStack, getX(), getY() + 2, 0, 0, width, height, 16, 16);
     }
 
     @Override
@@ -38,7 +38,7 @@ public class ArrowButton extends AbstractButton {
     }
 
     @Override
-    public void updateNarration(NarrationElementOutput elementOutput) {
+    protected void updateWidgetNarration(NarrationElementOutput elementOutput) {
 
     }
 
