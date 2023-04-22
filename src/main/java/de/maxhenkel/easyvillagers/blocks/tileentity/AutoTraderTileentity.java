@@ -66,15 +66,19 @@ public class AutoTraderTileentity extends TraderTileentityBase implements ITicka
 
         Villager villager = getVillagerEntity();
 
-        if (!hasEnoughItems(offer.getCostA(), false)
-                || !hasEnoughItems(offer.getCostB(), false)
-                || !canFitItems(offer.getResult(), false)) {
+        ItemStack autoTradeInputA = getAutoTradeInputA();
+        ItemStack costB = offer.getCostB();
+        ItemStack result = offer.getResult();
+
+        if (!hasEnoughItems(autoTradeInputA, false)
+                || !hasEnoughItems(costB, false)
+                || !canFitItems(result, false)) {
             return;
         }
 
-        hasEnoughItems(offer.getCostA(), true);
-        hasEnoughItems(offer.getCostB(), true);
-        canFitItems(offer.getResult(), true);
+        hasEnoughItems(autoTradeInputA, true);
+        hasEnoughItems(costB, true);
+        canFitItems(result, true);
 
         // villager.onTrade(offer) spawns XP, so we manually do all necessary stuff
         offer.increaseUses();
@@ -175,14 +179,25 @@ public class AutoTraderTileentity extends TraderTileentityBase implements ITicka
             tradeGuiInv.clearContent();
             return;
         }
-        tradeGuiInv.setItem(0, offer.getCostA());
+        tradeGuiInv.setItem(0, getAutoTradeInputA());
         tradeGuiInv.setItem(1, offer.getCostB());
         tradeGuiInv.setItem(2, offer.getResult());
     }
 
+    public ItemStack getAutoTradeInputA() {
+        MerchantOffer offer = getOffer();
+        if (offer == null) {
+            return ItemStack.EMPTY.copy();
+        }
+        ItemStack costA = offer.getCostA().copy();
+        int amount = Math.min(costA.getCount(), offer.getBaseCostA().getCount());
+        costA.setCount(amount);
+        return costA;
+    }
+
     @Nullable
     public MerchantOffer getOffer() {
-        Villager villagerEntity = getVillagerEntity();
+        EasyVillagerEntity villagerEntity = getVillagerEntity();
         if (villagerEntity == null) {
             return null;
         }
