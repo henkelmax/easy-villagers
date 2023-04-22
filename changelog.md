@@ -1,1 +1,2 @@
 - Fixed auto trader arrows on top of tooltip
+- Added locked trade indicator to auto trader
