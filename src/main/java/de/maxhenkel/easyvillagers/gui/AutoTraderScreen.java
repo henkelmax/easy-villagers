@@ -35,6 +35,14 @@ public class AutoTraderScreen extends ScreenBase<AutoTraderContainer> {
     }
 
     @Override
+    protected void renderBg(PoseStack matrixStack, float partialTicks, int mouseX, int mouseY) {
+        super.renderBg(matrixStack, partialTicks, mouseX, mouseY);
+        if (getMenu().isLocked()) {
+            blit(matrixStack, leftPos + 83, topPos + 19, 176, 0, 28, 21);
+        }
+    }
+
+    @Override
     protected void renderLabels(PoseStack matrixStack, int x, int y) {
         super.renderLabels(matrixStack, x, y);
         drawCenteredText(matrixStack, title, 6, FONT_COLOR);

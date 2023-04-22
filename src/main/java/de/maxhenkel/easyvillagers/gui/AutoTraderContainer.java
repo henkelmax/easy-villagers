@@ -7,12 +7,15 @@ import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.trading.MerchantOffer;
 
 public class AutoTraderContainer extends ContainerBase {
 
-    private AutoTraderTileentity trader;
+    private final AutoTraderTileentity trader;
+    private boolean locked;
 
     public AutoTraderContainer(int id, Inventory playerInventory, Container tradeSlots, AutoTraderTileentity trader, Container inputItems, Container outputItems) {
         super(Containers.AUTO_TRADER_CONTAINER.get(), id, playerInventory, null);
@@ -30,6 +33,38 @@ public class AutoTraderContainer extends ContainerBase {
         }
 
         addPlayerInventorySlots();
+
+        addDataSlots(FIELDS);
+    }
+
+    public final ContainerData FIELDS = new ContainerData() {
+        @Override
+        public int get(int index) {
+            if (index == 0) {
+                MerchantOffer offer = trader.getOffer();
+                if (offer == null) {
+                    return 1;
+                }
+                return offer.isOutOfStock() ? 0 : 1;
+            }
+            return 0;
+        }
+
+        @Override
+        public void set(int index, int value) {
+            if (index == 0) {
+                locked = value == 0;
+            }
+        }
+
+        @Override
+        public int getCount() {
+            return 1;
+        }
+    };
+
+    public boolean isLocked() {
+        return locked;
     }
 
     public AutoTraderContainer(int id, Inventory playerInventory, AutoTraderTileentity trader, Container inputItems, Container outputItems) {
