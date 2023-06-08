@@ -1,8 +1,8 @@
 package de.maxhenkel.easyvillagers.gui;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import de.maxhenkel.corelib.inventory.ScreenBase;
 import de.maxhenkel.easyvillagers.Main;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -23,15 +23,15 @@ public abstract class InputOutputScreen<T extends AbstractContainerMenu> extends
     }
 
     @Override
-    protected void renderLabels(PoseStack matrixStack, int x, int y) {
-        drawCentered(matrixStack, getTopText(), 9, FONT_COLOR);
-        drawCentered(matrixStack, getBottomText(), 40, FONT_COLOR);
-        font.draw(matrixStack, playerInventory.getDisplayName(), 8F, (float) (imageHeight - 96 + 3), FONT_COLOR);
+    protected void renderLabels(GuiGraphics guiGraphics, int x, int y) {
+        drawCentered(guiGraphics, getTopText(), 9, FONT_COLOR);
+        drawCentered(guiGraphics, getBottomText(), 40, FONT_COLOR);
+        guiGraphics.drawString(font, playerInventory.getDisplayName().getVisualOrderText(), 8F, (float) (imageHeight - 96 + 3), FONT_COLOR, false);
     }
 
-    protected void drawCentered(PoseStack matrixStack, MutableComponent text, int y, int color) {
+    protected void drawCentered(GuiGraphics guiGraphics, MutableComponent text, int y, int color) {
         int width = font.width(text);
-        font.draw(matrixStack, text, imageWidth / 2F - width / 2F, y, color);
+        guiGraphics.drawString(font, text.getVisualOrderText(), imageWidth / 2F - width / 2F, y, color, false);
     }
 
     protected abstract MutableComponent getTopText();

@@ -145,7 +145,7 @@ public class VillagerItem extends CustomRendererItem {
     }
 
     public static Villager convertToVillager(EasyVillagerEntity easyVillager) {
-        Villager villager = new Villager(EntityType.VILLAGER, easyVillager.level);
+        Villager villager = new Villager(EntityType.VILLAGER, easyVillager.level());
 
         CompoundTag data = easyVillager.serializeNBT();
         villager.deserializeNBT(data);

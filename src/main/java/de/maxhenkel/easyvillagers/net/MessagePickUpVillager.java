@@ -31,7 +31,7 @@ public class MessagePickUpVillager implements Message<MessagePickUpVillager> {
     @Override
     public void executeServerSide(NetworkEvent.Context context) {
         ServerPlayer player = context.getSender();
-        player.level.getEntitiesOfClass(Villager.class, player.getBoundingBox().inflate(8D), v -> v.getUUID().equals(villager)).stream().filter(VillagerEvents::arePickupConditionsMet).findAny().ifPresent(villagerEntity -> {
+        player.level().getEntitiesOfClass(Villager.class, player.getBoundingBox().inflate(8D), v -> v.getUUID().equals(villager)).stream().filter(VillagerEvents::arePickupConditionsMet).findAny().ifPresent(villagerEntity -> {
             VillagerEvents.pickUp(villagerEntity, player);
         });
     }

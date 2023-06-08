@@ -41,7 +41,7 @@ public class VillagerBlockBase extends HorizontalRotatableBlock {
     }
 
     public static void playRandomVillagerSound(Player player, SoundEvent soundEvent) {
-        if (player.level.getGameTime() % Main.SERVER_CONFIG.villagerSoundAmount.get() == 0 && player.level.random.nextInt(40) == 0) {
+        if (player.level().getGameTime() % Main.SERVER_CONFIG.villagerSoundAmount.get() == 0 && player.level().random.nextInt(40) == 0) {
             player.playNotifySound(soundEvent, SoundSource.BLOCKS, 1F, 1F);
         }
     }

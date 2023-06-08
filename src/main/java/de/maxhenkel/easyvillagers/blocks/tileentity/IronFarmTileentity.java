@@ -16,12 +16,11 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
@@ -101,15 +100,14 @@ public class IronFarmTileentity extends VillagerTileentity implements ITickableB
         }
         ServerLevel serverWorld = (ServerLevel) level;
 
-        LootContext.Builder builder = new LootContext.Builder(serverWorld)
-                .withRandom(serverWorld.random)
+        LootParams.Builder builder = new LootParams.Builder(serverWorld)
                 .withParameter(LootContextParams.THIS_ENTITY, new IronGolem(EntityType.IRON_GOLEM, level))
                 .withParameter(LootContextParams.ORIGIN, new Vec3(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ()))
                 .withParameter(LootContextParams.DAMAGE_SOURCE, serverWorld.damageSources().lava());
 
-        LootContext lootContext = builder.create(LootContextParamSets.ENTITY);
+        LootParams lootContext = builder.create(LootContextParamSets.ENTITY);
 
-        LootTable lootTable = serverWorld.getServer().getLootTables().get(GOLEM_LOOT_TABLE);
+        LootTable lootTable = serverWorld.getServer().getLootData().getLootTable(GOLEM_LOOT_TABLE);
 
         return lootTable.getRandomItems(lootContext);
     }
