@@ -156,7 +156,6 @@ public class VillagerItem extends CustomRendererItem {
         return cachedVillagers.get(stack, () -> getVillager(world, stack));
     }
 
-    @OnlyIn(Dist.CLIENT)
     public static ItemStack getBabyVillager() {
         ItemStack babyVillager = new ItemStack(ModItems.VILLAGER.get());
         EasyVillagerEntity villager = new EasyVillagerEntity(EntityType.VILLAGER, Minecraft.getInstance().level);
