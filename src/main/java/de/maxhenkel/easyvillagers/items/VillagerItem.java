@@ -159,9 +159,8 @@ public class VillagerItem extends CustomRendererItem {
     @OnlyIn(Dist.CLIENT)
     public static ItemStack getBabyVillager() {
         ItemStack babyVillager = new ItemStack(ModItems.VILLAGER.get());
-        EasyVillagerEntity villager = new EasyVillagerEntity(EntityType.VILLAGER, Minecraft.getInstance().level);
-        villager.setAge(-24000);
-        ModItems.VILLAGER.get().setVillager(babyVillager, villager);
+        CompoundTag compound = babyVillager.getOrCreateTagElement("villager");
+        compound.putInt("Age", -24000);
         return babyVillager;
     }
 }
