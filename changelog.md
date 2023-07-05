@@ -1,3 +1,1 @@
-- Fixed auto trader arrows on top of tooltip
-- Added locked trade indicator to auto trader
-- Prevent auto trader trades from becoming more expensive
+- Fixed crash on servers
