@@ -1,1 +1,1 @@
-- Fixed potential crash on servers
+- Fixed crash on servers
