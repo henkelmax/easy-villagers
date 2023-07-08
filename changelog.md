@@ -1,1 +1,1 @@
-- Fixed crash on servers
+- Added Hungarian translation
