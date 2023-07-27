@@ -45,9 +45,9 @@ repositories {
     mavenLocal()
     maven { url = 'https://maven.maxhenkel.de/repository/public' }
     maven {
-        url = 'https://www.cursemaven.com'
+        url = 'https://api.modrinth.com/maven'
         content {
-            includeGroup 'curse.maven'
+            includeGroup 'maven.modrinth'
         }
     }
 }
@@ -55,11 +55,9 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:${mod_minecraft_version}-${forge_version}"
 
-    compileOnly fg.deobf("curse.maven:jei-238222:${jei_id}")
-
-    compileOnly fg.deobf("curse.maven:the-one-probe-245211:${theoneprobe_id}")
-
-    compileOnly fg.deobf("curse.maven:jade-324717:${jade_id}")
+    implementation fg.deobf("maven.modrinth:jei:${jei_version}")
+    implementation fg.deobf("maven.modrinth:the-one-probe:${theoneprobe_version}")
+    compileOnly fg.deobf("maven.modrinth:jade:${jade_version}")
 
     shadow fg.deobf("de.maxhenkel.corelib:corelib:${mod_minecraft_version}-${corelib_version}:api")
     runtimeOnly fg.deobf("de.maxhenkel.corelib:corelib:${mod_minecraft_version}-${corelib_version}")
