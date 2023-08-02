@@ -4,6 +4,7 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '7.1.2'
     id 'com.modrinth.minotaur' version '2.+'
     id 'mod-update' version '2.0.0'
+    id 'org.spongepowered.mixin' version '0.7-SNAPSHOT'
 }
 apply plugin: 'idea'
 
@@ -57,7 +58,7 @@ dependencies {
 
     implementation fg.deobf("maven.modrinth:jei:${jei_version}")
     implementation fg.deobf("maven.modrinth:the-one-probe:${theoneprobe_version}")
-    compileOnly fg.deobf("maven.modrinth:jade:${jade_version}")
+    implementation fg.deobf("maven.modrinth:jade:${jade_version}")
 
     shadow fg.deobf("de.maxhenkel.corelib:corelib:${mod_minecraft_version}-${corelib_version}:api")
     runtimeOnly fg.deobf("de.maxhenkel.corelib:corelib:${mod_minecraft_version}-${corelib_version}")
