@@ -8,8 +8,6 @@ version="${mod_version}"
 displayName="${mod_name}"
 updateJSONURL="https://maxhenkel.de/update/easy_villagers.json"
 displayURL="https://www.curseforge.com/minecraft/mc-mods/easy-villagers"
-# logoFile="easy_villagers.png"
-# credits=""
 authors="${mod_vendor}"
 description='''Easy Villagers'''
 [[dependencies.${mod_id}]]
@@ -22,5 +20,23 @@ description='''Easy Villagers'''
     modId="minecraft"
     mandatory=true
     versionRange="[${mod_minecraft_version}]"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.${mod_id}]]
+    modId="jei"
+    mandatory=false
+    versionRange="*"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.${mod_id}]]
+    modId="theoneprobe"
+    mandatory=false
+    versionRange="*"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.${mod_id}]]
+    modId="jade"
+    mandatory=false
+    versionRange="*"
     ordering="NONE"
     side="BOTH"
