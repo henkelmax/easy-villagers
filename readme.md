@@ -1,8 +1,10 @@
 <!-- modrinth_exclude.start -->
 
-# Easy Villagers ![](http://cf.way2muchnoise.eu/full_400514_downloads.svg) ![](http://cf.way2muchnoise.eu/versions/400514.svg)
+# Easy Villagers
 
 ## Links
+
+- [Modrinth](https://modrinth.com/mod/easy-villagers)
 - [CurseForge](https://www.curseforge.com/minecraft/mc-mods/easy-villagers)
 - [Credits](https://modrepo.de/minecraft/easy_villagers/credits)
 
