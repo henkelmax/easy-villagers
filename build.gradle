@@ -1,11 +1,12 @@
 plugins {
-    id 'net.minecraftforge.gradle' version '5.+'
-    id 'com.matthewprenger.cursegradle' version '1.4.0'
-    id 'com.github.johnrengelman.shadow' version '7.1.2'
-    id 'com.modrinth.minotaur' version '2.+'
-    id 'mod-update' version '2.0.0'
-    id 'org.spongepowered.mixin' version '0.7-SNAPSHOT'
+    id 'net.neoforged.gradle' version "${neogradle_version}"
+    id 'com.matthewprenger.cursegradle' version "${cursegradle_version}"
+    id 'com.modrinth.minotaur' version "${minotaur_version}"
+    id 'com.github.johnrengelman.shadow' version "${shadow_version}"
+    id 'mod-update' version "${mod_update_version}"
+    id 'org.spongepowered.mixin' version "${mixingradle_version}"
 }
+
 apply plugin: 'idea'
 
 idea {
@@ -19,7 +20,7 @@ version = mod_version
 group = mod_packagename
 archivesBaseName = mod_id
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+java.toolchain.languageVersion = JavaLanguageVersion.of(java_version as int)
 
 minecraft {
     mappings channel: 'official', version: mod_minecraft_version
@@ -28,14 +29,18 @@ minecraft {
 
     runs {
         client {
-            workingDirectory project.file('run').canonicalPath
+            workingDirectory file('run')
             property 'forge.logging.console.level', 'debug'
-            args = ['--username', 'henkelmax']
+            args = ['--username', "henkelmax${new Random().nextInt(1000)}"]
         }
-
         server {
-            workingDirectory project.file('run/server').canonicalPath
+            workingDirectory file('run/server')
             property 'forge.logging.console.level', 'debug'
+        }
+        data {
+            workingDirectory file('run')
+            property 'forge.logging.console.level', 'debug'
+            args '--mod', mod_id, '--all', '--output', file('src/generated/resources/')
         }
     }
 }
@@ -43,7 +48,6 @@ minecraft {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
-    mavenLocal()
     maven { url = 'https://maven.maxhenkel.de/repository/public' }
     maven {
         url = 'https://api.modrinth.com/maven'
@@ -54,7 +58,7 @@ repositories {
 }
 
 dependencies {
-    minecraft "net.minecraftforge:forge:${mod_minecraft_version}-${forge_version}"
+    minecraft "net.neoforged:forge:${mod_minecraft_version}-${forge_version}"
 
     implementation fg.deobf("maven.modrinth:jei:${jei_version}")
     implementation fg.deobf("maven.modrinth:the-one-probe:${theoneprobe_version}")
@@ -91,19 +95,19 @@ processResources {
     }
 }
 
-tasks.withType(JavaCompile).configureEach {
-    options.encoding = 'UTF-8'
+shadowJar {
+    configurations = [project.configurations.shadow]
+    archiveClassifier = ''
+    relocate 'de.maxhenkel.corelib', "de.maxhenkel.${mod_id}.corelib"
+}
+shadowJar.dependsOn('reobfJar')
+
+reobf {
+    shadowJar {}
 }
 
 curseforge {
-    def apiKeyFile = file('curseforge_api_key.txt')
-    if (System.env.CURSEFORGE_API_KEY != null) {
-        apiKey = System.env.CURSEFORGE_API_KEY;
-    } else if (apiKeyFile.exists()) {
-        apiKey = apiKeyFile.text
-    } else {
-        apiKey = ""
-    }
+    apiKey = file('curseforge_api_key.txt').exists() ? file('curseforge_api_key.txt').text : ''
     project {
         id = curse_id
         changelogType = 'markdown'
@@ -111,7 +115,8 @@ curseforge {
         releaseType = release_type
         addGameVersion mod_minecraft_version
         addGameVersion 'Forge'
-        addGameVersion 'Java 17'
+        addGameVersion 'NeoForge'
+        addGameVersion "Java ${java_version}"
         mainArtifact(jar) {
             displayName = "[${mod_minecraft_version}] ${mod_name} ${mod_version}"
             relations {
@@ -129,9 +134,8 @@ tasks.modrinth.configure({
 tasks.modrinthSyncBody.configure({
     group = 'upload'
 })
-
 modrinth {
-    token = file("${rootDir}/modrinth_token.txt").exists() ? file("${rootDir}/modrinth_token.txt").text : ''
+    token = file('modrinth_token.txt').exists() ? file('modrinth_token.txt').text : ''
     projectId = modrinth_id
     versionNumber = "forge-${mod_version}"
     versionName = "[FORGE][${mod_minecraft_version}] ${mod_name} ${mod_version}"
@@ -139,8 +143,12 @@ modrinth {
     versionType = release_type.toUpperCase()
     changelog = file('changelog.md').text
     gameVersions = [mod_minecraft_version]
-    loaders = ['forge']
-    syncBodyFrom = file('readme.md').text
+    loaders = ['forge', 'neoforge']
+    dependencies {
+        optional.project 'jei'
+        optional.project 'the-one-probe'
+        optional.project 'jade'
+    }
 }
 tasks.modrinth.dependsOn(build)
 
@@ -149,55 +157,6 @@ modUpdate {
     modID = mod_id
     gameVersion = mod_minecraft_version
     modVersion = mod_version
-    changelogFile = file('changelog.md')
     releaseType = release_type
     tags = recommended == 'true' ? ['recommended'] : []
-}
-
-javadoc {
-    failOnError = false
-}
-
-task deobfJar(type: Jar) {
-    classifier 'deobf'
-    from sourceSets.main.output
-    manifest {
-        attributes(['Specification-Title'     : mod_name,
-                    'Specification-Vendor'    : mod_vendor,
-                    'Specification-Version'   : '1',
-                    'Implementation-Title'    : mod_name,
-                    'Implementation-Version'  : mod_version,
-                    'Implementation-Vendor'   : mod_vendor,
-                    'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")],)
-    }
-}
-
-task sourcesJar(type: Jar) {
-    classifier 'sources'
-    from sourceSets.main.allJava
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier 'javadoc'
-    from javadoc.getDestinationDir()
-}
-
-artifacts {
-    archives deobfJar
-    archives sourcesJar
-    archives javadocJar
-    archives shadowJar
-}
-
-jar.finalizedBy('reobfJar')
-
-shadowJar {
-    project.configurations.shadow.setTransitive(true);
-    configurations = [project.configurations.shadow]
-    classifier ""
-    relocate 'de.maxhenkel.corelib', "de.maxhenkel.${mod_id}.corelib"
-}
-
-reobf {
-    shadowJar {}
 }
