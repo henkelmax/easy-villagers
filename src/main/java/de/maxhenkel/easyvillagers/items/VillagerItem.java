@@ -41,9 +41,9 @@ public class VillagerItem extends CustomRendererItem {
         cachedVillagers = new CachedMap<>(10_000, ItemUtils.ITEM_COMPARATOR);
 
         DispenserBlock.registerBehavior(this, (source, stack) -> {
-            Direction direction = source.getBlockState().getValue(DispenserBlock.FACING);
-            BlockPos blockpos = source.getPos().relative(direction);
-            Level world = source.getLevel();
+            Direction direction = source.state().getValue(DispenserBlock.FACING);
+            BlockPos blockpos = source.pos().relative(direction);
+            Level world = source.level();
             EasyVillagerEntity villager = getVillager(world, stack);
             villager.absMoveTo(blockpos.getX() + 0.5D, blockpos.getY(), blockpos.getZ() + 0.5D, direction.toYRot(), 0F);
             world.addFreshEntity(villager);

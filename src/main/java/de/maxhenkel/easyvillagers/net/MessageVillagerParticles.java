@@ -7,7 +7,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.event.network.CustomPayloadEvent;
 
 public class MessageVillagerParticles implements Message<MessageVillagerParticles> {
 
@@ -27,7 +27,7 @@ public class MessageVillagerParticles implements Message<MessageVillagerParticle
     }
 
     @Override
-    public void executeClientSide(NetworkEvent.Context context) { //TODO check server crash
+    public void executeClientSide(CustomPayloadEvent.Context context) { //TODO check server crash
         BlockEntity tileEntity = Minecraft.getInstance().level.getBlockEntity(pos);
         if (tileEntity instanceof BreederTileentity) {
             BreederTileentity breeder = (BreederTileentity) tileEntity;

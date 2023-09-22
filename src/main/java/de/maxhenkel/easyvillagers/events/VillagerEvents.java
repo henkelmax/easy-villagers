@@ -1,5 +1,6 @@
 package de.maxhenkel.easyvillagers.events;
 
+import de.maxhenkel.corelib.net.NetUtils;
 import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.items.ModItems;
 import de.maxhenkel.easyvillagers.net.MessagePickUpVillager;
@@ -42,7 +43,7 @@ public class VillagerEvents {
             return;
         }
 
-        Main.SIMPLE_CHANNEL.sendToServer(new MessagePickUpVillager(villager.getUUID()));
+        NetUtils.sendToServer(Main.SIMPLE_CHANNEL, new MessagePickUpVillager(villager.getUUID()));
 
         event.setCancellationResult(InteractionResult.SUCCESS);
         event.setCanceled(true);
@@ -61,7 +62,7 @@ public class VillagerEvents {
             return;
         }
 
-        Main.SIMPLE_CHANNEL.sendToServer(new MessagePickUpVillager(villager.getUUID()));
+        NetUtils.sendToServer(Main.SIMPLE_CHANNEL, new MessagePickUpVillager(villager.getUUID()));
     }
 
     public static void pickUp(Villager villager, Player player) {
