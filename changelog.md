@@ -1,4 +1,1 @@
-- Added JEI to mods.toml
-- Added The One Probe to mods.toml
-- Added Jade to mods.toml
-- Switch to NeoGradle
+- Fixed duplication glitch

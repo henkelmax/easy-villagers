@@ -98,13 +98,13 @@ public abstract class TraderBlockBase extends VillagerBlockBase implements Entit
                 playVillagerSound(worldIn, pos, SoundEvents.VILLAGER_NO);
             }
             return InteractionResult.SUCCESS;
-        } else if (openGUI(trader, player)) {
+        } else if (openGUI(trader, player, worldIn, pos)) {
             return InteractionResult.SUCCESS;
         }
         return InteractionResult.SUCCESS;
     }
 
-    protected abstract boolean openGUI(TraderTileentityBase trader, Player player);
+    protected abstract boolean openGUI(TraderTileentityBase trader, Player player, Level level, BlockPos pos);
 
     protected void playWorkstationSound(Level world, BlockPos pos, TraderTileentityBase trader) {
         Villager villagerEntity = trader.getVillagerEntity();

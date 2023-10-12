@@ -1,24 +1,26 @@
 package de.maxhenkel.easyvillagers.gui;
 
-import de.maxhenkel.corelib.inventory.ContainerBase;
 import de.maxhenkel.corelib.inventory.LockedSlot;
+import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.blocks.tileentity.AutoTraderTileentity;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.trading.MerchantOffer;
+import net.minecraft.world.level.block.Block;
 
-public class AutoTraderContainer extends ContainerBase {
+public class AutoTraderContainer extends VillagerContainerBase {
 
     private final AutoTraderTileentity trader;
     private boolean locked;
 
-    public AutoTraderContainer(int id, Inventory playerInventory, Container tradeSlots, AutoTraderTileentity trader, Container inputItems, Container outputItems) {
-        super(Containers.AUTO_TRADER_CONTAINER.get(), id, playerInventory, null);
+    public AutoTraderContainer(int id, Inventory playerInventory, Container tradeSlots, AutoTraderTileentity trader, Container inputItems, Container outputItems, ContainerLevelAccess access) {
+        super(Containers.AUTO_TRADER_CONTAINER.get(), id, playerInventory, null, access);
         this.trader = trader;
         addSlot(new LockedSlot(tradeSlots, 0, 36, 21, true, true));
         addSlot(new LockedSlot(tradeSlots, 1, 62, 21, true, true));
@@ -35,6 +37,14 @@ public class AutoTraderContainer extends ContainerBase {
         addPlayerInventorySlots();
 
         addDataSlots(FIELDS);
+    }
+
+    public AutoTraderContainer(int id, Inventory playerInventory, AutoTraderTileentity trader, Container inputItems, Container outputItems, ContainerLevelAccess access) {
+        this(id, playerInventory, trader.getTradeGuiInv(), trader, inputItems, outputItems, access);
+    }
+
+    public AutoTraderContainer(int id, Inventory playerInventory) {
+        this(id, playerInventory, new SimpleContainer(3), null, new SimpleContainer(4), new SimpleContainer(4), ContainerLevelAccess.NULL);
     }
 
     public final ContainerData FIELDS = new ContainerData() {
@@ -65,14 +75,6 @@ public class AutoTraderContainer extends ContainerBase {
 
     public boolean isLocked() {
         return locked;
-    }
-
-    public AutoTraderContainer(int id, Inventory playerInventory, AutoTraderTileentity trader, Container inputItems, Container outputItems) {
-        this(id, playerInventory, trader.getTradeGuiInv(), trader, inputItems, outputItems);
-    }
-
-    public AutoTraderContainer(int id, Inventory playerInventory) {
-        this(id, playerInventory, new SimpleContainer(3), null, new SimpleContainer(4), new SimpleContainer(4));
     }
 
     @Override
@@ -114,4 +116,8 @@ public class AutoTraderContainer extends ContainerBase {
         return itemstack;
     }
 
+    @Override
+    public Block getBlock() {
+        return ModBlocks.AUTO_TRADER.get();
+    }
 }
