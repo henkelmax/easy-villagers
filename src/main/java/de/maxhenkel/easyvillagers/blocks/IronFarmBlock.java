@@ -22,6 +22,7 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -104,7 +105,7 @@ public class IronFarmBlock extends VillagerBlockBase implements EntityBlock, IIt
                 @Nullable
                 @Override
                 public AbstractContainerMenu createMenu(int id, Inventory playerInventory, Player player) {
-                    return new OutputContainer(id, playerInventory, farm.getOutputInventory());
+                    return new OutputContainer(id, playerInventory, farm.getOutputInventory(), ContainerLevelAccess.create(worldIn, pos), ModBlocks.IRON_FARM::get);
                 }
             });
             return InteractionResult.SUCCESS;
