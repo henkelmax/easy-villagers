@@ -18,6 +18,7 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -82,7 +83,7 @@ public class IncubatorBlock extends VillagerBlockBase implements EntityBlock, II
             @Nullable
             @Override
             public AbstractContainerMenu createMenu(int id, Inventory playerInventory, Player player) {
-                return new IncubatorContainer(id, playerInventory, incubator.getInputInventory(), incubator.getOutputInventory());
+                return new IncubatorContainer(id, playerInventory, incubator.getInputInventory(), incubator.getOutputInventory(), ContainerLevelAccess.create(worldIn, pos));
             }
         });
 

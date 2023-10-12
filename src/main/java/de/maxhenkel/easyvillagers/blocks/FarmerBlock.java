@@ -24,6 +24,7 @@ import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -130,7 +131,7 @@ public class FarmerBlock extends VillagerBlockBase implements EntityBlock, IItem
                 @Nullable
                 @Override
                 public AbstractContainerMenu createMenu(int id, Inventory playerInventory, Player player) {
-                    return new OutputContainer(id, playerInventory, farmer.getOutputInventory());
+                    return new OutputContainer(id, playerInventory, farmer.getOutputInventory(), ContainerLevelAccess.create(worldIn, pos), ModBlocks.FARMER::get);
                 }
             });
             return InteractionResult.SUCCESS;
