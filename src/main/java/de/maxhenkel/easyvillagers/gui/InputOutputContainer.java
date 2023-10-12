@@ -1,17 +1,17 @@
 package de.maxhenkel.easyvillagers.gui;
 
-import de.maxhenkel.corelib.inventory.ContainerBase;
 import de.maxhenkel.corelib.inventory.LockedSlot;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 
-public abstract class InputOutputContainer extends ContainerBase {
+public abstract class InputOutputContainer extends VillagerContainerBase {
 
-    public InputOutputContainer(MenuType type, int id, Inventory playerInventory, Container inputInventory, Container outputInventory) {
-        super(type, id, playerInventory, null);
+    public InputOutputContainer(MenuType type, int id, Inventory playerInventory, Container inputInventory, Container outputInventory, ContainerLevelAccess access) {
+        super(type, id, playerInventory, null, access);
 
         for (int i = 0; i < 4; i++) {
             addSlot(getInputSlot(inputInventory, i, 52 + i * 18, 20));
@@ -25,7 +25,7 @@ public abstract class InputOutputContainer extends ContainerBase {
     }
 
     public InputOutputContainer(MenuType type, int id, Inventory playerInventory) {
-        this(type, id, playerInventory, new SimpleContainer(4), new SimpleContainer(4));
+        this(type, id, playerInventory, new SimpleContainer(4), new SimpleContainer(4), ContainerLevelAccess.NULL);
     }
 
     @Override
