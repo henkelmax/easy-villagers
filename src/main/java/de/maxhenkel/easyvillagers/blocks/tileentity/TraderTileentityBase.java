@@ -7,6 +7,7 @@ import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.ai.village.poi.PoiTypes;
 import net.minecraft.world.entity.npc.VillagerProfession;
@@ -134,15 +135,18 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
     }
 
     protected void restock() {
-        EasyVillagerEntity villagerEntity = getVillagerEntity();
-        if (villagerEntity == null) {
-            return;
-        }
         try {
+            EasyVillagerEntity villagerEntity = getVillagerEntity();
+            if (villagerEntity == null) {
+                return;
+            }
             villagerEntity.restock();
-            VillagerBlockBase.playVillagerSound(level, getBlockPos(), villagerEntity.getVillagerData().getProfession().workSound());
+            SoundEvent workSound = villagerEntity.getVillagerData().getProfession().workSound();
+            if (workSound != null) {
+                VillagerBlockBase.playVillagerSound(level, getBlockPos(), workSound);
+            }
         } catch (Exception e) {
-            e.printStackTrace();
+            Main.LOGGER.error("Error restocking villager", e);
         }
     }
 
