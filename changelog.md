@@ -1,1 +1,1 @@
-- Fixed duplication glitch
+- Fixed error when having villager without work sound
