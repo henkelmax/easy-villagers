@@ -158,6 +158,7 @@ modUpdate {
     modID = mod_id
     gameVersion = mod_minecraft_version
     modVersion = mod_version
+    changelogFile = file('changelog.md')
     releaseType = release_type
     tags = recommended == 'true' ? ['recommended'] : []
 }
