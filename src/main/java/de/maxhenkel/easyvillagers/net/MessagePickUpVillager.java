@@ -5,8 +5,8 @@ import de.maxhenkel.easyvillagers.events.VillagerEvents;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.npc.Villager;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.event.network.CustomPayloadEvent;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.network.NetworkEvent;
 
 import java.util.UUID;
 
@@ -28,7 +28,7 @@ public class MessagePickUpVillager implements Message<MessagePickUpVillager> {
     }
 
     @Override
-    public void executeServerSide(CustomPayloadEvent.Context context) {
+    public void executeServerSide(NetworkEvent.Context context) {
         ServerPlayer player = context.getSender();
         player.level().getEntitiesOfClass(Villager.class, player.getBoundingBox().inflate(8D), v -> v.getUUID().equals(villager)).stream().filter(VillagerEvents::arePickupConditionsMet).findAny().ifPresent(villagerEntity -> {
             VillagerEvents.pickUp(villagerEntity, player);

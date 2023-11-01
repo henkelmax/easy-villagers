@@ -1,25 +1,25 @@
 modLoader="javafml"
-loaderVersion="${mod_loader_version}"
+loaderVersion="${loader_version}"
 license="All rights reserved"
 issueTrackerURL="https://github.com/henkelmax/easy-villagers/issues"
 [[mods]]
 modId="${mod_id}"
 version="${mod_version}"
 displayName="${mod_name}"
-updateJSONURL="https://maxhenkel.de/update/easy_villagers.json"
+updateJSONURL="https://update.maxhenkel.de/neoforge/easy_villagers"
 displayURL="https://www.curseforge.com/minecraft/mc-mods/easy-villagers"
 authors="${mod_vendor}"
 description='''Easy Villagers'''
 [[dependencies.${mod_id}]]
-    modId="forge"
+    modId="neoforge"
     mandatory=true
-    versionRange="${mod_forge_version}"
+    versionRange="${neoforge_version_range}"
     ordering="NONE"
     side="BOTH"
 [[dependencies.${mod_id}]]
     modId="minecraft"
     mandatory=true
-    versionRange="[${mod_minecraft_version}]"
+    versionRange="[${minecraft_version}]"
     ordering="NONE"
     side="BOTH"
 [[dependencies.${mod_id}]]

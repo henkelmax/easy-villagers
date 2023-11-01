@@ -25,11 +25,10 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.ItemStackHandler;
-
+import net.neoforged.neoforge.common.capabilities.Capabilities;
+import net.neoforged.neoforge.common.capabilities.Capability;
+import net.neoforged.neoforge.common.util.LazyOptional;
+import net.neoforged.neoforge.items.ItemStackHandler;
 import java.util.Collections;
 import java.util.List;
 
@@ -133,7 +132,7 @@ public class IronFarmTileentity extends VillagerTileentity implements ITickableB
 
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-        if (!remove && cap == ForgeCapabilities.ITEM_HANDLER) {
+        if (!remove && cap == Capabilities.ITEM_HANDLER) {
             return outputItemHandler.cast();
         }
         return super.getCapability(cap, side);

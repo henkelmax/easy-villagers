@@ -1,26 +1,26 @@
 package de.maxhenkel.easyvillagers;
 
 import de.maxhenkel.corelib.config.ConfigBase;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class ServerConfig extends ConfigBase {
 
-    public final ForgeConfigSpec.IntValue breedingTime;
-    public final ForgeConfigSpec.IntValue convertingTime;
-    public final ForgeConfigSpec.IntValue farmSpeed;
-    public final ForgeConfigSpec.IntValue golemSpawnTime;
-    public final ForgeConfigSpec.IntValue traderMinRestockTime;
-    public final ForgeConfigSpec.IntValue traderMaxRestockTime;
-    public final ForgeConfigSpec.IntValue autoTraderMinRestockTime;
-    public final ForgeConfigSpec.IntValue autoTraderMaxRestockTime;
-    public final ForgeConfigSpec.IntValue autoTraderCooldown;
-    public final ForgeConfigSpec.BooleanValue villagerInventorySounds;
-    public final ForgeConfigSpec.IntValue villagerSoundAmount;
-    public final ForgeConfigSpec.IntValue incubatorSpeed;
-    public final ForgeConfigSpec.BooleanValue tradeCycling;
-    public final ForgeConfigSpec.BooleanValue universalReputation;
+    public final ModConfigSpec.IntValue breedingTime;
+    public final ModConfigSpec.IntValue convertingTime;
+    public final ModConfigSpec.IntValue farmSpeed;
+    public final ModConfigSpec.IntValue golemSpawnTime;
+    public final ModConfigSpec.IntValue traderMinRestockTime;
+    public final ModConfigSpec.IntValue traderMaxRestockTime;
+    public final ModConfigSpec.IntValue autoTraderMinRestockTime;
+    public final ModConfigSpec.IntValue autoTraderMaxRestockTime;
+    public final ModConfigSpec.IntValue autoTraderCooldown;
+    public final ModConfigSpec.BooleanValue villagerInventorySounds;
+    public final ModConfigSpec.IntValue villagerSoundAmount;
+    public final ModConfigSpec.IntValue incubatorSpeed;
+    public final ModConfigSpec.BooleanValue tradeCycling;
+    public final ModConfigSpec.BooleanValue universalReputation;
 
-    public ServerConfig(ForgeConfigSpec.Builder builder) {
+    public ServerConfig(ModConfigSpec.Builder builder) {
         super(builder);
 
         breedingTime = builder

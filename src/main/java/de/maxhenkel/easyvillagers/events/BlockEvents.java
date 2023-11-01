@@ -2,9 +2,9 @@ package de.maxhenkel.easyvillagers.events;
 
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.eventbus.api.Event;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.Event;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
 public class BlockEvents {
 

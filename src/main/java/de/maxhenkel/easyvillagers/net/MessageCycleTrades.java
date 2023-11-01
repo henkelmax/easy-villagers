@@ -3,8 +3,8 @@ package de.maxhenkel.easyvillagers.net;
 import de.maxhenkel.corelib.net.Message;
 import de.maxhenkel.easyvillagers.events.GuiEvents;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.event.network.CustomPayloadEvent;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.network.NetworkEvent;
 
 public class MessageCycleTrades implements Message<MessageCycleTrades> {
 
@@ -18,7 +18,7 @@ public class MessageCycleTrades implements Message<MessageCycleTrades> {
     }
 
     @Override
-    public void executeServerSide(CustomPayloadEvent.Context context) {
+    public void executeServerSide(NetworkEvent.Context context) {
         GuiEvents.onCycleTrades(context.getSender());
     }
 

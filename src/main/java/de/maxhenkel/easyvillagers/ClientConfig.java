@@ -1,17 +1,17 @@
 package de.maxhenkel.easyvillagers;
 
 import de.maxhenkel.corelib.config.ConfigBase;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class ClientConfig extends ConfigBase {
 
-    public final ForgeConfigSpec.BooleanValue enableRightClickPickup;
-    public final ForgeConfigSpec.DoubleValue villagerVolume;
-    public final ForgeConfigSpec.EnumValue<CycleTradesButtonLocation> cycleTradesButtonLocation;
-    public final ForgeConfigSpec.BooleanValue renderBlockContents;
-    public final ForgeConfigSpec.IntValue blockRenderDistance;
+    public final ModConfigSpec.BooleanValue enableRightClickPickup;
+    public final ModConfigSpec.DoubleValue villagerVolume;
+    public final ModConfigSpec.EnumValue<CycleTradesButtonLocation> cycleTradesButtonLocation;
+    public final ModConfigSpec.BooleanValue renderBlockContents;
+    public final ModConfigSpec.IntValue blockRenderDistance;
 
-    public ClientConfig(ForgeConfigSpec.Builder builder) {
+    public ClientConfig(ModConfigSpec.Builder builder) {
         super(builder);
 
         enableRightClickPickup = builder

@@ -4,8 +4,8 @@ import de.maxhenkel.corelib.net.Message;
 import de.maxhenkel.easyvillagers.gui.AutoTraderContainer;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.event.network.CustomPayloadEvent;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.network.NetworkEvent;
 
 public class MessageSelectTrade implements Message<MessageSelectTrade> {
 
@@ -25,7 +25,7 @@ public class MessageSelectTrade implements Message<MessageSelectTrade> {
     }
 
     @Override
-    public void executeServerSide(CustomPayloadEvent.Context context) {
+    public void executeServerSide(NetworkEvent.Context context) {
         ServerPlayer player = context.getSender();
         if (player.containerMenu instanceof AutoTraderContainer) {
             AutoTraderContainer container = (AutoTraderContainer) player.containerMenu;

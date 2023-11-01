@@ -3,7 +3,10 @@ package de.maxhenkel.easyvillagers;
 import de.maxhenkel.corelib.CommonRegistry;
 import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.blocks.tileentity.ModTileEntities;
-import de.maxhenkel.easyvillagers.events.*;
+import de.maxhenkel.easyvillagers.events.BlockEvents;
+import de.maxhenkel.easyvillagers.events.GuiEvents;
+import de.maxhenkel.easyvillagers.events.ModSoundEvents;
+import de.maxhenkel.easyvillagers.events.VillagerEvents;
 import de.maxhenkel.easyvillagers.gui.Containers;
 import de.maxhenkel.easyvillagers.integration.IMC;
 import de.maxhenkel.easyvillagers.items.ModItems;
@@ -12,18 +15,17 @@ import de.maxhenkel.easyvillagers.net.MessagePickUpVillager;
 import de.maxhenkel.easyvillagers.net.MessageSelectTrade;
 import de.maxhenkel.easyvillagers.net.MessageVillagerParticles;
 import net.minecraft.client.KeyMapping;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.network.SimpleChannel;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.network.simple.SimpleChannel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
@@ -55,16 +57,15 @@ public class Main {
         SERVER_CONFIG = CommonRegistry.registerConfig(ModConfig.Type.SERVER, ServerConfig.class);
         CLIENT_CONFIG = CommonRegistry.registerConfig(ModConfig.Type.CLIENT, ClientConfig.class);
 
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+        if (FMLEnvironment.dist.isClient()) {
             FMLJavaModLoadingContext.get().getModEventBus().addListener(Main.this::clientSetup);
             FMLJavaModLoadingContext.get().getModEventBus().addListener(Main.this::onRegisterKeyBinds);
-        });
+        }
     }
 
-    @SubscribeEvent
     public void commonSetup(FMLCommonSetupEvent event) {
-        MinecraftForge.EVENT_BUS.register(new VillagerEvents());
-        MinecraftForge.EVENT_BUS.register(new BlockEvents());
+        NeoForge.EVENT_BUS.register(new VillagerEvents());
+        NeoForge.EVENT_BUS.register(new BlockEvents());
 
         SIMPLE_CHANNEL = CommonRegistry.registerChannel(Main.MODID, "default");
         CommonRegistry.registerMessage(SIMPLE_CHANNEL, 0, MessageVillagerParticles.class);
@@ -78,8 +79,8 @@ public class Main {
         ModTileEntities.clientSetup();
         Containers.clientSetup();
 
-        MinecraftForge.EVENT_BUS.register(new ModSoundEvents());
-        MinecraftForge.EVENT_BUS.register(new GuiEvents());
+        NeoForge.EVENT_BUS.register(new ModSoundEvents());
+        NeoForge.EVENT_BUS.register(new GuiEvents());
     }
 
     @OnlyIn(Dist.CLIENT)

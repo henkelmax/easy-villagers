@@ -3,32 +3,32 @@ package de.maxhenkel.easyvillagers.gui;
 import de.maxhenkel.corelib.ClientRegistry;
 import de.maxhenkel.easyvillagers.Main;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.extensions.IForgeMenuType;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.ForgeRegistries;
+import net.neoforged.neoforge.registries.RegistryObject;
 
 public class Containers {
 
     private static final DeferredRegister<MenuType<?>> MENU_TYPE_REGISTER = DeferredRegister.create(ForgeRegistries.MENU_TYPES, Main.MODID);
 
     public static final RegistryObject<MenuType<AutoTraderContainer>> AUTO_TRADER_CONTAINER = MENU_TYPE_REGISTER.register("auto_trader", () ->
-            IForgeMenuType.create((windowId, inv, data) -> new AutoTraderContainer(windowId, inv))
+            IMenuTypeExtension.create((windowId, inv, data) -> new AutoTraderContainer(windowId, inv))
     );
     public static final RegistryObject<MenuType<BreederContainer>> BREEDER_CONTAINER = MENU_TYPE_REGISTER.register("breeder", () ->
-            IForgeMenuType.create((windowId, inv, data) -> new BreederContainer(windowId, inv))
+            IMenuTypeExtension.create((windowId, inv, data) -> new BreederContainer(windowId, inv))
     );
     public static final RegistryObject<MenuType<ConverterContainer>> CONVERTER_CONTAINER = MENU_TYPE_REGISTER.register("converter", () ->
-            IForgeMenuType.create((windowId, inv, data) -> new ConverterContainer(windowId, inv))
+            IMenuTypeExtension.create((windowId, inv, data) -> new ConverterContainer(windowId, inv))
     );
     public static final RegistryObject<MenuType<IncubatorContainer>> INCUBATOR_CONTAINER = MENU_TYPE_REGISTER.register("incubator", () ->
-            IForgeMenuType.create((windowId, inv, data) -> new IncubatorContainer(windowId, inv))
+            IMenuTypeExtension.create((windowId, inv, data) -> new IncubatorContainer(windowId, inv))
     );
     public static final RegistryObject<MenuType<OutputContainer>> OUTPUT_CONTAINER = MENU_TYPE_REGISTER.register("output", () ->
-            IForgeMenuType.create((windowId, inv, data) -> new OutputContainer(windowId, inv))
+            IMenuTypeExtension.create((windowId, inv, data) -> new OutputContainer(windowId, inv))
     );
 
     public static void init() {
