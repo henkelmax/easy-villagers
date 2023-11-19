@@ -3,28 +3,22 @@ package de.maxhenkel.easyvillagers.blocks.tileentity.render;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import de.maxhenkel.corelib.CachedMap;
-import de.maxhenkel.corelib.client.RenderUtils;
-import de.maxhenkel.corelib.helpers.Pair;
 import de.maxhenkel.easyvillagers.blocks.TraderBlock;
 import de.maxhenkel.easyvillagers.blocks.tileentity.TraderTileentity;
 import de.maxhenkel.easyvillagers.blocks.tileentity.TraderTileentityBase;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.BlockRenderDispatcher;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.VillagerRenderer;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.*;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.GrindstoneBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.AttachFace;
-import net.neoforged.neoforge.registries.ForgeRegistries;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -125,7 +119,7 @@ public class TraderRenderer extends VillagerRendererBase<TraderTileentity> {
         if (cached != null) {
             return cached;
         }
-        Consumer<PoseStack> transform = TRANSFORMS.get(ForgeRegistries.BLOCKS.getKey(block.getBlock()));
+        Consumer<PoseStack> transform = TRANSFORMS.get(BuiltInRegistries.BLOCK.getKey(block.getBlock()));
         if (transform == null) {
             transform = (stack) -> {
             };
@@ -139,18 +133,18 @@ public class TraderRenderer extends VillagerRendererBase<TraderTileentity> {
         if (cached != null) {
             return cached;
         }
-        ResourceLocation resourceLocation = TOP_BLOCKS.get(ForgeRegistries.BLOCKS.getKey(bottom.getBlock()));
+        ResourceLocation resourceLocation = TOP_BLOCKS.get(BuiltInRegistries.BLOCK.getKey(bottom.getBlock()));
         if (resourceLocation == null) {
             BlockState state = Blocks.AIR.defaultBlockState();
             TOP_BLOCK_CACHE.put(bottom.getBlock(), state);
             return state;
         }
-        Block b = ForgeRegistries.BLOCKS.getValue(resourceLocation);
-        if (b == null) {
+        if (!BuiltInRegistries.BLOCK.containsKey(resourceLocation)) {
             BlockState state = Blocks.AIR.defaultBlockState();
             TOP_BLOCK_CACHE.put(bottom.getBlock(), state);
             return state;
         }
+        Block b = BuiltInRegistries.BLOCK.get(resourceLocation);
         BlockState state = b.defaultBlockState();
         TOP_BLOCK_CACHE.put(bottom.getBlock(), state);
         return state;

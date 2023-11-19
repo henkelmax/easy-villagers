@@ -5,6 +5,7 @@ import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -16,7 +17,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.registries.ForgeRegistries;
 
 public abstract class TraderTileentityBase extends VillagerTileentity implements IServerTickableBlockEntity {
 
@@ -58,7 +58,7 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
     }
 
     public VillagerProfession getWorkstationProfession() {
-        return PoiTypes.forState(workstation.defaultBlockState()).flatMap(pointOfInterestType -> ForgeRegistries.VILLAGER_PROFESSIONS.getValues().stream().filter(villagerProfession -> villagerProfession.heldJobSite().test(pointOfInterestType)).findFirst()).orElse(VillagerProfession.NONE);
+        return PoiTypes.forState(workstation.defaultBlockState()).flatMap(pointOfInterestType -> BuiltInRegistries.VILLAGER_PROFESSION.stream().filter(villagerProfession -> villagerProfession.heldJobSite().test(pointOfInterestType)).findFirst()).orElse(VillagerProfession.NONE);
     }
 
     @Override
@@ -163,7 +163,7 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
         super.saveAdditional(compound);
 
         if (hasWorkstation()) {
-            compound.putString("Workstation", ForgeRegistries.BLOCKS.getKey(workstation).toString());
+            compound.putString("Workstation", BuiltInRegistries.BLOCK.getKey(workstation).toString());
         }
         compound.putLong("NextRestock", nextRestock);
     }
@@ -171,7 +171,7 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
     @Override
     public void load(CompoundTag compound) {
         if (compound.contains("Workstation")) {
-            workstation = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(compound.getString("Workstation")));
+            workstation = BuiltInRegistries.BLOCK.get(new ResourceLocation(compound.getString("Workstation")));
         } else {
             removeWorkstation();
         }
