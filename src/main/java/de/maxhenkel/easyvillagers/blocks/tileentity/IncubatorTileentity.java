@@ -24,10 +24,13 @@ public class IncubatorTileentity extends VillagerTileentity implements IServerTi
     protected NonNullList<ItemStack> inputInventory;
     protected NonNullList<ItemStack> outputInventory;
 
+    protected MultiItemStackHandler itemHandler;
+
     public IncubatorTileentity(BlockPos pos, BlockState state) {
         super(ModTileEntities.INCUBATOR.get(), ModBlocks.INCUBATOR.get().defaultBlockState(), pos, state);
         inputInventory = NonNullList.withSize(4, ItemStack.EMPTY);
         outputInventory = NonNullList.withSize(4, ItemStack.EMPTY);
+        itemHandler = new MultiItemStackHandler(inputInventory, outputInventory, VillagerIncubateSlot::isValid);
     }
 
     @Override
@@ -93,8 +96,8 @@ public class IncubatorTileentity extends VillagerTileentity implements IServerTi
         return new ItemListInventory(outputInventory, this::setChanged);
     }
 
-    public IItemHandler createItemHandler() {
-        return new MultiItemStackHandler(inputInventory, outputInventory, VillagerIncubateSlot::isValid);
+    public IItemHandler getItemHandler() {
+        return itemHandler;
     }
 
 }

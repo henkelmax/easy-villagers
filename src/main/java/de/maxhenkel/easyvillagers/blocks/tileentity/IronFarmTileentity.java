@@ -39,11 +39,13 @@ public class IronFarmTileentity extends VillagerTileentity implements ITickableB
     protected long timer;
 
     protected ItemStackHandler itemHandler;
+    protected OutputItemHandler outputItemHandler;
 
     public IronFarmTileentity(BlockPos pos, BlockState state) {
         super(ModTileEntities.IRON_FARM.get(), ModBlocks.IRON_FARM.get().defaultBlockState(), pos, state);
         inventory = NonNullList.withSize(4, ItemStack.EMPTY);
         itemHandler = new ItemStackHandler(inventory);
+        outputItemHandler = new OutputItemHandler(inventory);
     }
 
     public long getTimer() {
@@ -133,8 +135,8 @@ public class IronFarmTileentity extends VillagerTileentity implements ITickableB
         return getGolemSpawnTime() + 20 * 10;
     }
 
-    public IItemHandler createItemHandler() {
-        return new OutputItemHandler(inventory);
+    public IItemHandler getItemHandler() {
+        return outputItemHandler;
     }
 
 }

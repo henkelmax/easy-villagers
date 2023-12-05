@@ -42,11 +42,13 @@ public class FarmerTileentity extends VillagerTileentity implements IServerTicka
     protected BlockState crop;
     protected NonNullList<ItemStack> inventory;
     protected ItemStackHandler itemHandler;
+    protected OutputItemHandler outputItemHandler;
 
     public FarmerTileentity(BlockPos pos, BlockState state) {
         super(ModTileEntities.FARMER.get(), ModBlocks.FARMER.get().defaultBlockState(), pos, state);
         inventory = NonNullList.withSize(4, ItemStack.EMPTY);
         itemHandler = new ItemStackHandler(inventory);
+        outputItemHandler = new OutputItemHandler(inventory);
     }
 
     @Override
@@ -187,8 +189,8 @@ public class FarmerTileentity extends VillagerTileentity implements IServerTicka
         super.load(compound);
     }
 
-    public IItemHandler createItemHandler() {
-        return new OutputItemHandler(inventory);
+    public IItemHandler getItemHandler() {
+        return outputItemHandler;
     }
 
 }

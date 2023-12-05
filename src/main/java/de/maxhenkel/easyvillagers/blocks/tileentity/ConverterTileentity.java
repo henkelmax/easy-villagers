@@ -35,10 +35,13 @@ public class ConverterTileentity extends VillagerTileentity implements IServerTi
     protected long timer;
     protected UUID owner;
 
+    protected MultiItemStackHandler itemHandler;
+
     public ConverterTileentity(BlockPos pos, BlockState state) {
         super(ModTileEntities.CONVERTER.get(), ModBlocks.CONVERTER.get().defaultBlockState(), pos, state);
         inputInventory = NonNullList.withSize(4, ItemStack.EMPTY);
         outputInventory = NonNullList.withSize(4, ItemStack.EMPTY);
+        itemHandler = new MultiItemStackHandler(inputInventory, outputInventory, VillagerConvertSlot::isValid);
     }
 
     @Override
@@ -197,8 +200,8 @@ public class ConverterTileentity extends VillagerTileentity implements IServerTi
         return getConvertTime() + 20 * 3;
     }
 
-    public IItemHandler createItemHandler() {
-        return new MultiItemStackHandler(inputInventory, outputInventory, VillagerConvertSlot::isValid);
+    public IItemHandler getItemHandler() {
+        return itemHandler;
     }
 
 }

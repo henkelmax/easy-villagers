@@ -35,6 +35,7 @@ public class BreederTileentity extends FakeWorldTileentity implements IServerTic
     protected EasyVillagerEntity villagerEntity1;
     protected ItemStack villager2;
     protected EasyVillagerEntity villagerEntity2;
+    private MultiItemStackHandler itemHandler;
 
     public BreederTileentity(BlockPos pos, BlockState state) {
         super(ModTileEntities.BREEDER.get(), ModBlocks.BREEDER.get().defaultBlockState(), pos, state);
@@ -42,6 +43,7 @@ public class BreederTileentity extends FakeWorldTileentity implements IServerTic
         outputInventory = NonNullList.withSize(4, ItemStack.EMPTY);
         villager1 = ItemStack.EMPTY;
         villager2 = ItemStack.EMPTY;
+        itemHandler = new MultiItemStackHandler(foodInventory, outputInventory, FoodSlot::isValid);
     }
 
     public ItemStack getVillager1() {
@@ -249,8 +251,8 @@ public class BreederTileentity extends FakeWorldTileentity implements IServerTic
         return new ItemListInventory(outputInventory, this::setChanged);
     }
 
-    public IItemHandler createItemHandler() {
-        return new MultiItemStackHandler(foodInventory, outputInventory, FoodSlot::isValid);
+    public IItemHandler getItemHandler() {
+        return itemHandler;
     }
 
 }

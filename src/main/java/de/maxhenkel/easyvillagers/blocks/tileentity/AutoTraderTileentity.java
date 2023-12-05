@@ -33,6 +33,7 @@ public class AutoTraderTileentity extends TraderTileentityBase implements ITicka
 
     protected int tradeIndex;
     protected ItemStackHandler outputHandler;
+    protected MultiItemStackHandler itemHandler;
 
     public AutoTraderTileentity(BlockPos pos, BlockState state) {
         super(ModTileEntities.AUTO_TRADER.get(), ModBlocks.AUTO_TRADER.get().defaultBlockState(), pos, state);
@@ -42,6 +43,7 @@ public class AutoTraderTileentity extends TraderTileentityBase implements ITicka
         outputInventory = NonNullList.withSize(4, ItemStack.EMPTY);
 
         outputHandler = new ItemStackHandler(outputInventory);
+        itemHandler = new MultiItemStackHandler(inputInventory, outputInventory);
     }
 
     @Override
@@ -241,8 +243,8 @@ public class AutoTraderTileentity extends TraderTileentityBase implements ITicka
         return new ItemListInventory(outputInventory, this::setChanged);
     }
 
-    public IItemHandler createItemHandler() {
-        return new MultiItemStackHandler(inputInventory, outputInventory);
+    public IItemHandler getItemHandler() {
+        return itemHandler;
     }
 
 }
