@@ -8,15 +8,10 @@ import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
-import net.minecraft.nbt.Tag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.Container;
@@ -28,20 +23,16 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.StateHolder;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.block.state.properties.Property;
-import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.IPlantable;
 import net.neoforged.neoforge.common.PlantType;
-import net.neoforged.neoforge.common.capabilities.Capabilities;
-import net.neoforged.neoforge.common.capabilities.Capability;
-import net.neoforged.neoforge.common.util.LazyOptional;
+import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
+
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
@@ -50,15 +41,11 @@ public class FarmerTileentity extends VillagerTileentity implements IServerTicka
 
     protected BlockState crop;
     protected NonNullList<ItemStack> inventory;
-
-    protected LazyOptional<OutputItemHandler> outputItemHandler;
     protected ItemStackHandler itemHandler;
 
     public FarmerTileentity(BlockPos pos, BlockState state) {
         super(ModTileEntities.FARMER.get(), ModBlocks.FARMER.get().defaultBlockState(), pos, state);
         inventory = NonNullList.withSize(4, ItemStack.EMPTY);
-
-        outputItemHandler = LazyOptional.of(() -> new OutputItemHandler(inventory));
         itemHandler = new ItemStackHandler(inventory);
     }
 
@@ -200,18 +187,8 @@ public class FarmerTileentity extends VillagerTileentity implements IServerTicka
         super.load(compound);
     }
 
-    @Override
-    public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-        if (!remove && cap == Capabilities.ITEM_HANDLER) {
-            return outputItemHandler.cast();
-        }
-        return super.getCapability(cap, side);
-    }
-
-    @Override
-    public void setRemoved() {
-        outputItemHandler.invalidate();
-        super.setRemoved();
+    public IItemHandler createItemHandler() {
+        return new OutputItemHandler(inventory);
     }
 
 }

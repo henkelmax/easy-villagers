@@ -9,6 +9,8 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -40,6 +42,15 @@ public class ModTileEntities {
 
     public static void init() {
         BLOCK_ENTITY_REGISTER.register(FMLJavaModLoadingContext.get().getModEventBus());
+    }
+
+    public static void onRegisterCapabilities(RegisterCapabilitiesEvent event) {
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, BREEDER.get(), (object, context) -> object.createItemHandler());
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, AUTO_TRADER.get(), (object, context) -> object.createItemHandler());
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, FARMER.get(), (object, context) -> object.createItemHandler());
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, CONVERTER.get(), (object, context) -> object.createItemHandler());
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, IRON_FARM.get(), (object, context) -> object.createItemHandler());
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, INCUBATOR.get(), (object, context) -> object.createItemHandler());
     }
 
     @OnlyIn(Dist.CLIENT)

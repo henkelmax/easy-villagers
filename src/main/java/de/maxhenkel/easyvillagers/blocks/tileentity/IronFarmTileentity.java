@@ -8,7 +8,6 @@ import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -25,10 +24,9 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.common.capabilities.Capabilities;
-import net.neoforged.neoforge.common.capabilities.Capability;
-import net.neoforged.neoforge.common.util.LazyOptional;
+import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -40,14 +38,11 @@ public class IronFarmTileentity extends VillagerTileentity implements ITickableB
 
     protected long timer;
 
-    protected LazyOptional<OutputItemHandler> outputItemHandler;
     protected ItemStackHandler itemHandler;
 
     public IronFarmTileentity(BlockPos pos, BlockState state) {
         super(ModTileEntities.IRON_FARM.get(), ModBlocks.IRON_FARM.get().defaultBlockState(), pos, state);
         inventory = NonNullList.withSize(4, ItemStack.EMPTY);
-
-        outputItemHandler = LazyOptional.of(() -> new OutputItemHandler(inventory));
         itemHandler = new ItemStackHandler(inventory);
     }
 
@@ -130,14 +125,6 @@ public class IronFarmTileentity extends VillagerTileentity implements ITickableB
         super.load(compound);
     }
 
-    @Override
-    public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-        if (!remove && cap == Capabilities.ITEM_HANDLER) {
-            return outputItemHandler.cast();
-        }
-        return super.getCapability(cap, side);
-    }
-
     public static int getGolemSpawnTime() {
         return Main.SERVER_CONFIG.golemSpawnTime.get() - 20 * 10;
     }
@@ -146,10 +133,8 @@ public class IronFarmTileentity extends VillagerTileentity implements ITickableB
         return getGolemSpawnTime() + 20 * 10;
     }
 
-    @Override
-    public void setRemoved() {
-        outputItemHandler.invalidate();
-        super.setRemoved();
+    public IItemHandler createItemHandler() {
+        return new OutputItemHandler(inventory);
     }
 
 }

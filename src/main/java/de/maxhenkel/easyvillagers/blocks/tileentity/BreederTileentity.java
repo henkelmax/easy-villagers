@@ -13,7 +13,6 @@ import de.maxhenkel.easyvillagers.gui.FoodSlot;
 import de.maxhenkel.easyvillagers.items.ModItems;
 import de.maxhenkel.easyvillagers.net.MessageVillagerParticles;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -26,9 +25,7 @@ import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.npc.VillagerType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.common.capabilities.Capabilities;
-import net.neoforged.neoforge.common.capabilities.Capability;
-import net.neoforged.neoforge.common.util.LazyOptional;
+import net.neoforged.neoforge.items.IItemHandler;
 
 public class BreederTileentity extends FakeWorldTileentity implements IServerTickableBlockEntity {
 
@@ -39,16 +36,12 @@ public class BreederTileentity extends FakeWorldTileentity implements IServerTic
     protected ItemStack villager2;
     protected EasyVillagerEntity villagerEntity2;
 
-    protected LazyOptional<MultiItemStackHandler> itemHandler;
-
     public BreederTileentity(BlockPos pos, BlockState state) {
         super(ModTileEntities.BREEDER.get(), ModBlocks.BREEDER.get().defaultBlockState(), pos, state);
         foodInventory = NonNullList.withSize(4, ItemStack.EMPTY);
         outputInventory = NonNullList.withSize(4, ItemStack.EMPTY);
         villager1 = ItemStack.EMPTY;
         villager2 = ItemStack.EMPTY;
-
-        itemHandler = LazyOptional.of(() -> new MultiItemStackHandler(foodInventory, outputInventory, FoodSlot::isValid));
     }
 
     public ItemStack getVillager1() {
@@ -256,18 +249,8 @@ public class BreederTileentity extends FakeWorldTileentity implements IServerTic
         return new ItemListInventory(outputInventory, this::setChanged);
     }
 
-    @Override
-    public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-        if (!remove && cap == Capabilities.ITEM_HANDLER) {
-            return itemHandler.cast();
-        }
-        return super.getCapability(cap, side);
-    }
-
-    @Override
-    public void setRemoved() {
-        itemHandler.invalidate();
-        super.setRemoved();
+    public IItemHandler createItemHandler() {
+        return new MultiItemStackHandler(foodInventory, outputInventory, FoodSlot::isValid);
     }
 
 }

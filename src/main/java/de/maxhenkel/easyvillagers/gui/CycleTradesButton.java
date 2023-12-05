@@ -31,13 +31,8 @@ public class CycleTradesButton extends AbstractButton {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-        visible = canCycle(screen.getMenu());
-        super.render(guiGraphics, mouseX, mouseY, partialTicks);
-    }
-
-    @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+        visible = canCycle(screen.getMenu());
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
         if (isHovered) {

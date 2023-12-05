@@ -8,7 +8,6 @@ import de.maxhenkel.easyvillagers.MultiItemStackHandler;
 import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Container;
@@ -20,10 +19,9 @@ import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.common.capabilities.Capabilities;
-import net.neoforged.neoforge.common.capabilities.Capability;
-import net.neoforged.neoforge.common.util.LazyOptional;
+import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
+
 import javax.annotation.Nullable;
 
 public class AutoTraderTileentity extends TraderTileentityBase implements ITickableBlockEntity {
@@ -34,7 +32,6 @@ public class AutoTraderTileentity extends TraderTileentityBase implements ITicka
     protected final NonNullList<ItemStack> outputInventory;
 
     protected int tradeIndex;
-    protected LazyOptional<MultiItemStackHandler> itemHandler;
     protected ItemStackHandler outputHandler;
 
     public AutoTraderTileentity(BlockPos pos, BlockState state) {
@@ -44,7 +41,6 @@ public class AutoTraderTileentity extends TraderTileentityBase implements ITicka
         inputInventory = NonNullList.withSize(4, ItemStack.EMPTY);
         outputInventory = NonNullList.withSize(4, ItemStack.EMPTY);
 
-        itemHandler = LazyOptional.of(() -> new MultiItemStackHandler(inputInventory, outputInventory));
         outputHandler = new ItemStackHandler(outputInventory);
     }
 
@@ -245,18 +241,8 @@ public class AutoTraderTileentity extends TraderTileentityBase implements ITicka
         return new ItemListInventory(outputInventory, this::setChanged);
     }
 
-    @Override
-    public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-        if (!remove && cap == Capabilities.ITEM_HANDLER) {
-            return itemHandler.cast();
-
-        }
-        return super.getCapability(cap, side);
+    public IItemHandler createItemHandler() {
+        return new MultiItemStackHandler(inputInventory, outputInventory);
     }
 
-    @Override
-    public void setRemoved() {
-        itemHandler.invalidate();
-        super.setRemoved();
-    }
 }

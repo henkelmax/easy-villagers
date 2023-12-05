@@ -9,7 +9,6 @@ import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
 import de.maxhenkel.easyvillagers.gui.VillagerIncubateSlot;
 import de.maxhenkel.easyvillagers.items.VillagerItem;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
@@ -18,23 +17,17 @@ import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.common.capabilities.Capabilities;
-import net.neoforged.neoforge.common.capabilities.Capability;
-import net.neoforged.neoforge.common.util.LazyOptional;
+import net.neoforged.neoforge.items.IItemHandler;
 
 public class IncubatorTileentity extends VillagerTileentity implements IServerTickableBlockEntity {
 
     protected NonNullList<ItemStack> inputInventory;
     protected NonNullList<ItemStack> outputInventory;
 
-    protected LazyOptional<MultiItemStackHandler> itemHandler;
-
     public IncubatorTileentity(BlockPos pos, BlockState state) {
         super(ModTileEntities.INCUBATOR.get(), ModBlocks.INCUBATOR.get().defaultBlockState(), pos, state);
         inputInventory = NonNullList.withSize(4, ItemStack.EMPTY);
         outputInventory = NonNullList.withSize(4, ItemStack.EMPTY);
-
-        itemHandler = LazyOptional.of(() -> new MultiItemStackHandler(inputInventory, outputInventory, VillagerIncubateSlot::isValid));
     }
 
     @Override
@@ -100,18 +93,8 @@ public class IncubatorTileentity extends VillagerTileentity implements IServerTi
         return new ItemListInventory(outputInventory, this::setChanged);
     }
 
-    @Override
-    public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-        if (!remove && cap == Capabilities.ITEM_HANDLER) {
-            return itemHandler.cast();
-        }
-        return super.getCapability(cap, side);
-    }
-
-    @Override
-    public void setRemoved() {
-        itemHandler.invalidate();
-        super.setRemoved();
+    public IItemHandler createItemHandler() {
+        return new MultiItemStackHandler(inputInventory, outputInventory, VillagerIncubateSlot::isValid);
     }
 
 }

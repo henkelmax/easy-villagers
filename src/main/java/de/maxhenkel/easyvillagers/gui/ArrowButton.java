@@ -24,8 +24,8 @@ public class ArrowButton extends AbstractButton {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
-        super.render(guiGraphics, mouseX, mouseY, delta);
+    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
+        super.renderWidget(guiGraphics, mouseX, mouseY, delta);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
         guiGraphics.blit(left ? ARROW_LEFT : ARROW_RIGHT, getX(), getY() + 2, 0, 0, width, height, 16, 16);
