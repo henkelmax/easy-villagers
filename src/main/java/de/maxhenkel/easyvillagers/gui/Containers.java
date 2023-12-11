@@ -30,6 +30,9 @@ public class Containers {
     public static final DeferredHolder<MenuType<?>, MenuType<OutputContainer>> OUTPUT_CONTAINER = MENU_TYPE_REGISTER.register("output", () ->
             IMenuTypeExtension.create((windowId, inv, data) -> new OutputContainer(windowId, inv))
     );
+    public static final DeferredHolder<MenuType<?>, MenuType<InventoryViewerContainer>> INVENTORY_VIEWER_CONTAINER = MENU_TYPE_REGISTER.register("inventory_viewer", () ->
+            IMenuTypeExtension.create((windowId, inv, data) -> new InventoryViewerContainer(windowId, inv, data.readBlockPos()))
+    );
 
     public static void init() {
         MENU_TYPE_REGISTER.register(FMLJavaModLoadingContext.get().getModEventBus());
@@ -42,6 +45,7 @@ public class Containers {
         ClientRegistry.<ConverterContainer, ConverterScreen>registerScreen(CONVERTER_CONTAINER.get(), ConverterScreen::new);
         ClientRegistry.<IncubatorContainer, IncubatorScreen>registerScreen(INCUBATOR_CONTAINER.get(), IncubatorScreen::new);
         ClientRegistry.<OutputContainer, OutputScreen>registerScreen(OUTPUT_CONTAINER.get(), OutputScreen::new);
+        ClientRegistry.<InventoryViewerContainer, InventoryViewerScreen>registerScreen(INVENTORY_VIEWER_CONTAINER.get(), InventoryViewerScreen::new);
     }
 
 }

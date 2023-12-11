@@ -18,6 +18,7 @@ public class ModBlocks {
     public static final DeferredHolder<Block, ConverterBlock> CONVERTER = BLOCK_REGISTER.register("converter", ConverterBlock::new);
     public static final DeferredHolder<Block, IronFarmBlock> IRON_FARM = BLOCK_REGISTER.register("iron_farm", IronFarmBlock::new);
     public static final DeferredHolder<Block, IncubatorBlock> INCUBATOR = BLOCK_REGISTER.register("incubator", IncubatorBlock::new);
+    public static final DeferredHolder<Block, InventoryViewerBlock> INVENTORY_VIEWER = BLOCK_REGISTER.register("inventory_viewer", InventoryViewerBlock::new);
 
     public static void init() {
         BLOCK_REGISTER.register(FMLJavaModLoadingContext.get().getModEventBus());

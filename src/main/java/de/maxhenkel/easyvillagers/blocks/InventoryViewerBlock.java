@@ -4,13 +4,19 @@ import de.maxhenkel.corelib.block.IItemBlock;
 import de.maxhenkel.corelib.blockentity.SimpleBlockEntityTicker;
 import de.maxhenkel.corelib.client.CustomRendererBlockItem;
 import de.maxhenkel.corelib.client.ItemRenderer;
+import de.maxhenkel.corelib.item.ItemUtils;
 import de.maxhenkel.easyvillagers.ItemTileEntityCache;
-import de.maxhenkel.easyvillagers.blocks.tileentity.IncubatorTileentity;
+import de.maxhenkel.easyvillagers.blocks.tileentity.InventoryViewerTileentity;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
-import de.maxhenkel.easyvillagers.gui.IncubatorContainer;
-import de.maxhenkel.easyvillagers.items.render.IncubatorItemRenderer;
+import de.maxhenkel.easyvillagers.gui.InventoryViewerContainer;
+import de.maxhenkel.easyvillagers.items.VillagerItem;
+import de.maxhenkel.easyvillagers.items.render.InventoryViewerItemRenderer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
@@ -34,12 +40,14 @@ import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.network.NetworkHooks;
+
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class IncubatorBlock extends VillagerBlockBase implements EntityBlock, IItemBlock {
+public class InventoryViewerBlock extends VillagerBlockBase implements EntityBlock, IItemBlock {
 
-    public IncubatorBlock() {
+    public InventoryViewerBlock() {
         super(Properties.of().mapColor(MapColor.METAL).strength(2.5F).sound(SoundType.METAL).noOcclusion());
     }
 
@@ -49,7 +57,7 @@ public class IncubatorBlock extends VillagerBlockBase implements EntityBlock, II
             @OnlyIn(Dist.CLIENT)
             @Override
             public ItemRenderer createItemRenderer() {
-                return new IncubatorItemRenderer();
+                return new InventoryViewerItemRenderer();
             }
         };
     }
@@ -57,8 +65,8 @@ public class IncubatorBlock extends VillagerBlockBase implements EntityBlock, II
     @Override
     public void appendHoverText(ItemStack stack, @Nullable BlockGetter blockGetter, List<Component> components, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, blockGetter, components, tooltipFlag);
-        IncubatorTileentity incubator = ItemTileEntityCache.getTileEntity(stack, () -> new IncubatorTileentity(BlockPos.ZERO, ModBlocks.INCUBATOR.get().defaultBlockState()));
-        EasyVillagerEntity villager = incubator.getVillagerEntity();
+        InventoryViewerTileentity trader = ItemTileEntityCache.getTileEntity(stack, () -> new InventoryViewerTileentity(BlockPos.ZERO, ModBlocks.INVENTORY_VIEWER.get().defaultBlockState()));
+        EasyVillagerEntity villager = trader.getVillagerEntity();
         if (villager != null) {
             components.add(villager.getAdvancedName());
         }
@@ -66,25 +74,45 @@ public class IncubatorBlock extends VillagerBlockBase implements EntityBlock, II
 
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+        ItemStack heldItem = player.getItemInHand(handIn);
         BlockEntity tileEntity = worldIn.getBlockEntity(pos);
-        if (!(tileEntity instanceof IncubatorTileentity)) {
+        if (!(tileEntity instanceof InventoryViewerTileentity)) {
             return super.use(state, worldIn, pos, player, handIn, hit);
         }
-        IncubatorTileentity incubator = (IncubatorTileentity) tileEntity;
-
-        player.openMenu(new MenuProvider() {
-            @Override
-            public Component getDisplayName() {
-                return Component.translatable(state.getBlock().getDescriptionId());
+        InventoryViewerTileentity inventoryViewer = (InventoryViewerTileentity) tileEntity;
+        if (!inventoryViewer.hasVillager() && heldItem.getItem() instanceof VillagerItem) {
+            inventoryViewer.setVillager(heldItem.copy());
+            ItemUtils.decrItemStack(heldItem, player);
+            playVillagerSound(worldIn, pos, SoundEvents.VILLAGER_CELEBRATE);
+            return InteractionResult.SUCCESS;
+        } else if (player.isShiftKeyDown() && inventoryViewer.hasVillager()) {
+            ItemStack stack = inventoryViewer.removeVillager();
+            if (heldItem.isEmpty()) {
+                player.setItemInHand(handIn, stack);
+            } else {
+                if (!player.getInventory().add(stack)) {
+                    Direction direction = state.getValue(TraderBlockBase.FACING);
+                    Containers.dropItemStack(worldIn, direction.getStepX() + pos.getX() + 0.5D, pos.getY() + 0.5D, direction.getStepZ() + pos.getZ() + 0.5D, stack);
+                }
             }
+            playVillagerSound(worldIn, pos, SoundEvents.VILLAGER_CELEBRATE);
+            return InteractionResult.SUCCESS;
+        } else if (inventoryViewer.hasVillager()) {
+            if (player instanceof ServerPlayer serverPlayer) {
+                NetworkHooks.openScreen(serverPlayer, new MenuProvider() {
+                    @Override
+                    public Component getDisplayName() {
+                        return Component.translatable(state.getBlock().getDescriptionId());
+                    }
 
-            @Nullable
-            @Override
-            public AbstractContainerMenu createMenu(int id, Inventory playerInventory, Player player) {
-                return new IncubatorContainer(id, playerInventory, incubator.getInputInventory(), incubator.getOutputInventory(), ContainerLevelAccess.create(worldIn, pos));
+                    @Override
+                    public AbstractContainerMenu createMenu(int id, Inventory playerInventory, Player player) {
+                        return new InventoryViewerContainer(id, playerInventory, inventoryViewer, ContainerLevelAccess.create(worldIn, pos));
+                    }
+                }, packetBuffer -> packetBuffer.writeBlockPos(inventoryViewer.getBlockPos()));
             }
-        });
-
+            return InteractionResult.SUCCESS;
+        }
         return InteractionResult.SUCCESS;
     }
 
@@ -97,7 +125,7 @@ public class IncubatorBlock extends VillagerBlockBase implements EntityBlock, II
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
-        return new IncubatorTileentity(blockPos, blockState);
+        return new InventoryViewerTileentity(blockPos, blockState);
     }
 
     @Override

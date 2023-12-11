@@ -20,6 +20,7 @@ public class ModItems {
     public static final DeferredHolder<Item, Item> CONVERTER = ITEM_REGISTER.register("converter", () -> ModBlocks.CONVERTER.get().toItem());
     public static final DeferredHolder<Item, Item> IRON_FARM = ITEM_REGISTER.register("iron_farm", () -> ModBlocks.IRON_FARM.get().toItem());
     public static final DeferredHolder<Item, Item> INCUBATOR = ITEM_REGISTER.register("incubator", () -> ModBlocks.INCUBATOR.get().toItem());
+    public static final DeferredHolder<Item, Item> INVENTORY_VIEWER = ITEM_REGISTER.register("inventory_viewer", () -> ModBlocks.INVENTORY_VIEWER.get().toItem());
 
     public static void init() {
         ITEM_REGISTER.register(FMLJavaModLoadingContext.get().getModEventBus());

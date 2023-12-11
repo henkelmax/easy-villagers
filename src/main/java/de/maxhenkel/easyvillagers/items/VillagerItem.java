@@ -28,6 +28,7 @@ import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -117,11 +118,12 @@ public class VillagerItem extends CustomRendererItem {
     }
 
     public void setVillager(ItemStack stack, Villager villager) {
-        CompoundTag compound = stack.getOrCreateTagElement("villager");
+        CompoundTag compound = new CompoundTag();
         villager.addAdditionalSaveData(compound);
         if (villager.hasCustomName()) {
             stack.setHoverName(villager.getCustomName());
         }
+        stack.getOrCreateTag().put("villager", compound);
     }
 
     public EasyVillagerEntity getVillager(Level world, ItemStack stack) {

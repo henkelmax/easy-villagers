@@ -29,11 +29,6 @@ public abstract class InputOutputScreen<T extends AbstractContainerMenu> extends
         guiGraphics.drawString(font, playerInventory.getDisplayName().getVisualOrderText(), 8F, (float) (imageHeight - 96 + 3), FONT_COLOR, false);
     }
 
-    protected void drawCentered(GuiGraphics guiGraphics, MutableComponent text, int y, int color) {
-        int width = font.width(text);
-        guiGraphics.drawString(font, text.getVisualOrderText(), imageWidth / 2F - width / 2F, y, color, false);
-    }
-
     protected abstract MutableComponent getTopText();
 
     protected abstract MutableComponent getBottomText();

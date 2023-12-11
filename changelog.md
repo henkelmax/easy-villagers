@@ -1,1 +1,1 @@
-- Added Chinese Traditional translation
+- Added Inventory Viewer block

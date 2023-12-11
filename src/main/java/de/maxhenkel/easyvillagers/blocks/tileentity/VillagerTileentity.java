@@ -8,6 +8,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
+import javax.annotation.Nullable;
+
 public class VillagerTileentity extends FakeWorldTileentity {
 
     protected ItemStack villager;
@@ -20,7 +22,7 @@ public class VillagerTileentity extends FakeWorldTileentity {
 
     public ItemStack getVillager() {
         if (villagerEntity != null) {
-            ModItems.VILLAGER.get().setVillager(villager, villagerEntity);
+            saveVillagerEntity();
         }
         return villager;
     }
@@ -29,11 +31,18 @@ public class VillagerTileentity extends FakeWorldTileentity {
         return !villager.isEmpty();
     }
 
+    @Nullable
     public EasyVillagerEntity getVillagerEntity() {
         if (villagerEntity == null && !villager.isEmpty()) {
             villagerEntity = ModItems.VILLAGER.get().getVillager(level, villager);
         }
         return villagerEntity;
+    }
+
+    public void saveVillagerEntity() {
+        if (villagerEntity != null) {
+            ModItems.VILLAGER.get().setVillager(villager, villagerEntity);
+        }
     }
 
     public void setVillager(ItemStack villager) {

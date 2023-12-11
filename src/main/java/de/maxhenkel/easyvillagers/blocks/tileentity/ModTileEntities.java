@@ -39,6 +39,9 @@ public class ModTileEntities {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<IncubatorTileentity>> INCUBATOR = BLOCK_ENTITY_REGISTER.register("incubator", () ->
             BlockEntityType.Builder.of(IncubatorTileentity::new, ModBlocks.INCUBATOR.get()).build(null)
     );
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<InventoryViewerTileentity>> INVENTORY_VIEWER = BLOCK_ENTITY_REGISTER.register("inventory_viewer", () ->
+            BlockEntityType.Builder.of(InventoryViewerTileentity::new, ModBlocks.INVENTORY_VIEWER.get()).build(null)
+    );
 
     public static void init() {
         BLOCK_ENTITY_REGISTER.register(FMLJavaModLoadingContext.get().getModEventBus());
@@ -51,6 +54,7 @@ public class ModTileEntities {
         event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, CONVERTER.get(), (object, context) -> object.getItemHandler());
         event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, IRON_FARM.get(), (object, context) -> object.getItemHandler());
         event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, INCUBATOR.get(), (object, context) -> object.getItemHandler());
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, INVENTORY_VIEWER.get(), (object, context) -> object.getItemHandler());
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -65,6 +69,7 @@ public class ModTileEntities {
         BlockEntityRenderers.register(ModTileEntities.CONVERTER.get(), ConverterRenderer::new);
         BlockEntityRenderers.register(ModTileEntities.IRON_FARM.get(), IronFarmRenderer::new);
         BlockEntityRenderers.register(ModTileEntities.INCUBATOR.get(), IncubatorRenderer::new);
+        BlockEntityRenderers.register(ModTileEntities.INVENTORY_VIEWER.get(), InventoryViewerRenderer::new);
     }
 
 }

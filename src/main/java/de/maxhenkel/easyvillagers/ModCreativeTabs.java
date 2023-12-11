@@ -29,6 +29,7 @@ public class ModCreativeTabs {
                     output.accept(new ItemStack(ModBlocks.CONVERTER.get()));
                     output.accept(new ItemStack(ModBlocks.IRON_FARM.get()));
                     output.accept(new ItemStack(ModBlocks.INCUBATOR.get()));
+                    output.accept(new ItemStack(ModBlocks.INVENTORY_VIEWER.get()));
                 })
                 .title(Component.translatable("itemGroup.easy_villagers"))
                 .build();
