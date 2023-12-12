@@ -75,6 +75,11 @@ This averages about one iron ingot per minute.
 The incubator block increases the growth rate of baby villagers.
 The speed can be changed in the config.
 
+## The Inventory Viewer Block
+
+The inventory viewer block is only available for Minecraft versions `1.20.4+` and currently only obtainable through creative mode.
+It allows you to view and edit the villagers inventory and equipment like armor.
+
 ## Trade Cycling
 
 When looking for a good trade, you always have to remove the villagers workstation, in order to reset their trades.
