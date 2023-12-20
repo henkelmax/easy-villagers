@@ -1,42 +1,42 @@
-modLoader="javafml"
-loaderVersion="${loader_version}"
-license="All rights reserved"
-issueTrackerURL="https://github.com/henkelmax/easy-villagers/issues"
+modLoader = "javafml"
+loaderVersion = "*"
+license = "All rights reserved"
+issueTrackerURL = "https://github.com/henkelmax/easy-villagers/issues"
 [[mods]]
-modId="${mod_id}"
-version="${mod_version}"
-displayName="${mod_name}"
-updateJSONURL="https://update.maxhenkel.de/neoforge/easy_villagers"
-displayURL="https://www.curseforge.com/minecraft/mc-mods/easy-villagers"
-authors="${mod_vendor}"
-description='''Easy Villagers'''
-[[dependencies.${mod_id}]]
-    modId="neoforge"
-    mandatory=true
-    versionRange="${neoforge_version_range}"
-    ordering="NONE"
-    side="BOTH"
-[[dependencies.${mod_id}]]
-    modId="minecraft"
-    mandatory=true
-    versionRange="[${minecraft_version}]"
-    ordering="NONE"
-    side="BOTH"
-[[dependencies.${mod_id}]]
-    modId="jei"
-    mandatory=false
-    versionRange="*"
-    ordering="NONE"
-    side="BOTH"
-[[dependencies.${mod_id}]]
-    modId="theoneprobe"
-    mandatory=false
-    versionRange="*"
-    ordering="NONE"
-    side="BOTH"
-[[dependencies.${mod_id}]]
-    modId="jade"
-    mandatory=false
-    versionRange="*"
-    ordering="NONE"
-    side="BOTH"
+modId = "easy_villagers"
+version = "${mod_version}"
+displayName = "Easy Villagers"
+updateJSONURL = "https://update.maxhenkel.de/neoforge/easy_villagers"
+displayURL = "https://www.curseforge.com/minecraft/mc-mods/easy-villagers"
+authors = "Max Henkel"
+description = '''Easy Villagers'''
+[[dependencies.easy_villagers]]
+modId = "neoforge"
+mandatory = true
+versionRange = "${neoforge_dependency}"
+ordering = "NONE"
+side = "BOTH"
+[[dependencies.easy_villagers]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[${minecraft_version}]"
+ordering = "NONE"
+side = "BOTH"
+[[dependencies.easy_villagers]]
+modId = "jei"
+mandatory = false
+versionRange = "*"
+ordering = "NONE"
+side = "BOTH"
+[[dependencies.easy_villagers]]
+modId = "theoneprobe"
+mandatory = false
+versionRange = "*"
+ordering = "NONE"
+side = "BOTH"
+[[dependencies.easy_villagers]]
+modId = "jade"
+mandatory = false
+versionRange = "*"
+ordering = "NONE"
+side = "BOTH"
