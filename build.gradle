@@ -7,8 +7,7 @@ plugins {
     id 'mod-update' version "${mod_update_version}"
 }
 
-//apply from: "https://raw.githubusercontent.com/henkelmax/mod-gradle-scripts/${mod_gradle_script_version}/mod.gradle"
-apply from: "E:/Workspaces/peek/mod.gradle"
+apply from: "https://raw.githubusercontent.com/henkelmax/mod-gradle-scripts/${mod_gradle_script_version}/mod.gradle"
 
 dependencies {
     shadow "de.maxhenkel.corelib:corelib:${minecraft_version}-${corelib_version}:api"
