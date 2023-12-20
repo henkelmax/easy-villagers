@@ -8,6 +8,7 @@ version = "${mod_version}"
 displayName = "Easy Villagers"
 updateJSONURL = "https://update.maxhenkel.de/forge/easy_villagers"
 displayURL = "https://www.curseforge.com/minecraft/mc-mods/easy-villagers"
+logoFile = "icon.png"
 authors = "Max Henkel"
 description = '''Easy Villagers'''
 [[dependencies.easy_villagers]]
