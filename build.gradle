@@ -14,9 +14,9 @@ dependencies {
     runtimeOnly fg.deobf("de.maxhenkel.corelib:corelib:${minecraft_version}-${corelib_version}")
     compileOnly fg.deobf("de.maxhenkel.corelib:corelib:${minecraft_version}-${corelib_version}:javadoc")
 
-    compileOnly fg.deobf("maven.modrinth:jei:${jei_version}")
-    compileOnly fg.deobf("maven.modrinth:the-one-probe:${theoneprobe_version}")
-    compileOnly fg.deobf("maven.modrinth:jade:${jade_version}")
+    implementation fg.deobf("maven.modrinth:jei:${jei_version}")
+    implementation fg.deobf("maven.modrinth:the-one-probe:${theoneprobe_version}")
+    implementation fg.deobf("maven.modrinth:jade:${jade_version}")
 }
 
 processResources {
