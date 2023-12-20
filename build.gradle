@@ -28,5 +28,5 @@ processResources {
 }
 
 shadowJar {
-    relocate 'de.maxhenkel.corelib', 'de.maxhenkel.reap.corelib'
+    relocate 'de.maxhenkel.corelib', 'de.maxhenkel.easyvillagers.corelib'
 }
