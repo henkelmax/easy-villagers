@@ -1,162 +1,33 @@
 plugins {
-    id 'net.neoforged.gradle' version "${neogradle_version}"
+    id 'net.neoforged.gradle.userdev' version "${neogradle_version}"
+    id 'net.neoforged.gradle.mixin' version "${neogradle_mixin_version}"
     id 'com.matthewprenger.cursegradle' version "${cursegradle_version}"
     id 'com.modrinth.minotaur' version "${minotaur_version}"
     id 'com.github.johnrengelman.shadow' version "${shadow_version}"
     id 'mod-update' version "${mod_update_version}"
-    id 'org.spongepowered.mixin' version "${mixingradle_version}"
 }
 
-apply plugin: 'idea'
-
-idea {
-    module {
-        downloadJavadoc = true
-        downloadSources = true
-    }
-}
-
-version = mod_version
-group = mod_packagename
-archivesBaseName = mod_id
-
-java.toolchain.languageVersion = JavaLanguageVersion.of(java_version as int)
-
-minecraft {
-    mappings channel: 'official', version: mod_minecraft_version
-
-    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
-
-    runs {
-        client {
-            workingDirectory file('run')
-            property 'forge.logging.console.level', 'debug'
-            args = ['--username', "henkelmax${new Random().nextInt(1000)}"]
-        }
-        server {
-            workingDirectory file('run/server')
-            property 'forge.logging.console.level', 'debug'
-        }
-        data {
-            workingDirectory file('run')
-            property 'forge.logging.console.level', 'debug'
-            args '--mod', mod_id, '--all', '--output', file('src/generated/resources/')
-        }
-    }
-}
-
-sourceSets.main.resources { srcDir 'src/generated/resources' }
-
-repositories {
-    maven { url = 'https://maven.maxhenkel.de/repository/public' }
-    maven {
-        url = 'https://api.modrinth.com/maven'
-        content {
-            includeGroup 'maven.modrinth'
-        }
-    }
-}
+//apply from: "https://raw.githubusercontent.com/henkelmax/mod-gradle-scripts/${mod_gradle_script_version}/mod.gradle"
+apply from: "E:/Workspaces/peek/mod.gradle"
 
 dependencies {
-    minecraft "net.neoforged:forge:${mod_minecraft_version}-${forge_version}"
+    shadow "de.maxhenkel.corelib:corelib:${minecraft_version}-${corelib_version}:api"
+    runtimeOnly "de.maxhenkel.corelib:corelib:${minecraft_version}-${corelib_version}"
+    compileOnly "de.maxhenkel.corelib:corelib:${minecraft_version}-${corelib_version}:javadoc"
 
-    implementation fg.deobf("maven.modrinth:jei:${jei_version}")
-    implementation fg.deobf("maven.modrinth:the-one-probe:${theoneprobe_version}")
-    implementation fg.deobf("maven.modrinth:jade:${jade_version}")
-
-    shadow fg.deobf("de.maxhenkel.corelib:corelib:${mod_minecraft_version}-${corelib_version}:api")
-    runtimeOnly fg.deobf("de.maxhenkel.corelib:corelib:${mod_minecraft_version}-${corelib_version}")
-    runtimeOnly fg.deobf("de.maxhenkel.corelib:corelib:${mod_minecraft_version}-${corelib_version}:javadoc")
-
-    implementation 'com.google.code.findbugs:jsr305:3.0.2'
-}
-
-jar {
-    manifest {
-        attributes(['Specification-Title'     : mod_name,
-                    'Specification-Vendor'    : mod_vendor,
-                    'Specification-Version'   : '1',
-                    'Implementation-Title'    : mod_name,
-                    'Implementation-Version'  : mod_version,
-                    'Implementation-Vendor'   : mod_vendor,
-                    'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")],)
-    }
+    compileOnly "maven.modrinth:jei:${jei_version}"
+    compileOnly "maven.modrinth:the-one-probe:${theoneprobe_version}"
+    compileOnly "maven.modrinth:jade:${jade_version}"
 }
 
 processResources {
     filesMatching('**/*.toml') {
-        expand 'mod_id': mod_id,
-                'mod_version': mod_version,
-                'mod_vendor': mod_vendor,
-                'mod_name': mod_name,
-                'mod_forge_version': mod_forge_version,
-                'mod_loader_version': mod_loader_version,
-                'mod_minecraft_version': mod_minecraft_version
+        expand 'mod_version': mod_version,
+                'forge_dependency': forge_dependency,
+                'minecraft_version': minecraft_version
     }
 }
 
 shadowJar {
-    configurations = [project.configurations.shadow]
-    archiveClassifier = ''
-    relocate 'de.maxhenkel.corelib', "de.maxhenkel.${mod_id}.corelib"
-}
-shadowJar.dependsOn('reobfJar')
-
-reobf {
-    shadowJar {}
-}
-
-curseforge {
-    apiKey = file('curseforge_api_key.txt').exists() ? file('curseforge_api_key.txt').text : ''
-    project {
-        id = curse_id
-        changelogType = 'markdown'
-        changelog = file('changelog.md')
-        releaseType = release_type
-        addGameVersion mod_minecraft_version
-        addGameVersion 'Forge'
-        addGameVersion 'NeoForge'
-        addGameVersion "Java ${java_version}"
-        mainArtifact(jar) {
-            displayName = "[${mod_minecraft_version}] ${mod_name} ${mod_version}"
-            relations {
-                optionalDependency 'jei'
-                optionalDependency 'the-one-probe'
-                optionalDependency 'jade'
-            }
-        }
-    }
-}
-
-tasks.modrinth.configure({
-    group = 'upload'
-})
-tasks.modrinthSyncBody.configure({
-    group = 'upload'
-})
-modrinth {
-    token = file('modrinth_token.txt').exists() ? file('modrinth_token.txt').text : ''
-    projectId = modrinth_id
-    versionNumber = "forge-${mod_version}"
-    versionName = "[FORGE][${mod_minecraft_version}] ${mod_name} ${mod_version}"
-    uploadFile = jar
-    versionType = release_type.toUpperCase()
-    changelog = file('changelog.md').text
-    gameVersions = [mod_minecraft_version]
-    loaders = ['forge', 'neoforge']
-    dependencies {
-        optional.project 'jei'
-        optional.project 'the-one-probe'
-        optional.project 'jade'
-    }
-}
-tasks.modrinth.dependsOn(build)
-
-modUpdate {
-    serverURL = 'https://update.maxhenkel.de/'
-    modID = mod_id
-    gameVersion = mod_minecraft_version
-    modVersion = mod_version
-    releaseType = release_type
-    tags = recommended == 'true' ? ['recommended'] : []
+    relocate 'de.maxhenkel.corelib', 'de.maxhenkel.easyvillagers.corelib'
 }
