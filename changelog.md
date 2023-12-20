@@ -1,1 +1,1 @@
-- Added Inventory Viewer block
+- Added mod icon
