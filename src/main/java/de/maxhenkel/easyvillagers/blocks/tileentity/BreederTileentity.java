@@ -1,9 +1,7 @@
 package de.maxhenkel.easyvillagers.blocks.tileentity;
 
 import de.maxhenkel.corelib.blockentity.IServerTickableBlockEntity;
-import de.maxhenkel.corelib.entity.EntityUtils;
 import de.maxhenkel.corelib.inventory.ItemListInventory;
-import de.maxhenkel.corelib.net.NetUtils;
 import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.MultiItemStackHandler;
 import de.maxhenkel.easyvillagers.blocks.ModBlocks;
@@ -16,7 +14,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
@@ -26,6 +23,7 @@ import net.minecraft.world.entity.npc.VillagerType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 public class BreederTileentity extends FakeWorldTileentity implements IServerTickableBlockEntity {
 
@@ -151,8 +149,7 @@ public class BreederTileentity extends FakeWorldTileentity implements IServerTic
                         0D, 0D, 0D);
             }
         } else {
-            MessageVillagerParticles msg = new MessageVillagerParticles(worldPosition);
-            EntityUtils.forEachPlayerAround((ServerLevel) level, worldPosition, 128, playerEntity -> NetUtils.sendTo(Main.SIMPLE_CHANNEL, playerEntity, msg));
+            PacketDistributor.TRACKING_CHUNK.with(level.getChunkAt(worldPosition)).send(new MessageVillagerParticles(worldPosition));
         }
     }
 

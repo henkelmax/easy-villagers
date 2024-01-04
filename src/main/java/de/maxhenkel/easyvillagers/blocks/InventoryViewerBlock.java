@@ -40,7 +40,6 @@ import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -99,7 +98,7 @@ public class InventoryViewerBlock extends VillagerBlockBase implements EntityBlo
             return InteractionResult.SUCCESS;
         } else if (inventoryViewer.hasVillager()) {
             if (player instanceof ServerPlayer serverPlayer) {
-                NetworkHooks.openScreen(serverPlayer, new MenuProvider() {
+                serverPlayer.openMenu(new MenuProvider() {
                     @Override
                     public Component getDisplayName() {
                         return Component.translatable(state.getBlock().getDescriptionId());

@@ -17,17 +17,16 @@ import de.maxhenkel.easyvillagers.net.MessageVillagerParticles;
 import net.minecraft.client.KeyMapping;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.neoforged.fml.loading.FMLEnvironment;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.network.simple.SimpleChannel;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlerEvent;
+import net.neoforged.neoforge.network.registration.IPayloadRegistrar;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
@@ -42,39 +41,33 @@ public class Main {
     public static ServerConfig SERVER_CONFIG;
     public static ClientConfig CLIENT_CONFIG;
 
-    public static SimpleChannel SIMPLE_CHANNEL;
     public static KeyMapping PICKUP_KEY;
     public static KeyMapping CYCLE_TRADES_KEY;
 
-    public Main() {
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(IMC::enqueueIMC);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(ModTileEntities::onRegisterCapabilities);
+    public Main(IEventBus eventBus) {
+        eventBus.addListener(this::commonSetup);
+        eventBus.addListener(this::onRegisterPayloadHandler);
+        eventBus.addListener(IMC::enqueueIMC);
+        eventBus.addListener(ModTileEntities::onRegisterCapabilities);
 
-        ModBlocks.init();
-        ModItems.init();
-        ModTileEntities.init();
-        Containers.init();
-        ModCreativeTabs.init();
+        ModBlocks.init(eventBus);
+        ModItems.init(eventBus);
+        ModTileEntities.init(eventBus);
+        Containers.init(eventBus);
+        ModCreativeTabs.init(eventBus);
 
         SERVER_CONFIG = CommonRegistry.registerConfig(ModConfig.Type.SERVER, ServerConfig.class);
         CLIENT_CONFIG = CommonRegistry.registerConfig(ModConfig.Type.CLIENT, ClientConfig.class);
 
         if (FMLEnvironment.dist.isClient()) {
-            FMLJavaModLoadingContext.get().getModEventBus().addListener(Main.this::clientSetup);
-            FMLJavaModLoadingContext.get().getModEventBus().addListener(Main.this::onRegisterKeyBinds);
+            eventBus.addListener(Main.this::clientSetup);
+            eventBus.addListener(Main.this::onRegisterKeyBinds);
         }
     }
 
     public void commonSetup(FMLCommonSetupEvent event) {
         NeoForge.EVENT_BUS.register(new VillagerEvents());
         NeoForge.EVENT_BUS.register(new BlockEvents());
-
-        SIMPLE_CHANNEL = CommonRegistry.registerChannel(Main.MODID, "default");
-        CommonRegistry.registerMessage(SIMPLE_CHANNEL, 0, MessageVillagerParticles.class);
-        CommonRegistry.registerMessage(SIMPLE_CHANNEL, 1, MessagePickUpVillager.class);
-        CommonRegistry.registerMessage(SIMPLE_CHANNEL, 2, MessageSelectTrade.class);
-        CommonRegistry.registerMessage(SIMPLE_CHANNEL, 3, MessageCycleTrades.class);
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -84,6 +77,14 @@ public class Main {
 
         NeoForge.EVENT_BUS.register(new ModSoundEvents());
         NeoForge.EVENT_BUS.register(new GuiEvents());
+    }
+
+    public void onRegisterPayloadHandler(RegisterPayloadHandlerEvent event) {
+        IPayloadRegistrar registrar = event.registrar(MODID).versioned("0");
+        CommonRegistry.registerMessage(registrar, MessageVillagerParticles.class);
+        CommonRegistry.registerMessage(registrar, MessagePickUpVillager.class);
+        CommonRegistry.registerMessage(registrar, MessageSelectTrade.class);
+        CommonRegistry.registerMessage(registrar, MessageCycleTrades.class);
     }
 
     @OnlyIn(Dist.CLIENT)

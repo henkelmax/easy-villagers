@@ -3,7 +3,7 @@ package de.maxhenkel.easyvillagers.blocks;
 import de.maxhenkel.easyvillagers.Main;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.Block;
-import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -20,8 +20,8 @@ public class ModBlocks {
     public static final DeferredHolder<Block, IncubatorBlock> INCUBATOR = BLOCK_REGISTER.register("incubator", IncubatorBlock::new);
     public static final DeferredHolder<Block, InventoryViewerBlock> INVENTORY_VIEWER = BLOCK_REGISTER.register("inventory_viewer", InventoryViewerBlock::new);
 
-    public static void init() {
-        BLOCK_REGISTER.register(FMLJavaModLoadingContext.get().getModEventBus());
+    public static void init(IEventBus eventBus) {
+        BLOCK_REGISTER.register(eventBus);
     }
 
 }

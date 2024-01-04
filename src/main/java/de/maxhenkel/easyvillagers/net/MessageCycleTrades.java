@@ -1,25 +1,33 @@
 package de.maxhenkel.easyvillagers.net;
 
 import de.maxhenkel.corelib.net.Message;
+import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.events.GuiEvents;
 import net.minecraft.network.FriendlyByteBuf;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.neoforge.network.NetworkEvent;
+import net.minecraft.network.protocol.PacketFlow;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 
 public class MessageCycleTrades implements Message<MessageCycleTrades> {
+
+    public static ResourceLocation ID = new ResourceLocation(Main.MODID, "cycle_trades");
 
     public MessageCycleTrades() {
 
     }
 
     @Override
-    public Dist getExecutingSide() {
-        return Dist.DEDICATED_SERVER;
+    public PacketFlow getExecutingSide() {
+        return PacketFlow.SERVERBOUND;
     }
 
     @Override
-    public void executeServerSide(NetworkEvent.Context context) {
-        GuiEvents.onCycleTrades(context.getSender());
+    public void executeServerSide(PlayPayloadContext context) {
+        if (!(context.player().orElse(null) instanceof ServerPlayer sender)) {
+            return;
+        }
+        GuiEvents.onCycleTrades(sender);
     }
 
     @Override
@@ -29,5 +37,10 @@ public class MessageCycleTrades implements Message<MessageCycleTrades> {
 
     @Override
     public void toBytes(FriendlyByteBuf packetBuffer) {
+    }
+
+    @Override
+    public ResourceLocation id() {
+        return ID;
     }
 }

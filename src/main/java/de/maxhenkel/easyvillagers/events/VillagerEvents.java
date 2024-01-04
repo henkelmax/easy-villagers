@@ -1,6 +1,5 @@
 package de.maxhenkel.easyvillagers.events;
 
-import de.maxhenkel.corelib.net.NetUtils;
 import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.items.ModItems;
 import de.maxhenkel.easyvillagers.net.MessagePickUpVillager;
@@ -16,6 +15,7 @@ import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.InputEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 public class VillagerEvents {
 
@@ -43,7 +43,7 @@ public class VillagerEvents {
             return;
         }
 
-        NetUtils.sendToServer(Main.SIMPLE_CHANNEL, new MessagePickUpVillager(villager.getUUID()));
+        PacketDistributor.SERVER.noArg().send(new MessagePickUpVillager(villager.getUUID()));
 
         event.setCancellationResult(InteractionResult.SUCCESS);
         event.setCanceled(true);
@@ -62,7 +62,7 @@ public class VillagerEvents {
             return;
         }
 
-        NetUtils.sendToServer(Main.SIMPLE_CHANNEL, new MessagePickUpVillager(villager.getUUID()));
+        PacketDistributor.SERVER.noArg().send(new MessagePickUpVillager(villager.getUUID()));
     }
 
     public static void pickUp(Villager villager, Player player) {

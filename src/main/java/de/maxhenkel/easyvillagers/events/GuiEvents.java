@@ -1,6 +1,5 @@
 package de.maxhenkel.easyvillagers.events;
 
-import de.maxhenkel.corelib.net.NetUtils;
 import de.maxhenkel.easyvillagers.ClientConfig;
 import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
@@ -19,6 +18,7 @@ import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.InputEvent;
 import net.neoforged.neoforge.client.event.ScreenEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 public class GuiEvents {
 
@@ -57,7 +57,7 @@ public class GuiEvents {
         }
 
         event.addListener(new CycleTradesButton(posX, merchantScreen.getGuiTop() + 8, b -> {
-            NetUtils.sendToServer(Main.SIMPLE_CHANNEL, new MessageCycleTrades());
+            PacketDistributor.SERVER.noArg().send(new MessageCycleTrades());
         }, merchantScreen));
     }
 
@@ -85,7 +85,7 @@ public class GuiEvents {
             return;
         }
 
-        NetUtils.sendToServer(Main.SIMPLE_CHANNEL, new MessageCycleTrades());
+        PacketDistributor.SERVER.noArg().send(new MessageCycleTrades());
         mc.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1F));
     }
 

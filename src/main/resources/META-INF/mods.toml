@@ -13,31 +13,31 @@ authors = "Max Henkel"
 description = '''Easy Villagers'''
 [[dependencies.easy_villagers]]
 modId = "neoforge"
-mandatory = true
+type = "required"
 versionRange = "${neoforge_dependency}"
 ordering = "NONE"
 side = "BOTH"
 [[dependencies.easy_villagers]]
 modId = "minecraft"
-mandatory = true
+type = "required"
 versionRange = "[${minecraft_version}]"
 ordering = "NONE"
 side = "BOTH"
 [[dependencies.easy_villagers]]
 modId = "jei"
-mandatory = false
+type = "optional"
 versionRange = "*"
 ordering = "NONE"
 side = "BOTH"
 [[dependencies.easy_villagers]]
 modId = "theoneprobe"
-mandatory = false
+type = "optional"
 versionRange = "*"
 ordering = "NONE"
 side = "BOTH"
 [[dependencies.easy_villagers]]
 modId = "jade"
-mandatory = false
+type = "optional"
 versionRange = "*"
 ordering = "NONE"
 side = "BOTH"

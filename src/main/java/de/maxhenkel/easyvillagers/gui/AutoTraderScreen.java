@@ -1,13 +1,13 @@
 package de.maxhenkel.easyvillagers.gui;
 
 import de.maxhenkel.corelib.inventory.ScreenBase;
-import de.maxhenkel.corelib.net.NetUtils;
 import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.net.MessageSelectTrade;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 public class AutoTraderScreen extends ScreenBase<AutoTraderContainer> {
 
@@ -27,11 +27,11 @@ public class AutoTraderScreen extends ScreenBase<AutoTraderContainer> {
         super.init();
 
         addRenderableWidget(new ArrowButton(leftPos + 8, topPos + 19, true, button -> {
-            NetUtils.sendToServer(Main.SIMPLE_CHANNEL, new MessageSelectTrade(false));
+            PacketDistributor.SERVER.noArg().send(new MessageSelectTrade(false));
         }));
 
         addRenderableWidget(new ArrowButton(leftPos + imageWidth - 16 - 8, topPos + 19, false, button -> {
-            NetUtils.sendToServer(Main.SIMPLE_CHANNEL, new MessageSelectTrade(true));
+            PacketDistributor.SERVER.noArg().send(new MessageSelectTrade(true));
         }));
     }
 

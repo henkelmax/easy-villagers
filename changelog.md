@@ -1,1 +1,1 @@
-- Added mod icon
+- Updated to NeoForges new networking system
