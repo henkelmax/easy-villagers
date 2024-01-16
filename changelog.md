@@ -1,1 +1,1 @@
-- Updated to NeoForges new networking system
+- Fixed villagers can be converted without potion

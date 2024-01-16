@@ -106,10 +106,10 @@ public class ConverterTileentity extends VillagerTileentity implements IServerTi
         ItemStack appleStack = null;
         ItemStack potionStack = null;
         for (ItemStack stack : inputInventory) {
-            if (appleStack == null && stack.getItem() == Items.GOLDEN_APPLE) {
+            if (appleStack == null && !stack.isEmpty() && stack.getItem() == Items.GOLDEN_APPLE) {
                 appleStack = stack;
             }
-            if (potionStack == null && isWeakness(stack)) {
+            if (potionStack == null && !stack.isEmpty() && isWeakness(stack)) {
                 potionStack = stack;
             }
         }
