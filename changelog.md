@@ -1,1 +1,1 @@
-- Added mod icon
+- Fixed villagers can be converted without potion
