@@ -1,1 +1,1 @@
-- Fixed villagers can be converted without potion
+- Updated dependencies
