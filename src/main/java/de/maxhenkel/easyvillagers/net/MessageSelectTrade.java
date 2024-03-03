@@ -35,6 +35,7 @@ public class MessageSelectTrade implements Message<MessageSelectTrade> {
                 container.getTrader().prevTrade();
             }
         }
+        context.setPacketHandled(true);
     }
 
     @Override

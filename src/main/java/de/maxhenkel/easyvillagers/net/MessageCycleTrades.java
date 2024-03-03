@@ -20,6 +20,7 @@ public class MessageCycleTrades implements Message<MessageCycleTrades> {
     @Override
     public void executeServerSide(NetworkEvent.Context context) {
         GuiEvents.onCycleTrades(context.getSender());
+        context.setPacketHandled(true);
     }
 
     @Override

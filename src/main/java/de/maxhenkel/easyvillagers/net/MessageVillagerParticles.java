@@ -33,6 +33,7 @@ public class MessageVillagerParticles implements Message<MessageVillagerParticle
             BreederTileentity breeder = (BreederTileentity) tileEntity;
             breeder.spawnParticles();
         }
+        context.setPacketHandled(true);
     }
 
     @Override

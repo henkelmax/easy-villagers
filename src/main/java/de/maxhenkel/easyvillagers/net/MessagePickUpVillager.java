@@ -34,6 +34,7 @@ public class MessagePickUpVillager implements Message<MessagePickUpVillager> {
         player.level().getEntitiesOfClass(Villager.class, player.getBoundingBox().inflate(8D), v -> v.getUUID().equals(villager)).stream().filter(VillagerEvents::arePickupConditionsMet).findAny().ifPresent(villagerEntity -> {
             VillagerEvents.pickUp(villagerEntity, player);
         });
+        context.setPacketHandled(true);
     }
 
     @Override
