@@ -17,7 +17,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 
 import java.util.ArrayList;
@@ -56,15 +56,15 @@ public class JEIPlugin implements IModPlugin {
         registration.addRecipes(CATEGORY_BREEDING, foods);
 
         List<ItemStack> potions = new ArrayList<>();
-        potions.add(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WEAKNESS));
-        potions.add(PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.LONG_WEAKNESS));
-        potions.add(PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), Potions.WEAKNESS));
-        potions.add(PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), Potions.LONG_WEAKNESS));
-        potions.add(PotionUtils.setPotion(new ItemStack(Items.LINGERING_POTION), Potions.WEAKNESS));
-        potions.add(PotionUtils.setPotion(new ItemStack(Items.LINGERING_POTION), Potions.LONG_WEAKNESS));
+        potions.add(PotionContents.createItemStack(Items.POTION, Potions.WEAKNESS));
+        potions.add(PotionContents.createItemStack(Items.POTION, Potions.LONG_WEAKNESS));
+        potions.add(PotionContents.createItemStack(Items.SPLASH_POTION, Potions.WEAKNESS));
+        potions.add(PotionContents.createItemStack(Items.SPLASH_POTION, Potions.LONG_WEAKNESS));
+        potions.add(PotionContents.createItemStack(Items.LINGERING_POTION, Potions.WEAKNESS));
+        potions.add(PotionContents.createItemStack(Items.LINGERING_POTION, Potions.LONG_WEAKNESS));
         registration.addRecipes(CATEGORY_CONVERTING, potions);
 
-        registration.addRecipes(CATEGORY_INCUBATING, Collections.singletonList(VillagerItem.getBabyVillager()));
+        registration.addRecipes(CATEGORY_INCUBATING, Collections.singletonList(VillagerItem.createBabyVillager()));
     }
 
 }

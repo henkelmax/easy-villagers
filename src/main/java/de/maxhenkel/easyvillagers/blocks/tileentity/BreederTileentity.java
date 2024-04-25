@@ -6,14 +6,17 @@ import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.MultiItemStackHandler;
 import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
+import de.maxhenkel.easyvillagers.datacomponents.VillagerData;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import de.maxhenkel.easyvillagers.gui.FoodSlot;
 import de.maxhenkel.easyvillagers.items.ModItems;
 import de.maxhenkel.easyvillagers.net.MessageVillagerParticles;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
@@ -21,6 +24,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.npc.VillagerType;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -62,14 +66,14 @@ public class BreederTileentity extends FakeWorldTileentity implements IServerTic
 
     public EasyVillagerEntity getVillagerEntity1() {
         if (villagerEntity1 == null && !villager1.isEmpty()) {
-            villagerEntity1 = ModItems.VILLAGER.get().getVillager(level, villager1);
+            villagerEntity1 = VillagerData.createEasyVillager(villager1, level);
         }
         return villagerEntity1;
     }
 
     public EasyVillagerEntity getVillagerEntity2() {
         if (villagerEntity2 == null && !villager2.isEmpty()) {
-            villagerEntity2 = ModItems.VILLAGER.get().getVillager(level, villager2);
+            villagerEntity2 = VillagerData.createEasyVillager(villager2, level);
         }
         return villagerEntity2;
     }
@@ -80,7 +84,7 @@ public class BreederTileentity extends FakeWorldTileentity implements IServerTic
         if (villager.isEmpty()) {
             villagerEntity1 = null;
         } else {
-            villagerEntity1 = ModItems.VILLAGER.get().getVillager(level, villager);
+            villagerEntity1 = VillagerData.createEasyVillager(villager, level);
         }
         setChanged();
         sync();
@@ -92,7 +96,7 @@ public class BreederTileentity extends FakeWorldTileentity implements IServerTic
         if (villager.isEmpty()) {
             villagerEntity2 = null;
         } else {
-            villagerEntity2 = ModItems.VILLAGER.get().getVillager(level, villager);
+            villagerEntity2 = VillagerData.createEasyVillager(villager, level);
         }
         setChanged();
         sync();
@@ -140,7 +144,10 @@ public class BreederTileentity extends FakeWorldTileentity implements IServerTic
     }
 
     public void spawnParticles() {
-        if (level.isClientSide) {
+        if (level instanceof ServerLevel serverLevel) {
+            PacketDistributor.sendToPlayersTrackingChunk(serverLevel, new ChunkPos(worldPosition), new MessageVillagerParticles(worldPosition));
+
+        } else if (level.isClientSide) {
             for (int i = 0; i < 5; i++) {
                 level.addParticle(ParticleTypes.HEART,
                         worldPosition.getX() + (level.random.nextDouble() - 0.5D) + 0.5D,
@@ -148,8 +155,6 @@ public class BreederTileentity extends FakeWorldTileentity implements IServerTic
                         worldPosition.getZ() + (level.random.nextDouble() - 0.5D) + 0.5D,
                         0D, 0D, 0D);
             }
-        } else {
-            PacketDistributor.TRACKING_CHUNK.with(level.getChunkAt(worldPosition)).send(new MessageVillagerParticles(worldPosition));
         }
     }
 
@@ -160,7 +165,7 @@ public class BreederTileentity extends FakeWorldTileentity implements IServerTic
                 villagerEntity.setVillagerData(villagerEntity.getVillagerData().setType(VillagerType.byBiome(level.getBiome(getBlockPos()))));
                 villagerEntity.setAge(-24000);
                 ItemStack villager = new ItemStack(ModItems.VILLAGER.get());
-                ModItems.VILLAGER.get().setVillager(villager, villagerEntity);
+                VillagerData.applyToItem(villager, villagerEntity);
                 outputInventory.set(i, villager);
                 return true;
             }
@@ -196,48 +201,48 @@ public class BreederTileentity extends FakeWorldTileentity implements IServerTic
     }
 
     @Override
-    protected void saveAdditional(CompoundTag compound) {
-        super.saveAdditional(compound);
+    protected void saveAdditional(CompoundTag compound, HolderLookup.Provider provider) {
+        super.saveAdditional(compound, provider);
 
         if (hasVillager1()) {
             CompoundTag comp = new CompoundTag();
             if (villagerEntity1 != null) {
-                ModItems.VILLAGER.get().setVillager(villager1, villagerEntity1);
+                VillagerData.applyToItem(villager1, villagerEntity1);
             }
-            villager1.save(comp);
+            villager1.save(provider, comp);
             compound.put("Villager1", comp);
         }
         if (hasVillager2()) {
             CompoundTag comp = new CompoundTag();
             if (villagerEntity2 != null) {
-                ModItems.VILLAGER.get().setVillager(villager2, villagerEntity2);
+                VillagerData.applyToItem(villager2, villagerEntity2);
             }
-            villager2.save(comp);
+            villager2.save(provider, comp);
             compound.put("Villager2", comp);
         }
-        compound.put("FoodInventory", ContainerHelper.saveAllItems(new CompoundTag(), foodInventory, true));
-        compound.put("OutputInventory", ContainerHelper.saveAllItems(new CompoundTag(), outputInventory, true));
+        compound.put("FoodInventory", ContainerHelper.saveAllItems(new CompoundTag(), foodInventory, true, provider));
+        compound.put("OutputInventory", ContainerHelper.saveAllItems(new CompoundTag(), outputInventory, true, provider));
     }
 
     @Override
-    public void load(CompoundTag compound) {
+    protected void loadAdditional(CompoundTag compound, HolderLookup.Provider provider) {
         if (compound.contains("Villager1")) {
             CompoundTag comp = compound.getCompound("Villager1");
-            villager1 = ItemStack.of(comp);
+            villager1 = VillagerData.convert(provider, comp);
             villagerEntity1 = null;
         } else {
             removeVillager1();
         }
         if (compound.contains("Villager2")) {
             CompoundTag comp = compound.getCompound("Villager2");
-            villager2 = ItemStack.of(comp);
+            villager2 = VillagerData.convert(provider, comp);
             villagerEntity2 = null;
         } else {
             removeVillager2();
         }
-        ContainerHelper.loadAllItems(compound.getCompound("FoodInventory"), foodInventory);
-        ContainerHelper.loadAllItems(compound.getCompound("OutputInventory"), outputInventory);
-        super.load(compound);
+        VillagerData.convertInventory(compound.getCompound("FoodInventory"), foodInventory, provider);
+        VillagerData.convertInventory(compound.getCompound("OutputInventory"), outputInventory, provider);
+        super.loadAdditional(compound, provider);
     }
 
     public Container getFoodInventory() {

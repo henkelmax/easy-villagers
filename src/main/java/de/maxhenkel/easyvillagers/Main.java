@@ -10,6 +10,7 @@ import de.maxhenkel.easyvillagers.events.VillagerEvents;
 import de.maxhenkel.easyvillagers.gui.Containers;
 import de.maxhenkel.easyvillagers.integration.IMC;
 import de.maxhenkel.easyvillagers.items.ModItems;
+import de.maxhenkel.easyvillagers.loottable.ModLootTables;
 import de.maxhenkel.easyvillagers.net.MessageCycleTrades;
 import de.maxhenkel.easyvillagers.net.MessagePickUpVillager;
 import de.maxhenkel.easyvillagers.net.MessageSelectTrade;
@@ -25,8 +26,8 @@ import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.network.event.RegisterPayloadHandlerEvent;
-import net.neoforged.neoforge.network.registration.IPayloadRegistrar;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
@@ -55,9 +56,10 @@ public class Main {
         ModTileEntities.init(eventBus);
         Containers.init(eventBus);
         ModCreativeTabs.init(eventBus);
+        ModLootTables.init(eventBus);
 
-        SERVER_CONFIG = CommonRegistry.registerConfig(ModConfig.Type.SERVER, ServerConfig.class);
-        CLIENT_CONFIG = CommonRegistry.registerConfig(ModConfig.Type.CLIENT, ClientConfig.class);
+        SERVER_CONFIG = CommonRegistry.registerConfig(MODID, ModConfig.Type.SERVER, ServerConfig.class);
+        CLIENT_CONFIG = CommonRegistry.registerConfig(MODID, ModConfig.Type.CLIENT, ClientConfig.class);
 
         if (FMLEnvironment.dist.isClient()) {
             eventBus.addListener(Main.this::clientSetup);
@@ -79,8 +81,8 @@ public class Main {
         NeoForge.EVENT_BUS.register(new GuiEvents());
     }
 
-    public void onRegisterPayloadHandler(RegisterPayloadHandlerEvent event) {
-        IPayloadRegistrar registrar = event.registrar(MODID).versioned("0");
+    public void onRegisterPayloadHandler(RegisterPayloadHandlersEvent event) {
+        PayloadRegistrar registrar = event.registrar(MODID).versioned("0");
         CommonRegistry.registerMessage(registrar, MessageVillagerParticles.class);
         CommonRegistry.registerMessage(registrar, MessagePickUpVillager.class);
         CommonRegistry.registerMessage(registrar, MessageSelectTrade.class);

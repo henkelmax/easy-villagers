@@ -6,11 +6,14 @@ import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.MultiItemStackHandler;
 import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
+import de.maxhenkel.easyvillagers.datacomponents.VillagerData;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import de.maxhenkel.easyvillagers.gui.VillagerConvertSlot;
 import de.maxhenkel.easyvillagers.items.VillagerItem;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -20,7 +23,7 @@ import net.minecraft.world.entity.ai.village.ReputationEventType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.items.IItemHandler;
@@ -124,7 +127,11 @@ public class ConverterTileentity extends VillagerTileentity implements IServerTi
     }
 
     public static boolean isWeakness(ItemStack stack) {
-        return PotionUtils.getPotion(stack).equals(Potions.WEAKNESS) || PotionUtils.getPotion(stack).equals(Potions.LONG_WEAKNESS);
+        PotionContents potionContents = stack.get(DataComponents.POTION_CONTENTS);
+        if (potionContents == null) {
+            return false;
+        }
+        return potionContents.potion().filter(potionHolder -> potionHolder.equals(Potions.WEAKNESS) || potionHolder.equals(Potions.LONG_WEAKNESS)).isPresent();
     }
 
     public long getTimer() {
@@ -152,11 +159,11 @@ public class ConverterTileentity extends VillagerTileentity implements IServerTi
     }
 
     @Override
-    protected void saveAdditional(CompoundTag compound) {
-        super.saveAdditional(compound);
+    protected void saveAdditional(CompoundTag compound, HolderLookup.Provider provider) {
+        super.saveAdditional(compound, provider);
 
-        compound.put("InputInventory", ContainerHelper.saveAllItems(new CompoundTag(), inputInventory, true));
-        compound.put("OutputInventory", ContainerHelper.saveAllItems(new CompoundTag(), outputInventory, true));
+        compound.put("InputInventory", ContainerHelper.saveAllItems(new CompoundTag(), inputInventory, true, provider));
+        compound.put("OutputInventory", ContainerHelper.saveAllItems(new CompoundTag(), outputInventory, true, provider));
         compound.putLong("Timer", timer);
         if (owner != null) {
             compound.putUUID("Owner", owner);
@@ -164,16 +171,16 @@ public class ConverterTileentity extends VillagerTileentity implements IServerTi
     }
 
     @Override
-    public void load(CompoundTag compound) {
-        ContainerHelper.loadAllItems(compound.getCompound("InputInventory"), inputInventory);
-        ContainerHelper.loadAllItems(compound.getCompound("OutputInventory"), outputInventory);
+    protected void loadAdditional(CompoundTag compound, HolderLookup.Provider provider) {
+        VillagerData.convertInventory(compound.getCompound("InputInventory"), inputInventory, provider);
+        VillagerData.convertInventory(compound.getCompound("OutputInventory"), outputInventory, provider);
         timer = compound.getLong("Timer");
         if (compound.contains("Owner")) {
             owner = compound.getUUID("Owner");
         } else {
             owner = null;
         }
-        super.load(compound);
+        super.loadAdditional(compound, provider);
     }
 
     public Container getInputInventory() {

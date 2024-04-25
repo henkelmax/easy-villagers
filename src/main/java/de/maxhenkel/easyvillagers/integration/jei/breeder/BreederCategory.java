@@ -41,7 +41,7 @@ public class BreederCategory implements IRecipeCategory<ItemStack> {
         builder.addSlot(RecipeIngredientRole.INPUT, 37, 1);
         builder.addSlot(RecipeIngredientRole.INPUT, 55, 1);
 
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 1, 32).addIngredient(VanillaTypes.ITEM_STACK, VillagerItem.getBabyVillager());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 1, 32).addIngredient(VanillaTypes.ITEM_STACK, VillagerItem.createBabyVillager());
         builder.addSlot(RecipeIngredientRole.OUTPUT, 19, 32);
         builder.addSlot(RecipeIngredientRole.OUTPUT, 37, 32);
         builder.addSlot(RecipeIngredientRole.OUTPUT, 55, 32);

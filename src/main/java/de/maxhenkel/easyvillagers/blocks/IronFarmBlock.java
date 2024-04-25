@@ -5,8 +5,8 @@ import de.maxhenkel.corelib.blockentity.SimpleBlockEntityTicker;
 import de.maxhenkel.corelib.client.CustomRendererBlockItem;
 import de.maxhenkel.corelib.client.ItemRenderer;
 import de.maxhenkel.corelib.item.ItemUtils;
-import de.maxhenkel.easyvillagers.ItemTileEntityCache;
 import de.maxhenkel.easyvillagers.blocks.tileentity.IronFarmTileentity;
+import de.maxhenkel.easyvillagers.datacomponents.VillagerBlockEntityData;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import de.maxhenkel.easyvillagers.gui.OutputContainer;
 import de.maxhenkel.easyvillagers.items.VillagerItem;
@@ -15,10 +15,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.Containers;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.MenuProvider;
+import net.minecraft.world.*;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -39,6 +36,7 @@ import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -60,9 +58,9 @@ public class IronFarmBlock extends VillagerBlockBase implements EntityBlock, IIt
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable BlockGetter blockGetter, List<Component> components, TooltipFlag tooltipFlag) {
-        super.appendHoverText(stack, blockGetter, components, tooltipFlag);
-        IronFarmTileentity trader = ItemTileEntityCache.getTileEntity(stack, () -> new IronFarmTileentity(BlockPos.ZERO, ModBlocks.TRADER.get().defaultBlockState()));
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> components, TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, context, components, tooltipFlag);
+        IronFarmTileentity trader = VillagerBlockEntityData.getAndStoreBlockEntity(stack, context.registries(), null, () -> new IronFarmTileentity(BlockPos.ZERO, ModBlocks.TRADER.get().defaultBlockState()));
         EasyVillagerEntity villager = trader.getVillagerEntity();
         if (villager != null) {
             components.add(villager.getAdvancedName());
@@ -70,18 +68,17 @@ public class IronFarmBlock extends VillagerBlockBase implements EntityBlock, IIt
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        ItemStack heldItem = player.getItemInHand(handIn);
+    protected ItemInteractionResult useItemOn(ItemStack heldItem, BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         BlockEntity tileEntity = worldIn.getBlockEntity(pos);
         if (!(tileEntity instanceof IronFarmTileentity)) {
-            return super.use(state, worldIn, pos, player, handIn, hit);
+            return super.useItemOn(heldItem, state, worldIn, pos, player, handIn, hit);
         }
         IronFarmTileentity farm = (IronFarmTileentity) tileEntity;
         if (!farm.hasVillager() && heldItem.getItem() instanceof VillagerItem) {
             farm.setVillager(heldItem.copy());
             ItemUtils.decrItemStack(heldItem, player);
             VillagerBlockBase.playVillagerSound(worldIn, pos, SoundEvents.VILLAGER_NO);
-            return InteractionResult.SUCCESS;
+            return ItemInteractionResult.SUCCESS;
         } else if (player.isShiftKeyDown() && farm.hasVillager()) {
             ItemStack stack = farm.removeVillager();
             if (heldItem.isEmpty()) {
@@ -93,7 +90,7 @@ public class IronFarmBlock extends VillagerBlockBase implements EntityBlock, IIt
                 }
             }
             VillagerBlockBase.playVillagerSound(worldIn, pos, SoundEvents.VILLAGER_CELEBRATE);
-            return InteractionResult.SUCCESS;
+            return ItemInteractionResult.SUCCESS;
         } else {
             player.openMenu(new MenuProvider() {
                 @Override
@@ -107,7 +104,7 @@ public class IronFarmBlock extends VillagerBlockBase implements EntityBlock, IIt
                     return new OutputContainer(id, playerInventory, farm.getOutputInventory(), ContainerLevelAccess.create(worldIn, pos), ModBlocks.IRON_FARM::get);
                 }
             });
-            return InteractionResult.SUCCESS;
+            return ItemInteractionResult.SUCCESS;
         }
     }
 

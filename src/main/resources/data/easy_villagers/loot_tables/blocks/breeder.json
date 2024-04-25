@@ -8,30 +8,7 @@
           "type": "minecraft:item",
           "functions": [
             {
-              "function": "minecraft:copy_nbt",
-              "source": "block_entity",
-              "ops": [
-                {
-                  "source": "Villager1",
-                  "target": "BlockEntityTag.Villager1",
-                  "op": "replace"
-                },
-                {
-                  "source": "Villager2",
-                  "target": "BlockEntityTag.Villager2",
-                  "op": "replace"
-                },
-                {
-                  "source": "FoodInventory",
-                  "target": "BlockEntityTag.FoodInventory",
-                  "op": "replace"
-                },
-                {
-                  "source": "OutputInventory",
-                  "target": "BlockEntityTag.OutputInventory",
-                  "op": "replace"
-                }
-              ]
+              "function": "easy_villagers:copy_block_entity"
             }
           ],
           "name": "easy_villagers:breeder"

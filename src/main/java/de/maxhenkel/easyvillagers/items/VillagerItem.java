@@ -1,11 +1,10 @@
 package de.maxhenkel.easyvillagers.items;
 
-import de.maxhenkel.corelib.CachedMap;
 import de.maxhenkel.corelib.client.CustomRendererItem;
 import de.maxhenkel.corelib.client.ItemRenderer;
-import de.maxhenkel.corelib.item.ItemUtils;
 import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
+import de.maxhenkel.easyvillagers.datacomponents.VillagerData;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import de.maxhenkel.easyvillagers.items.render.VillagerItemRenderer;
 import net.minecraft.client.Minecraft;
@@ -16,7 +15,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -29,22 +27,20 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
-import javax.annotation.Nullable;
 import java.util.List;
+
+import static de.maxhenkel.easyvillagers.datacomponents.VillagerData.getCacheVillager;
 
 public class VillagerItem extends CustomRendererItem {
 
-    private final CachedMap<ItemStack, EasyVillagerEntity> cachedVillagers;
-
     public VillagerItem() {
         super(new Item.Properties().stacksTo(1));
-        cachedVillagers = new CachedMap<>(10_000, ItemUtils.ITEM_COMPARATOR);
 
         DispenserBlock.registerBehavior(this, (source, stack) -> {
             Direction direction = source.state().getValue(DispenserBlock.FACING);
             BlockPos blockpos = source.pos().relative(direction);
             Level world = source.level();
-            EasyVillagerEntity villager = getVillager(world, stack);
+            Villager villager = VillagerData.getOrCreate(stack).createEasyVillager(world, stack);
             villager.absMoveTo(blockpos.getX() + 0.5D, blockpos.getY(), blockpos.getZ() + 0.5D, direction.toYRot(), 0F);
             world.addFreshEntity(villager);
             stack.shrink(1);
@@ -73,7 +69,7 @@ public class VillagerItem extends CustomRendererItem {
                 blockpos = blockpos.relative(direction);
             }
 
-            Villager villager = convertToVillager(getVillager(world, itemstack));
+            Villager villager = VillagerData.getOrCreate(itemstack).createEasyVillager(world, itemstack);
 
             villager.setPos(blockpos.getX() + 0.5D, blockpos.getY(), blockpos.getZ() + 0.5);
 
@@ -86,8 +82,8 @@ public class VillagerItem extends CustomRendererItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
+        super.appendHoverText(stack, context, tooltip, flagIn);
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -97,7 +93,7 @@ public class VillagerItem extends CustomRendererItem {
         if (world == null) {
             return super.getName(stack);
         } else {
-            EasyVillagerEntity villager = getVillagerFast(world, stack);
+            EasyVillagerEntity villager = getCacheVillager(stack, world);
             if (!villager.hasCustomName() && villager.isBaby()) {
                 return Component.translatable("item.easy_villagers.baby_villager");
             }
@@ -117,50 +113,12 @@ public class VillagerItem extends CustomRendererItem {
         VillagerBlockBase.playRandomVillagerSound((Player) entity, SoundEvents.VILLAGER_AMBIENT);
     }
 
-    public void setVillager(ItemStack stack, Villager villager) {
-        CompoundTag compound = new CompoundTag();
-        villager.addAdditionalSaveData(compound);
-        if (villager.hasCustomName()) {
-            stack.setHoverName(villager.getCustomName());
-        }
-        stack.getOrCreateTag().put("villager", compound);
-    }
-
-    public EasyVillagerEntity getVillager(Level world, ItemStack stack) {
-        CompoundTag compound = stack.getTagElement("villager");
-        if (compound == null) {
-            compound = new CompoundTag();
-        }
-
-        EasyVillagerEntity villager = new EasyVillagerEntity(EntityType.VILLAGER, world);
-        villager.readAdditionalSaveData(compound);
-
-        if (stack.hasCustomHoverName()) {
-            villager.setCustomName(stack.getHoverName());
-        }
-
-        villager.hurtTime = 0;
-        villager.yHeadRot = 0F;
-        villager.yHeadRotO = 0F;
-        return villager;
-    }
-
-    public static Villager convertToVillager(EasyVillagerEntity easyVillager) {
-        Villager villager = new Villager(EntityType.VILLAGER, easyVillager.level());
-
-        CompoundTag data = easyVillager.serializeNBT();
-        villager.deserializeNBT(data);
-        return villager;
-    }
-
-    public EasyVillagerEntity getVillagerFast(Level world, ItemStack stack) {
-        return cachedVillagers.get(stack, () -> getVillager(world, stack));
-    }
-
-    public static ItemStack getBabyVillager() {
+    public static ItemStack createBabyVillager() {
         ItemStack babyVillager = new ItemStack(ModItems.VILLAGER.get());
-        CompoundTag compound = babyVillager.getOrCreateTagElement("villager");
+        CompoundTag compound = new CompoundTag();
         compound.putInt("Age", -24000);
+        VillagerData data = VillagerData.of(compound);
+        babyVillager.set(ModItems.VILLAGER_DATA_COMPONENT, data);
         return babyVillager;
     }
 }

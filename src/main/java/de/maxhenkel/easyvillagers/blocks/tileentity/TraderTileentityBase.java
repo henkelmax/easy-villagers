@@ -5,6 +5,7 @@ import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -159,8 +160,8 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
     }
 
     @Override
-    protected void saveAdditional(CompoundTag compound) {
-        super.saveAdditional(compound);
+    protected void saveAdditional(CompoundTag compound, HolderLookup.Provider provider) {
+        super.saveAdditional(compound, provider);
 
         if (hasWorkstation()) {
             compound.putString("Workstation", BuiltInRegistries.BLOCK.getKey(workstation).toString());
@@ -169,14 +170,14 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
     }
 
     @Override
-    public void load(CompoundTag compound) {
+    protected void loadAdditional(CompoundTag compound, HolderLookup.Provider provider) {
         if (compound.contains("Workstation")) {
             workstation = BuiltInRegistries.BLOCK.get(new ResourceLocation(compound.getString("Workstation")));
         } else {
             removeWorkstation();
         }
         nextRestock = compound.getLong("NextRestock");
-        super.load(compound);
+        super.loadAdditional(compound, provider);
     }
 
 }

@@ -3,8 +3,8 @@ package de.maxhenkel.easyvillagers.items.render;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.maxhenkel.corelib.client.ItemRenderer;
 import de.maxhenkel.corelib.client.RendererProviders;
-import de.maxhenkel.easyvillagers.ItemTileEntityCache;
 import de.maxhenkel.easyvillagers.blocks.tileentity.FakeWorldTileentity;
+import de.maxhenkel.easyvillagers.datacomponents.VillagerBlockEntityData;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -34,7 +34,8 @@ public class BlockItemRendererBase<T extends BlockEntityRenderer<U>, U extends F
         if (itemStack.getItem() instanceof BlockItem blockItem) {
             minecraft.getBlockRenderer().renderSingleBlock(blockItem.getBlock().defaultBlockState(), matrixStack, buffer, combinedLightIn, combinedOverlayIn);
         }
-        renderer.render(ItemTileEntityCache.getTileEntity(itemStack, tileEntitySupplier), 0F, matrixStack, buffer, combinedLightIn, combinedOverlayIn);
+        U be = VillagerBlockEntityData.getAndStoreBlockEntity(itemStack, minecraft.level.registryAccess(), minecraft.level, tileEntitySupplier);
+        renderer.render(be, 0F, matrixStack, buffer, combinedLightIn, combinedOverlayIn);
     }
 
 }

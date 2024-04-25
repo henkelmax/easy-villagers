@@ -57,7 +57,7 @@ public class GuiEvents {
         }
 
         event.addListener(new CycleTradesButton(posX, merchantScreen.getGuiTop() + 8, b -> {
-            PacketDistributor.SERVER.noArg().send(new MessageCycleTrades());
+            PacketDistributor.sendToServer(new MessageCycleTrades());
         }, merchantScreen));
     }
 
@@ -85,7 +85,7 @@ public class GuiEvents {
             return;
         }
 
-        PacketDistributor.SERVER.noArg().send(new MessageCycleTrades());
+        PacketDistributor.sendToServer(new MessageCycleTrades());
         mc.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1F));
     }
 

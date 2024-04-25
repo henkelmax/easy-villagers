@@ -6,9 +6,11 @@ import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.MultiItemStackHandler;
 import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
+import de.maxhenkel.easyvillagers.datacomponents.VillagerData;
 import de.maxhenkel.easyvillagers.gui.VillagerIncubateSlot;
 import de.maxhenkel.easyvillagers.items.VillagerItem;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
@@ -74,18 +76,18 @@ public class IncubatorTileentity extends VillagerTileentity implements IServerTi
     }
 
     @Override
-    protected void saveAdditional(CompoundTag compound) {
-        super.saveAdditional(compound);
+    protected void saveAdditional(CompoundTag compound, HolderLookup.Provider provider) {
+        super.saveAdditional(compound, provider);
 
-        compound.put("InputInventory", ContainerHelper.saveAllItems(new CompoundTag(), inputInventory, true));
-        compound.put("OutputInventory", ContainerHelper.saveAllItems(new CompoundTag(), outputInventory, true));
+        compound.put("InputInventory", ContainerHelper.saveAllItems(new CompoundTag(), inputInventory, true, provider));
+        compound.put("OutputInventory", ContainerHelper.saveAllItems(new CompoundTag(), outputInventory, true, provider));
     }
 
     @Override
-    public void load(CompoundTag compound) {
-        ContainerHelper.loadAllItems(compound.getCompound("InputInventory"), inputInventory);
-        ContainerHelper.loadAllItems(compound.getCompound("OutputInventory"), outputInventory);
-        super.load(compound);
+    protected void loadAdditional(CompoundTag compound, HolderLookup.Provider provider) {
+        VillagerData.convertInventory(compound.getCompound("InputInventory"), inputInventory, provider);
+        VillagerData.convertInventory(compound.getCompound("OutputInventory"), outputInventory, provider);
+        super.loadAdditional(compound, provider);
     }
 
     public Container getInputInventory() {

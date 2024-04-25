@@ -8,8 +8,11 @@ import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -32,7 +35,7 @@ import java.util.List;
 
 public class IronFarmTileentity extends VillagerTileentity implements ITickableBlockEntity {
 
-    protected static final ResourceLocation GOLEM_LOOT_TABLE = new ResourceLocation("entities/iron_golem");
+    private static ResourceKey<LootTable> GOLEM_LOOT_TABLE = ResourceKey.create(Registries.LOOT_TABLE, new ResourceLocation("entities/iron_golem"));
 
     protected NonNullList<ItemStack> inventory;
 
@@ -103,7 +106,7 @@ public class IronFarmTileentity extends VillagerTileentity implements ITickableB
 
         LootParams lootContext = builder.create(LootContextParamSets.ENTITY);
 
-        LootTable lootTable = serverWorld.getServer().getLootData().getLootTable(GOLEM_LOOT_TABLE);
+        LootTable lootTable = serverWorld.getServer().reloadableRegistries().getLootTable(GOLEM_LOOT_TABLE);
 
         return lootTable.getRandomItems(lootContext);
     }
@@ -113,18 +116,18 @@ public class IronFarmTileentity extends VillagerTileentity implements ITickableB
     }
 
     @Override
-    protected void saveAdditional(CompoundTag compound) {
-        super.saveAdditional(compound);
+    protected void saveAdditional(CompoundTag compound, HolderLookup.Provider provider) {
+        super.saveAdditional(compound, provider);
 
-        ContainerHelper.saveAllItems(compound, inventory, false);
+        ContainerHelper.saveAllItems(compound, inventory, false, provider);
         compound.putLong("Timer", timer);
     }
 
     @Override
-    public void load(CompoundTag compound) {
-        ContainerHelper.loadAllItems(compound, inventory);
+    protected void loadAdditional(CompoundTag compound, HolderLookup.Provider provider) {
+        ContainerHelper.loadAllItems(compound, inventory, provider);
         timer = compound.getLong("Timer");
-        super.load(compound);
+        super.loadAdditional(compound, provider);
     }
 
     public static int getGolemSpawnTime() {

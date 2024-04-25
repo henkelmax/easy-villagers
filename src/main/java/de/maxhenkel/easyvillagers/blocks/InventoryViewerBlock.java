@@ -5,8 +5,8 @@ import de.maxhenkel.corelib.blockentity.SimpleBlockEntityTicker;
 import de.maxhenkel.corelib.client.CustomRendererBlockItem;
 import de.maxhenkel.corelib.client.ItemRenderer;
 import de.maxhenkel.corelib.item.ItemUtils;
-import de.maxhenkel.easyvillagers.ItemTileEntityCache;
 import de.maxhenkel.easyvillagers.blocks.tileentity.InventoryViewerTileentity;
+import de.maxhenkel.easyvillagers.datacomponents.VillagerBlockEntityData;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import de.maxhenkel.easyvillagers.gui.InventoryViewerContainer;
 import de.maxhenkel.easyvillagers.items.VillagerItem;
@@ -16,10 +16,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.Containers;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.MenuProvider;
+import net.minecraft.world.*;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -62,9 +59,9 @@ public class InventoryViewerBlock extends VillagerBlockBase implements EntityBlo
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable BlockGetter blockGetter, List<Component> components, TooltipFlag tooltipFlag) {
-        super.appendHoverText(stack, blockGetter, components, tooltipFlag);
-        InventoryViewerTileentity trader = ItemTileEntityCache.getTileEntity(stack, () -> new InventoryViewerTileentity(BlockPos.ZERO, ModBlocks.INVENTORY_VIEWER.get().defaultBlockState()));
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> components, TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, context, components, tooltipFlag);
+        InventoryViewerTileentity trader = VillagerBlockEntityData.getAndStoreBlockEntity(stack, context.registries(), null, () -> new InventoryViewerTileentity(BlockPos.ZERO, ModBlocks.INVENTORY_VIEWER.get().defaultBlockState()));
         EasyVillagerEntity villager = trader.getVillagerEntity();
         if (villager != null) {
             components.add(villager.getAdvancedName());
@@ -72,18 +69,17 @@ public class InventoryViewerBlock extends VillagerBlockBase implements EntityBlo
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        ItemStack heldItem = player.getItemInHand(handIn);
+    protected ItemInteractionResult useItemOn(ItemStack heldItem, BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         BlockEntity tileEntity = worldIn.getBlockEntity(pos);
         if (!(tileEntity instanceof InventoryViewerTileentity)) {
-            return super.use(state, worldIn, pos, player, handIn, hit);
+            return super.useItemOn(heldItem, state, worldIn, pos, player, handIn, hit);
         }
         InventoryViewerTileentity inventoryViewer = (InventoryViewerTileentity) tileEntity;
         if (!inventoryViewer.hasVillager() && heldItem.getItem() instanceof VillagerItem) {
             inventoryViewer.setVillager(heldItem.copy());
             ItemUtils.decrItemStack(heldItem, player);
             playVillagerSound(worldIn, pos, SoundEvents.VILLAGER_CELEBRATE);
-            return InteractionResult.SUCCESS;
+            return ItemInteractionResult.SUCCESS;
         } else if (player.isShiftKeyDown() && inventoryViewer.hasVillager()) {
             ItemStack stack = inventoryViewer.removeVillager();
             if (heldItem.isEmpty()) {
@@ -95,7 +91,7 @@ public class InventoryViewerBlock extends VillagerBlockBase implements EntityBlo
                 }
             }
             playVillagerSound(worldIn, pos, SoundEvents.VILLAGER_CELEBRATE);
-            return InteractionResult.SUCCESS;
+            return ItemInteractionResult.SUCCESS;
         } else if (inventoryViewer.hasVillager()) {
             if (player instanceof ServerPlayer serverPlayer) {
                 serverPlayer.openMenu(new MenuProvider() {
@@ -110,9 +106,9 @@ public class InventoryViewerBlock extends VillagerBlockBase implements EntityBlo
                     }
                 }, packetBuffer -> packetBuffer.writeBlockPos(inventoryViewer.getBlockPos()));
             }
-            return InteractionResult.SUCCESS;
+            return ItemInteractionResult.SUCCESS;
         }
-        return InteractionResult.SUCCESS;
+        return ItemInteractionResult.SUCCESS;
     }
 
     @Nullable

@@ -2,9 +2,9 @@ package de.maxhenkel.easyvillagers.integration.jei.incubator;
 
 import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.blocks.ModBlocks;
+import de.maxhenkel.easyvillagers.datacomponents.VillagerData;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import de.maxhenkel.easyvillagers.integration.jei.JEIPlugin;
-import de.maxhenkel.easyvillagers.items.ModItems;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -51,9 +51,9 @@ public class IncubatorCategory implements IRecipeCategory<ItemStack> {
 
     private ItemStack getOutput(ItemStack input) {
         ItemStack out = input.copy();
-        EasyVillagerEntity villager = ModItems.VILLAGER.get().getVillager(Minecraft.getInstance().level, out);
+        EasyVillagerEntity villager = VillagerData.createEasyVillager(out, Minecraft.getInstance().level);
         villager.setAge(0);
-        ModItems.VILLAGER.get().setVillager(out, villager);
+        VillagerData.applyToItem(out, villager);
         return out;
     }
 

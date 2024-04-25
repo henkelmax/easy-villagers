@@ -1,8 +1,8 @@
 package de.maxhenkel.easyvillagers.blocks.tileentity;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -39,16 +39,9 @@ public class SyncableTileentity extends BlockEntity {
     }
 
     @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        if (pkt.getTag() != null) {
-            handleUpdateTag(pkt.getTag());
-        }
-    }
-
-    @Override
-    public CompoundTag getUpdateTag() {
+    public CompoundTag getUpdateTag(HolderLookup.Provider provider) {
         CompoundTag updateTag = new CompoundTag();
-        saveAdditional(updateTag);
+        saveAdditional(updateTag, provider);
         return updateTag;
     }
 

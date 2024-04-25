@@ -3,15 +3,16 @@ package de.maxhenkel.easyvillagers.net;
 import de.maxhenkel.corelib.net.Message;
 import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.events.GuiEvents;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.PacketFlow;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.neoforge.network.handling.PlayPayloadContext;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class MessageCycleTrades implements Message<MessageCycleTrades> {
 
-    public static ResourceLocation ID = new ResourceLocation(Main.MODID, "cycle_trades");
+    public static final CustomPacketPayload.Type<MessageCycleTrades> TYPE = new CustomPacketPayload.Type<>(new ResourceLocation(Main.MODID, "cycle_trades"));
 
     public MessageCycleTrades() {
 
@@ -23,24 +24,25 @@ public class MessageCycleTrades implements Message<MessageCycleTrades> {
     }
 
     @Override
-    public void executeServerSide(PlayPayloadContext context) {
-        if (!(context.player().orElse(null) instanceof ServerPlayer sender)) {
+    public void executeServerSide(IPayloadContext context) {
+        if (!(context.player() instanceof ServerPlayer sender)) {
             return;
         }
         GuiEvents.onCycleTrades(sender);
     }
 
     @Override
-    public MessageCycleTrades fromBytes(FriendlyByteBuf packetBuffer) {
+    public MessageCycleTrades fromBytes(RegistryFriendlyByteBuf packetBuffer) {
         return this;
     }
 
     @Override
-    public void toBytes(FriendlyByteBuf packetBuffer) {
+    public void toBytes(RegistryFriendlyByteBuf packetBuffer) {
     }
 
     @Override
-    public ResourceLocation id() {
-        return ID;
+    public Type<MessageCycleTrades> type() {
+        return TYPE;
     }
+
 }

@@ -1,8 +1,9 @@
 package de.maxhenkel.easyvillagers.blocks.tileentity;
 
+import de.maxhenkel.easyvillagers.datacomponents.VillagerData;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
-import de.maxhenkel.easyvillagers.items.ModItems;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -34,14 +35,14 @@ public class VillagerTileentity extends FakeWorldTileentity {
     @Nullable
     public EasyVillagerEntity getVillagerEntity() {
         if (villagerEntity == null && !villager.isEmpty()) {
-            villagerEntity = ModItems.VILLAGER.get().getVillager(level, villager);
+            villagerEntity = VillagerData.createEasyVillager(villager, level);
         }
         return villagerEntity;
     }
 
     public void saveVillagerEntity() {
         if (villagerEntity != null) {
-            ModItems.VILLAGER.get().setVillager(villager, villagerEntity);
+            VillagerData.applyToItem(villager, villagerEntity);
         }
     }
 
@@ -51,7 +52,7 @@ public class VillagerTileentity extends FakeWorldTileentity {
         if (villager.isEmpty()) {
             villagerEntity = null;
         } else {
-            villagerEntity = ModItems.VILLAGER.get().getVillager(level, villager);
+            villagerEntity = VillagerData.createEasyVillager(villager, level);
             onAddVillager(villagerEntity);
         }
         setChanged();
@@ -91,26 +92,24 @@ public class VillagerTileentity extends FakeWorldTileentity {
     }
 
     @Override
-    protected void saveAdditional(CompoundTag compound) {
-        super.saveAdditional(compound);
+    protected void saveAdditional(CompoundTag compound, HolderLookup.Provider provider) {
+        super.saveAdditional(compound, provider);
 
         if (hasVillager()) {
-            CompoundTag comp = new CompoundTag();
-            getVillager().save(comp);
-            compound.put("Villager", comp);
+            compound.put("Villager", getVillager().save(provider));
         }
     }
 
     @Override
-    public void load(CompoundTag compound) {
+    protected void loadAdditional(CompoundTag compound, HolderLookup.Provider provider) {
         if (compound.contains("Villager")) {
             CompoundTag comp = compound.getCompound("Villager");
-            villager = ItemStack.of(comp);
+            villager = VillagerData.convert(provider, comp);
             villagerEntity = null;
         } else {
             removeVillager();
         }
-        super.load(compound);
+        super.loadAdditional(compound, provider);
     }
 
 }

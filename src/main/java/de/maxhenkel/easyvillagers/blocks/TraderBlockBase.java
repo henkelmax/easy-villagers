@@ -11,7 +11,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
@@ -42,11 +42,10 @@ public abstract class TraderBlockBase extends VillagerBlockBase implements Entit
     public abstract Item toItem();
 
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        ItemStack heldItem = player.getItemInHand(handIn);
-        BlockEntity tileEntity = worldIn.getBlockEntity(pos);
+    protected ItemInteractionResult useItemOn(ItemStack heldItem, BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+        BlockEntity tileEntity = level.getBlockEntity(pos);
         if (!(tileEntity instanceof TraderTileentityBase)) {
-            return super.use(state, worldIn, pos, player, handIn, hit);
+            return super.useItemOn(heldItem, state, level, pos, player, handIn, hit);
         }
         TraderTileentityBase trader = (TraderTileentityBase) tileEntity;
         if (!trader.hasVillager() && heldItem.getItem() instanceof VillagerItem) {
@@ -55,23 +54,23 @@ public abstract class TraderBlockBase extends VillagerBlockBase implements Entit
             if (trader.hasWorkstation()) {
                 Villager villagerEntity = trader.getVillagerEntity();
                 if (villagerEntity != null) {
-                    playWorkstationSound(worldIn, pos, trader);
+                    playWorkstationSound(level, pos, trader);
                 }
             } else {
-                playVillagerSound(worldIn, pos, SoundEvents.VILLAGER_CELEBRATE);
+                playVillagerSound(level, pos, SoundEvents.VILLAGER_CELEBRATE);
             }
-            return InteractionResult.SUCCESS;
+            return ItemInteractionResult.SUCCESS;
         } else if (!trader.hasWorkstation() && heldItem.getItem() instanceof BlockItem && trader.isValidBlock(((BlockItem) heldItem.getItem()).getBlock())) {
             Block block = ((BlockItem) heldItem.getItem()).getBlock();
             trader.setWorkstation(block);
             ItemUtils.decrItemStack(heldItem, player);
             Villager villagerEntity = trader.getVillagerEntity();
             if (villagerEntity != null) {
-                playWorkstationSound(worldIn, pos, trader);
+                playWorkstationSound(level, pos, trader);
             }
-            SoundType type = block.getSoundType(block.defaultBlockState());
-            worldIn.playSound(null, pos, type.getPlaceSound(), SoundSource.BLOCKS, type.getVolume(), type.getPitch());
-            return InteractionResult.SUCCESS;
+            SoundType type = block.defaultBlockState().getSoundType(level, pos, player);
+            level.playSound(null, pos, type.getPlaceSound(), SoundSource.BLOCKS, type.getVolume(), type.getPitch());
+            return ItemInteractionResult.SUCCESS;
         } else if (player.isShiftKeyDown() && trader.hasVillager()) {
             ItemStack stack = trader.removeVillager();
             if (heldItem.isEmpty()) {
@@ -79,11 +78,11 @@ public abstract class TraderBlockBase extends VillagerBlockBase implements Entit
             } else {
                 if (!player.getInventory().add(stack)) {
                     Direction direction = state.getValue(TraderBlockBase.FACING);
-                    Containers.dropItemStack(worldIn, direction.getStepX() + pos.getX() + 0.5D, pos.getY() + 0.5D, direction.getStepZ() + pos.getZ() + 0.5D, stack);
+                    Containers.dropItemStack(level, direction.getStepX() + pos.getX() + 0.5D, pos.getY() + 0.5D, direction.getStepZ() + pos.getZ() + 0.5D, stack);
                 }
             }
-            playVillagerSound(worldIn, pos, SoundEvents.VILLAGER_CELEBRATE);
-            return InteractionResult.SUCCESS;
+            playVillagerSound(level, pos, SoundEvents.VILLAGER_CELEBRATE);
+            return ItemInteractionResult.SUCCESS;
         } else if (player.isShiftKeyDown() && trader.hasWorkstation()) {
             ItemStack blockStack = new ItemStack(trader.removeWorkstation());
             if (heldItem.isEmpty()) {
@@ -91,17 +90,17 @@ public abstract class TraderBlockBase extends VillagerBlockBase implements Entit
             } else {
                 if (!player.getInventory().add(blockStack)) {
                     Direction direction = state.getValue(TraderBlockBase.FACING);
-                    Containers.dropItemStack(worldIn, direction.getStepX() + pos.getX() + 0.5D, pos.getY() + 0.5D, direction.getStepZ() + pos.getZ() + 0.5D, blockStack);
+                    Containers.dropItemStack(level, direction.getStepX() + pos.getX() + 0.5D, pos.getY() + 0.5D, direction.getStepZ() + pos.getZ() + 0.5D, blockStack);
                 }
             }
             if (trader.hasVillager()) {
-                playVillagerSound(worldIn, pos, SoundEvents.VILLAGER_NO);
+                playVillagerSound(level, pos, SoundEvents.VILLAGER_NO);
             }
-            return InteractionResult.SUCCESS;
-        } else if (openGUI(trader, player, worldIn, pos)) {
-            return InteractionResult.SUCCESS;
+            return ItemInteractionResult.SUCCESS;
+        } else if (openGUI(trader, player, level, pos)) {
+            return ItemInteractionResult.SUCCESS;
         }
-        return InteractionResult.SUCCESS;
+        return ItemInteractionResult.SUCCESS;
     }
 
     protected abstract boolean openGUI(TraderTileentityBase trader, Player player, Level level, BlockPos pos);

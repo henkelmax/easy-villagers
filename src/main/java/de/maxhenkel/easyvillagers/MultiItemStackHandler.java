@@ -3,7 +3,6 @@ package de.maxhenkel.easyvillagers;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
@@ -57,7 +56,7 @@ public class MultiItemStackHandler implements IItemHandler {
         int limit = getStackLimit(slot, stack);
 
         if (!existing.isEmpty()) {
-            if (!ItemHandlerHelper.canItemStacksStack(stack, existing)) {
+            if (!ItemStack.isSameItemSameComponents(stack, existing)) {
                 return stack;
             }
 
@@ -72,13 +71,22 @@ public class MultiItemStackHandler implements IItemHandler {
 
         if (!simulate) {
             if (existing.isEmpty()) {
-                getList(slot).set(getListIndex(slot), reachedLimit ? ItemHandlerHelper.copyStackWithSize(stack, limit) : stack);
+                getList(slot).set(getListIndex(slot), reachedLimit ? copyStackWithSize(stack, limit) : stack);
             } else {
                 existing.grow(reachedLimit ? limit : stack.getCount());
             }
         }
 
-        return reachedLimit ? ItemHandlerHelper.copyStackWithSize(stack, stack.getCount() - limit) : ItemStack.EMPTY;
+        return reachedLimit ? copyStackWithSize(stack, stack.getCount() - limit) : ItemStack.EMPTY;
+    }
+
+    private ItemStack copyStackWithSize(ItemStack stack, int amount) {
+        if (amount == 0) {
+            return ItemStack.EMPTY;
+        }
+        ItemStack copy = stack.copy();
+        copy.setCount(amount);
+        return copy;
     }
 
     @NotNull
@@ -111,10 +119,10 @@ public class MultiItemStackHandler implements IItemHandler {
             }
         } else {
             if (!simulate) {
-                getList(slot).set(getListIndex(slot), ItemHandlerHelper.copyStackWithSize(existing, existing.getCount() - toExtract));
+                getList(slot).set(getListIndex(slot), copyStackWithSize(existing, existing.getCount() - toExtract));
             }
 
-            return ItemHandlerHelper.copyStackWithSize(existing, toExtract);
+            return copyStackWithSize(existing, toExtract);
         }
     }
 

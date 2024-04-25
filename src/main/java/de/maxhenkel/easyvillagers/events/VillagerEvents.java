@@ -1,6 +1,7 @@
 package de.maxhenkel.easyvillagers.events;
 
 import de.maxhenkel.easyvillagers.Main;
+import de.maxhenkel.easyvillagers.datacomponents.VillagerData;
 import de.maxhenkel.easyvillagers.items.ModItems;
 import de.maxhenkel.easyvillagers.net.MessagePickUpVillager;
 import net.minecraft.client.Minecraft;
@@ -43,7 +44,7 @@ public class VillagerEvents {
             return;
         }
 
-        PacketDistributor.SERVER.noArg().send(new MessagePickUpVillager(villager.getUUID()));
+        PacketDistributor.sendToServer(new MessagePickUpVillager(villager.getUUID()));
 
         event.setCancellationResult(InteractionResult.SUCCESS);
         event.setCanceled(true);
@@ -62,7 +63,7 @@ public class VillagerEvents {
             return;
         }
 
-        PacketDistributor.SERVER.noArg().send(new MessagePickUpVillager(villager.getUUID()));
+        PacketDistributor.sendToServer(new MessagePickUpVillager(villager.getUUID()));
     }
 
     public static void pickUp(Villager villager, Player player) {
@@ -72,7 +73,7 @@ public class VillagerEvents {
 
         ItemStack stack = new ItemStack(ModItems.VILLAGER.get());
 
-        ModItems.VILLAGER.get().setVillager(stack, villager);
+        VillagerData.applyToItem(stack, villager);
 
         if (player.getMainHandItem().isEmpty()) {
             player.setItemInHand(InteractionHand.MAIN_HAND, stack);

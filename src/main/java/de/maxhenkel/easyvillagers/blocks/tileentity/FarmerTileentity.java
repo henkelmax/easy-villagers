@@ -8,6 +8,7 @@ import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -168,25 +169,25 @@ public class FarmerTileentity extends VillagerTileentity implements IServerTicka
     }
 
     @Override
-    protected void saveAdditional(CompoundTag compound) {
-        super.saveAdditional(compound);
+    protected void saveAdditional(CompoundTag compound, HolderLookup.Provider provider) {
+        super.saveAdditional(compound, provider);
 
         if (crop != null) {
             compound.put("Crop", NbtUtils.writeBlockState(crop));
         }
-        ContainerHelper.saveAllItems(compound, inventory, false);
+        ContainerHelper.saveAllItems(compound, inventory, false, provider);
     }
 
     @Override
-    public void load(CompoundTag compound) {
+    protected void loadAdditional(CompoundTag compound, HolderLookup.Provider provider) {
         if (compound.contains("Crop")) {
             crop = NbtUtils.readBlockState(BuiltInRegistries.BLOCK.asLookup(), compound.getCompound("Crop"));
         } else {
             removeSeed();
         }
 
-        ContainerHelper.loadAllItems(compound, inventory);
-        super.load(compound);
+        ContainerHelper.loadAllItems(compound, inventory, provider);
+        super.loadAdditional(compound, provider);
     }
 
     public IItemHandler getItemHandler() {

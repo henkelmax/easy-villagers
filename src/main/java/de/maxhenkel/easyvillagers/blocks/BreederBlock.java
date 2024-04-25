@@ -5,8 +5,8 @@ import de.maxhenkel.corelib.blockentity.SimpleBlockEntityTicker;
 import de.maxhenkel.corelib.client.CustomRendererBlockItem;
 import de.maxhenkel.corelib.client.ItemRenderer;
 import de.maxhenkel.corelib.item.ItemUtils;
-import de.maxhenkel.easyvillagers.ItemTileEntityCache;
 import de.maxhenkel.easyvillagers.blocks.tileentity.BreederTileentity;
+import de.maxhenkel.easyvillagers.datacomponents.VillagerBlockEntityData;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import de.maxhenkel.easyvillagers.gui.BreederContainer;
 import de.maxhenkel.easyvillagers.items.VillagerItem;
@@ -15,10 +15,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.Containers;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.MenuProvider;
+import net.minecraft.world.*;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -39,6 +36,7 @@ import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -60,9 +58,9 @@ public class BreederBlock extends VillagerBlockBase implements EntityBlock, IIte
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable BlockGetter blockGetter, List<Component> components, TooltipFlag tooltipFlag) {
-        super.appendHoverText(stack, blockGetter, components, tooltipFlag);
-        BreederTileentity trader = ItemTileEntityCache.getTileEntity(stack, () -> new BreederTileentity(BlockPos.ZERO, ModBlocks.TRADER.get().defaultBlockState()));
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> components, TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, context, components, tooltipFlag);
+        BreederTileentity trader = VillagerBlockEntityData.getAndStoreBlockEntity(stack, context.registries(), null, () -> new BreederTileentity(BlockPos.ZERO, ModBlocks.TRADER.get().defaultBlockState()));
         EasyVillagerEntity villager1 = trader.getVillagerEntity1();
         if (villager1 != null) {
             components.add(villager1.getAdvancedName());
@@ -74,11 +72,10 @@ public class BreederBlock extends VillagerBlockBase implements EntityBlock, IIte
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        ItemStack heldItem = player.getItemInHand(handIn);
+    protected ItemInteractionResult useItemOn(ItemStack heldItem, BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         BlockEntity tileEntity = worldIn.getBlockEntity(pos);
         if (!(tileEntity instanceof BreederTileentity)) {
-            return super.use(state, worldIn, pos, player, handIn, hit);
+            return super.useItemOn(heldItem, state, worldIn, pos, player, handIn, hit);
         }
         BreederTileentity breeder = (BreederTileentity) tileEntity;
 
@@ -86,12 +83,12 @@ public class BreederBlock extends VillagerBlockBase implements EntityBlock, IIte
             breeder.setVillager1(heldItem.copy());
             ItemUtils.decrItemStack(heldItem, player);
             VillagerBlockBase.playVillagerSound(worldIn, pos, SoundEvents.VILLAGER_YES);
-            return InteractionResult.SUCCESS;
+            return ItemInteractionResult.SUCCESS;
         } else if (!breeder.hasVillager2() && heldItem.getItem() instanceof VillagerItem) {
             breeder.setVillager2(heldItem.copy());
             ItemUtils.decrItemStack(heldItem, player);
             VillagerBlockBase.playVillagerSound(worldIn, pos, SoundEvents.VILLAGER_YES);
-            return InteractionResult.SUCCESS;
+            return ItemInteractionResult.SUCCESS;
         } else if (player.isShiftKeyDown() && breeder.hasVillager2()) {
             ItemStack stack = breeder.removeVillager2();
             if (heldItem.isEmpty()) {
@@ -103,7 +100,7 @@ public class BreederBlock extends VillagerBlockBase implements EntityBlock, IIte
                 }
             }
             VillagerBlockBase.playVillagerSound(worldIn, pos, SoundEvents.VILLAGER_CELEBRATE);
-            return InteractionResult.SUCCESS;
+            return ItemInteractionResult.SUCCESS;
         } else if (player.isShiftKeyDown() && breeder.hasVillager1()) {
             ItemStack stack = breeder.removeVillager1();
             if (heldItem.isEmpty()) {
@@ -115,7 +112,7 @@ public class BreederBlock extends VillagerBlockBase implements EntityBlock, IIte
                 }
             }
             VillagerBlockBase.playVillagerSound(worldIn, pos, SoundEvents.VILLAGER_CELEBRATE);
-            return InteractionResult.SUCCESS;
+            return ItemInteractionResult.SUCCESS;
         } else {
             player.openMenu(new MenuProvider() {
                 @Override
@@ -129,8 +126,9 @@ public class BreederBlock extends VillagerBlockBase implements EntityBlock, IIte
                     return new BreederContainer(id, playerInventory, breeder.getFoodInventory(), breeder.getOutputInventory(), ContainerLevelAccess.create(worldIn, pos));
                 }
             });
-            return InteractionResult.SUCCESS;
+            return ItemInteractionResult.SUCCESS;
         }
+
     }
 
     @Nullable

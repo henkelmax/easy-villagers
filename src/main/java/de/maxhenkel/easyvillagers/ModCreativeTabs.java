@@ -20,7 +20,7 @@ public class ModCreativeTabs {
                 .icon(() -> new ItemStack(ModItems.VILLAGER.get()))
                 .displayItems((features, output) -> {
                     output.accept(new ItemStack(ModItems.VILLAGER.get()));
-                    output.accept(VillagerItem.getBabyVillager());
+                    output.accept(VillagerItem.createBabyVillager());
 
                     output.accept(new ItemStack(ModBlocks.TRADER.get()));
                     output.accept(new ItemStack(ModBlocks.AUTO_TRADER.get()));

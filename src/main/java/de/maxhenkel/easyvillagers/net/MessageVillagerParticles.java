@@ -5,16 +5,17 @@ import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.blocks.tileentity.BreederTileentity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.PacketFlow;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.network.handling.PlayPayloadContext;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class MessageVillagerParticles implements Message<MessageVillagerParticles> {
 
-    public static ResourceLocation ID = new ResourceLocation(Main.MODID, "villager_particles");
+    public static final CustomPacketPayload.Type<MessageVillagerParticles> TYPE = new CustomPacketPayload.Type<>(new ResourceLocation(Main.MODID, "villager_particles"));
 
     private BlockPos pos;
 
@@ -32,7 +33,7 @@ public class MessageVillagerParticles implements Message<MessageVillagerParticle
     }
 
     @Override
-    public void executeClientSide(PlayPayloadContext context) {
+    public void executeClientSide(IPayloadContext context) {
         spawnParticles();
     }
 
@@ -45,18 +46,19 @@ public class MessageVillagerParticles implements Message<MessageVillagerParticle
     }
 
     @Override
-    public MessageVillagerParticles fromBytes(FriendlyByteBuf packetBuffer) {
+    public MessageVillagerParticles fromBytes(RegistryFriendlyByteBuf packetBuffer) {
         pos = packetBuffer.readBlockPos();
         return this;
     }
 
     @Override
-    public void toBytes(FriendlyByteBuf packetBuffer) {
+    public void toBytes(RegistryFriendlyByteBuf packetBuffer) {
         packetBuffer.writeBlockPos(pos);
     }
 
     @Override
-    public ResourceLocation id() {
-        return ID;
+    public Type<MessageVillagerParticles> type() {
+        return TYPE;
     }
+
 }

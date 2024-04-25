@@ -27,11 +27,11 @@ public class AutoTraderScreen extends ScreenBase<AutoTraderContainer> {
         super.init();
 
         addRenderableWidget(new ArrowButton(leftPos + 8, topPos + 19, true, button -> {
-            PacketDistributor.SERVER.noArg().send(new MessageSelectTrade(false));
+            PacketDistributor.sendToServer(new MessageSelectTrade(false));
         }));
 
         addRenderableWidget(new ArrowButton(leftPos + imageWidth - 16 - 8, topPos + 19, false, button -> {
-            PacketDistributor.SERVER.noArg().send(new MessageSelectTrade(true));
+            PacketDistributor.sendToServer(new MessageSelectTrade(true));
         }));
     }
 
