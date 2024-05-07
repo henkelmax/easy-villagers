@@ -1,12 +1,12 @@
 package de.maxhenkel.easyvillagers.gui;
 
-import de.maxhenkel.corelib.ClientRegistry;
 import de.maxhenkel.easyvillagers.Main;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.inventory.MenuType;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -38,14 +38,18 @@ public class Containers {
         MENU_TYPE_REGISTER.register(eventBus);
     }
 
+    public static void initClient(IEventBus eventBus) {
+        eventBus.addListener(Containers::onRegisterScreens);
+    }
+
     @OnlyIn(Dist.CLIENT)
-    public static void clientSetup() {
-        ClientRegistry.<AutoTraderContainer, AutoTraderScreen>registerScreen(AUTO_TRADER_CONTAINER.get(), AutoTraderScreen::new);
-        ClientRegistry.<BreederContainer, BreederScreen>registerScreen(BREEDER_CONTAINER.get(), BreederScreen::new);
-        ClientRegistry.<ConverterContainer, ConverterScreen>registerScreen(CONVERTER_CONTAINER.get(), ConverterScreen::new);
-        ClientRegistry.<IncubatorContainer, IncubatorScreen>registerScreen(INCUBATOR_CONTAINER.get(), IncubatorScreen::new);
-        ClientRegistry.<OutputContainer, OutputScreen>registerScreen(OUTPUT_CONTAINER.get(), OutputScreen::new);
-        ClientRegistry.<InventoryViewerContainer, InventoryViewerScreen>registerScreen(INVENTORY_VIEWER_CONTAINER.get(), InventoryViewerScreen::new);
+    public static void onRegisterScreens(RegisterMenuScreensEvent containers) {
+        containers.<AutoTraderContainer, AutoTraderScreen>register(AUTO_TRADER_CONTAINER.get(), AutoTraderScreen::new);
+        containers.<BreederContainer, BreederScreen>register(BREEDER_CONTAINER.get(), BreederScreen::new);
+        containers.<ConverterContainer, ConverterScreen>register(CONVERTER_CONTAINER.get(), ConverterScreen::new);
+        containers.<IncubatorContainer, IncubatorScreen>register(INCUBATOR_CONTAINER.get(), IncubatorScreen::new);
+        containers.<OutputContainer, OutputScreen>register(OUTPUT_CONTAINER.get(), OutputScreen::new);
+        containers.<InventoryViewerContainer, InventoryViewerScreen>register(INVENTORY_VIEWER_CONTAINER.get(), InventoryViewerScreen::new);
     }
 
 }
