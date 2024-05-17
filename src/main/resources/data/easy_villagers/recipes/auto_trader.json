@@ -7,16 +7,16 @@
   ],
   "key": {
     "G": {
-      "tag": "forge:glass_panes/colorless"
+      "tag": "c:glass_panes/colorless"
     },
     "I": {
-      "tag": "forge:ingots/iron"
+      "tag": "c:ingots/iron"
     },
     "R": {
-      "tag": "forge:dusts/redstone"
+      "tag": "c:dusts/redstone"
     },
     "N": {
-      "tag": "forge:ingots/netherite"
+      "tag": "c:ingots/netherite"
     }
   },
   "result": {
