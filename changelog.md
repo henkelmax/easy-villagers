@@ -1,1 +1,1 @@
-- Fixed recipes not working
+- Updated to the latest version of NeoForge

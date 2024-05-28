@@ -2,8 +2,8 @@ package de.maxhenkel.easyvillagers.events;
 
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.common.util.TriState;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
 public class BlockEvents {
@@ -16,8 +16,8 @@ public class BlockEvents {
         }
         VillagerBlockBase block = (VillagerBlockBase) state.getBlock();
 
-        if (block.overrideClick(state, event.getLevel(), event.getPos(), event.getEntity(), event.getHand(), event.getUseItem())) {
-            event.setUseBlock(Event.Result.ALLOW);
+        if (block.overrideClick(state, event.getLevel(), event.getPos(), event.getEntity(), event.getHand())) {
+            event.setUseBlock(TriState.TRUE);
         }
     }
 

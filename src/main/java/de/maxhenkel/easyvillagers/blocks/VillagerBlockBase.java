@@ -13,7 +13,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.bus.api.Event;
 
 public class VillagerBlockBase extends HorizontalRotatableBlock {
 
@@ -30,7 +29,7 @@ public class VillagerBlockBase extends HorizontalRotatableBlock {
         super(properties);
     }
 
-    public boolean overrideClick(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, Event.Result itemResult) {
+    public boolean overrideClick(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn) {
         return player.isShiftKeyDown() && player.getMainHandItem().isEmpty();
     }
 
