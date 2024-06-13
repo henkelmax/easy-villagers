@@ -13,7 +13,7 @@ public class HUDHandlerBreeder implements IBlockComponentProvider {
 
     public static final HUDHandlerBreeder INSTANCE = new HUDHandlerBreeder();
 
-    private static final ResourceLocation UID = new ResourceLocation(Main.MODID, "breeder");
+    private static final ResourceLocation UID = ResourceLocation.fromNamespaceAndPath(Main.MODID, "breeder");
 
     @Override
     public void appendTooltip(ITooltip iTooltip, BlockAccessor blockAccessor, IPluginConfig iPluginConfig) {

@@ -15,7 +15,7 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class MessageVillagerParticles implements Message<MessageVillagerParticles> {
 
-    public static final CustomPacketPayload.Type<MessageVillagerParticles> TYPE = new CustomPacketPayload.Type<>(new ResourceLocation(Main.MODID, "villager_particles"));
+    public static final CustomPacketPayload.Type<MessageVillagerParticles> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(Main.MODID, "villager_particles"));
 
     private BlockPos pos;
 

@@ -12,7 +12,7 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class MessageSelectTrade implements Message<MessageSelectTrade> {
 
-    public static final CustomPacketPayload.Type<MessageSelectTrade> TYPE = new CustomPacketPayload.Type<>(new ResourceLocation(Main.MODID, "select_trade"));
+    public static final CustomPacketPayload.Type<MessageSelectTrade> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(Main.MODID, "select_trade"));
 
     private boolean next;
 

@@ -12,7 +12,7 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class MessageCycleTrades implements Message<MessageCycleTrades> {
 
-    public static final CustomPacketPayload.Type<MessageCycleTrades> TYPE = new CustomPacketPayload.Type<>(new ResourceLocation(Main.MODID, "cycle_trades"));
+    public static final CustomPacketPayload.Type<MessageCycleTrades> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(Main.MODID, "cycle_trades"));
 
     public MessageCycleTrades() {
 

@@ -11,7 +11,7 @@ import net.neoforged.neoforge.network.PacketDistributor;
 
 public class AutoTraderScreen extends ScreenBase<AutoTraderContainer> {
 
-    public static final ResourceLocation BACKGROUND = new ResourceLocation(Main.MODID, "textures/gui/container/auto_trader.png");
+    public static final ResourceLocation BACKGROUND = ResourceLocation.fromNamespaceAndPath(Main.MODID, "textures/gui/container/auto_trader.png");
 
     private final Inventory playerInventory;
 

@@ -16,7 +16,7 @@ import java.util.function.Consumer;
 
 public class CycleTradesButton extends AbstractButton {
 
-    private static final ResourceLocation ARROW_BUTTON = new ResourceLocation(Main.MODID, "textures/gui/container/arrow_button.png");
+    private static final ResourceLocation ARROW_BUTTON = ResourceLocation.fromNamespaceAndPath(Main.MODID, "textures/gui/container/arrow_button.png");
 
     public static final int WIDTH = 18;
     public static final int HEIGHT = 14;

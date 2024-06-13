@@ -10,7 +10,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class OutputScreen extends ScreenBase<OutputContainer> {
 
-    public static final ResourceLocation BACKGROUND = new ResourceLocation(Main.MODID, "textures/gui/container/output.png");
+    public static final ResourceLocation BACKGROUND = ResourceLocation.fromNamespaceAndPath(Main.MODID, "textures/gui/container/output.png");
 
     private Inventory playerInventory;
 

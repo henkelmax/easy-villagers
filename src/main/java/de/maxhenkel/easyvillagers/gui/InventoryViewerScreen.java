@@ -9,7 +9,7 @@ import net.minecraft.world.entity.player.Inventory;
 
 public class InventoryViewerScreen extends ScreenBase<InventoryViewerContainer> {
 
-    public static final ResourceLocation BACKGROUND = new ResourceLocation(Main.MODID, "textures/gui/container/villager_inventory.png");
+    public static final ResourceLocation BACKGROUND = ResourceLocation.fromNamespaceAndPath(Main.MODID, "textures/gui/container/villager_inventory.png");
 
     public static final Component VILLAGER_INVENTORY = Component.translatable("gui.easy_villagers.villager_inventory");
     public static final Component VILLAGER_EQUIPMENT = Component.translatable("gui.easy_villagers.villager_equipment");

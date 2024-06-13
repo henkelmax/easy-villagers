@@ -35,7 +35,7 @@ import java.util.List;
 
 public class IronFarmTileentity extends VillagerTileentity implements ITickableBlockEntity {
 
-    private static ResourceKey<LootTable> GOLEM_LOOT_TABLE = ResourceKey.create(Registries.LOOT_TABLE, new ResourceLocation("entities/iron_golem"));
+    private static ResourceKey<LootTable> GOLEM_LOOT_TABLE = ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.withDefaultNamespace("entities/iron_golem"));
 
     protected NonNullList<ItemStack> inventory;
 

@@ -28,7 +28,7 @@ public class ConverterCategory implements IRecipeCategory<ItemStack> {
 
     @Override
     public IDrawable getBackground() {
-        return helper.createDrawable(new ResourceLocation(Main.MODID, "textures/gui/container/jei_input_output.png"), 0, 0, 72, 49);
+        return helper.createDrawable(ResourceLocation.fromNamespaceAndPath(Main.MODID, "textures/gui/container/jei_input_output.png"), 0, 0, 72, 49);
     }
 
     @Override

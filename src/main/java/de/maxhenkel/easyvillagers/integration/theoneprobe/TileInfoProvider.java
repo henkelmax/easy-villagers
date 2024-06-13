@@ -14,7 +14,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class TileInfoProvider implements IProbeInfoProvider {
 
-    public static final ResourceLocation ID = new ResourceLocation(Main.MODID, "probeinfoprovider");
+    public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(Main.MODID, "probeinfoprovider");
 
     @Override
     public ResourceLocation getID() {

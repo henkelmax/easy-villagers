@@ -172,7 +172,7 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
     @Override
     protected void loadAdditional(CompoundTag compound, HolderLookup.Provider provider) {
         if (compound.contains("Workstation")) {
-            workstation = BuiltInRegistries.BLOCK.get(new ResourceLocation(compound.getString("Workstation")));
+            workstation = BuiltInRegistries.BLOCK.get(ResourceLocation.parse(compound.getString("Workstation")));
         } else {
             removeWorkstation();
         }

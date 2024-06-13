@@ -200,6 +200,9 @@ public class AutoTraderTileentity extends TraderTileentityBase implements ITicka
         if (villagerEntity == null) {
             return null;
         }
+        if (villagerEntity.level().isClientSide()) {
+            return null;
+        }
         MerchantOffers offers = villagerEntity.getOffers();
         if (tradeIndex < 0 || tradeIndex >= offers.size()) {
             return null;

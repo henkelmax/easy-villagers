@@ -21,7 +21,7 @@ public class HUDHandlerVillager implements IBlockComponentProvider {
 
     public static final HUDHandlerVillager INSTANCE = new HUDHandlerVillager();
 
-    private static final ResourceLocation UID = new ResourceLocation(Main.MODID, "villager");
+    private static final ResourceLocation UID = ResourceLocation.fromNamespaceAndPath(Main.MODID, "villager");
 
     @Override
     public void appendTooltip(ITooltip iTooltip, BlockAccessor blockAccessor, IPluginConfig iPluginConfig) {

@@ -15,7 +15,7 @@ import java.util.UUID;
 
 public class MessagePickUpVillager implements Message<MessagePickUpVillager> {
 
-    public static final CustomPacketPayload.Type<MessagePickUpVillager> TYPE = new CustomPacketPayload.Type<>(new ResourceLocation(Main.MODID, "pick_up_villager"));
+    public static final CustomPacketPayload.Type<MessagePickUpVillager> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(Main.MODID, "pick_up_villager"));
 
     private UUID villager;
 

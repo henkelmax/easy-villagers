@@ -11,7 +11,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 
 public abstract class InputOutputScreen<T extends AbstractContainerMenu> extends ScreenBase<T> {
 
-    public static final ResourceLocation BACKGROUND = new ResourceLocation(Main.MODID, "textures/gui/container/input_output.png");
+    public static final ResourceLocation BACKGROUND = ResourceLocation.fromNamespaceAndPath(Main.MODID, "textures/gui/container/input_output.png");
 
     private Inventory playerInventory;
 

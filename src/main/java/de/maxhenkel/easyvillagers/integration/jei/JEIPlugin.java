@@ -33,7 +33,7 @@ public class JEIPlugin implements IModPlugin {
 
     @Override
     public ResourceLocation getPluginUid() {
-        return new ResourceLocation(Main.MODID, "easy_villagers");
+        return ResourceLocation.fromNamespaceAndPath(Main.MODID, "easy_villagers");
     }
 
     @Override

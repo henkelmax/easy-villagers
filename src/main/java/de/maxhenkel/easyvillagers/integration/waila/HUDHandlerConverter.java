@@ -15,7 +15,7 @@ public class HUDHandlerConverter implements IBlockComponentProvider {
 
     public static final HUDHandlerConverter INSTANCE = new HUDHandlerConverter();
 
-    private static final ResourceLocation UID = new ResourceLocation(Main.MODID, "converter");
+    private static final ResourceLocation UID = ResourceLocation.fromNamespaceAndPath(Main.MODID, "converter");
 
     @Override
     public void appendTooltip(ITooltip iTooltip, BlockAccessor blockAccessor, IPluginConfig iPluginConfig) {

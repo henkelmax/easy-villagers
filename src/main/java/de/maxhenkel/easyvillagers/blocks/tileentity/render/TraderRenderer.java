@@ -108,10 +108,10 @@ public class TraderRenderer extends VillagerRendererBase<TraderTileentity> {
         Consumer<PoseStack> immersiveEngineering = stack -> {
             stack.translate(-0.5D, 0D, 0D);
         };
-        TRANSFORMS.put(new ResourceLocation("immersiveengineering", "workbench"), immersiveEngineering);
-        TRANSFORMS.put(new ResourceLocation("immersiveengineering", "circuit_table"), immersiveEngineering);
+        TRANSFORMS.put(ResourceLocation.fromNamespaceAndPath("immersiveengineering", "workbench"), immersiveEngineering);
+        TRANSFORMS.put(ResourceLocation.fromNamespaceAndPath("immersiveengineering", "circuit_table"), immersiveEngineering);
 
-        TOP_BLOCKS.put(new ResourceLocation("car", "gas_station"), new ResourceLocation("car", "gas_station_top"));
+        TOP_BLOCKS.put(ResourceLocation.fromNamespaceAndPath("car", "gas_station"), ResourceLocation.fromNamespaceAndPath("car", "gas_station_top"));
     }
 
     protected static Consumer<PoseStack> getTransforms(BlockState block) {
