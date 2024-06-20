@@ -1,1 +1,1 @@
-- Updated to the latest version of NeoForge
+- Fixed crash when clicking auto trader
