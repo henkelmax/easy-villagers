@@ -1,1 +1,1 @@
-- Fixed crash when clicking auto trader
+- Fixed blocks not dropping items
