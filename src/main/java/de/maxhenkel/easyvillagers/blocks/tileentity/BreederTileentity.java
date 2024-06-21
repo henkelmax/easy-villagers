@@ -205,20 +205,10 @@ public class BreederTileentity extends FakeWorldTileentity implements IServerTic
         super.saveAdditional(compound, provider);
 
         if (hasVillager1()) {
-            CompoundTag comp = new CompoundTag();
-            if (villagerEntity1 != null) {
-                VillagerData.applyToItem(villager1, villagerEntity1);
-            }
-            villager1.save(provider, comp);
-            compound.put("Villager1", comp);
+            compound.put("Villager1", getVillager1().save(provider));
         }
         if (hasVillager2()) {
-            CompoundTag comp = new CompoundTag();
-            if (villagerEntity2 != null) {
-                VillagerData.applyToItem(villager2, villagerEntity2);
-            }
-            villager2.save(provider, comp);
-            compound.put("Villager2", comp);
+            compound.put("Villager2", getVillager2().save(provider));
         }
         compound.put("FoodInventory", ContainerHelper.saveAllItems(new CompoundTag(), foodInventory, true, provider));
         compound.put("OutputInventory", ContainerHelper.saveAllItems(new CompoundTag(), outputInventory, true, provider));

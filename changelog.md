@@ -1,1 +1,1 @@
-- Updated to the latest version of NeoForge
+- Fixed villagers in breeder not rendering
