@@ -1,1 +1,1 @@
-- Fixed blocks not dropping items
+- Fixed villagers in breeder not rendering
