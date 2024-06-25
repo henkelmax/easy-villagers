@@ -1,1 +1,1 @@
-- Fixed villagers in breeder not rendering
+- Fixed crash when trying to trade with cured villagers

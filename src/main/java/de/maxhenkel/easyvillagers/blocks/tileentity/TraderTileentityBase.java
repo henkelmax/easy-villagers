@@ -98,6 +98,10 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
             return false;
         }
 
+        if (level == null || level.isClientSide()) {
+            return true;
+        }
+
         villagerEntity.setPos(getBlockPos().getX() + 0.5D, getBlockPos().getY() + 1D, getBlockPos().getZ() + 0.5D);
         villagerEntity.startTrading(playerEntity);
         return true;
