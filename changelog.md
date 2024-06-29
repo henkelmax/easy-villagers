@@ -1,1 +1,1 @@
-- Fixed crash when trying to trade with cured villagers
+- Update NeoForge version

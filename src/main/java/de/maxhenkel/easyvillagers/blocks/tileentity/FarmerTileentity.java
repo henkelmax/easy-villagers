@@ -15,22 +15,20 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.npc.VillagerProfession;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.common.IPlantable;
-import net.neoforged.neoforge.common.PlantType;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
 
@@ -84,21 +82,14 @@ public class FarmerTileentity extends VillagerTileentity implements IServerTicka
     }
 
     public BlockState getSeedCrop(Item seed) {
-        if (seed == Items.WHEAT_SEEDS) {
-            return Blocks.WHEAT.defaultBlockState();
-        } else if (seed == Items.POTATO) {
-            return Blocks.POTATOES.defaultBlockState();
-        } else if (seed == Items.CARROT) {
-            return Blocks.CARROTS.defaultBlockState();
-        } else if (seed == Items.BEETROOT_SEEDS) {
-            return Blocks.BEETROOTS.defaultBlockState();
-        } else if (seed instanceof IPlantable) {
-            IPlantable plantable = (IPlantable) seed;
-            if (plantable.getPlantType(level, getBlockPos()) == PlantType.CROP) { //TODO fake world
-                return plantable.getPlant(level, getBlockPos());
-            }
+        ItemStack seedStack = new ItemStack(seed);
+        if (!(seed instanceof BlockItem blockitem)) {
+            return null;
         }
-        return null;
+        if (!seedStack.is(ItemTags.VILLAGER_PLANTABLE_SEEDS)) {
+            return null;
+        }
+        return blockitem.getBlock().defaultBlockState();
     }
 
     @Nullable
