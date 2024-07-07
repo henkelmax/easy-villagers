@@ -1,1 +1,1 @@
-- Updated dependencies
+- Updated Korean translation
