@@ -1,1 +1,1 @@
-- Fixed villagers in breeder not rendering
+- Updated Korean translation
