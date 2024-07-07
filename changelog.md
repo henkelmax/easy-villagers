@@ -1,1 +1,1 @@
-- Update NeoForge version
+- Updated Korean translation
