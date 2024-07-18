@@ -63,6 +63,10 @@ public class GuiEvents {
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
     public void onKeyInput(InputEvent.Key event) {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.player == null) {
+            return;
+        }
         if (event.getKey() != Main.CYCLE_TRADES_KEY.getKey().getValue() || event.getAction() != 0) {
             return;
         }
@@ -71,7 +75,6 @@ public class GuiEvents {
             return;
         }
 
-        Minecraft mc = Minecraft.getInstance();
         Screen currentScreen = mc.screen;
 
         if (!(currentScreen instanceof MerchantScreen)) {
