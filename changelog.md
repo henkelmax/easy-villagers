@@ -1,1 +1,1 @@
-- Updated dependencies
+- Fixed pressing the cycle trades button outside a world crashes the game
