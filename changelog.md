@@ -1,1 +1,1 @@
-- Fixed pressing the cycle trades button outside a world crashes the game
+- Updated to 1.21.1
