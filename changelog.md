@@ -1,1 +1,1 @@
-- Updated to 1.21.1
+- Fixed crash when rendering items
