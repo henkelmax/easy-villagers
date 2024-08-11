@@ -64,7 +64,7 @@ public class BreederBlock extends VillagerBlockBase implements EntityBlock, IIte
     @Override
     public void appendHoverText(ItemStack stack, @Nullable BlockGetter blockGetter, List<Component> components, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, blockGetter, components, tooltipFlag);
-        BreederTileentity trader = ItemTileEntityCache.getTileEntity(stack, () -> new BreederTileentity(BlockPos.ZERO, ModBlocks.TRADER.get().defaultBlockState()));
+        BreederTileentity trader = ItemTileEntityCache.getTileEntity(stack, () -> new BreederTileentity(BlockPos.ZERO, ModBlocks.BREEDER.get().defaultBlockState()));
         EasyVillagerEntity villager1 = trader.getVillagerEntity1();
         if (villager1 != null) {
             components.add(villager1.getAdvancedName());

@@ -60,7 +60,7 @@ public class ConverterBlock extends VillagerBlockBase implements EntityBlock, II
     @Override
     public void appendHoverText(ItemStack stack, @Nullable BlockGetter blockGetter, List<Component> components, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, blockGetter, components, tooltipFlag);
-        ConverterTileentity trader = ItemTileEntityCache.getTileEntity(stack, () -> new ConverterTileentity(BlockPos.ZERO, ModBlocks.TRADER.get().defaultBlockState()));
+        ConverterTileentity trader = ItemTileEntityCache.getTileEntity(stack, () -> new ConverterTileentity(BlockPos.ZERO, ModBlocks.CONVERTER.get().defaultBlockState()));
         EasyVillagerEntity villager = trader.getVillagerEntity();
         if (villager != null) {
             components.add(villager.getAdvancedName());

@@ -64,7 +64,7 @@ public class IronFarmBlock extends VillagerBlockBase implements EntityBlock, IIt
     @Override
     public void appendHoverText(ItemStack stack, @Nullable BlockGetter blockGetter, List<Component> components, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, blockGetter, components, tooltipFlag);
-        IronFarmTileentity trader = ItemTileEntityCache.getTileEntity(stack, () -> new IronFarmTileentity(BlockPos.ZERO, ModBlocks.TRADER.get().defaultBlockState()));
+        IronFarmTileentity trader = ItemTileEntityCache.getTileEntity(stack, () -> new IronFarmTileentity(BlockPos.ZERO, ModBlocks.IRON_FARM.get().defaultBlockState()));
         EasyVillagerEntity villager = trader.getVillagerEntity();
         if (villager != null) {
             components.add(villager.getAdvancedName());
