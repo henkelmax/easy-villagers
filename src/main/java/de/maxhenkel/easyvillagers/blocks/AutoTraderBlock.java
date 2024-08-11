@@ -47,7 +47,7 @@ public class AutoTraderBlock extends TraderBlockBase {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable BlockGetter blockGetter, List<Component> components, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, blockGetter, components, tooltipFlag);
-        AutoTraderTileentity trader = ItemTileEntityCache.getTileEntity(stack, () -> new AutoTraderTileentity(BlockPos.ZERO, ModBlocks.TRADER.get().defaultBlockState()));
+        AutoTraderTileentity trader = ItemTileEntityCache.getTileEntity(stack, () -> new AutoTraderTileentity(BlockPos.ZERO, ModBlocks.AUTO_TRADER.get().defaultBlockState()));
         EasyVillagerEntity villager = trader.getVillagerEntity();
         if (villager != null) {
             components.add(villager.getAdvancedName());
