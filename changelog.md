@@ -1,1 +1,1 @@
-- Fixed crash when rendering items
+- Updated Ukrainian translation
