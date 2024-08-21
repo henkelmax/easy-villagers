@@ -57,7 +57,7 @@ public class IncubatorBlock extends VillagerBlockBase implements EntityBlock, II
     @Override
     public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> components, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, context, components, tooltipFlag);
-        IncubatorTileentity incubator = VillagerBlockEntityData.getAndStoreBlockEntity(stack, context.registries(), null, () -> new IncubatorTileentity(BlockPos.ZERO, ModBlocks.INCUBATOR.get().defaultBlockState()));
+        IncubatorTileentity incubator = VillagerBlockEntityData.getAndStoreBlockEntity(stack, context.registries(), context.level(), () -> new IncubatorTileentity(BlockPos.ZERO, ModBlocks.INCUBATOR.get().defaultBlockState()));
         EasyVillagerEntity villager = incubator.getVillagerEntity();
         if (villager != null) {
             components.add(villager.getAdvancedName());

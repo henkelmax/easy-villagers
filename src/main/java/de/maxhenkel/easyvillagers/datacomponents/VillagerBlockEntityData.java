@@ -2,6 +2,7 @@ package de.maxhenkel.easyvillagers.datacomponents;
 
 import de.maxhenkel.easyvillagers.blocks.tileentity.FakeWorldTileentity;
 import de.maxhenkel.easyvillagers.items.ModItems;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
@@ -10,6 +11,9 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.fml.loading.FMLEnvironment;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
@@ -58,8 +62,17 @@ public class VillagerBlockEntityData {
         }
         if (level != null && !cache.isFakeWorld()) {
             cache.setFakeWorld(level);
+        } else if (level == null) {
+            if (FMLEnvironment.dist.isClient()) {
+                cache.setFakeWorld(getClientLevel());
+            }
         }
         return (T) cache;
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    private Level getClientLevel() {
+        return Minecraft.getInstance().level;
     }
 
     public static <T extends FakeWorldTileentity> T getAndStoreBlockEntity(ItemStack stack, HolderLookup.Provider provider, @Nullable Level level, Supplier<T> blockEntitySupplier) {
