@@ -1,1 +1,1 @@
-- Updated Ukrainian translation
+- Fixed villager blocks not getting rendered properly in the inventory

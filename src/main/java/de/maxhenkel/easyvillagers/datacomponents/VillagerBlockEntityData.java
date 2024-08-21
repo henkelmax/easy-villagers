@@ -2,7 +2,6 @@ package de.maxhenkel.easyvillagers.datacomponents;
 
 import de.maxhenkel.easyvillagers.blocks.tileentity.FakeWorldTileentity;
 import de.maxhenkel.easyvillagers.items.ModItems;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
@@ -11,9 +10,6 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.fml.loading.FMLEnvironment;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
@@ -35,6 +31,8 @@ public class VillagerBlockEntityData {
 
     @Nullable
     private FakeWorldTileentity cache;
+    @Nullable
+    private FakeWorldTileentity emptyCache;
     private final CompoundTag nbt;
 
     private VillagerBlockEntityData(CompoundTag nbt) {
@@ -55,24 +53,18 @@ public class VillagerBlockEntityData {
     }
 
     public <T extends FakeWorldTileentity> T getBlockEntity(HolderLookup.Provider provider, @Nullable Level level, Supplier<T> blockEntitySupplier) {
+        if (level == null) {
+            if (emptyCache == null) {
+                emptyCache = blockEntitySupplier.get();
+            }
+            return (T) emptyCache;
+        }
         if (cache == null) {
             cache = blockEntitySupplier.get();
             cache.setFakeWorld(level);
             cache.loadCustomOnly(nbt, provider);
         }
-        if (level != null && !cache.isFakeWorld()) {
-            cache.setFakeWorld(level);
-        } else if (level == null) {
-            if (FMLEnvironment.dist.isClient()) {
-                cache.setFakeWorld(getClientLevel());
-            }
-        }
         return (T) cache;
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    private Level getClientLevel() {
-        return Minecraft.getInstance().level;
     }
 
     public static <T extends FakeWorldTileentity> T getAndStoreBlockEntity(ItemStack stack, HolderLookup.Provider provider, @Nullable Level level, Supplier<T> blockEntitySupplier) {
