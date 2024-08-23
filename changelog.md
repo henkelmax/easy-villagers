@@ -1,1 +1,1 @@
-- Fixed villager blocks not getting rendered properly in the inventory
+- Fixed minimum required NeoForge version
