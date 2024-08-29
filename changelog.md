@@ -1,1 +1,1 @@
-- Fixed minimum required NeoForge version
+- Fixed memory leak

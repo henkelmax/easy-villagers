@@ -20,6 +20,7 @@ import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
+import java.lang.ref.WeakReference;
 import java.util.Objects;
 
 public class VillagerData {
@@ -37,8 +38,7 @@ public class VillagerData {
         }
     };
 
-    @Nullable
-    private EasyVillagerEntity villager;
+    private WeakReference<EasyVillagerEntity> villager = new WeakReference<>(null);
     private final CompoundTag nbt;
 
     private VillagerData(CompoundTag nbt) {
@@ -73,10 +73,12 @@ public class VillagerData {
     }
 
     public EasyVillagerEntity getCacheVillager(Level level) {
-        if (villager == null) {
-            villager = createEasyVillager(level, null);
+        EasyVillagerEntity easyVillager = villager.get();
+        if (easyVillager == null) {
+            easyVillager = createEasyVillager(level, null);
+            villager = new WeakReference<>(easyVillager);
         }
-        return villager;
+        return easyVillager;
     }
 
     public EasyVillagerEntity createEasyVillager(Level level, @Nullable ItemStack stack) {

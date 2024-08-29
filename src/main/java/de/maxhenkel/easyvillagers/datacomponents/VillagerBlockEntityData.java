@@ -12,6 +12,7 @@ import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
+import java.lang.ref.WeakReference;
 import java.util.Objects;
 import java.util.function.Supplier;
 
@@ -29,10 +30,8 @@ public class VillagerBlockEntityData {
         }
     };
 
-    @Nullable
-    private FakeWorldTileentity cache;
-    @Nullable
-    private FakeWorldTileentity emptyCache;
+    private WeakReference<FakeWorldTileentity> cache = new WeakReference<>(null);
+    private WeakReference<FakeWorldTileentity> emptyCache = new WeakReference<>(null);
     private final CompoundTag nbt;
 
     private VillagerBlockEntityData(CompoundTag nbt) {
@@ -54,17 +53,21 @@ public class VillagerBlockEntityData {
 
     public <T extends FakeWorldTileentity> T getBlockEntity(HolderLookup.Provider provider, @Nullable Level level, Supplier<T> blockEntitySupplier) {
         if (level == null) {
-            if (emptyCache == null) {
-                emptyCache = blockEntitySupplier.get();
+            T te = (T) emptyCache.get();
+            if (te == null) {
+                te = blockEntitySupplier.get();
+                emptyCache = new WeakReference<>(te);
             }
-            return (T) emptyCache;
+            return te;
         }
-        if (cache == null) {
-            cache = blockEntitySupplier.get();
-            cache.setFakeWorld(level);
-            cache.loadCustomOnly(nbt, provider);
+        T te = (T) cache.get();
+        if (te == null) {
+            te = blockEntitySupplier.get();
+            te.setFakeWorld(level);
+            te.loadCustomOnly(nbt, provider);
+            cache = new WeakReference<>(te);
         }
-        return (T) cache;
+        return te;
     }
 
     public static <T extends FakeWorldTileentity> T getAndStoreBlockEntity(ItemStack stack, HolderLookup.Provider provider, @Nullable Level level, Supplier<T> blockEntitySupplier) {
