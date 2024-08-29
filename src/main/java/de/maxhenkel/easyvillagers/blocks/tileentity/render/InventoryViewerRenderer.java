@@ -10,7 +10,6 @@ import net.minecraft.core.Direction;
 
 public class InventoryViewerRenderer extends VillagerRendererBase<InventoryViewerTileentity> {
 
-
     public InventoryViewerRenderer(BlockEntityRendererProvider.Context renderer) {
         super(renderer);
     }
@@ -31,7 +30,7 @@ public class InventoryViewerRenderer extends VillagerRendererBase<InventoryViewe
             matrixStack.translate(0.5D, 1D / 16D, 0.5D);
             matrixStack.mulPose(Axis.YP.rotationDegrees(-direction.toYRot()));
             matrixStack.scale(0.45F, 0.45F, 0.45F);
-            villagerRenderer.render(inventoryViewer.getVillagerEntity(), 0F, 1F, matrixStack, buffer, combinedLight);
+            getVillagerRenderer().render(inventoryViewer.getVillagerEntity(), 0F, 1F, matrixStack, buffer, combinedLight);
             matrixStack.popPose();
         }
 

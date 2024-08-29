@@ -7,15 +7,18 @@ import de.maxhenkel.easyvillagers.blocks.tileentity.BreederTileentity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BedRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.entity.VillagerRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BedBlockEntity;
 
+import java.lang.ref.WeakReference;
+
 public class BreederRenderer extends VillagerRendererBase<BreederTileentity> {
 
-    private BedRenderer bedRenderer;
-    private BedBlockEntity bed;
+    private WeakReference<BedRenderer> bedRendererCache = new WeakReference<>(null);
+    private WeakReference<BedBlockEntity> bedCache = new WeakReference<>(null);
 
     public BreederRenderer(BlockEntityRendererProvider.Context renderer) {
         super(renderer);
@@ -26,10 +29,19 @@ public class BreederRenderer extends VillagerRendererBase<BreederTileentity> {
         super.render(breeder, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
         matrixStack.pushPose();
 
+        BedRenderer bedRenderer = bedRendererCache.get();
         if (bedRenderer == null) {
             bedRenderer = new BedRenderer(renderer);
-            bed = new BedBlockEntity(BlockPos.ZERO, Blocks.RED_BED.defaultBlockState());
+            bedRendererCache = new WeakReference<>(bedRenderer);
         }
+
+        BedBlockEntity bed = bedCache.get();
+        if (bed == null) {
+            bed = new BedBlockEntity(BlockPos.ZERO, Blocks.RED_BED.defaultBlockState());
+            bedCache = new WeakReference<>(bed);
+        }
+
+        VillagerRenderer villagerRenderer = getVillagerRenderer();
 
         Direction direction = Direction.SOUTH;
         if (!breeder.isFakeWorld()) {

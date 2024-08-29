@@ -14,12 +14,14 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.monster.ZombieVillager;
 
+import java.lang.ref.WeakReference;
+
 public class ConverterRenderer extends VillagerRendererBase<ConverterTileentity> {
 
-    private Zombie zombie;
-    private ZombieRenderer zombieRenderer;
-    private ZombieVillagerRenderer zombieVillagerRenderer;
-    private ZombieVillager zombieVillager;
+    private WeakReference<Zombie> zombieCache = new WeakReference<>(null);
+    private WeakReference<ZombieRenderer> zombieRendererCache = new WeakReference<>(null);
+    private WeakReference<ZombieVillagerRenderer> zombieVillagerRendererCache = new WeakReference<>(null);
+    private WeakReference<ZombieVillager> zombieVillagerCache = new WeakReference<>(null);
 
     public ConverterRenderer(BlockEntityRendererProvider.Context renderer) {
         super(renderer);
@@ -30,14 +32,26 @@ public class ConverterRenderer extends VillagerRendererBase<ConverterTileentity>
         super.render(converter, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
         matrixStack.pushPose();
 
+        ZombieRenderer zombieRenderer = zombieRendererCache.get();
         if (zombieRenderer == null) {
             zombieRenderer = new ZombieRenderer(createEntityRenderer());
+            zombieRendererCache = new WeakReference<>(zombieRenderer);
+        }
+        Zombie zombie = zombieCache.get();
+        if (zombie == null) {
             zombie = new Zombie(minecraft.level);
+            zombieCache = new WeakReference<>(zombie);
         }
 
+        ZombieVillagerRenderer zombieVillagerRenderer = zombieVillagerRendererCache.get();
         if (zombieVillagerRenderer == null) {
             zombieVillagerRenderer = new ZombieVillagerRenderer(createEntityRenderer());
+            zombieVillagerRendererCache = new WeakReference<>(zombieVillagerRenderer);
+        }
+        ZombieVillager zombieVillager = zombieVillagerCache.get();
+        if (zombieVillager == null) {
             zombieVillager = new ZombieVillager(EntityType.ZOMBIE_VILLAGER, minecraft.level);
+            zombieVillagerCache = new WeakReference<>(zombieVillager);
         }
 
         Direction direction = Direction.SOUTH;
@@ -57,7 +71,7 @@ public class ConverterRenderer extends VillagerRendererBase<ConverterTileentity>
                 zombieVillager.setBaby(villagerEntity.isBaby());
                 zombieVillagerRenderer.render(zombieVillager, 0F, 1F, matrixStack, buffer, combinedLight);
             } else {
-                villagerRenderer.render(villagerEntity, 0F, 1F, matrixStack, buffer, combinedLight);
+                getVillagerRenderer().render(villagerEntity, 0F, 1F, matrixStack, buffer, combinedLight);
             }
             matrixStack.popPose();
         }

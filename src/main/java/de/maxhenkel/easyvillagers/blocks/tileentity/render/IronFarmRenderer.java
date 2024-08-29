@@ -13,12 +13,14 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.monster.Zombie;
 
+import java.lang.ref.WeakReference;
+
 public class IronFarmRenderer extends VillagerRendererBase<IronFarmTileentity> {
 
-    private Zombie zombie;
-    private ZombieRenderer zombieRenderer;
-    private IronGolem ironGolem;
-    private IronGolemRenderer ironGolemRenderer;
+    private WeakReference<Zombie> zombieCache = new WeakReference<>(null);
+    private WeakReference<ZombieRenderer> zombieRendererCache = new WeakReference<>(null);
+    private WeakReference<IronGolem> ironGolemCache = new WeakReference<>(null);
+    private WeakReference<IronGolemRenderer> ironGolemRendererCache = new WeakReference<>(null);
 
     public IronFarmRenderer(BlockEntityRendererProvider.Context renderer) {
         super(renderer);
@@ -29,14 +31,28 @@ public class IronFarmRenderer extends VillagerRendererBase<IronFarmTileentity> {
         super.render(farm, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
         matrixStack.pushPose();
 
-        if (zombieRenderer == null) {
-            zombieRenderer = new ZombieRenderer(createEntityRenderer());
+        Zombie zombie = zombieCache.get();
+        if (zombie == null) {
             zombie = new Zombie(minecraft.level);
+            zombieCache = new WeakReference<>(zombie);
         }
 
+        ZombieRenderer zombieRenderer = zombieRendererCache.get();
+        if (zombieRenderer == null) {
+            zombieRenderer = new ZombieRenderer(createEntityRenderer());
+            zombieRendererCache = new WeakReference<>(zombieRenderer);
+        }
+
+        IronGolem ironGolem = ironGolemCache.get();
+        if (ironGolem == null) {
+            ironGolem = new IronGolem(EntityType.IRON_GOLEM, minecraft.level);
+            ironGolemCache = new WeakReference<>(ironGolem);
+        }
+
+        IronGolemRenderer ironGolemRenderer = ironGolemRendererCache.get();
         if (ironGolemRenderer == null) {
             ironGolemRenderer = new IronGolemRenderer(createEntityRenderer());
-            ironGolem = new IronGolem(EntityType.IRON_GOLEM, minecraft.level);
+            ironGolemRendererCache = new WeakReference<>(ironGolemRenderer);
         }
 
         Direction direction = Direction.SOUTH;
@@ -51,7 +67,7 @@ public class IronFarmRenderer extends VillagerRendererBase<IronFarmTileentity> {
             matrixStack.translate(-5D / 16D, 0D, -5D / 16D);
             matrixStack.mulPose(Axis.YP.rotationDegrees(90));
             matrixStack.scale(0.3F, 0.3F, 0.3F);
-            villagerRenderer.render(farm.getVillagerEntity(), 0F, 1F, matrixStack, buffer, combinedLight);
+            getVillagerRenderer().render(farm.getVillagerEntity(), 0F, 1F, matrixStack, buffer, combinedLight);
             matrixStack.popPose();
         }
 

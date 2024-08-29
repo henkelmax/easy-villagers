@@ -36,7 +36,7 @@ public class TraderRenderer extends VillagerRendererBase<TraderTileentity> {
     @Override
     public void render(TraderTileentity trader, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
         super.render(trader, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
-        renderTraderBase(villagerRenderer, trader, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
+        renderTraderBase(getVillagerRenderer(), trader, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
     }
 
     public static void renderTraderBase(VillagerRenderer renderer, TraderTileentityBase trader, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {

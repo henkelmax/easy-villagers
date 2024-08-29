@@ -37,7 +37,7 @@ public class FarmerRenderer extends VillagerRendererBase<FarmerTileentity> {
             matrixStack.mulPose(Axis.YP.rotationDegrees(-direction.toYRot()));
             matrixStack.translate(0D, 0D, -4D / 16D);
             matrixStack.scale(0.45F, 0.45F, 0.45F);
-            villagerRenderer.render(farmer.getVillagerEntity(), 0F, 1F, matrixStack, buffer, combinedLight);
+            getVillagerRenderer().render(farmer.getVillagerEntity(), 0F, 1F, matrixStack, buffer, combinedLight);
             matrixStack.popPose();
         }
 
