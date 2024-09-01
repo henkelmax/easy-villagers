@@ -1,1 +1,1 @@
-- Fixed memory leak
+- Updated Chinese Traditional translation
