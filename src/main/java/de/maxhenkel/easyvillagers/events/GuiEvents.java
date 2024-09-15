@@ -25,14 +25,13 @@ public class GuiEvents {
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
     public void onOpenScreen(ScreenEvent.Init.Post event) {
+        if (!(event.getScreen() instanceof MerchantScreen merchantScreen)) {
+            return;
+        }
         if (Minecraft.getInstance().player == null) {
             return;
         }
         if (!Main.SERVER_CONFIG.tradeCycling.get()) {
-            return;
-        }
-
-        if (!(event.getScreen() instanceof MerchantScreen)) {
             return;
         }
 
@@ -41,8 +40,6 @@ public class GuiEvents {
         if (loc.equals(ClientConfig.CycleTradesButtonLocation.NONE)) {
             return;
         }
-
-        MerchantScreen merchantScreen = (MerchantScreen) event.getScreen();
 
         int posX;
 
