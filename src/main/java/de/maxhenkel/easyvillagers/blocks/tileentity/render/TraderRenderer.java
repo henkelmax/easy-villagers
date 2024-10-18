@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.VillagerRenderer;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
@@ -53,7 +54,7 @@ public class TraderRenderer extends VillagerRendererBase<TraderTileentity> {
             matrixStack.mulPose(Axis.YP.rotationDegrees(-direction.toYRot()));
             matrixStack.translate(0D, 0D, -4D / 16D);
             matrixStack.scale(0.45F, 0.45F, 0.45F);
-            renderer.render(trader.getVillagerEntity(), 0F, 1F, matrixStack, buffer, combinedLight);
+            renderer.render(getVillagerRenderState(renderer, trader.getVillagerEntity()), matrixStack, buffer, combinedLight);
             matrixStack.popPose();
         }
 
@@ -144,7 +145,7 @@ public class TraderRenderer extends VillagerRendererBase<TraderTileentity> {
             TOP_BLOCK_CACHE.put(bottom.getBlock(), state);
             return state;
         }
-        Block b = BuiltInRegistries.BLOCK.get(resourceLocation);
+        Block b = BuiltInRegistries.BLOCK.get(resourceLocation).map(Holder.Reference::value).orElse(Blocks.AIR);
         BlockState state = b.defaultBlockState();
         TOP_BLOCK_CACHE.put(bottom.getBlock(), state);
         return state;

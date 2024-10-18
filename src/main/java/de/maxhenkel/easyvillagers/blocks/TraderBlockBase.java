@@ -1,6 +1,5 @@
 package de.maxhenkel.easyvillagers.blocks;
 
-import de.maxhenkel.corelib.block.IItemBlock;
 import de.maxhenkel.corelib.blockentity.SimpleBlockEntityTicker;
 import de.maxhenkel.corelib.item.ItemUtils;
 import de.maxhenkel.easyvillagers.blocks.tileentity.TraderTileentityBase;
@@ -11,11 +10,10 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -32,17 +30,14 @@ import net.minecraft.world.phys.BlockHitResult;
 
 import javax.annotation.Nullable;
 
-public abstract class TraderBlockBase extends VillagerBlockBase implements EntityBlock, IItemBlock {
+public abstract class TraderBlockBase extends VillagerBlockBase implements EntityBlock {
 
-    public TraderBlockBase() {
-        super(Properties.of().mapColor(MapColor.METAL).strength(2.5F).sound(SoundType.METAL).noOcclusion());
+    public TraderBlockBase(Properties properties) {
+        super(properties.mapColor(MapColor.METAL).strength(2.5F).sound(SoundType.METAL).noOcclusion());
     }
 
     @Override
-    public abstract Item toItem();
-
-    @Override
-    protected ItemInteractionResult useItemOn(ItemStack heldItem, BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+    protected InteractionResult useItemOn(ItemStack heldItem, BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         BlockEntity tileEntity = level.getBlockEntity(pos);
         if (!(tileEntity instanceof TraderTileentityBase)) {
             return super.useItemOn(heldItem, state, level, pos, player, handIn, hit);
@@ -59,7 +54,7 @@ public abstract class TraderBlockBase extends VillagerBlockBase implements Entit
             } else {
                 playVillagerSound(level, pos, SoundEvents.VILLAGER_CELEBRATE);
             }
-            return ItemInteractionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         } else if (!trader.hasWorkstation() && heldItem.getItem() instanceof BlockItem && trader.isValidBlock(((BlockItem) heldItem.getItem()).getBlock())) {
             Block block = ((BlockItem) heldItem.getItem()).getBlock();
             trader.setWorkstation(block);
@@ -70,7 +65,7 @@ public abstract class TraderBlockBase extends VillagerBlockBase implements Entit
             }
             SoundType type = block.defaultBlockState().getSoundType(level, pos, player);
             level.playSound(null, pos, type.getPlaceSound(), SoundSource.BLOCKS, type.getVolume(), type.getPitch());
-            return ItemInteractionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         } else if (player.isShiftKeyDown() && trader.hasVillager()) {
             ItemStack stack = trader.removeVillager();
             if (heldItem.isEmpty()) {
@@ -82,7 +77,7 @@ public abstract class TraderBlockBase extends VillagerBlockBase implements Entit
                 }
             }
             playVillagerSound(level, pos, SoundEvents.VILLAGER_CELEBRATE);
-            return ItemInteractionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         } else if (player.isShiftKeyDown() && trader.hasWorkstation()) {
             ItemStack blockStack = new ItemStack(trader.removeWorkstation());
             if (heldItem.isEmpty()) {
@@ -96,11 +91,11 @@ public abstract class TraderBlockBase extends VillagerBlockBase implements Entit
             if (trader.hasVillager()) {
                 playVillagerSound(level, pos, SoundEvents.VILLAGER_NO);
             }
-            return ItemInteractionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         } else if (openGUI(trader, player, level, pos)) {
-            return ItemInteractionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
-        return ItemInteractionResult.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
     protected abstract boolean openGUI(TraderTileentityBase trader, Player player, Level level, BlockPos pos);

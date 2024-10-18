@@ -19,28 +19,28 @@ public class ModTileEntities {
     private static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_REGISTER = DeferredRegister.create(BuiltInRegistries.BLOCK_ENTITY_TYPE, Main.MODID);
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<TraderTileentity>> TRADER = BLOCK_ENTITY_REGISTER.register("trader", () ->
-            BlockEntityType.Builder.of(TraderTileentity::new, ModBlocks.TRADER.get()).build(null)
+            new BlockEntityType<>(TraderTileentity::new, ModBlocks.TRADER.get())
     );
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<AutoTraderTileentity>> AUTO_TRADER = BLOCK_ENTITY_REGISTER.register("auto_trader", () ->
-            BlockEntityType.Builder.of(AutoTraderTileentity::new, ModBlocks.AUTO_TRADER.get()).build(null)
+            new BlockEntityType<>(AutoTraderTileentity::new, ModBlocks.AUTO_TRADER.get())
     );
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FarmerTileentity>> FARMER = BLOCK_ENTITY_REGISTER.register("farmer", () ->
-            BlockEntityType.Builder.of(FarmerTileentity::new, ModBlocks.FARMER.get()).build(null)
+            new BlockEntityType<>(FarmerTileentity::new, ModBlocks.FARMER.get())
     );
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BreederTileentity>> BREEDER = BLOCK_ENTITY_REGISTER.register("breeder", () ->
-            BlockEntityType.Builder.of(BreederTileentity::new, ModBlocks.BREEDER.get()).build(null)
+            new BlockEntityType<>(BreederTileentity::new, ModBlocks.BREEDER.get())
     );
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ConverterTileentity>> CONVERTER = BLOCK_ENTITY_REGISTER.register("converter", () ->
-            BlockEntityType.Builder.of(ConverterTileentity::new, ModBlocks.CONVERTER.get()).build(null)
+            new BlockEntityType<>(ConverterTileentity::new, ModBlocks.CONVERTER.get())
     );
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<IronFarmTileentity>> IRON_FARM = BLOCK_ENTITY_REGISTER.register("iron_farm", () ->
-            BlockEntityType.Builder.of(IronFarmTileentity::new, ModBlocks.IRON_FARM.get()).build(null)
+            new BlockEntityType<>(IronFarmTileentity::new, ModBlocks.IRON_FARM.get())
     );
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<IncubatorTileentity>> INCUBATOR = BLOCK_ENTITY_REGISTER.register("incubator", () ->
-            BlockEntityType.Builder.of(IncubatorTileentity::new, ModBlocks.INCUBATOR.get()).build(null)
+            new BlockEntityType<>(IncubatorTileentity::new, ModBlocks.INCUBATOR.get())
     );
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<InventoryViewerTileentity>> INVENTORY_VIEWER = BLOCK_ENTITY_REGISTER.register("inventory_viewer", () ->
-            BlockEntityType.Builder.of(InventoryViewerTileentity::new, ModBlocks.INVENTORY_VIEWER.get()).build(null)
+            new BlockEntityType<>(InventoryViewerTileentity::new, ModBlocks.INVENTORY_VIEWER.get())
     );
 
     public static void init(IEventBus eventBus) {

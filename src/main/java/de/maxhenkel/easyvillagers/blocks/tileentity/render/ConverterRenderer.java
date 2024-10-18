@@ -7,8 +7,11 @@ import de.maxhenkel.easyvillagers.blocks.tileentity.ConverterTileentity;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.entity.VillagerRenderer;
 import net.minecraft.client.renderer.entity.ZombieRenderer;
 import net.minecraft.client.renderer.entity.ZombieVillagerRenderer;
+import net.minecraft.client.renderer.entity.state.ZombieRenderState;
+import net.minecraft.client.renderer.entity.state.ZombieVillagerRenderState;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Zombie;
@@ -22,6 +25,9 @@ public class ConverterRenderer extends VillagerRendererBase<ConverterTileentity>
     private WeakReference<ZombieRenderer> zombieRendererCache = new WeakReference<>(null);
     private WeakReference<ZombieVillagerRenderer> zombieVillagerRendererCache = new WeakReference<>(null);
     private WeakReference<ZombieVillager> zombieVillagerCache = new WeakReference<>(null);
+
+    protected ZombieVillagerRenderState zombieVillagerRenderState;
+    protected ZombieRenderState zombieRenderState;
 
     public ConverterRenderer(BlockEntityRendererProvider.Context renderer) {
         super(renderer);
@@ -69,9 +75,10 @@ public class ConverterRenderer extends VillagerRendererBase<ConverterTileentity>
             if (converter.getTimer() >= ConverterTileentity.getZombifyTime() && converter.getTimer() < ConverterTileentity.getConvertTime()) {
                 zombieVillager.setVillagerData(villagerEntity.getVillagerData());
                 zombieVillager.setBaby(villagerEntity.isBaby());
-                zombieVillagerRenderer.render(zombieVillager, 0F, 1F, matrixStack, buffer, combinedLight);
+                zombieVillagerRenderer.render(getZombieVillagerRenderState(zombieVillagerRenderer, zombieVillager), matrixStack, buffer, combinedLight);
             } else {
-                getVillagerRenderer().render(villagerEntity, 0F, 1F, matrixStack, buffer, combinedLight);
+                VillagerRenderer villagerRenderer = getVillagerRenderer();
+                villagerRenderer.render(getVillagerRenderState(villagerRenderer, villagerEntity), matrixStack, buffer, combinedLight);
             }
             matrixStack.popPose();
         }
@@ -83,10 +90,26 @@ public class ConverterRenderer extends VillagerRendererBase<ConverterTileentity>
         matrixStack.translate(5D / 16D, 0D, 0D);
         matrixStack.mulPose(Axis.YP.rotationDegrees(-90));
         matrixStack.scale(0.4F, 0.4F, 0.4F);
-        zombieRenderer.render(zombie, 0F, 1F, matrixStack, buffer, combinedLight);
+        zombieRenderer.render(getZombieRenderState(zombieRenderer, zombie), matrixStack, buffer, combinedLight);
         matrixStack.popPose();
 
         matrixStack.popPose();
+    }
+
+    protected ZombieVillagerRenderState getZombieVillagerRenderState(ZombieVillagerRenderer renderer, ZombieVillager villager) {
+        if (zombieVillagerRenderState == null) {
+            zombieVillagerRenderState = renderer.createRenderState();
+        }
+        renderer.extractRenderState(villager, zombieVillagerRenderState, 0F);
+        return zombieVillagerRenderState;
+    }
+
+    protected ZombieRenderState getZombieRenderState(ZombieRenderer renderer, Zombie zombie) {
+        if (zombieRenderState == null) {
+            zombieRenderState = renderer.createRenderState();
+        }
+        renderer.extractRenderState(zombie, zombieRenderState, 0F);
+        return zombieRenderState;
     }
 
 }

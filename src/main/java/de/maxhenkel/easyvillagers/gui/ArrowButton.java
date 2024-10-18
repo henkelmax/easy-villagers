@@ -1,11 +1,10 @@
 package de.maxhenkel.easyvillagers.gui;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import de.maxhenkel.easyvillagers.Main;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
@@ -26,9 +25,7 @@ public class ArrowButton extends AbstractButton {
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
         super.renderWidget(guiGraphics, mouseX, mouseY, delta);
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
-        guiGraphics.blit(left ? ARROW_LEFT : ARROW_RIGHT, getX(), getY() + 2, 0, 0, width, height, 16, 16);
+        guiGraphics.blit(RenderType::guiTextured, left ? ARROW_LEFT : ARROW_RIGHT, getX(), getY() + 2, 0, 0, width, height, 16, 16);
     }
 
     @Override

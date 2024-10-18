@@ -1,16 +1,12 @@
 package de.maxhenkel.easyvillagers.blocks;
 
-import de.maxhenkel.corelib.block.IItemBlock;
 import de.maxhenkel.corelib.blockentity.SimpleBlockEntityTicker;
-import de.maxhenkel.corelib.client.CustomRendererBlockItem;
-import de.maxhenkel.corelib.client.ItemRenderer;
 import de.maxhenkel.corelib.item.ItemUtils;
 import de.maxhenkel.easyvillagers.blocks.tileentity.FarmerTileentity;
 import de.maxhenkel.easyvillagers.datacomponents.VillagerBlockEntityData;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import de.maxhenkel.easyvillagers.gui.OutputContainer;
 import de.maxhenkel.easyvillagers.items.VillagerItem;
-import de.maxhenkel.easyvillagers.items.render.FarmerItemRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -41,21 +37,10 @@ import net.neoforged.api.distmarker.OnlyIn;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class FarmerBlock extends VillagerBlockBase implements EntityBlock, IItemBlock {
+public class FarmerBlock extends VillagerBlockBase implements EntityBlock {
 
-    public FarmerBlock() {
-        super(Properties.of().mapColor(MapColor.METAL).strength(2.5F).sound(SoundType.METAL).noOcclusion());
-    }
-
-    @Override
-    public Item toItem() {
-        return new CustomRendererBlockItem(this, new Item.Properties()) {
-            @OnlyIn(Dist.CLIENT)
-            @Override
-            public ItemRenderer createItemRenderer() {
-                return new FarmerItemRenderer();
-            }
-        };
+    public FarmerBlock(Properties properties) {
+        super(properties.mapColor(MapColor.METAL).strength(2.5F).sound(SoundType.METAL).noOcclusion());
     }
 
     @Override
@@ -69,7 +54,7 @@ public class FarmerBlock extends VillagerBlockBase implements EntityBlock, IItem
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack heldItem, BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+    protected InteractionResult useItemOn(ItemStack heldItem, BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         BlockEntity tileEntity = worldIn.getBlockEntity(pos);
         if (!(tileEntity instanceof FarmerTileentity)) {
             return super.useItemOn(heldItem, state, worldIn, pos, player, handIn, hit);
@@ -79,7 +64,7 @@ public class FarmerBlock extends VillagerBlockBase implements EntityBlock, IItem
             farmer.setVillager(heldItem.copy());
             ItemUtils.decrItemStack(heldItem, player);
             VillagerBlockBase.playVillagerSound(worldIn, pos, SoundEvents.VILLAGER_YES);
-            return ItemInteractionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         } else if (farmer.getCrop() == null && farmer.isValidSeed(heldItem.getItem())) {
             Item seed = heldItem.getItem();
             farmer.setCrop(seed);
@@ -89,7 +74,7 @@ public class FarmerBlock extends VillagerBlockBase implements EntityBlock, IItem
                 VillagerBlockBase.playVillagerSound(worldIn, pos, SoundEvents.VILLAGER_WORK_FARMER);
             }
             VillagerBlockBase.playVillagerSound(worldIn, pos, SoundEvents.CROP_PLANTED);
-            return ItemInteractionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         } else if (player.isShiftKeyDown() && farmer.getCrop() != null) {
             ItemStack blockStack = new ItemStack(farmer.removeSeed());
             if (heldItem.isEmpty()) {
@@ -103,7 +88,7 @@ public class FarmerBlock extends VillagerBlockBase implements EntityBlock, IItem
             if (farmer.hasVillager()) {
                 VillagerBlockBase.playVillagerSound(worldIn, pos, SoundEvents.VILLAGER_NO);
             }
-            return ItemInteractionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         } else if (player.isShiftKeyDown() && farmer.hasVillager()) {
             ItemStack stack = farmer.removeVillager();
             if (heldItem.isEmpty()) {
@@ -115,7 +100,7 @@ public class FarmerBlock extends VillagerBlockBase implements EntityBlock, IItem
                 }
             }
             VillagerBlockBase.playVillagerSound(worldIn, pos, SoundEvents.VILLAGER_CELEBRATE);
-            return ItemInteractionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         } else {
             player.openMenu(new MenuProvider() {
                 @Override
@@ -129,7 +114,7 @@ public class FarmerBlock extends VillagerBlockBase implements EntityBlock, IItem
                     return new OutputContainer(id, playerInventory, farmer.getOutputInventory(), ContainerLevelAccess.create(worldIn, pos), ModBlocks.FARMER::get);
                 }
             });
-            return ItemInteractionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
     }
 

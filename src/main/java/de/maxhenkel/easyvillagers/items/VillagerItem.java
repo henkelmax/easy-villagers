@@ -1,12 +1,9 @@
 package de.maxhenkel.easyvillagers.items;
 
-import de.maxhenkel.corelib.client.CustomRendererItem;
-import de.maxhenkel.corelib.client.ItemRenderer;
 import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
 import de.maxhenkel.easyvillagers.datacomponents.VillagerData;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
-import de.maxhenkel.easyvillagers.items.render.VillagerItemRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -31,10 +28,10 @@ import java.util.List;
 
 import static de.maxhenkel.easyvillagers.datacomponents.VillagerData.getCacheVillager;
 
-public class VillagerItem extends CustomRendererItem {
+public class VillagerItem extends Item {
 
-    public VillagerItem() {
-        super(new Item.Properties().stacksTo(1));
+    public VillagerItem(Item.Properties properties) {
+        super(properties.stacksTo(1));
 
         DispenserBlock.registerBehavior(this, (source, stack) -> {
             Direction direction = source.state().getValue(DispenserBlock.FACING);
@@ -46,12 +43,6 @@ public class VillagerItem extends CustomRendererItem {
             stack.shrink(1);
             return stack;
         });
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    @Override
-    public ItemRenderer createItemRenderer() {
-        return new VillagerItemRenderer();
     }
 
     @Override

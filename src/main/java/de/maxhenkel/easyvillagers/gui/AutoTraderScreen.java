@@ -4,6 +4,7 @@ import de.maxhenkel.corelib.inventory.ScreenBase;
 import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.net.MessageSelectTrade;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -39,7 +40,7 @@ public class AutoTraderScreen extends ScreenBase<AutoTraderContainer> {
     protected void renderBg(GuiGraphics guiGraphics, float partialTicks, int mouseX, int mouseY) {
         super.renderBg(guiGraphics, partialTicks, mouseX, mouseY);
         if (getMenu().isLocked()) {
-            guiGraphics.blit(BACKGROUND, leftPos + 83, topPos + 19, 176, 0, 28, 21);
+            guiGraphics.blit(RenderType::guiTextured, BACKGROUND, leftPos + 83, topPos + 19, 176, 0, 28, 21, 256, 256);
         }
     }
 

@@ -5,12 +5,18 @@ import de.maxhenkel.easyvillagers.blocks.tileentity.FakeWorldTileentity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.VillagerRenderer;
+import net.minecraft.client.renderer.entity.state.VillagerRenderState;
+import net.minecraft.world.entity.npc.Villager;
 
+import javax.annotation.Nullable;
 import java.lang.ref.WeakReference;
 
 public class VillagerRendererBase<T extends FakeWorldTileentity> extends BlockRendererBase<T> {
 
     protected WeakReference<VillagerRenderer> villagerRendererCache = new WeakReference<>(null);
+
+    @Nullable
+    protected static VillagerRenderState villagerRenderState;
 
     public VillagerRendererBase(BlockEntityRendererProvider.Context renderer) {
         super(renderer);
@@ -28,6 +34,14 @@ public class VillagerRendererBase<T extends FakeWorldTileentity> extends BlockRe
             villagerRendererCache = new WeakReference<>(villagerRenderer);
         }
         return villagerRenderer;
+    }
+
+    protected static VillagerRenderState getVillagerRenderState(VillagerRenderer renderer, Villager villager) {
+        if (villagerRenderState == null) {
+            villagerRenderState = renderer.createRenderState();
+        }
+        renderer.extractRenderState(villager, villagerRenderState, 0F);
+        return villagerRenderState;
     }
 
 }

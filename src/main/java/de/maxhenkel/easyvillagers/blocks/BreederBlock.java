@@ -1,16 +1,12 @@
 package de.maxhenkel.easyvillagers.blocks;
 
-import de.maxhenkel.corelib.block.IItemBlock;
 import de.maxhenkel.corelib.blockentity.SimpleBlockEntityTicker;
-import de.maxhenkel.corelib.client.CustomRendererBlockItem;
-import de.maxhenkel.corelib.client.ItemRenderer;
 import de.maxhenkel.corelib.item.ItemUtils;
 import de.maxhenkel.easyvillagers.blocks.tileentity.BreederTileentity;
 import de.maxhenkel.easyvillagers.datacomponents.VillagerBlockEntityData;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import de.maxhenkel.easyvillagers.gui.BreederContainer;
 import de.maxhenkel.easyvillagers.items.VillagerItem;
-import de.maxhenkel.easyvillagers.items.render.BreederItemRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -40,21 +36,10 @@ import net.neoforged.api.distmarker.OnlyIn;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class BreederBlock extends VillagerBlockBase implements EntityBlock, IItemBlock {
+public class BreederBlock extends VillagerBlockBase implements EntityBlock {
 
-    public BreederBlock() {
-        super(Properties.of().mapColor(MapColor.METAL).strength(2.5F).sound(SoundType.METAL).noOcclusion());
-    }
-
-    @Override
-    public Item toItem() {
-        return new CustomRendererBlockItem(this, new Item.Properties()) {
-            @OnlyIn(Dist.CLIENT)
-            @Override
-            public ItemRenderer createItemRenderer() {
-                return new BreederItemRenderer();
-            }
-        };
+    public BreederBlock(Properties properties) {
+        super(properties.mapColor(MapColor.METAL).strength(2.5F).sound(SoundType.METAL).noOcclusion());
     }
 
     @Override
@@ -72,7 +57,7 @@ public class BreederBlock extends VillagerBlockBase implements EntityBlock, IIte
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack heldItem, BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+    protected InteractionResult useItemOn(ItemStack heldItem, BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         BlockEntity tileEntity = worldIn.getBlockEntity(pos);
         if (!(tileEntity instanceof BreederTileentity)) {
             return super.useItemOn(heldItem, state, worldIn, pos, player, handIn, hit);
@@ -83,12 +68,12 @@ public class BreederBlock extends VillagerBlockBase implements EntityBlock, IIte
             breeder.setVillager1(heldItem.copy());
             ItemUtils.decrItemStack(heldItem, player);
             VillagerBlockBase.playVillagerSound(worldIn, pos, SoundEvents.VILLAGER_YES);
-            return ItemInteractionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         } else if (!breeder.hasVillager2() && heldItem.getItem() instanceof VillagerItem) {
             breeder.setVillager2(heldItem.copy());
             ItemUtils.decrItemStack(heldItem, player);
             VillagerBlockBase.playVillagerSound(worldIn, pos, SoundEvents.VILLAGER_YES);
-            return ItemInteractionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         } else if (player.isShiftKeyDown() && breeder.hasVillager2()) {
             ItemStack stack = breeder.removeVillager2();
             if (heldItem.isEmpty()) {
@@ -100,7 +85,7 @@ public class BreederBlock extends VillagerBlockBase implements EntityBlock, IIte
                 }
             }
             VillagerBlockBase.playVillagerSound(worldIn, pos, SoundEvents.VILLAGER_CELEBRATE);
-            return ItemInteractionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         } else if (player.isShiftKeyDown() && breeder.hasVillager1()) {
             ItemStack stack = breeder.removeVillager1();
             if (heldItem.isEmpty()) {
@@ -112,7 +97,7 @@ public class BreederBlock extends VillagerBlockBase implements EntityBlock, IIte
                 }
             }
             VillagerBlockBase.playVillagerSound(worldIn, pos, SoundEvents.VILLAGER_CELEBRATE);
-            return ItemInteractionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         } else {
             player.openMenu(new MenuProvider() {
                 @Override
@@ -126,7 +111,7 @@ public class BreederBlock extends VillagerBlockBase implements EntityBlock, IIte
                     return new BreederContainer(id, playerInventory, breeder.getFoodInventory(), breeder.getOutputInventory(), ContainerLevelAccess.create(worldIn, pos));
                 }
             });
-            return ItemInteractionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
 
     }

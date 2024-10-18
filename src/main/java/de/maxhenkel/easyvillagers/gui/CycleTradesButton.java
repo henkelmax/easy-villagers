@@ -1,12 +1,11 @@
 package de.maxhenkel.easyvillagers.gui;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import de.maxhenkel.easyvillagers.Main;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.inventory.MerchantScreen;
-import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.MerchantMenu;
@@ -33,13 +32,11 @@ public class CycleTradesButton extends AbstractButton {
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         visible = canCycle(screen.getMenu());
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
         if (isHovered) {
-            guiGraphics.blit(ARROW_BUTTON, getX(), getY(), 0, 14, WIDTH, HEIGHT, 32, 32);
+            guiGraphics.blit(RenderType::guiTextured, ARROW_BUTTON, getX(), getY(), 0, 14, WIDTH, HEIGHT, 32, 32);
             guiGraphics.renderTooltip(screen.getMinecraft().font, Collections.singletonList(Component.translatable("tooltip.easy_villagers.cycle_trades").getVisualOrderText()), mouseX, mouseY);
         } else {
-            guiGraphics.blit(ARROW_BUTTON, getX(), getY(), 0, 0, WIDTH, HEIGHT, 32, 32);
+            guiGraphics.blit(RenderType::guiTextured, ARROW_BUTTON, getX(), getY(), 0, 0, WIDTH, HEIGHT, 32, 32);
         }
     }
 

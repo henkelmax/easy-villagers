@@ -55,7 +55,7 @@ public class BreederRenderer extends VillagerRendererBase<BreederTileentity> {
             matrixStack.translate(-5D / 16D, 0D, 0D);
             matrixStack.mulPose(Axis.YP.rotationDegrees(90));
             matrixStack.scale(0.45F, 0.45F, 0.45F);
-            villagerRenderer.render(breeder.getVillagerEntity1(), 0F, 1F, matrixStack, buffer, combinedLight);
+            villagerRenderer.render(getVillagerRenderState(villagerRenderer, breeder.getVillagerEntity1()), matrixStack, buffer, combinedLight);
             matrixStack.popPose();
         }
 
@@ -67,7 +67,7 @@ public class BreederRenderer extends VillagerRendererBase<BreederTileentity> {
             matrixStack.translate(5D / 16D, 0D, 0D);
             matrixStack.mulPose(Axis.YP.rotationDegrees(-90));
             matrixStack.scale(0.45F, 0.45F, 0.45F);
-            villagerRenderer.render(breeder.getVillagerEntity2(), 0F, 1F, matrixStack, buffer, combinedLight);
+            villagerRenderer.render(getVillagerRenderState(villagerRenderer, breeder.getVillagerEntity2()), matrixStack, buffer, combinedLight);
             matrixStack.popPose();
         }
 

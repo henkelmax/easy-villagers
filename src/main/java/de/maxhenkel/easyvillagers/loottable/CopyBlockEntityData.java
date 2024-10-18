@@ -24,7 +24,7 @@ public class CopyBlockEntityData extends LootItemConditionalFunction {
 
     @Override
     public ItemStack run(ItemStack stack, LootContext context) {
-        BlockEntity blockEntity = context.getParamOrNull(LootContextParams.BLOCK_ENTITY);
+        BlockEntity blockEntity = context.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
         if (blockEntity == null) {
             return stack;
         }

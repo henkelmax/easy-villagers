@@ -6,6 +6,7 @@ import de.maxhenkel.easyvillagers.blocks.TraderBlock;
 import de.maxhenkel.easyvillagers.blocks.tileentity.IncubatorTileentity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.entity.VillagerRenderer;
 import net.minecraft.core.Direction;
 
 public class IncubatorRenderer extends VillagerRendererBase<IncubatorTileentity> {
@@ -30,7 +31,8 @@ public class IncubatorRenderer extends VillagerRendererBase<IncubatorTileentity>
             matrixStack.translate(0.5D, 1D / 16D, 0.5D);
             matrixStack.mulPose(Axis.YP.rotationDegrees(-direction.toYRot()));
             matrixStack.scale(0.45F, 0.45F, 0.45F);
-            getVillagerRenderer().render(incubator.getVillagerEntity(), 0F, 1F, matrixStack, buffer, combinedLight);
+            VillagerRenderer villagerRenderer = getVillagerRenderer();
+            villagerRenderer.render(getVillagerRenderState(villagerRenderer, incubator.getVillagerEntity()), matrixStack, buffer, combinedLight);
             matrixStack.popPose();
         }
 

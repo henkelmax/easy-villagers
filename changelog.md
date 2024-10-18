@@ -1,1 +1,1 @@
-- Fixed potential crash
+- Updated to 1.21.2

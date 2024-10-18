@@ -10,7 +10,7 @@ import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.server.level.ServerLevel;
@@ -172,7 +172,7 @@ public class FarmerTileentity extends VillagerTileentity implements IServerTicka
     @Override
     protected void loadAdditional(CompoundTag compound, HolderLookup.Provider provider) {
         if (compound.contains("Crop")) {
-            crop = NbtUtils.readBlockState(BuiltInRegistries.BLOCK.asLookup(), compound.getCompound("Crop"));
+            crop = NbtUtils.readBlockState(provider.lookupOrThrow(Registries.BLOCK), compound.getCompound("Crop"));
         } else {
             removeSeed();
         }

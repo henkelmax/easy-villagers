@@ -5,6 +5,7 @@ import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -176,7 +177,7 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
     @Override
     protected void loadAdditional(CompoundTag compound, HolderLookup.Provider provider) {
         if (compound.contains("Workstation")) {
-            workstation = BuiltInRegistries.BLOCK.get(ResourceLocation.parse(compound.getString("Workstation")));
+            workstation = BuiltInRegistries.BLOCK.get(ResourceLocation.parse(compound.getString("Workstation"))).map(Holder.Reference::value).orElse(Blocks.AIR);
         } else {
             removeWorkstation();
         }

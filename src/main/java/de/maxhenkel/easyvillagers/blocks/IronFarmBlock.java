@@ -1,16 +1,12 @@
 package de.maxhenkel.easyvillagers.blocks;
 
-import de.maxhenkel.corelib.block.IItemBlock;
 import de.maxhenkel.corelib.blockentity.SimpleBlockEntityTicker;
-import de.maxhenkel.corelib.client.CustomRendererBlockItem;
-import de.maxhenkel.corelib.client.ItemRenderer;
 import de.maxhenkel.corelib.item.ItemUtils;
 import de.maxhenkel.easyvillagers.blocks.tileentity.IronFarmTileentity;
 import de.maxhenkel.easyvillagers.datacomponents.VillagerBlockEntityData;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import de.maxhenkel.easyvillagers.gui.OutputContainer;
 import de.maxhenkel.easyvillagers.items.VillagerItem;
-import de.maxhenkel.easyvillagers.items.render.IronFarmItemRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -40,21 +36,10 @@ import net.neoforged.api.distmarker.OnlyIn;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class IronFarmBlock extends VillagerBlockBase implements EntityBlock, IItemBlock {
+public class IronFarmBlock extends VillagerBlockBase implements EntityBlock {
 
-    public IronFarmBlock() {
-        super(Properties.of().mapColor(MapColor.METAL).strength(2.5F).sound(SoundType.METAL).noOcclusion());
-    }
-
-    @Override
-    public Item toItem() {
-        return new CustomRendererBlockItem(this, new Item.Properties()) {
-            @OnlyIn(Dist.CLIENT)
-            @Override
-            public ItemRenderer createItemRenderer() {
-                return new IronFarmItemRenderer();
-            }
-        };
+    public IronFarmBlock(Properties properties) {
+        super(properties.mapColor(MapColor.METAL).strength(2.5F).sound(SoundType.METAL).noOcclusion());
     }
 
     @Override
@@ -68,7 +53,7 @@ public class IronFarmBlock extends VillagerBlockBase implements EntityBlock, IIt
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack heldItem, BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+    protected InteractionResult useItemOn(ItemStack heldItem, BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         BlockEntity tileEntity = worldIn.getBlockEntity(pos);
         if (!(tileEntity instanceof IronFarmTileentity)) {
             return super.useItemOn(heldItem, state, worldIn, pos, player, handIn, hit);
@@ -78,7 +63,7 @@ public class IronFarmBlock extends VillagerBlockBase implements EntityBlock, IIt
             farm.setVillager(heldItem.copy());
             ItemUtils.decrItemStack(heldItem, player);
             VillagerBlockBase.playVillagerSound(worldIn, pos, SoundEvents.VILLAGER_NO);
-            return ItemInteractionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         } else if (player.isShiftKeyDown() && farm.hasVillager()) {
             ItemStack stack = farm.removeVillager();
             if (heldItem.isEmpty()) {
@@ -90,7 +75,7 @@ public class IronFarmBlock extends VillagerBlockBase implements EntityBlock, IIt
                 }
             }
             VillagerBlockBase.playVillagerSound(worldIn, pos, SoundEvents.VILLAGER_CELEBRATE);
-            return ItemInteractionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         } else {
             player.openMenu(new MenuProvider() {
                 @Override
@@ -104,7 +89,7 @@ public class IronFarmBlock extends VillagerBlockBase implements EntityBlock, IIt
                     return new OutputContainer(id, playerInventory, farm.getOutputInventory(), ContainerLevelAccess.create(worldIn, pos), ModBlocks.IRON_FARM::get);
                 }
             });
-            return ItemInteractionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
     }
 
