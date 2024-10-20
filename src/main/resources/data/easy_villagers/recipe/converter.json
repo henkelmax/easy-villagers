@@ -6,18 +6,10 @@
     "ICI"
   ],
   "key": {
-    "G": {
-      "tag": "c:glass_panes/colorless"
-    },
-    "I": {
-      "tag": "c:ingots/iron"
-    },
-    "F": {
-      "item": "minecraft:rotten_flesh"
-    },
-    "C": {
-      "item": "minecraft:mossy_cobblestone"
-    }
+    "G": "#c:glass_panes/colorless",
+    "I": "#c:ingots/iron",
+    "F": "minecraft:rotten_flesh",
+    "C": "minecraft:mossy_cobblestone"
   },
   "result": {
     "id": "easy_villagers:converter"

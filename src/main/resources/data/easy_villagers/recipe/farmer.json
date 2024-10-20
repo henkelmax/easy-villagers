@@ -6,18 +6,10 @@
     "IDI"
   ],
   "key": {
-    "G": {
-      "tag": "c:glass_panes/colorless"
-    },
-    "I": {
-      "tag": "c:ingots/iron"
-    },
-    "D": {
-      "item": "minecraft:dirt"
-    },
-    "W": {
-      "item": "minecraft:water_bucket"
-    }
+    "G": "#c:glass_panes/colorless",
+    "I": "#c:ingots/iron",
+    "D": "minecraft:dirt",
+    "W": "minecraft:water_bucket"
   },
   "result": {
     "id": "easy_villagers:farmer"

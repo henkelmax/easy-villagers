@@ -6,18 +6,10 @@
     "INI"
   ],
   "key": {
-    "G": {
-      "tag": "c:glass_panes/colorless"
-    },
-    "I": {
-      "tag": "c:ingots/iron"
-    },
-    "R": {
-      "tag": "c:dusts/redstone"
-    },
-    "N": {
-      "tag": "c:ingots/netherite"
-    }
+    "G": "#c:glass_panes/colorless",
+    "I": "#c:ingots/iron",
+    "R": "#c:dusts/redstone",
+    "N": "#c:ingots/netherite"
   },
   "result": {
     "id": "easy_villagers:auto_trader"
