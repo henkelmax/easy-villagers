@@ -2,8 +2,8 @@ package de.maxhenkel.easyvillagers.blocks.tileentity.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.maxhenkel.easyvillagers.blocks.tileentity.FakeWorldTileentity;
+import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.VillagerRenderer;
 import net.minecraft.client.renderer.entity.state.VillagerRenderState;
 import net.minecraft.world.entity.npc.Villager;
@@ -18,8 +18,8 @@ public class VillagerRendererBase<T extends FakeWorldTileentity> extends BlockRe
     @Nullable
     protected static VillagerRenderState villagerRenderState;
 
-    public VillagerRendererBase(BlockEntityRendererProvider.Context renderer) {
-        super(renderer);
+    public VillagerRendererBase(EntityModelSet entityModelSet) {
+        super(entityModelSet);
     }
 
     @Override

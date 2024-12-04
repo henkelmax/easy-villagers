@@ -4,9 +4,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import de.maxhenkel.easyvillagers.blocks.TraderBlock;
 import de.maxhenkel.easyvillagers.blocks.tileentity.BreederTileentity;
+import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BedRenderer;
-import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.VillagerRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -20,8 +20,8 @@ public class BreederRenderer extends VillagerRendererBase<BreederTileentity> {
     private WeakReference<BedRenderer> bedRendererCache = new WeakReference<>(null);
     private WeakReference<BedBlockEntity> bedCache = new WeakReference<>(null);
 
-    public BreederRenderer(BlockEntityRendererProvider.Context renderer) {
-        super(renderer);
+    public BreederRenderer(EntityModelSet entityModelSet) {
+        super(entityModelSet);
     }
 
     @Override
@@ -31,7 +31,7 @@ public class BreederRenderer extends VillagerRendererBase<BreederTileentity> {
 
         BedRenderer bedRenderer = bedRendererCache.get();
         if (bedRenderer == null) {
-            bedRenderer = new BedRenderer(renderer);
+            bedRenderer = new BedRenderer(entityModelSet);
             bedRendererCache = new WeakReference<>(bedRenderer);
         }
 

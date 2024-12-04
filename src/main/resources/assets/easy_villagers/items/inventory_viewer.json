@@ -1,0 +1,9 @@
+{
+    "model": {
+        "type": "minecraft:special",
+        "base": "easy_villagers:item/inventory_viewer",
+        "model": {
+            "type": "easy_villagers:inventory_viewer"
+        }
+    }
+}

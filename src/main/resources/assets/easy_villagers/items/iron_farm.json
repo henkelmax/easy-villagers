@@ -1,0 +1,9 @@
+{
+    "model": {
+        "type": "minecraft:special",
+        "base": "easy_villagers:item/iron_farm",
+        "model": {
+            "type": "easy_villagers:iron_farm"
+        }
+    }
+}

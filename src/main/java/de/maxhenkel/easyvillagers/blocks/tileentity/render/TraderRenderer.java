@@ -7,8 +7,8 @@ import de.maxhenkel.easyvillagers.blocks.TraderBlock;
 import de.maxhenkel.easyvillagers.blocks.tileentity.TraderTileentity;
 import de.maxhenkel.easyvillagers.blocks.tileentity.TraderTileentityBase;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.VillagerRenderer;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -30,8 +30,8 @@ public class TraderRenderer extends VillagerRendererBase<TraderTileentity> {
 
     private static final CachedMap<Block, BlockState> blockStateCache = new CachedMap<>(10_000);
 
-    public TraderRenderer(BlockEntityRendererProvider.Context renderer) {
-        super(renderer);
+    public TraderRenderer(EntityModelSet entityModelSet) {
+        super(entityModelSet);
     }
 
     @Override

@@ -4,15 +4,15 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import de.maxhenkel.easyvillagers.blocks.TraderBlock;
 import de.maxhenkel.easyvillagers.blocks.tileentity.InventoryViewerTileentity;
+import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.VillagerRenderer;
 import net.minecraft.core.Direction;
 
 public class InventoryViewerRenderer extends VillagerRendererBase<InventoryViewerTileentity> {
 
-    public InventoryViewerRenderer(BlockEntityRendererProvider.Context renderer) {
-        super(renderer);
+    public InventoryViewerRenderer(EntityModelSet entityModelSet) {
+        super(entityModelSet);
     }
 
     @Override

@@ -1,7 +1,6 @@
 package de.maxhenkel.easyvillagers;
 
 import de.maxhenkel.corelib.CommonRegistry;
-import de.maxhenkel.corelib.client.CustomRenderItemExtension;
 import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.blocks.tileentity.ModTileEntities;
 import de.maxhenkel.easyvillagers.events.BlockEvents;
@@ -18,6 +17,7 @@ import de.maxhenkel.easyvillagers.net.MessagePickUpVillager;
 import de.maxhenkel.easyvillagers.net.MessageSelectTrade;
 import de.maxhenkel.easyvillagers.net.MessageVillagerParticles;
 import net.minecraft.client.KeyMapping;
+import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.IEventBus;
@@ -27,7 +27,7 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
-import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
+import net.neoforged.neoforge.client.event.RegisterSpecialModelRendererEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
@@ -67,7 +67,7 @@ public class Main {
         if (FMLEnvironment.dist.isClient()) {
             eventBus.addListener(Main.this::clientSetup);
             eventBus.addListener(Main.this::onRegisterKeyBinds);
-            eventBus.addListener(Main.this::onRegisterClientExtensions);
+            eventBus.addListener(Main.this::registerItemModels);
             Containers.initClient(eventBus);
         }
     }
@@ -102,16 +102,17 @@ public class Main {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public void onRegisterClientExtensions(RegisterClientExtensionsEvent event) {
-        event.registerItem(new CustomRenderItemExtension(new AutoTraderItemRenderer()), ModItems.AUTO_TRADER);
-        event.registerItem(new CustomRenderItemExtension(new BreederItemRenderer()), ModItems.BREEDER);
-        event.registerItem(new CustomRenderItemExtension(new ConverterItemRenderer()), ModItems.CONVERTER);
-        event.registerItem(new CustomRenderItemExtension(new FarmerItemRenderer()), ModItems.FARMER);
-        event.registerItem(new CustomRenderItemExtension(new IncubatorItemRenderer()), ModItems.INCUBATOR);
-        event.registerItem(new CustomRenderItemExtension(new InventoryViewerItemRenderer()), ModItems.INVENTORY_VIEWER);
-        event.registerItem(new CustomRenderItemExtension(new IronFarmItemRenderer()), ModItems.IRON_FARM);
-        event.registerItem(new CustomRenderItemExtension(new TraderItemRenderer()), ModItems.TRADER);
-        event.registerItem(new CustomRenderItemExtension(new VillagerItemRenderer()), ModItems.VILLAGER);
+    public void registerItemModels(RegisterSpecialModelRendererEvent event) {
+        event.register(ResourceLocation.fromNamespaceAndPath(MODID, "auto_trader"), AutoTraderSpecialRenderer.Unbaked.MAP_CODEC);
+        event.register(ResourceLocation.fromNamespaceAndPath(MODID, "breeder"), BreederSpecialRenderer.Unbaked.MAP_CODEC);
+        event.register(ResourceLocation.fromNamespaceAndPath(MODID, "converter"), ConverterSpecialRenderer.Unbaked.MAP_CODEC);
+        event.register(ResourceLocation.fromNamespaceAndPath(MODID, "farmer"), FarmerSpecialRenderer.Unbaked.MAP_CODEC);
+        event.register(ResourceLocation.fromNamespaceAndPath(MODID, "incubator"), IncubatorSpecialRenderer.Unbaked.MAP_CODEC);
+        event.register(ResourceLocation.fromNamespaceAndPath(MODID, "inventory_viewer"), InventoryViewerSpecialRenderer.Unbaked.MAP_CODEC);
+        event.register(ResourceLocation.fromNamespaceAndPath(MODID, "trader"), TraderSpecialRenderer.Unbaked.MAP_CODEC);
+        event.register(ResourceLocation.fromNamespaceAndPath(MODID, "iron_farm"), IronFarmSpecialRenderer.Unbaked.MAP_CODEC);
+
+        event.register(ResourceLocation.fromNamespaceAndPath(MODID, "villager"), VillagerSpecialRenderer.Unbaked.MAP_CODEC);
     }
 
 }

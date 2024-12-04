@@ -62,14 +62,14 @@ public class ModTileEntities {
         if (!Main.CLIENT_CONFIG.renderBlockContents.get()) {
             return;
         }
-        BlockEntityRenderers.register(ModTileEntities.TRADER.get(), TraderRenderer::new);
-        BlockEntityRenderers.register(ModTileEntities.AUTO_TRADER.get(), AutoTraderRenderer::new);
-        BlockEntityRenderers.register(ModTileEntities.FARMER.get(), FarmerRenderer::new);
-        BlockEntityRenderers.register(ModTileEntities.BREEDER.get(), BreederRenderer::new);
-        BlockEntityRenderers.register(ModTileEntities.CONVERTER.get(), ConverterRenderer::new);
-        BlockEntityRenderers.register(ModTileEntities.IRON_FARM.get(), IronFarmRenderer::new);
-        BlockEntityRenderers.register(ModTileEntities.INCUBATOR.get(), IncubatorRenderer::new);
-        BlockEntityRenderers.register(ModTileEntities.INVENTORY_VIEWER.get(), InventoryViewerRenderer::new);
+        BlockEntityRenderers.register(ModTileEntities.TRADER.get(), c -> new TraderRenderer(c.getModelSet()));
+        BlockEntityRenderers.register(ModTileEntities.AUTO_TRADER.get(), c -> new AutoTraderRenderer(c.getModelSet()));
+        BlockEntityRenderers.register(ModTileEntities.FARMER.get(), c -> new FarmerRenderer(c.getModelSet()));
+        BlockEntityRenderers.register(ModTileEntities.BREEDER.get(), c -> new BreederRenderer(c.getModelSet()));
+        BlockEntityRenderers.register(ModTileEntities.CONVERTER.get(), c -> new ConverterRenderer(c.getModelSet()));
+        BlockEntityRenderers.register(ModTileEntities.IRON_FARM.get(), c -> new IronFarmRenderer(c.getModelSet()));
+        BlockEntityRenderers.register(ModTileEntities.INCUBATOR.get(), c -> new IncubatorRenderer(c.getModelSet()));
+        BlockEntityRenderers.register(ModTileEntities.INVENTORY_VIEWER.get(), c -> new InventoryViewerRenderer(c.getModelSet()));
     }
 
 }

@@ -4,8 +4,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import de.maxhenkel.easyvillagers.blocks.TraderBlock;
 import de.maxhenkel.easyvillagers.blocks.tileentity.IronFarmTileentity;
+import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.IronGolemRenderer;
 import net.minecraft.client.renderer.entity.VillagerRenderer;
 import net.minecraft.client.renderer.entity.ZombieRenderer;
@@ -28,8 +28,8 @@ public class IronFarmRenderer extends VillagerRendererBase<IronFarmTileentity> {
     protected ZombieRenderState zombieRenderState;
     protected IronGolemRenderState ironGolemRenderState;
 
-    public IronFarmRenderer(BlockEntityRendererProvider.Context renderer) {
-        super(renderer);
+    public IronFarmRenderer(EntityModelSet entityModelSet) {
+        super(entityModelSet);
     }
 
     @Override

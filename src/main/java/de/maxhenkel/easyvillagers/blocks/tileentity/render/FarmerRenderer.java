@@ -5,11 +5,11 @@ import com.mojang.math.Axis;
 import de.maxhenkel.corelib.client.RenderUtils;
 import de.maxhenkel.easyvillagers.blocks.TraderBlock;
 import de.maxhenkel.easyvillagers.blocks.tileentity.FarmerTileentity;
+import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
-import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.VillagerRenderer;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
@@ -17,8 +17,8 @@ import net.neoforged.neoforge.client.model.data.ModelData;
 
 public class FarmerRenderer extends VillagerRendererBase<FarmerTileentity> {
 
-    public FarmerRenderer(BlockEntityRendererProvider.Context renderer) {
-        super(renderer);
+    public FarmerRenderer(EntityModelSet entityModelSet) {
+        super(entityModelSet);
     }
 
     @Override

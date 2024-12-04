@@ -1,0 +1,9 @@
+{
+    "model": {
+        "type": "minecraft:special",
+        "base": "easy_villagers:item/auto_trader",
+        "model": {
+            "type": "easy_villagers:auto_trader"
+        }
+    }
+}

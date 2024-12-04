@@ -5,8 +5,8 @@ import com.mojang.math.Axis;
 import de.maxhenkel.easyvillagers.blocks.TraderBlock;
 import de.maxhenkel.easyvillagers.blocks.tileentity.ConverterTileentity;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
+import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.VillagerRenderer;
 import net.minecraft.client.renderer.entity.ZombieRenderer;
 import net.minecraft.client.renderer.entity.ZombieVillagerRenderer;
@@ -29,8 +29,8 @@ public class ConverterRenderer extends VillagerRendererBase<ConverterTileentity>
     protected ZombieVillagerRenderState zombieVillagerRenderState;
     protected ZombieRenderState zombieRenderState;
 
-    public ConverterRenderer(BlockEntityRendererProvider.Context renderer) {
-        super(renderer);
+    public ConverterRenderer(EntityModelSet entityModelSet) {
+        super(entityModelSet);
     }
 
     @Override

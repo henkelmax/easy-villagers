@@ -2,13 +2,13 @@ package de.maxhenkel.easyvillagers.blocks.tileentity.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.maxhenkel.easyvillagers.blocks.tileentity.AutoTraderTileentity;
+import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 
 public class AutoTraderRenderer extends VillagerRendererBase<AutoTraderTileentity> {
 
-    public AutoTraderRenderer(BlockEntityRendererProvider.Context renderer) {
-        super(renderer);
+    public AutoTraderRenderer(EntityModelSet entityModelSet) {
+        super(entityModelSet);
     }
 
     @Override
