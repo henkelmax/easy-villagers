@@ -53,8 +53,8 @@ public class FarmerTileentity extends VillagerTileentity implements IServerTicka
     @Override
     protected void onAddVillager(EasyVillagerEntity villager) {
         super.onAddVillager(villager);
-        if (villager.getVillagerXp() <= 0 && !villager.getVillagerData().getProfession().equals(VillagerProfession.NITWIT)) {
-            villager.setVillagerData(villager.getVillagerData().setProfession(VillagerProfession.FARMER));
+        if (villager.getVillagerXp() <= 0 && !villager.getVillagerData().profession().is(VillagerProfession.NITWIT)) {
+            villager.setVillagerData(villager.getVillagerData().withProfession(level.registryAccess(), VillagerProfession.FARMER));
         }
     }
 
@@ -135,7 +135,7 @@ public class FarmerTileentity extends VillagerTileentity implements IServerTicka
         int age = c.getValue(p);
 
         if (age >= max) {
-            if (villager == null || villager.isBaby() || !villager.getVillagerData().getProfession().equals(VillagerProfession.FARMER)) {
+            if (villager == null || villager.isBaby() || !villager.getVillagerData().profession().is(VillagerProfession.FARMER)) {
                 return false;
             }
             LootParams.Builder context = new LootParams.Builder((ServerLevel) level).withParameter(LootContextParams.ORIGIN, new Vec3(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ())).withParameter(LootContextParams.BLOCK_STATE, c).withParameter(LootContextParams.TOOL, ItemStack.EMPTY);
@@ -171,8 +171,9 @@ public class FarmerTileentity extends VillagerTileentity implements IServerTicka
 
     @Override
     protected void loadAdditional(CompoundTag compound, HolderLookup.Provider provider) {
-        if (compound.contains("Crop")) {
-            crop = NbtUtils.readBlockState(provider.lookupOrThrow(Registries.BLOCK), compound.getCompound("Crop"));
+        Optional<BlockState> optionalCrop = compound.getCompound("Crop").map(t -> NbtUtils.readBlockState(provider.lookupOrThrow(Registries.BLOCK), t));
+        if (optionalCrop.isPresent()) {
+            crop = optionalCrop.get();
         } else {
             removeSeed();
         }

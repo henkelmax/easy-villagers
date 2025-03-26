@@ -8,6 +8,7 @@ import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.world.phys.Vec3;
 
 public class BlockRendererBase<T extends FakeWorldTileentity> implements BlockEntityRenderer<T> {
 
@@ -19,7 +20,7 @@ public class BlockRendererBase<T extends FakeWorldTileentity> implements BlockEn
     }
 
     @Override
-    public void render(T tileEntity, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
+    public void render(T tileEntity, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay, Vec3 vec) {
 
     }
 

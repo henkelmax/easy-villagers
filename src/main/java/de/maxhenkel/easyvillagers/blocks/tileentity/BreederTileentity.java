@@ -29,6 +29,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.network.PacketDistributor;
 
+import java.util.Optional;
+
 public class BreederTileentity extends FakeWorldTileentity implements IServerTickableBlockEntity {
 
     protected NonNullList<ItemStack> foodInventory;
@@ -162,7 +164,7 @@ public class BreederTileentity extends FakeWorldTileentity implements IServerTic
         for (int i = 0; i < outputInventory.size(); i++) {
             if (outputInventory.get(i).isEmpty()) {
                 EasyVillagerEntity villagerEntity = new EasyVillagerEntity(EntityType.VILLAGER, level);
-                villagerEntity.setVillagerData(villagerEntity.getVillagerData().setType(VillagerType.byBiome(level.getBiome(getBlockPos()))));
+                villagerEntity.setVillagerData(villagerEntity.getVillagerData().withType(level.registryAccess(), VillagerType.byBiome(level.getBiome(getBlockPos()))));
                 villagerEntity.setAge(-24000);
                 ItemStack villager = new ItemStack(ModItems.VILLAGER.get());
                 VillagerData.applyToItem(villager, villagerEntity);
@@ -216,22 +218,23 @@ public class BreederTileentity extends FakeWorldTileentity implements IServerTic
 
     @Override
     protected void loadAdditional(CompoundTag compound, HolderLookup.Provider provider) {
-        if (compound.contains("Villager1")) {
-            CompoundTag comp = compound.getCompound("Villager1");
-            villager1 = VillagerData.convert(provider, comp);
+        Optional<ItemStack> optionalVillager1 = compound.getCompound("Villager1").map(c -> VillagerData.convert(provider, c));
+        if (optionalVillager1.isPresent()) {
+            villager1 = optionalVillager1.get();
             villagerEntity1 = null;
         } else {
             removeVillager1();
         }
-        if (compound.contains("Villager2")) {
-            CompoundTag comp = compound.getCompound("Villager2");
-            villager2 = VillagerData.convert(provider, comp);
+        Optional<ItemStack> optionalVillager2 = compound.getCompound("Villager2").map(c -> VillagerData.convert(provider, c));
+        if (optionalVillager2.isPresent()) {
+            villager2 = optionalVillager2.get();
             villagerEntity2 = null;
         } else {
-            removeVillager2();
+            removeVillager1();
         }
-        VillagerData.convertInventory(compound.getCompound("FoodInventory"), foodInventory, provider);
-        VillagerData.convertInventory(compound.getCompound("OutputInventory"), outputInventory, provider);
+        compound.getCompound("FoodInventory").ifPresent(t -> VillagerData.convertInventory(t, foodInventory, provider));
+        compound.getCompound("OutputInventory").ifPresent(t -> VillagerData.convertInventory(t, outputInventory, provider));
+
         super.loadAdditional(compound, provider);
     }
 

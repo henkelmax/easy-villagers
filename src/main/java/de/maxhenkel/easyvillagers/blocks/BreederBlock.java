@@ -18,7 +18,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.EntityBlock;
@@ -34,7 +33,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
-import java.util.List;
+import java.util.function.Consumer;
 
 public class BreederBlock extends VillagerBlockBase implements EntityBlock {
 
@@ -43,16 +42,16 @@ public class BreederBlock extends VillagerBlockBase implements EntityBlock {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> components, TooltipFlag tooltipFlag) {
-        super.appendHoverText(stack, context, components, tooltipFlag);
+    public void onTooltip(ItemStack stack, Item.TooltipContext context, Consumer<Component> component) {
+        super.onTooltip(stack, context, component);
         BreederTileentity trader = VillagerBlockEntityData.getAndStoreBlockEntity(stack, context.registries(), context.level(), () -> new BreederTileentity(BlockPos.ZERO, ModBlocks.BREEDER.get().defaultBlockState()));
         EasyVillagerEntity villager1 = trader.getVillagerEntity1();
         if (villager1 != null) {
-            components.add(villager1.getAdvancedName());
+            component.accept(villager1.getAdvancedName());
         }
         EasyVillagerEntity villager2 = trader.getVillagerEntity2();
         if (villager2 != null) {
-            components.add(villager2.getAdvancedName());
+            component.accept(villager2.getAdvancedName());
         }
     }
 

@@ -109,7 +109,7 @@ public class GuiEvents {
         Villager villager = (Villager) container.trader;
         villager.offers = null;
         EasyVillagerEntity.recalculateOffers(villager);
-        player.sendMerchantOffers(container.containerId, villager.getOffers(), villager.getVillagerData().getLevel(), villager.getVillagerXp(), villager.showProgressBar(), villager.canRestock());
+        player.sendMerchantOffers(container.containerId, villager.getOffers(), villager.getVillagerData().level(), villager.getVillagerXp(), villager.showProgressBar(), villager.canRestock());
     }
 
 }

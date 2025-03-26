@@ -8,6 +8,7 @@ import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.VillagerRenderer;
 import net.minecraft.core.Direction;
+import net.minecraft.world.phys.Vec3;
 
 public class IncubatorRenderer extends VillagerRendererBase<IncubatorTileentity> {
 
@@ -16,8 +17,8 @@ public class IncubatorRenderer extends VillagerRendererBase<IncubatorTileentity>
     }
 
     @Override
-    public void render(IncubatorTileentity incubator, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
-        super.render(incubator, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
+    public void render(IncubatorTileentity incubator, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay, Vec3 vec) {
+        super.render(incubator, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay, vec);
         matrixStack.pushPose();
 
         Direction direction = Direction.SOUTH;

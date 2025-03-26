@@ -15,6 +15,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.monster.Zombie;
+import net.minecraft.world.phys.Vec3;
 
 import java.lang.ref.WeakReference;
 
@@ -33,8 +34,8 @@ public class IronFarmRenderer extends VillagerRendererBase<IronFarmTileentity> {
     }
 
     @Override
-    public void render(IronFarmTileentity farm, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
-        super.render(farm, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
+    public void render(IronFarmTileentity farm, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay, Vec3 vec) {
+        super.render(farm, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay, vec);
         matrixStack.pushPose();
 
         Zombie zombie = zombieCache.get();

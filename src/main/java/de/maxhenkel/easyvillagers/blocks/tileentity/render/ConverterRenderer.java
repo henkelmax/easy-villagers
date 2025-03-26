@@ -16,6 +16,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.monster.ZombieVillager;
+import net.minecraft.world.phys.Vec3;
 
 import java.lang.ref.WeakReference;
 
@@ -34,8 +35,8 @@ public class ConverterRenderer extends VillagerRendererBase<ConverterTileentity>
     }
 
     @Override
-    public void render(ConverterTileentity converter, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
-        super.render(converter, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
+    public void render(ConverterTileentity converter, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay, Vec3 vec) {
+        super.render(converter, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay, vec);
         matrixStack.pushPose();
 
         ZombieRenderer zombieRenderer = zombieRendererCache.get();

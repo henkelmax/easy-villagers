@@ -2,6 +2,7 @@ package de.maxhenkel.easyvillagers;
 
 import de.maxhenkel.corelib.CommonRegistry;
 import de.maxhenkel.easyvillagers.blocks.ModBlocks;
+import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
 import de.maxhenkel.easyvillagers.blocks.tileentity.ModTileEntities;
 import de.maxhenkel.easyvillagers.events.BlockEvents;
 import de.maxhenkel.easyvillagers.events.GuiEvents;
@@ -17,10 +18,14 @@ import de.maxhenkel.easyvillagers.net.MessagePickUpVillager;
 import de.maxhenkel.easyvillagers.net.MessageSelectTrade;
 import de.maxhenkel.easyvillagers.net.MessageVillagerParticles;
 import net.minecraft.client.KeyMapping;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
@@ -29,11 +34,15 @@ import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.event.RegisterSpecialModelRendererEvent;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
+
+import java.util.LinkedList;
+import java.util.List;
 
 @Mod(Main.MODID)
 public class Main {
@@ -73,6 +82,7 @@ public class Main {
     }
 
     public void commonSetup(FMLCommonSetupEvent event) {
+        NeoForge.EVENT_BUS.register(this);
         NeoForge.EVENT_BUS.register(new VillagerEvents());
         NeoForge.EVENT_BUS.register(new BlockEvents());
     }
@@ -83,6 +93,22 @@ public class Main {
 
         NeoForge.EVENT_BUS.register(new ModSoundEvents());
         NeoForge.EVENT_BUS.register(new GuiEvents());
+    }
+
+    @SubscribeEvent
+    public void onItemTooltip(ItemTooltipEvent event) {
+        ItemStack itemStack = event.getItemStack();
+        if (!(itemStack.getItem() instanceof BlockItem blockItem)) {
+            return;
+        }
+        if (!(blockItem.getBlock() instanceof VillagerBlockBase villagerBlock)) {
+            return;
+        }
+        List<Component> components = new LinkedList<>();
+        villagerBlock.onTooltip(event.getItemStack(), event.getContext(), components::add);
+        for (int i = components.size() - 1; i >= 0; i--) {
+            event.getToolTip().add(1, components.get(i));
+        }
     }
 
     public void onRegisterPayloadHandler(RegisterPayloadHandlersEvent event) {

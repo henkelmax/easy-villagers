@@ -103,8 +103,7 @@ public class VillagerTileentity extends FakeWorldTileentity {
     @Override
     protected void loadAdditional(CompoundTag compound, HolderLookup.Provider provider) {
         if (compound.contains("Villager")) {
-            CompoundTag comp = compound.getCompound("Villager");
-            villager = VillagerData.convert(provider, comp);
+            villager = compound.getCompound("Villager").map(c -> VillagerData.convert(provider, c)).orElse(ItemStack.EMPTY);
             villagerEntity = null;
         } else {
             removeVillager();

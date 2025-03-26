@@ -1,9 +1,7 @@
 package de.maxhenkel.easyvillagers.blocks.tileentity.render;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import de.maxhenkel.easyvillagers.blocks.tileentity.FakeWorldTileentity;
 import net.minecraft.client.model.geom.EntityModelSet;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.VillagerRenderer;
 import net.minecraft.client.renderer.entity.state.VillagerRenderState;
 import net.minecraft.world.entity.npc.Villager;
@@ -20,11 +18,6 @@ public class VillagerRendererBase<T extends FakeWorldTileentity> extends BlockRe
 
     public VillagerRendererBase(EntityModelSet entityModelSet) {
         super(entityModelSet);
-    }
-
-    @Override
-    public void render(T tileEntity, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
-        super.render(tileEntity, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
     }
 
     protected VillagerRenderer getVillagerRenderer() {

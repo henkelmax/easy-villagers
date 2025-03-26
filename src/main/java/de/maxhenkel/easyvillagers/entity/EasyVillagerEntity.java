@@ -2,7 +2,9 @@ package de.maxhenkel.easyvillagers.entity;
 
 import de.maxhenkel.easyvillagers.Main;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.gossip.GossipType;
@@ -16,12 +18,16 @@ import net.minecraft.world.level.Level;
 
 public class EasyVillagerEntity extends Villager {
 
-    public EasyVillagerEntity(EntityType<? extends Villager> type, Level worldIn) {
-        super(type, worldIn);
+    public EasyVillagerEntity(EntityType<? extends Villager> type, Level level) {
+        super(type, level);
     }
 
-    public EasyVillagerEntity(EntityType<? extends Villager> type, Level worldIn, VillagerType villagerType) {
-        super(type, worldIn, villagerType);
+    public EasyVillagerEntity(EntityType<? extends Villager> type, Level level, ResourceKey<VillagerType> villagerTypeResourceKey) {
+        super(type, level, villagerTypeResourceKey);
+    }
+
+    public EasyVillagerEntity(EntityType<? extends Villager> type, Level level, Holder<VillagerType> villagerTypeHolder) {
+        super(type, level, villagerTypeHolder);
     }
 
     @Override
@@ -92,8 +98,8 @@ public class EasyVillagerEntity extends Villager {
             return super.getName();
         }
         VillagerData villagerData = getVillagerData();
-        VillagerProfession profession = villagerData.getProfession();
-        if (profession.equals(VillagerProfession.NONE)) {
+        Holder<VillagerProfession> profession = villagerData.profession();
+        if (profession.is(VillagerProfession.NONE)) {
             return EntityType.VILLAGER.getDescription().copy();
         } else {
             return getTypeName();
@@ -101,7 +107,7 @@ public class EasyVillagerEntity extends Villager {
     }
 
     public Component getAdvancedName() {
-        return Component.translatable("tooltip.easy_villagers.villager_profession", getName().copy(), Component.translatable("merchant.level." + getVillagerData().getLevel())).withStyle(ChatFormatting.GRAY);
+        return Component.translatable("tooltip.easy_villagers.villager_profession", getName().copy(), Component.translatable("merchant.level." + getVillagerData().level())).withStyle(ChatFormatting.GRAY);
     }
 
 }

@@ -9,7 +9,6 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
@@ -22,6 +21,7 @@ import net.minecraft.world.level.Level;
 import javax.annotation.Nullable;
 import java.lang.ref.WeakReference;
 import java.util.Objects;
+import java.util.Optional;
 
 public class VillagerData {
 
@@ -116,11 +116,25 @@ public class VillagerData {
     }
 
     public static void convertInventory(CompoundTag tag, NonNullList<ItemStack> stacks, HolderLookup.Provider provider) {
-        ListTag listtag = tag.getList("Items", Tag.TAG_COMPOUND);
+        Optional<ListTag> optionalItems = tag.getList("Items");
 
-        for (int i = 0; i < listtag.size(); i++) {
-            CompoundTag itemTag = listtag.getCompound(i);
-            int pos = itemTag.getByte("Slot") & 255;
+        if (optionalItems.isEmpty()) {
+            return;
+        }
+
+        ListTag listTag = optionalItems.get();
+
+        for (int i = 0; i < listTag.size(); i++) {
+            Optional<CompoundTag> tagOptional = listTag.getCompound(i);
+            if (tagOptional.isEmpty()) {
+                continue;
+            }
+            CompoundTag itemTag = tagOptional.get();
+            Optional<Byte> optionalByte = itemTag.getByte("Slot");
+            if (optionalByte.isEmpty()) {
+                continue;
+            }
+            int pos = optionalByte.get() & 255;
             if (pos < stacks.size()) {
                 ItemStack convert = convert(provider, itemTag);
                 stacks.set(pos, convert);
@@ -129,7 +143,7 @@ public class VillagerData {
     }
 
     public static ItemStack convert(HolderLookup.Provider provider, CompoundTag itemCompound) {
-        ItemStack stack = ItemStack.parseOptional(provider, itemCompound);
+        ItemStack stack = ItemStack.parse(provider, itemCompound).orElse(ItemStack.EMPTY);
         if (stack.isEmpty()) {
             return stack;
         }
@@ -139,14 +153,16 @@ public class VillagerData {
         if (stack.has(ModItems.VILLAGER_DATA_COMPONENT)) {
             return stack;
         }
-        if (!itemCompound.contains("tag", Tag.TAG_COMPOUND)) {
+        Optional<CompoundTag> tagOptional = itemCompound.getCompound("tag");
+        if (tagOptional.isEmpty()) {
             return stack;
         }
-        CompoundTag tag = itemCompound.getCompound("tag");
-        if (!tag.contains("villager", Tag.TAG_COMPOUND)) {
+        CompoundTag tag = tagOptional.get();
+        Optional<CompoundTag> optionalVillager = tag.getCompound("villager");
+        if (optionalVillager.isEmpty()) {
             return stack;
         }
-        CompoundTag villagerTag = tag.getCompound("villager");
+        CompoundTag villagerTag = optionalVillager.get();
         VillagerData villagerData = VillagerData.of(villagerTag);
         stack.set(ModItems.VILLAGER_DATA_COMPONENT, villagerData);
         return stack;
@@ -165,18 +181,18 @@ public class VillagerData {
             return;
         }
         CompoundTag customTag = customData.copyTag();
-        if (!customTag.contains("villager", Tag.TAG_COMPOUND)) {
+        Optional<CompoundTag> villagerTag = customTag.getCompound("villager");
+        if (villagerTag.isEmpty()) {
             setEmptyVillagerTag(stack);
             return;
         }
-        CompoundTag villagerTag = customTag.getCompound("villager");
         customTag.remove("villager");
         if (customTag.isEmpty()) {
             stack.remove(DataComponents.CUSTOM_DATA);
         } else {
             stack.set(DataComponents.CUSTOM_DATA, CustomData.of(customTag));
         }
-        VillagerData villagerData = VillagerData.of(villagerTag);
+        VillagerData villagerData = VillagerData.of(villagerTag.get());
         stack.set(ModItems.VILLAGER_DATA_COMPONENT, villagerData);
     }
 

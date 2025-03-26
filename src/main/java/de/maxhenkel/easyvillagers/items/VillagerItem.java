@@ -9,22 +9,22 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-
-import java.util.List;
+import org.jetbrains.annotations.Nullable;
 
 import static de.maxhenkel.easyvillagers.datacomponents.VillagerData.getCacheVillager;
 
@@ -38,7 +38,7 @@ public class VillagerItem extends Item {
             BlockPos blockpos = source.pos().relative(direction);
             Level world = source.level();
             Villager villager = VillagerData.getOrCreate(stack).createEasyVillager(world, stack);
-            villager.absMoveTo(blockpos.getX() + 0.5D, blockpos.getY(), blockpos.getZ() + 0.5D, direction.toYRot(), 0F);
+            villager.snapTo(blockpos.getX() + 0.5D, blockpos.getY(), blockpos.getZ() + 0.5D, direction.toYRot(), 0F);
             world.addFreshEntity(villager);
             stack.shrink(1);
             return stack;
@@ -72,11 +72,6 @@ public class VillagerItem extends Item {
         }
     }
 
-    @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flagIn) {
-        super.appendHoverText(stack, context, tooltip, flagIn);
-    }
-
     @OnlyIn(Dist.CLIENT)
     @Override
     public Component getName(ItemStack stack) {
@@ -93,15 +88,15 @@ public class VillagerItem extends Item {
     }
 
     @Override
-    public void inventoryTick(ItemStack stack, Level world, Entity entity, int itemSlot, boolean isSelected) {
-        super.inventoryTick(stack, world, entity, itemSlot, isSelected);
-        if (!(entity instanceof Player) || world.isClientSide) {
+    public void inventoryTick(ItemStack stack, ServerLevel level, Entity entity, @Nullable EquipmentSlot equipmentSlot) {
+        super.inventoryTick(stack, level, entity, equipmentSlot);
+        if (!(entity instanceof Player player)) {
             return;
         }
         if (!Main.SERVER_CONFIG.villagerInventorySounds.get()) {
             return;
         }
-        VillagerBlockBase.playRandomVillagerSound((Player) entity, SoundEvents.VILLAGER_AMBIENT);
+        VillagerBlockBase.playRandomVillagerSound(player, SoundEvents.VILLAGER_AMBIENT);
     }
 
     public static ItemStack createBabyVillager() {

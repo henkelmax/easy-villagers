@@ -13,6 +13,7 @@ import de.maxhenkel.easyvillagers.items.VillagerItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -166,20 +167,16 @@ public class ConverterTileentity extends VillagerTileentity implements IServerTi
         compound.put("OutputInventory", ContainerHelper.saveAllItems(new CompoundTag(), outputInventory, true, provider));
         compound.putLong("Timer", timer);
         if (owner != null) {
-            compound.putUUID("Owner", owner);
+            compound.store("Owner", UUIDUtil.CODEC, owner);
         }
     }
 
     @Override
     protected void loadAdditional(CompoundTag compound, HolderLookup.Provider provider) {
-        VillagerData.convertInventory(compound.getCompound("InputInventory"), inputInventory, provider);
-        VillagerData.convertInventory(compound.getCompound("OutputInventory"), outputInventory, provider);
-        timer = compound.getLong("Timer");
-        if (compound.contains("Owner")) {
-            owner = compound.getUUID("Owner");
-        } else {
-            owner = null;
-        }
+        compound.getCompound("InputInventory").ifPresent(t -> VillagerData.convertInventory(t, inputInventory, provider));
+        compound.getCompound("OutputInventory").ifPresent(t -> VillagerData.convertInventory(t, outputInventory, provider));
+        timer = compound.getLongOr("Timer", 0L);
+        owner = compound.read("Owner", UUIDUtil.CODEC).orElse(null);
         super.loadAdditional(compound, provider);
     }
 

@@ -3,16 +3,21 @@ package de.maxhenkel.easyvillagers.blocks;
 import de.maxhenkel.corelib.block.VoxelUtils;
 import de.maxhenkel.easyvillagers.Main;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+
+import java.util.function.Consumer;
 
 public class VillagerBlockBase extends HorizontalRotatableBlock {
 
@@ -54,4 +59,7 @@ public class VillagerBlockBase extends HorizontalRotatableBlock {
         return SHAPE;
     }
 
+    public void onTooltip(ItemStack stack, Item.TooltipContext context, Consumer<Component> component) {
+
+    }
 }

@@ -238,9 +238,9 @@ public class AutoTraderTileentity extends TraderTileentityBase implements ITicka
     @Override
     protected void loadAdditional(CompoundTag compound, HolderLookup.Provider provider) {
         super.loadAdditional(compound, provider);
-        tradeIndex = compound.getInt("Trade");
-        VillagerData.convertInventory(compound.getCompound("InputInventory"), inputInventory, provider);
-        VillagerData.convertInventory(compound.getCompound("OutputInventory"), outputInventory, provider);
+        tradeIndex = compound.getIntOr("Trade", 0);
+        compound.getCompound("InputInventory").ifPresent(t -> VillagerData.convertInventory(t, inputInventory, provider));
+        compound.getCompound("OutputInventory").ifPresent(t -> VillagerData.convertInventory(t, outputInventory, provider));
     }
 
     public Container getInputInventory() {

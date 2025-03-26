@@ -1,9 +1,9 @@
 package de.maxhenkel.easyvillagers.events;
 
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
+import net.minecraft.util.TriState;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.common.util.TriState;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
 public class BlockEvents {

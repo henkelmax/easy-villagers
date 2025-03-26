@@ -18,7 +18,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.EntityBlock;
@@ -34,7 +33,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
-import java.util.List;
+import java.util.function.Consumer;
 
 public class IronFarmBlock extends VillagerBlockBase implements EntityBlock {
 
@@ -43,12 +42,12 @@ public class IronFarmBlock extends VillagerBlockBase implements EntityBlock {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> components, TooltipFlag tooltipFlag) {
-        super.appendHoverText(stack, context, components, tooltipFlag);
+    public void onTooltip(ItemStack stack, Item.TooltipContext context, Consumer<Component> component) {
+        super.onTooltip(stack, context, component);
         IronFarmTileentity trader = VillagerBlockEntityData.getAndStoreBlockEntity(stack, context.registries(), context.level(), () -> new IronFarmTileentity(BlockPos.ZERO, ModBlocks.IRON_FARM.get().defaultBlockState()));
         EasyVillagerEntity villager = trader.getVillagerEntity();
         if (villager != null) {
-            components.add(villager.getAdvancedName());
+            component.accept(villager.getAdvancedName());
         }
     }
 

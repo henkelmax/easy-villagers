@@ -5,12 +5,11 @@ import de.maxhenkel.corelib.inventory.ItemListInventory;
 import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
+import de.maxhenkel.easyvillagers.gui.VillagerArmorContainer;
 import de.maxhenkel.easyvillagers.gui.VillagerItemStackHandler;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.NonNullList;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.Container;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.items.IItemHandler;
 
@@ -32,7 +31,7 @@ public class InventoryViewerTileentity extends VillagerTileentity implements ISe
     }
 
     public Container getVillagerArmorInventory() {
-        return new ItemListInventory((NonNullList<ItemStack>) getVillagerEntity().getArmorSlots(), this::setChanged);
+        return new VillagerArmorContainer(getVillagerEntity(), this::setChanged);
     }
 
     public IItemHandler getItemHandler() {

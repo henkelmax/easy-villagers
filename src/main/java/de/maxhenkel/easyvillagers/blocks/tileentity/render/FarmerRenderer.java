@@ -6,14 +6,13 @@ import de.maxhenkel.corelib.client.RenderUtils;
 import de.maxhenkel.easyvillagers.blocks.TraderBlock;
 import de.maxhenkel.easyvillagers.blocks.tileentity.FarmerTileentity;
 import net.minecraft.client.model.geom.EntityModelSet;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.entity.VillagerRenderer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.client.model.data.ModelData;
+import net.minecraft.world.phys.Vec3;
 
 public class FarmerRenderer extends VillagerRendererBase<FarmerTileentity> {
 
@@ -22,8 +21,8 @@ public class FarmerRenderer extends VillagerRendererBase<FarmerTileentity> {
     }
 
     @Override
-    public void render(FarmerTileentity farmer, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
-        super.render(farmer, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
+    public void render(FarmerTileentity farmer, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay, Vec3 vec) {
+        super.render(farmer, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay, vec);
         matrixStack.pushPose();
 
         Direction direction = Direction.SOUTH;
@@ -54,10 +53,24 @@ public class FarmerRenderer extends VillagerRendererBase<FarmerTileentity> {
             matrixStack.scale(0.45F, 0.45F, 0.45F);
             matrixStack.translate(0.5D / 0.45D - 0.5D, 0D, 0.5D / 0.45D - 0.5D);
 
-            BlockRenderDispatcher dispatcher = minecraft.getBlockRenderer();
-            int color = minecraft.getBlockColors().getColor(crop, null, null, 0);
-            RenderType renderType = ItemBlockRenderTypes.getRenderType(crop);
-            dispatcher.getModelRenderer().renderModel(matrixStack.last(), buffer.getBuffer(renderType), crop, dispatcher.getBlockModel(crop), RenderUtils.getRed(color), RenderUtils.getGreen(color), RenderUtils.getBlue(color), combinedLight, combinedOverlay, ModelData.EMPTY, renderType);
+            if (minecraft.level != null) {
+                BlockRenderDispatcher dispatcher = minecraft.getBlockRenderer();
+                int color = minecraft.getBlockColors().getColor(crop, null, null, 0);
+                dispatcher.getModelRenderer().renderModel(
+                        matrixStack.last(),
+                        buffer,
+                        dispatcher.getBlockModel(crop),
+                        RenderUtils.getRedFloat(color),
+                        RenderUtils.getGreenFloat(color),
+                        RenderUtils.getBlueFloat(color),
+                        combinedLight,
+                        combinedOverlay,
+                        minecraft.level,
+                        BlockPos.ZERO,
+                        crop
+                );
+            }
+
             matrixStack.popPose();
         }
 

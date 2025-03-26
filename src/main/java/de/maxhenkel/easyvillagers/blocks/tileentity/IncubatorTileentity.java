@@ -85,8 +85,8 @@ public class IncubatorTileentity extends VillagerTileentity implements IServerTi
 
     @Override
     protected void loadAdditional(CompoundTag compound, HolderLookup.Provider provider) {
-        VillagerData.convertInventory(compound.getCompound("InputInventory"), inputInventory, provider);
-        VillagerData.convertInventory(compound.getCompound("OutputInventory"), outputInventory, provider);
+        compound.getCompound("InputInventory").ifPresent(t -> VillagerData.convertInventory(t, inputInventory, provider));
+        compound.getCompound("OutputInventory").ifPresent(t -> VillagerData.convertInventory(t, outputInventory, provider));
         super.loadAdditional(compound, provider);
     }
 

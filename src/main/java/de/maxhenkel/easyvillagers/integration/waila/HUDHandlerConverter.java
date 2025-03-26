@@ -3,6 +3,7 @@ package de.maxhenkel.easyvillagers.integration.waila;
 import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.blocks.tileentity.ConverterTileentity;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.npc.VillagerProfession;
@@ -23,8 +24,8 @@ public class HUDHandlerConverter implements IBlockComponentProvider {
             EasyVillagerEntity villagerEntity = converter.getVillagerEntity();
             if (villagerEntity != null) {
                 if (converter.getTimer() >= ConverterTileentity.getZombifyTime() && converter.getTimer() < ConverterTileentity.getConvertTime()) {
-                    VillagerProfession profession = villagerEntity.getVillagerData().getProfession();
-                    if (profession.equals(VillagerProfession.NONE)) {
+                    Holder<VillagerProfession> profession = villagerEntity.getVillagerData().profession();
+                    if (profession.is(VillagerProfession.NONE)) {
                         iTooltip.add(Component.translatable("entity.minecraft.zombie_villager"));
                     } else {
                         iTooltip.add(Component.translatable("tooltip.easy_villagers.zombie_villager_profession",

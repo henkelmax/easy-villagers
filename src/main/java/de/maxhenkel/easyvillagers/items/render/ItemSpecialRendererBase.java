@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.special.SpecialModelRenderer;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
@@ -37,7 +38,7 @@ public class ItemSpecialRendererBase<T extends FakeWorldTileentity> implements S
         if (blockEntity == null) {
             return;
         }
-        renderer.render(blockEntity, 0F, stack, bufferSource, light, overlay);
+        renderer.render(blockEntity, 0F, stack, bufferSource, light, overlay, Vec3.ZERO);
     }
 
     @Nullable

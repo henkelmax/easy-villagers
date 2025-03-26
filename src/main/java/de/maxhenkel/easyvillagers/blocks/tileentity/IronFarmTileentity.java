@@ -126,7 +126,7 @@ public class IronFarmTileentity extends VillagerTileentity implements ITickableB
     @Override
     protected void loadAdditional(CompoundTag compound, HolderLookup.Provider provider) {
         ContainerHelper.loadAllItems(compound, inventory, provider);
-        timer = compound.getLong("Timer");
+        timer = compound.getLongOr("Timer", 0L);
         super.loadAdditional(compound, provider);
     }
 

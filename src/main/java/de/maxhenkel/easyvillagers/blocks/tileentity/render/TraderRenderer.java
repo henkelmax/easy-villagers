@@ -19,6 +19,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.GrindstoneBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.AttachFace;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,8 +36,8 @@ public class TraderRenderer extends VillagerRendererBase<TraderTileentity> {
     }
 
     @Override
-    public void render(TraderTileentity trader, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
-        super.render(trader, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
+    public void render(TraderTileentity trader, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay, Vec3 vec) {
+        super.render(trader, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay, vec);
         renderTraderBase(getVillagerRenderer(), trader, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
     }
 

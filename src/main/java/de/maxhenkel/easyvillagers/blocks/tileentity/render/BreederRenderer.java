@@ -12,6 +12,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BedBlockEntity;
+import net.minecraft.world.phys.Vec3;
 
 import java.lang.ref.WeakReference;
 
@@ -25,8 +26,8 @@ public class BreederRenderer extends VillagerRendererBase<BreederTileentity> {
     }
 
     @Override
-    public void render(BreederTileentity breeder, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
-        super.render(breeder, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
+    public void render(BreederTileentity breeder, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay, Vec3 vec) {
+        super.render(breeder, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay, vec);
         matrixStack.pushPose();
 
         BedRenderer bedRenderer = bedRendererCache.get();
@@ -78,7 +79,7 @@ public class BreederRenderer extends VillagerRendererBase<BreederTileentity> {
         matrixStack.translate(-0.5D, 0D, -0.5D);
         matrixStack.scale(0.4F, 0.4F, 0.4F);
         matrixStack.translate(0.5D / 0.4D - 0.5D, 0D, 0.5D / 0.4D - 0.5D);
-        bedRenderer.render(bed, 1F, matrixStack, buffer, combinedLight, combinedOverlay);
+        bedRenderer.render(bed, 1F, matrixStack, buffer, combinedLight, combinedOverlay, Vec3.ZERO);
         matrixStack.popPose();
 
         matrixStack.popPose();

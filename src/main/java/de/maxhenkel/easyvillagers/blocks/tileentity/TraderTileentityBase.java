@@ -20,6 +20,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
+import java.util.Optional;
+
 public abstract class TraderTileentityBase extends VillagerTileentity implements IServerTickableBlockEntity {
 
     protected Block workstation;
@@ -59,8 +61,14 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
         return PoiTypes.forState(block.defaultBlockState()).isPresent();
     }
 
-    public VillagerProfession getWorkstationProfession() {
-        return PoiTypes.forState(workstation.defaultBlockState()).flatMap(pointOfInterestType -> BuiltInRegistries.VILLAGER_PROFESSION.stream().filter(villagerProfession -> villagerProfession.heldJobSite().test(pointOfInterestType)).findFirst()).orElse(VillagerProfession.NONE);
+    public Holder<VillagerProfession> getWorkstationProfession() {
+        return PoiTypes.forState(workstation.defaultBlockState())
+                .flatMap(pointOfInterestType -> BuiltInRegistries.VILLAGER_PROFESSION.stream()
+                        .filter(villagerProfession -> villagerProfession.heldJobSite().test(pointOfInterestType))
+                        .findFirst()
+                )
+                .map(Holder::direct)
+                .orElse(BuiltInRegistries.VILLAGER_PROFESSION.get(VillagerProfession.NONE).orElseThrow());
     }
 
     @Override
@@ -74,10 +82,10 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
 
     private void fixProfession() {
         EasyVillagerEntity v = getVillagerEntity();
-        if (v == null || v.getVillagerXp() > 0 || v.getVillagerData().getProfession().equals(VillagerProfession.NITWIT)) {
+        if (v == null || v.getVillagerXp() > 0 || v.getVillagerData().profession().is(VillagerProfession.NITWIT)) {
             return;
         }
-        v.setVillagerData(v.getVillagerData().setProfession(getWorkstationProfession()));
+        v.setVillagerData(v.getVillagerData().withProfession(getWorkstationProfession()));
     }
 
     public boolean openTradingGUI(Player playerEntity) {
@@ -90,8 +98,8 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
             return false;
         }
 
-        VillagerProfession profession = villagerEntity.getVillagerData().getProfession();
-        if (profession.equals(VillagerProfession.NONE) || profession.equals(VillagerProfession.NITWIT)) {
+        Holder<VillagerProfession> profession = villagerEntity.getVillagerData().profession();
+        if (profession.is(VillagerProfession.NONE) || profession.is(VillagerProfession.NITWIT)) {
             return false;
         }
 
@@ -129,7 +137,7 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
                 sync();
             }
 
-            if (level.getGameTime() - getLastRestock() > nextRestock && v.getVillagerData().getProfession().equals(getWorkstationProfession())) {
+            if (level.getGameTime() - getLastRestock() > nextRestock && v.getVillagerData().profession().is(getWorkstationProfession())) {
                 restock();
                 nextRestock = calculateNextRestock();
             }
@@ -147,7 +155,7 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
                 return;
             }
             villagerEntity.restock();
-            SoundEvent workSound = villagerEntity.getVillagerData().getProfession().workSound();
+            SoundEvent workSound = villagerEntity.getVillagerData().profession().value().workSound();
             if (workSound != null) {
                 VillagerBlockBase.playVillagerSound(level, getBlockPos(), workSound);
             }
@@ -176,12 +184,13 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
 
     @Override
     protected void loadAdditional(CompoundTag compound, HolderLookup.Provider provider) {
-        if (compound.contains("Workstation")) {
-            workstation = BuiltInRegistries.BLOCK.get(ResourceLocation.parse(compound.getString("Workstation"))).map(Holder.Reference::value).orElse(Blocks.AIR);
+        Optional<Block> optionalWorkstation = compound.read("Workstation", ResourceLocation.CODEC).map(r -> BuiltInRegistries.BLOCK.get(r).map(Holder.Reference::value).orElse(Blocks.AIR));
+        if (optionalWorkstation.isPresent()) {
+            workstation = optionalWorkstation.get();
         } else {
             removeWorkstation();
         }
-        nextRestock = compound.getLong("NextRestock");
+        nextRestock = compound.getLongOr("NextRestock", 0L);
         super.loadAdditional(compound, provider);
     }
 
