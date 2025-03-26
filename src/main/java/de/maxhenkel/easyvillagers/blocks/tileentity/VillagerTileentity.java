@@ -10,6 +10,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 public class VillagerTileentity extends FakeWorldTileentity {
 
@@ -102,8 +103,9 @@ public class VillagerTileentity extends FakeWorldTileentity {
 
     @Override
     protected void loadAdditional(CompoundTag compound, HolderLookup.Provider provider) {
-        if (compound.contains("Villager")) {
-            villager = compound.getCompound("Villager").map(c -> VillagerData.convert(provider, c)).orElse(ItemStack.EMPTY);
+        Optional<ItemStack> optionalItemStack = compound.getCompound("Villager").map(c -> VillagerData.convert(provider, c));
+        if (optionalItemStack.isPresent()) {
+            villager = optionalItemStack.get();
             villagerEntity = null;
         } else {
             removeVillager();
