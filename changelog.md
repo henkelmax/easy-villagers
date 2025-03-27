@@ -1,1 +1,1 @@
-- Updated to 1.21.5
+- Fixed crash when crafting blocks

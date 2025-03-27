@@ -3,9 +3,9 @@ package de.maxhenkel.easyvillagers.blocks;
 import de.maxhenkel.corelib.blockentity.SimpleBlockEntityTicker;
 import de.maxhenkel.corelib.item.ItemUtils;
 import de.maxhenkel.easyvillagers.blocks.tileentity.IronFarmTileentity;
-import de.maxhenkel.easyvillagers.datacomponents.VillagerBlockEntityData;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import de.maxhenkel.easyvillagers.gui.OutputContainer;
+import de.maxhenkel.easyvillagers.items.BlockItemDataCache;
 import de.maxhenkel.easyvillagers.items.VillagerItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -20,7 +20,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -35,7 +34,7 @@ import net.neoforged.api.distmarker.OnlyIn;
 import javax.annotation.Nullable;
 import java.util.function.Consumer;
 
-public class IronFarmBlock extends VillagerBlockBase implements EntityBlock {
+public class IronFarmBlock extends VillagerBlockBase {
 
     public IronFarmBlock(Properties properties) {
         super(properties.mapColor(MapColor.METAL).strength(2.5F).sound(SoundType.METAL).noOcclusion());
@@ -44,8 +43,15 @@ public class IronFarmBlock extends VillagerBlockBase implements EntityBlock {
     @Override
     public void onTooltip(ItemStack stack, Item.TooltipContext context, Consumer<Component> component) {
         super.onTooltip(stack, context, component);
-        IronFarmTileentity trader = VillagerBlockEntityData.getAndStoreBlockEntity(stack, context.registries(), context.level(), () -> new IronFarmTileentity(BlockPos.ZERO, ModBlocks.IRON_FARM.get().defaultBlockState()));
-        EasyVillagerEntity villager = trader.getVillagerEntity();
+        Level level = context.level();
+        if (level == null) {
+            return;
+        }
+        IronFarmTileentity ironFarm = BlockItemDataCache.get(level, stack, IronFarmTileentity.class);
+        if (ironFarm == null) {
+            return;
+        }
+        EasyVillagerEntity villager = ironFarm.getVillagerEntity();
         if (villager != null) {
             component.accept(villager.getAdvancedName());
         }

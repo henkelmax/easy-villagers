@@ -6,7 +6,6 @@ import de.maxhenkel.easyvillagers.blocks.tileentity.IronFarmTileentity;
 import de.maxhenkel.easyvillagers.blocks.tileentity.render.IronFarmRenderer;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -16,8 +15,8 @@ import java.util.function.Supplier;
 @OnlyIn(Dist.CLIENT)
 public class IronFarmSpecialRenderer extends ItemSpecialRendererBase<IronFarmTileentity> {
 
-    public IronFarmSpecialRenderer(EntityModelSet modelSet, Supplier<BlockState> blockSupplier, Supplier<IronFarmTileentity> blockEntitySupplier) {
-        super(modelSet, blockSupplier, blockEntitySupplier);
+    public IronFarmSpecialRenderer(EntityModelSet modelSet, Supplier<BlockState> blockSupplier) {
+        super(modelSet, blockSupplier, IronFarmTileentity.class);
         renderer = new IronFarmRenderer(modelSet);
     }
 
@@ -37,7 +36,7 @@ public class IronFarmSpecialRenderer extends ItemSpecialRendererBase<IronFarmTil
 
         @Override
         public SpecialModelRenderer<?> bake(EntityModelSet modelSet) {
-            return new IronFarmSpecialRenderer(modelSet, () -> ModBlocks.IRON_FARM.get().defaultBlockState(), () -> new IronFarmTileentity(BlockPos.ZERO, ModBlocks.IRON_FARM.get().defaultBlockState()));
+            return new IronFarmSpecialRenderer(modelSet, () -> ModBlocks.IRON_FARM.get().defaultBlockState());
         }
     }
 }

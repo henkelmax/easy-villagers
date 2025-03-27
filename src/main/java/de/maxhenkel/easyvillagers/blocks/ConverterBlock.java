@@ -2,9 +2,9 @@ package de.maxhenkel.easyvillagers.blocks;
 
 import de.maxhenkel.corelib.blockentity.SimpleBlockEntityTicker;
 import de.maxhenkel.easyvillagers.blocks.tileentity.ConverterTileentity;
-import de.maxhenkel.easyvillagers.datacomponents.VillagerBlockEntityData;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import de.maxhenkel.easyvillagers.gui.ConverterContainer;
+import de.maxhenkel.easyvillagers.items.BlockItemDataCache;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
@@ -18,7 +18,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -33,7 +32,7 @@ import net.neoforged.api.distmarker.OnlyIn;
 import javax.annotation.Nullable;
 import java.util.function.Consumer;
 
-public class ConverterBlock extends VillagerBlockBase implements EntityBlock {
+public class ConverterBlock extends VillagerBlockBase {
 
     public ConverterBlock(Properties properties) {
         super(properties.mapColor(MapColor.METAL).strength(2.5F).sound(SoundType.METAL).noOcclusion());
@@ -42,8 +41,15 @@ public class ConverterBlock extends VillagerBlockBase implements EntityBlock {
     @Override
     public void onTooltip(ItemStack stack, Item.TooltipContext context, Consumer<Component> component) {
         super.onTooltip(stack, context, component);
-        ConverterTileentity trader = VillagerBlockEntityData.getAndStoreBlockEntity(stack, context.registries(), context.level(), () -> new ConverterTileentity(BlockPos.ZERO, ModBlocks.CONVERTER.get().defaultBlockState()));
-        EasyVillagerEntity villager = trader.getVillagerEntity();
+        Level level = context.level();
+        if (level == null) {
+            return;
+        }
+        ConverterTileentity converter = BlockItemDataCache.get(level, stack, ConverterTileentity.class);
+        if (converter == null) {
+            return;
+        }
+        EasyVillagerEntity villager = converter.getVillagerEntity();
         if (villager != null) {
             component.accept(villager.getAdvancedName());
         }

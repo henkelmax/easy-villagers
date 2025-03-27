@@ -6,7 +6,6 @@ import de.maxhenkel.easyvillagers.blocks.tileentity.ConverterTileentity;
 import de.maxhenkel.easyvillagers.blocks.tileentity.render.ConverterRenderer;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -16,8 +15,8 @@ import java.util.function.Supplier;
 @OnlyIn(Dist.CLIENT)
 public class ConverterSpecialRenderer extends ItemSpecialRendererBase<ConverterTileentity> {
 
-    public ConverterSpecialRenderer(EntityModelSet modelSet, Supplier<BlockState> blockSupplier, Supplier<ConverterTileentity> blockEntitySupplier) {
-        super(modelSet, blockSupplier, blockEntitySupplier);
+    public ConverterSpecialRenderer(EntityModelSet modelSet, Supplier<BlockState> blockSupplier) {
+        super(modelSet, blockSupplier, ConverterTileentity.class);
         renderer = new ConverterRenderer(modelSet);
     }
 
@@ -37,7 +36,7 @@ public class ConverterSpecialRenderer extends ItemSpecialRendererBase<ConverterT
 
         @Override
         public SpecialModelRenderer<?> bake(EntityModelSet modelSet) {
-            return new ConverterSpecialRenderer(modelSet, () -> ModBlocks.CONVERTER.get().defaultBlockState(), () -> new ConverterTileentity(BlockPos.ZERO, ModBlocks.CONVERTER.get().defaultBlockState()));
+            return new ConverterSpecialRenderer(modelSet, () -> ModBlocks.CONVERTER.get().defaultBlockState());
         }
     }
 }

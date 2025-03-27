@@ -3,7 +3,7 @@ package de.maxhenkel.easyvillagers.items.render;
 import com.mojang.blaze3d.vertex.PoseStack;
 import de.maxhenkel.easyvillagers.blocks.tileentity.FakeWorldTileentity;
 import de.maxhenkel.easyvillagers.blocks.tileentity.render.BlockRendererBase;
-import de.maxhenkel.easyvillagers.datacomponents.VillagerBlockEntityData;
+import de.maxhenkel.easyvillagers.items.BlockItemDataCache;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -25,11 +25,11 @@ public class ItemSpecialRendererBase<T extends FakeWorldTileentity> implements S
 
     protected BlockRendererBase<T> renderer;
     protected Supplier<BlockState> blockSupplier;
-    protected Supplier<T> blockEntitySupplier;
+    protected Class<T> typeClass;
 
-    public ItemSpecialRendererBase(EntityModelSet modelSet, Supplier<BlockState> blockSupplier, Supplier<T> blockEntitySupplier) {
+    public ItemSpecialRendererBase(EntityModelSet modelSet, Supplier<BlockState> blockSupplier, Class<T> typeClass) {
         this.blockSupplier = blockSupplier;
-        this.blockEntitySupplier = blockEntitySupplier;
+        this.typeClass = typeClass;
     }
 
     @Override
@@ -44,7 +44,7 @@ public class ItemSpecialRendererBase<T extends FakeWorldTileentity> implements S
     @Nullable
     @Override
     public T extractArgument(ItemStack stack) {
-        return VillagerBlockEntityData.getAndStoreBlockEntity(stack, minecraft.level.registryAccess(), minecraft.level, blockEntitySupplier);
+        return BlockItemDataCache.get(minecraft.level, stack, typeClass);
     }
 }
 

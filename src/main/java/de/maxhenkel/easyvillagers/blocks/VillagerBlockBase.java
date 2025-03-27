@@ -13,13 +13,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.function.Consumer;
 
-public class VillagerBlockBase extends HorizontalRotatableBlock {
+public abstract class VillagerBlockBase extends HorizontalRotatableBlock implements EntityBlock {
 
     private static final VoxelShape SHAPE = VoxelUtils.combine(
             Block.box(0D, 0D, 0D, 16D, 1D, 16D),

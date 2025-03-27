@@ -6,7 +6,6 @@ import de.maxhenkel.easyvillagers.blocks.tileentity.InventoryViewerTileentity;
 import de.maxhenkel.easyvillagers.blocks.tileentity.render.InventoryViewerRenderer;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -16,8 +15,8 @@ import java.util.function.Supplier;
 @OnlyIn(Dist.CLIENT)
 public class InventoryViewerSpecialRenderer extends ItemSpecialRendererBase<InventoryViewerTileentity> {
 
-    public InventoryViewerSpecialRenderer(EntityModelSet modelSet, Supplier<BlockState> blockSupplier, Supplier<InventoryViewerTileentity> blockEntitySupplier) {
-        super(modelSet, blockSupplier, blockEntitySupplier);
+    public InventoryViewerSpecialRenderer(EntityModelSet modelSet, Supplier<BlockState> blockSupplier) {
+        super(modelSet, blockSupplier, InventoryViewerTileentity.class);
         renderer = new InventoryViewerRenderer(modelSet);
     }
 
@@ -37,7 +36,7 @@ public class InventoryViewerSpecialRenderer extends ItemSpecialRendererBase<Inve
 
         @Override
         public SpecialModelRenderer<?> bake(EntityModelSet modelSet) {
-            return new InventoryViewerSpecialRenderer(modelSet, () -> ModBlocks.INVENTORY_VIEWER.get().defaultBlockState(), () -> new InventoryViewerTileentity(BlockPos.ZERO, ModBlocks.INVENTORY_VIEWER.get().defaultBlockState()));
+            return new InventoryViewerSpecialRenderer(modelSet, () -> ModBlocks.INVENTORY_VIEWER.get().defaultBlockState());
         }
     }
 }

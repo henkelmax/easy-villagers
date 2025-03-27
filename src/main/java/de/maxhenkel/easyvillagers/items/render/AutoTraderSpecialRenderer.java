@@ -6,7 +6,6 @@ import de.maxhenkel.easyvillagers.blocks.tileentity.AutoTraderTileentity;
 import de.maxhenkel.easyvillagers.blocks.tileentity.render.AutoTraderRenderer;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -16,8 +15,8 @@ import java.util.function.Supplier;
 @OnlyIn(Dist.CLIENT)
 public class AutoTraderSpecialRenderer extends ItemSpecialRendererBase<AutoTraderTileentity> {
 
-    public AutoTraderSpecialRenderer(EntityModelSet modelSet, Supplier<BlockState> blockSupplier, Supplier<AutoTraderTileentity> blockEntitySupplier) {
-        super(modelSet, blockSupplier, blockEntitySupplier);
+    public AutoTraderSpecialRenderer(EntityModelSet modelSet, Supplier<BlockState> blockSupplier) {
+        super(modelSet, blockSupplier, AutoTraderTileentity.class);
         renderer = new AutoTraderRenderer(modelSet);
     }
 
@@ -37,7 +36,7 @@ public class AutoTraderSpecialRenderer extends ItemSpecialRendererBase<AutoTrade
 
         @Override
         public SpecialModelRenderer<?> bake(EntityModelSet modelSet) {
-            return new AutoTraderSpecialRenderer(modelSet, () -> ModBlocks.AUTO_TRADER.get().defaultBlockState(), () -> new AutoTraderTileentity(BlockPos.ZERO, ModBlocks.AUTO_TRADER.get().defaultBlockState()));
+            return new AutoTraderSpecialRenderer(modelSet, () -> ModBlocks.AUTO_TRADER.get().defaultBlockState());
         }
     }
 }
