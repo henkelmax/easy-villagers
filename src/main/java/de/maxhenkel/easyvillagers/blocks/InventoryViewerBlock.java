@@ -3,9 +3,9 @@ package de.maxhenkel.easyvillagers.blocks;
 import de.maxhenkel.corelib.blockentity.SimpleBlockEntityTicker;
 import de.maxhenkel.corelib.item.ItemUtils;
 import de.maxhenkel.easyvillagers.blocks.tileentity.InventoryViewerTileentity;
-import de.maxhenkel.easyvillagers.datacomponents.VillagerBlockEntityData;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import de.maxhenkel.easyvillagers.gui.InventoryViewerContainer;
+import de.maxhenkel.easyvillagers.items.BlockItemDataCache;
 import de.maxhenkel.easyvillagers.items.VillagerItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -22,7 +22,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -37,7 +36,7 @@ import net.neoforged.api.distmarker.OnlyIn;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class InventoryViewerBlock extends VillagerBlockBase implements EntityBlock {
+public class InventoryViewerBlock extends VillagerBlockBase {
 
     public InventoryViewerBlock(Properties properties) {
         super(properties.mapColor(MapColor.METAL).strength(2.5F).sound(SoundType.METAL).noOcclusion());
@@ -46,8 +45,15 @@ public class InventoryViewerBlock extends VillagerBlockBase implements EntityBlo
     @Override
     public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> components, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, context, components, tooltipFlag);
-        InventoryViewerTileentity trader = VillagerBlockEntityData.getAndStoreBlockEntity(stack, context.registries(), context.level(), () -> new InventoryViewerTileentity(BlockPos.ZERO, ModBlocks.INVENTORY_VIEWER.get().defaultBlockState()));
-        EasyVillagerEntity villager = trader.getVillagerEntity();
+        Level level = context.level();
+        if (level == null) {
+            return;
+        }
+        InventoryViewerTileentity invViewer = BlockItemDataCache.get(level, stack, InventoryViewerTileentity.class);
+        if (invViewer == null) {
+            return;
+        }
+        EasyVillagerEntity villager = invViewer.getVillagerEntity();
         if (villager != null) {
             components.add(villager.getAdvancedName());
         }

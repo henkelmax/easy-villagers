@@ -6,7 +6,6 @@ import de.maxhenkel.easyvillagers.blocks.tileentity.FarmerTileentity;
 import de.maxhenkel.easyvillagers.blocks.tileentity.render.FarmerRenderer;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -16,8 +15,8 @@ import java.util.function.Supplier;
 @OnlyIn(Dist.CLIENT)
 public class FarmerSpecialRenderer extends ItemSpecialRendererBase<FarmerTileentity> {
 
-    public FarmerSpecialRenderer(EntityModelSet modelSet, Supplier<BlockState> blockSupplier, Supplier<FarmerTileentity> blockEntitySupplier) {
-        super(modelSet, blockSupplier, blockEntitySupplier);
+    public FarmerSpecialRenderer(EntityModelSet modelSet, Supplier<BlockState> blockSupplier) {
+        super(modelSet, blockSupplier, FarmerTileentity.class);
         renderer = new FarmerRenderer(modelSet);
     }
 
@@ -37,7 +36,7 @@ public class FarmerSpecialRenderer extends ItemSpecialRendererBase<FarmerTileent
 
         @Override
         public SpecialModelRenderer<?> bake(EntityModelSet modelSet) {
-            return new FarmerSpecialRenderer(modelSet, () -> ModBlocks.FARMER.get().defaultBlockState(), () -> new FarmerTileentity(BlockPos.ZERO, ModBlocks.FARMER.get().defaultBlockState()));
+            return new FarmerSpecialRenderer(modelSet, () -> ModBlocks.FARMER.get().defaultBlockState());
         }
     }
 }

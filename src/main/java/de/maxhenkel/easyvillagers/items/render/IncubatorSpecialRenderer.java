@@ -6,7 +6,6 @@ import de.maxhenkel.easyvillagers.blocks.tileentity.IncubatorTileentity;
 import de.maxhenkel.easyvillagers.blocks.tileentity.render.IncubatorRenderer;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -16,8 +15,8 @@ import java.util.function.Supplier;
 @OnlyIn(Dist.CLIENT)
 public class IncubatorSpecialRenderer extends ItemSpecialRendererBase<IncubatorTileentity> {
 
-    public IncubatorSpecialRenderer(EntityModelSet modelSet, Supplier<BlockState> blockSupplier, Supplier<IncubatorTileentity> blockEntitySupplier) {
-        super(modelSet, blockSupplier, blockEntitySupplier);
+    public IncubatorSpecialRenderer(EntityModelSet modelSet, Supplier<BlockState> blockSupplier) {
+        super(modelSet, blockSupplier, IncubatorTileentity.class);
         renderer = new IncubatorRenderer(modelSet);
     }
 
@@ -37,7 +36,7 @@ public class IncubatorSpecialRenderer extends ItemSpecialRendererBase<IncubatorT
 
         @Override
         public SpecialModelRenderer<?> bake(EntityModelSet modelSet) {
-            return new IncubatorSpecialRenderer(modelSet, () -> ModBlocks.INCUBATOR.get().defaultBlockState(), () -> new IncubatorTileentity(BlockPos.ZERO, ModBlocks.INCUBATOR.get().defaultBlockState()));
+            return new IncubatorSpecialRenderer(modelSet, () -> ModBlocks.INCUBATOR.get().defaultBlockState());
         }
     }
 }

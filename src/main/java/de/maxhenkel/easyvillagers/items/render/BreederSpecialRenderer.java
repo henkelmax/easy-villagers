@@ -6,7 +6,6 @@ import de.maxhenkel.easyvillagers.blocks.tileentity.BreederTileentity;
 import de.maxhenkel.easyvillagers.blocks.tileentity.render.BreederRenderer;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -16,8 +15,8 @@ import java.util.function.Supplier;
 @OnlyIn(Dist.CLIENT)
 public class BreederSpecialRenderer extends ItemSpecialRendererBase<BreederTileentity> {
 
-    public BreederSpecialRenderer(EntityModelSet modelSet, Supplier<BlockState> blockSupplier, Supplier<BreederTileentity> blockEntitySupplier) {
-        super(modelSet, blockSupplier, blockEntitySupplier);
+    public BreederSpecialRenderer(EntityModelSet modelSet, Supplier<BlockState> blockSupplier) {
+        super(modelSet, blockSupplier, BreederTileentity.class);
         renderer = new BreederRenderer(modelSet);
     }
 
@@ -37,7 +36,7 @@ public class BreederSpecialRenderer extends ItemSpecialRendererBase<BreederTilee
 
         @Override
         public SpecialModelRenderer<?> bake(EntityModelSet modelSet) {
-            return new BreederSpecialRenderer(modelSet, () -> ModBlocks.BREEDER.get().defaultBlockState(), () -> new BreederTileentity(BlockPos.ZERO, ModBlocks.BREEDER.get().defaultBlockState()));
+            return new BreederSpecialRenderer(modelSet, () -> ModBlocks.BREEDER.get().defaultBlockState());
         }
     }
 }

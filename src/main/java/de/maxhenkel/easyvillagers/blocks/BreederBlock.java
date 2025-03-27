@@ -3,9 +3,9 @@ package de.maxhenkel.easyvillagers.blocks;
 import de.maxhenkel.corelib.blockentity.SimpleBlockEntityTicker;
 import de.maxhenkel.corelib.item.ItemUtils;
 import de.maxhenkel.easyvillagers.blocks.tileentity.BreederTileentity;
-import de.maxhenkel.easyvillagers.datacomponents.VillagerBlockEntityData;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import de.maxhenkel.easyvillagers.gui.BreederContainer;
+import de.maxhenkel.easyvillagers.items.BlockItemDataCache;
 import de.maxhenkel.easyvillagers.items.VillagerItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -21,7 +21,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -36,7 +35,7 @@ import net.neoforged.api.distmarker.OnlyIn;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class BreederBlock extends VillagerBlockBase implements EntityBlock {
+public class BreederBlock extends VillagerBlockBase {
 
     public BreederBlock(Properties properties) {
         super(properties.mapColor(MapColor.METAL).strength(2.5F).sound(SoundType.METAL).noOcclusion());
@@ -45,12 +44,19 @@ public class BreederBlock extends VillagerBlockBase implements EntityBlock {
     @Override
     public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> components, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, context, components, tooltipFlag);
-        BreederTileentity trader = VillagerBlockEntityData.getAndStoreBlockEntity(stack, context.registries(), context.level(), () -> new BreederTileentity(BlockPos.ZERO, ModBlocks.BREEDER.get().defaultBlockState()));
-        EasyVillagerEntity villager1 = trader.getVillagerEntity1();
+        Level level = context.level();
+        if (level == null) {
+            return;
+        }
+        BreederTileentity breeder = BlockItemDataCache.get(level, stack, BreederTileentity.class);
+        if (breeder == null) {
+            return;
+        }
+        EasyVillagerEntity villager1 = breeder.getVillagerEntity1();
         if (villager1 != null) {
             components.add(villager1.getAdvancedName());
         }
-        EasyVillagerEntity villager2 = trader.getVillagerEntity2();
+        EasyVillagerEntity villager2 = breeder.getVillagerEntity2();
         if (villager2 != null) {
             components.add(villager2.getAdvancedName());
         }
