@@ -12,6 +12,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.entity.ai.village.poi.PoiTypes;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.player.Player;
@@ -62,13 +63,19 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
     }
 
     public Holder<VillagerProfession> getWorkstationProfession() {
-        return PoiTypes.forState(workstation.defaultBlockState())
-                .flatMap(pointOfInterestType -> BuiltInRegistries.VILLAGER_PROFESSION.stream()
-                        .filter(villagerProfession -> villagerProfession.heldJobSite().test(pointOfInterestType))
-                        .findFirst()
-                )
-                .map(Holder::direct)
-                .orElse(BuiltInRegistries.VILLAGER_PROFESSION.get(VillagerProfession.NONE).orElseThrow());
+        Optional<Holder<PoiType>> poiTypeHolder = PoiTypes.forState(workstation.defaultBlockState());
+        if (poiTypeHolder.isEmpty()) {
+            return BuiltInRegistries.VILLAGER_PROFESSION.get(VillagerProfession.NONE).orElseThrow();
+        }
+
+        Holder<PoiType> poiType = poiTypeHolder.get();
+        for (VillagerProfession profession : BuiltInRegistries.VILLAGER_PROFESSION) {
+            if (profession.heldJobSite().test(poiType)) {
+                return BuiltInRegistries.VILLAGER_PROFESSION.wrapAsHolder(profession);
+            }
+        }
+
+        return BuiltInRegistries.VILLAGER_PROFESSION.get(VillagerProfession.NONE).orElseThrow();
     }
 
     @Override

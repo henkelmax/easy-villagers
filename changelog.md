@@ -1,1 +1,1 @@
-- Fixed crash when crafting blocks
+- Fixed crash when taking a villager from a trader
