@@ -1,1 +1,1 @@
-- Fixed crash when crafting blocks
+- Added farm crops blacklist
