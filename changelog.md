@@ -1,1 +1,1 @@
-- Fixed crash when taking a villager from a trader
+- Added farm crops blacklist

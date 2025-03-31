@@ -89,6 +89,9 @@ public class FarmerTileentity extends VillagerTileentity implements IServerTicka
         if (!seedStack.is(ItemTags.VILLAGER_PLANTABLE_SEEDS)) {
             return null;
         }
+        if (Main.SERVER_CONFIG.farmCropsBlacklist.stream().anyMatch(itemTag -> itemTag.contains(seed))) {
+            return null;
+        }
         return blockitem.getBlock().defaultBlockState();
     }
 
