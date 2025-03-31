@@ -58,7 +58,7 @@ public class Main {
         ModCreativeTabs.init(eventBus);
         ModLootTables.init(eventBus);
 
-        SERVER_CONFIG = CommonRegistry.registerConfig(MODID, ModConfig.Type.SERVER, ServerConfig.class);
+        SERVER_CONFIG = CommonRegistry.registerConfig(MODID, ModConfig.Type.SERVER, ServerConfig.class, true);
         CLIENT_CONFIG = CommonRegistry.registerConfig(MODID, ModConfig.Type.CLIENT, ClientConfig.class);
 
         if (FMLEnvironment.dist.isClient()) {
