@@ -95,6 +95,9 @@ public class FarmerTileentity extends VillagerTileentity implements IServerTicka
     }
 
     public BlockState getSeedCrop(Item seed) {
+        if (Main.SERVER_CONFIG.farmCropsBlacklist.stream().anyMatch(itemTag -> itemTag.contains(seed))) {
+            return null;
+        }
         if (seed == Items.WHEAT_SEEDS) {
             return Blocks.WHEAT.defaultBlockState();
         } else if (seed == Items.POTATO) {

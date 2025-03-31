@@ -52,7 +52,7 @@ public class Main {
         Containers.init();
         ModCreativeTabs.init();
 
-        SERVER_CONFIG = CommonRegistry.registerConfig(ModConfig.Type.SERVER, ServerConfig.class);
+        SERVER_CONFIG = CommonRegistry.registerConfig(ModConfig.Type.SERVER, ServerConfig.class, true);
         CLIENT_CONFIG = CommonRegistry.registerConfig(ModConfig.Type.CLIENT, ClientConfig.class);
 
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {

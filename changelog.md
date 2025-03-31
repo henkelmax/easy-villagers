@@ -1,1 +1,1 @@
-- Fixed potential crash
+- Added farm crops blacklist

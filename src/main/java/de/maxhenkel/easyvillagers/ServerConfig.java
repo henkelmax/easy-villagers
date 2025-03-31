@@ -1,13 +1,23 @@
 package de.maxhenkel.easyvillagers;
 
 import de.maxhenkel.corelib.config.ConfigBase;
+import de.maxhenkel.corelib.tag.Tag;
+import de.maxhenkel.corelib.tag.TagUtils;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class ServerConfig extends ConfigBase {
 
     public final ForgeConfigSpec.IntValue breedingTime;
     public final ForgeConfigSpec.IntValue convertingTime;
     public final ForgeConfigSpec.IntValue farmSpeed;
+    private final ForgeConfigSpec.ConfigValue<List<? extends String>> farmCropsBlacklistSpec;
     public final ForgeConfigSpec.IntValue golemSpawnTime;
     public final ForgeConfigSpec.IntValue traderMinRestockTime;
     public final ForgeConfigSpec.IntValue traderMaxRestockTime;
@@ -19,6 +29,8 @@ public class ServerConfig extends ConfigBase {
     public final ForgeConfigSpec.IntValue incubatorSpeed;
     public final ForgeConfigSpec.BooleanValue tradeCycling;
     public final ForgeConfigSpec.BooleanValue universalReputation;
+
+    public List<Tag<Item>> farmCropsBlacklist;
 
     public ServerConfig(ForgeConfigSpec.Builder builder) {
         super(builder);
@@ -35,6 +47,12 @@ public class ServerConfig extends ConfigBase {
                 .comment("The chance that a crop grows a stage in a farmer")
                 .comment("Lower values mean faster growth")
                 .defineInRange("farmer.farm_speed", 10, 1, Integer.MAX_VALUE);
+
+        farmCropsBlacklistSpec = builder
+                .comment("The crops that the farmer will not use", "Entries starting with '#' are treated as tags")
+                .defineList("farmer.crop_blacklist", Arrays.asList(
+                        "#easy_villagers:invalid_farmer_crop"
+                ), Objects::nonNull);
 
         golemSpawnTime = builder
                 .comment("The time in ticks the iron farm takes to spawn a golem")
@@ -83,6 +101,16 @@ public class ServerConfig extends ConfigBase {
                 )
                 .define("villager.universal_reputation", true);
 
+    }
+
+    @Override
+    public void onReload(ModConfigEvent event) {
+        super.onReload(event);
+        onConfigChange();
+    }
+
+    private void onConfigChange() {
+        farmCropsBlacklist = farmCropsBlacklistSpec.get().stream().map(s -> TagUtils.getItem(s, true)).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
 }
