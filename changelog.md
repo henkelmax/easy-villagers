@@ -1,1 +1,1 @@
-- Added farm crops blacklist
+- Fixed infinite trading issue if villager gets removed
