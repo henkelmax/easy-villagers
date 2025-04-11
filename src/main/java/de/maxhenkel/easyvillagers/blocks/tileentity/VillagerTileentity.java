@@ -50,6 +50,8 @@ public class VillagerTileentity extends FakeWorldTileentity {
     public void setVillager(ItemStack villager) {
         this.villager = villager;
 
+        removeTradingPlayer();
+
         if (villager.isEmpty()) {
             villagerEntity = null;
         } else {
@@ -58,6 +60,12 @@ public class VillagerTileentity extends FakeWorldTileentity {
         }
         setChanged();
         sync();
+    }
+
+    public void removeTradingPlayer() {
+        if (villagerEntity != null) {
+            villagerEntity.setTradingPlayer(null);
+        }
     }
 
     protected void onAddVillager(EasyVillagerEntity villager) {
@@ -90,6 +98,12 @@ public class VillagerTileentity extends FakeWorldTileentity {
 
     public static boolean advanceAge(EasyVillagerEntity villagerEntity) {
         return advanceAge(villagerEntity, 1);
+    }
+
+    @Override
+    public void setRemoved() {
+        removeTradingPlayer();
+        super.setRemoved();
     }
 
     @Override
