@@ -1,1 +1,1 @@
-- Fixed infinite trading issue if villager gets removed
+- Updated JEI dependency

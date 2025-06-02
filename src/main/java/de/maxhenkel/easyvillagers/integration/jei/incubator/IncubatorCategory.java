@@ -11,8 +11,8 @@ import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
-import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -38,12 +38,12 @@ public class IncubatorCategory implements IRecipeCategory<ItemStack> {
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, ItemStack recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 1, 1).addIngredient(VanillaTypes.ITEM_STACK, recipe);
+        builder.addSlot(RecipeIngredientRole.INPUT, 1, 1).add(VanillaTypes.ITEM_STACK, recipe);
         builder.addSlot(RecipeIngredientRole.INPUT, 19, 1);
         builder.addSlot(RecipeIngredientRole.INPUT, 37, 1);
         builder.addSlot(RecipeIngredientRole.INPUT, 55, 1);
 
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 1, 32).addIngredient(VanillaTypes.ITEM_STACK, getOutput(recipe));
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 1, 32).add(VanillaTypes.ITEM_STACK, getOutput(recipe));
         builder.addSlot(RecipeIngredientRole.OUTPUT, 19, 32);
         builder.addSlot(RecipeIngredientRole.OUTPUT, 37, 32);
         builder.addSlot(RecipeIngredientRole.OUTPUT, 55, 32);
@@ -63,7 +63,7 @@ public class IncubatorCategory implements IRecipeCategory<ItemStack> {
     }
 
     @Override
-    public RecipeType<ItemStack> getRecipeType() {
+    public IRecipeType<ItemStack> getRecipeType() {
         return JEIPlugin.CATEGORY_INCUBATING;
     }
 

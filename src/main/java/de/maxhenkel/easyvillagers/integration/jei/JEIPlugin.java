@@ -8,8 +8,7 @@ import de.maxhenkel.easyvillagers.integration.jei.incubator.IncubatorCategory;
 import de.maxhenkel.easyvillagers.items.VillagerItem;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
-import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.recipe.RecipeType;
+import mezz.jei.api.recipe.types.IRecipeType;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
@@ -27,9 +26,9 @@ import java.util.List;
 @JeiPlugin
 public class JEIPlugin implements IModPlugin {
 
-    public static final RecipeType<ItemStack> CATEGORY_BREEDING = RecipeType.create(Main.MODID, "breeding", ItemStack.class);
-    public static final RecipeType<ItemStack> CATEGORY_CONVERTING = RecipeType.create(Main.MODID, "converting", ItemStack.class);
-    public static final RecipeType<ItemStack> CATEGORY_INCUBATING = RecipeType.create(Main.MODID, "incubating", ItemStack.class);
+    public static final IRecipeType<ItemStack> CATEGORY_BREEDING = IRecipeType.create(Main.MODID, "breeding", ItemStack.class);
+    public static final IRecipeType<ItemStack> CATEGORY_CONVERTING = IRecipeType.create(Main.MODID, "converting", ItemStack.class);
+    public static final IRecipeType<ItemStack> CATEGORY_INCUBATING = IRecipeType.create(Main.MODID, "incubating", ItemStack.class);
 
     @Override
     public ResourceLocation getPluginUid() {
@@ -38,9 +37,9 @@ public class JEIPlugin implements IModPlugin {
 
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
-        registration.addRecipeCatalyst(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.BREEDER.get()), CATEGORY_BREEDING);
-        registration.addRecipeCatalyst(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.CONVERTER.get()), CATEGORY_CONVERTING);
-        registration.addRecipeCatalyst(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.INCUBATOR.get()), CATEGORY_INCUBATING);
+        registration.addCraftingStation(CATEGORY_BREEDING, new ItemStack(ModBlocks.BREEDER.get()));
+        registration.addCraftingStation(CATEGORY_CONVERTING, new ItemStack(ModBlocks.CONVERTER.get()));
+        registration.addCraftingStation(CATEGORY_INCUBATING, new ItemStack(ModBlocks.INCUBATOR.get()));
     }
 
     @Override
