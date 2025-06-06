@@ -1,1 +1,1 @@
-- Fixed infinite trading issue if villager gets removed
+- Added Croatian translation
