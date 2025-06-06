@@ -1,1 +1,1 @@
-- Updated JEI dependency
+- Added Croatian translation
