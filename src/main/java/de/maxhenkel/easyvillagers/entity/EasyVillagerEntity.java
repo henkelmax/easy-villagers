@@ -15,6 +15,8 @@ import net.minecraft.world.entity.npc.VillagerType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 public class EasyVillagerEntity extends Villager {
 
@@ -110,4 +112,13 @@ public class EasyVillagerEntity extends Villager {
         return Component.translatable("tooltip.easy_villagers.villager_profession", getName().copy(), Component.translatable("merchant.level." + getVillagerData().level())).withStyle(ChatFormatting.GRAY);
     }
 
+    @Override
+    public void addAdditionalSaveData(ValueOutput valueOutput) {
+        super.addAdditionalSaveData(valueOutput);
+    }
+
+    @Override
+    public void readAdditionalSaveData(ValueInput valueInput) {
+        super.readAdditionalSaveData(valueInput);
+    }
 }

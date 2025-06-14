@@ -1,6 +1,7 @@
 package de.maxhenkel.easyvillagers.items;
 
 import de.maxhenkel.corelib.CachedMap;
+import de.maxhenkel.corelib.codec.ValueInputOutputUtils;
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
 import de.maxhenkel.easyvillagers.blocks.tileentity.FakeWorldTileentity;
 import net.minecraft.core.BlockPos;
@@ -52,7 +53,7 @@ public class BlockItemDataCache {
 
         fakeWorldTileentity.setFakeWorld(level);
         if (data != null) {
-            fakeWorldTileentity.loadCustomOnly(data.copyTag(), level.registryAccess());
+            fakeWorldTileentity.loadCustomOnly(ValueInputOutputUtils.createValueInput(fakeWorldTileentity, level.registryAccess(), data.copyTag()));
         }
 
         return fakeWorldTileentity;

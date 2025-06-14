@@ -4,7 +4,7 @@ import de.maxhenkel.easyvillagers.Main;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
@@ -25,7 +25,7 @@ public class ArrowButton extends AbstractButton {
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
         super.renderWidget(guiGraphics, mouseX, mouseY, delta);
-        guiGraphics.blit(RenderType::guiTextured, left ? ARROW_LEFT : ARROW_RIGHT, getX(), getY() + 2, 0, 0, width, height, 16, 16);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, left ? ARROW_LEFT : ARROW_RIGHT, getX(), getY() + 2, 0, 0, width, height, 16, 16);
     }
 
     @Override

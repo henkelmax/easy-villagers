@@ -1,10 +1,12 @@
 package de.maxhenkel.easyvillagers.datacomponents;
 
 import com.mojang.serialization.Codec;
+import de.maxhenkel.corelib.codec.CodecUtils;
+import de.maxhenkel.corelib.codec.ValueInputOutputUtils;
+import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import de.maxhenkel.easyvillagers.items.ModItems;
 import de.maxhenkel.easyvillagers.items.VillagerItem;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
@@ -17,6 +19,7 @@ import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.TagValueOutput;
 
 import javax.annotation.Nullable;
 import java.lang.ref.WeakReference;
@@ -50,9 +53,9 @@ public class VillagerData {
     }
 
     public static VillagerData of(Villager villager) {
-        CompoundTag nbt = new CompoundTag();
-        villager.addAdditionalSaveData(nbt);
-        return new VillagerData(nbt);
+        TagValueOutput valueOutput = ValueInputOutputUtils.createValueOutput(villager, villager.registryAccess());
+        villager.addAdditionalSaveData(valueOutput);
+        return new VillagerData(ValueInputOutputUtils.toTag(valueOutput));
     }
 
     @Nullable
@@ -83,7 +86,7 @@ public class VillagerData {
 
     public EasyVillagerEntity createEasyVillager(Level level, @Nullable ItemStack stack) {
         EasyVillagerEntity v = new EasyVillagerEntity(EntityType.VILLAGER, level);
-        v.readAdditionalSaveData(nbt);
+        v.readAdditionalSaveData(ValueInputOutputUtils.createValueInput(Main.MODID, level.registryAccess(), nbt));
         if (stack != null) {
             Component customName = stack.get(DataComponents.CUSTOM_NAME);
             if (customName != null) {
@@ -115,7 +118,7 @@ public class VillagerData {
         return getOrCreate(stack).getCacheVillager(level);
     }
 
-    public static void convertInventory(CompoundTag tag, NonNullList<ItemStack> stacks, HolderLookup.Provider provider) {
+    public static void convertInventory(CompoundTag tag, NonNullList<ItemStack> stacks) {
         Optional<ListTag> optionalItems = tag.getList("Items");
 
         if (optionalItems.isEmpty()) {
@@ -136,14 +139,14 @@ public class VillagerData {
             }
             int pos = optionalByte.get() & 255;
             if (pos < stacks.size()) {
-                ItemStack convert = convert(provider, itemTag);
+                ItemStack convert = convert(itemTag);
                 stacks.set(pos, convert);
             }
         }
     }
 
-    public static ItemStack convert(HolderLookup.Provider provider, CompoundTag itemCompound) {
-        ItemStack stack = ItemStack.parse(provider, itemCompound).orElse(ItemStack.EMPTY);
+    public static ItemStack convert(CompoundTag itemCompound) {
+        ItemStack stack = CodecUtils.fromNBT(ItemStack.CODEC, itemCompound).orElse(ItemStack.EMPTY);
         if (stack.isEmpty()) {
             return stack;
         }

@@ -1,13 +1,14 @@
 package de.maxhenkel.easyvillagers.blocks.tileentity;
 
+import de.maxhenkel.corelib.codec.ValueInputOutputUtils;
 import de.maxhenkel.easyvillagers.datacomponents.VillagerData;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
@@ -107,24 +108,24 @@ public class VillagerTileentity extends FakeWorldTileentity {
     }
 
     @Override
-    protected void saveAdditional(CompoundTag compound, HolderLookup.Provider provider) {
-        super.saveAdditional(compound, provider);
+    protected void saveAdditional(ValueOutput valueOutput) {
+        super.saveAdditional(valueOutput);
 
         if (hasVillager()) {
-            compound.put("Villager", getVillager().save(provider));
+            valueOutput.store("Villager", ItemStack.CODEC, getVillager());
         }
     }
 
     @Override
-    protected void loadAdditional(CompoundTag compound, HolderLookup.Provider provider) {
-        Optional<ItemStack> optionalItemStack = compound.getCompound("Villager").map(c -> VillagerData.convert(provider, c));
+    protected void loadAdditional(ValueInput valueInput) {
+        Optional<ItemStack> optionalItemStack = ValueInputOutputUtils.getTag(valueInput, "Villager").map(VillagerData::convert);
         if (optionalItemStack.isPresent()) {
             villager = optionalItemStack.get();
             villagerEntity = null;
         } else {
             removeVillager();
         }
-        super.loadAdditional(compound, provider);
+        super.loadAdditional(valueInput);
     }
 
 }

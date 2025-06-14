@@ -15,7 +15,9 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
 
+import java.util.Set;
 import java.util.function.Supplier;
 
 @OnlyIn(Dist.CLIENT)
@@ -39,6 +41,11 @@ public class ItemSpecialRendererBase<T extends FakeWorldTileentity> implements S
             return;
         }
         renderer.render(blockEntity, 0F, stack, bufferSource, light, overlay, Vec3.ZERO);
+    }
+
+    @Override
+    public void getExtents(Set<Vector3f> vecs) {
+
     }
 
     @Nullable

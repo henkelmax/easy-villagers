@@ -16,6 +16,9 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
+
+import java.util.Set;
 
 @OnlyIn(Dist.CLIENT)
 public class VillagerSpecialRenderer implements SpecialModelRenderer<VillagerRenderState> {
@@ -35,6 +38,11 @@ public class VillagerSpecialRenderer implements SpecialModelRenderer<VillagerRen
             return;
         }
         getRenderer().render(villagerRenderState, stack, bufferSource, light);
+    }
+
+    @Override
+    public void getExtents(Set<Vector3f> vecs) {
+
     }
 
     @Nullable

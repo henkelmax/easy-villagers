@@ -1,7 +1,9 @@
 package de.maxhenkel.easyvillagers.blocks.tileentity;
 
 import de.maxhenkel.corelib.blockentity.IServerTickableBlockEntity;
+import de.maxhenkel.corelib.codec.ValueInputOutputUtils;
 import de.maxhenkel.corelib.inventory.ItemListInventory;
+import de.maxhenkel.corelib.item.ItemUtils;
 import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.MultiItemStackHandler;
 import de.maxhenkel.easyvillagers.blocks.ModBlocks;
@@ -12,20 +14,20 @@ import de.maxhenkel.easyvillagers.gui.FoodSlot;
 import de.maxhenkel.easyvillagers.items.ModItems;
 import de.maxhenkel.easyvillagers.net.MessageVillagerParticles;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.Container;
-import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.npc.VillagerType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.network.PacketDistributor;
 
@@ -203,39 +205,45 @@ public class BreederTileentity extends FakeWorldTileentity implements IServerTic
     }
 
     @Override
-    protected void saveAdditional(CompoundTag compound, HolderLookup.Provider provider) {
-        super.saveAdditional(compound, provider);
+    protected void saveAdditional(ValueOutput valueOutput) {
+        super.saveAdditional(valueOutput);
 
         if (hasVillager1()) {
-            compound.put("Villager1", getVillager1().save(provider));
+            valueOutput.store("Villager1", ItemStack.CODEC, getVillager1());
         }
         if (hasVillager2()) {
-            compound.put("Villager2", getVillager2().save(provider));
+            valueOutput.store("Villager2", ItemStack.CODEC, getVillager2());
         }
-        compound.put("FoodInventory", ContainerHelper.saveAllItems(new CompoundTag(), foodInventory, true, provider));
-        compound.put("OutputInventory", ContainerHelper.saveAllItems(new CompoundTag(), outputInventory, true, provider));
+
+        CompoundTag foodInv = new CompoundTag();
+        ItemUtils.saveInventory(foodInv, "Items", foodInventory);
+        ValueInputOutputUtils.setTag(valueOutput, "FoodInventory", foodInv);
+
+        CompoundTag outputInv = new CompoundTag();
+        ItemUtils.saveInventory(outputInv, "Items", outputInventory);
+        ValueInputOutputUtils.setTag(valueOutput, "OutputInventory", outputInv);
     }
 
     @Override
-    protected void loadAdditional(CompoundTag compound, HolderLookup.Provider provider) {
-        Optional<ItemStack> optionalVillager1 = compound.getCompound("Villager1").map(c -> VillagerData.convert(provider, c));
+    protected void loadAdditional(ValueInput valueInput) {
+        Optional<ItemStack> optionalVillager1 = ValueInputOutputUtils.getTag(valueInput, "Villager1").map(VillagerData::convert);
         if (optionalVillager1.isPresent()) {
             villager1 = optionalVillager1.get();
             villagerEntity1 = null;
         } else {
             removeVillager1();
         }
-        Optional<ItemStack> optionalVillager2 = compound.getCompound("Villager2").map(c -> VillagerData.convert(provider, c));
+        Optional<ItemStack> optionalVillager2 = ValueInputOutputUtils.getTag(valueInput, "Villager2").map(VillagerData::convert);
         if (optionalVillager2.isPresent()) {
             villager2 = optionalVillager2.get();
             villagerEntity2 = null;
         } else {
             removeVillager1();
         }
-        compound.getCompound("FoodInventory").ifPresent(t -> VillagerData.convertInventory(t, foodInventory, provider));
-        compound.getCompound("OutputInventory").ifPresent(t -> VillagerData.convertInventory(t, outputInventory, provider));
+        ValueInputOutputUtils.getTag(valueInput, "FoodInventory").ifPresent(t -> VillagerData.convertInventory(t, foodInventory));
+        ValueInputOutputUtils.getTag(valueInput, "OutputInventory").ifPresent(t -> VillagerData.convertInventory(t, outputInventory));
 
-        super.loadAdditional(compound, provider);
+        super.loadAdditional(valueInput);
     }
 
     public Container getFoodInventory() {

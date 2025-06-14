@@ -1,6 +1,7 @@
 package de.maxhenkel.easyvillagers.blocks.tileentity;
 
 import de.maxhenkel.corelib.blockentity.IServerTickableBlockEntity;
+import de.maxhenkel.corelib.codec.ValueInputOutputUtils;
 import de.maxhenkel.corelib.inventory.ItemListInventory;
 import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.OutputItemHandler;
@@ -8,10 +9,8 @@ import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -26,6 +25,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
@@ -163,26 +164,26 @@ public class FarmerTileentity extends VillagerTileentity implements IServerTicka
     }
 
     @Override
-    protected void saveAdditional(CompoundTag compound, HolderLookup.Provider provider) {
-        super.saveAdditional(compound, provider);
+    protected void saveAdditional(ValueOutput valueOutput) {
+        super.saveAdditional(valueOutput);
 
         if (crop != null) {
-            compound.put("Crop", NbtUtils.writeBlockState(crop));
+            ValueInputOutputUtils.setTag(valueOutput, "Crop", NbtUtils.writeBlockState(crop));
         }
-        ContainerHelper.saveAllItems(compound, inventory, false, provider);
+        ContainerHelper.saveAllItems(valueOutput, inventory, false);
     }
 
     @Override
-    protected void loadAdditional(CompoundTag compound, HolderLookup.Provider provider) {
-        Optional<BlockState> optionalCrop = compound.getCompound("Crop").map(t -> NbtUtils.readBlockState(provider.lookupOrThrow(Registries.BLOCK), t));
+    protected void loadAdditional(ValueInput valueInput) {
+        Optional<BlockState> optionalCrop = ValueInputOutputUtils.getTag(valueInput, "Crop").map(t -> NbtUtils.readBlockState(valueInput.lookup().lookupOrThrow(Registries.BLOCK), t));
         if (optionalCrop.isPresent()) {
             crop = optionalCrop.get();
         } else {
             removeSeed();
         }
 
-        ContainerHelper.loadAllItems(compound, inventory, provider);
-        super.loadAdditional(compound, provider);
+        ContainerHelper.loadAllItems(valueInput, inventory);
+        super.loadAdditional(valueInput);
     }
 
     public IItemHandler getItemHandler() {

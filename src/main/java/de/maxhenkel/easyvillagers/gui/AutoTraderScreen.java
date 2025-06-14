@@ -4,7 +4,7 @@ import de.maxhenkel.corelib.inventory.ScreenBase;
 import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.net.MessageSelectTrade;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -40,7 +40,7 @@ public class AutoTraderScreen extends ScreenBase<AutoTraderContainer> {
     protected void renderBg(GuiGraphics guiGraphics, float partialTicks, int mouseX, int mouseY) {
         super.renderBg(guiGraphics, partialTicks, mouseX, mouseY);
         if (getMenu().isLocked()) {
-            guiGraphics.blit(RenderType::guiTextured, BACKGROUND, leftPos + 83, topPos + 19, 176, 0, 28, 21, 256, 256);
+            guiGraphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, leftPos + 83, topPos + 19, 176, 0, 28, 21, 256, 256);
         }
     }
 
@@ -50,12 +50,12 @@ public class AutoTraderScreen extends ScreenBase<AutoTraderContainer> {
         drawCenteredText(guiGraphics, title, 6, FONT_COLOR);
         drawCenteredText(guiGraphics, Component.translatable("gui.easy_villagers.input"), 45, FONT_COLOR);
         drawCenteredText(guiGraphics, Component.translatable("gui.easy_villagers.output"), 77, FONT_COLOR);
-        guiGraphics.drawString(font, playerInventory.getDisplayName().getVisualOrderText(), 8F, (float) (imageHeight - 96 + 3), FONT_COLOR, false);
+        guiGraphics.drawString(font, playerInventory.getDisplayName().getVisualOrderText(), 8, imageHeight - 96 + 3, FONT_COLOR, false);
     }
 
     protected void drawCenteredText(GuiGraphics guiGraphics, Component text, int y, int color) {
         int width = font.width(text);
-        guiGraphics.drawString(font, text.getVisualOrderText(), imageWidth / 2F - width / 2F, y, color, false);
+        guiGraphics.drawString(font, text.getVisualOrderText(), imageWidth / 2 - width / 2, y, color, false);
     }
 
 }

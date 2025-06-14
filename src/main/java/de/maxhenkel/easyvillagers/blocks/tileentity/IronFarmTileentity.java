@@ -8,10 +8,8 @@ import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -22,6 +20,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
@@ -116,18 +116,18 @@ public class IronFarmTileentity extends VillagerTileentity implements ITickableB
     }
 
     @Override
-    protected void saveAdditional(CompoundTag compound, HolderLookup.Provider provider) {
-        super.saveAdditional(compound, provider);
+    protected void saveAdditional(ValueOutput valueOutput) {
+        super.saveAdditional(valueOutput);
 
-        ContainerHelper.saveAllItems(compound, inventory, false, provider);
-        compound.putLong("Timer", timer);
+        ContainerHelper.saveAllItems(valueOutput, inventory, false);
+        valueOutput.putLong("Timer", timer);
     }
 
     @Override
-    protected void loadAdditional(CompoundTag compound, HolderLookup.Provider provider) {
-        ContainerHelper.loadAllItems(compound, inventory, provider);
-        timer = compound.getLongOr("Timer", 0L);
-        super.loadAdditional(compound, provider);
+    protected void loadAdditional(ValueInput valueInput) {
+        ContainerHelper.loadAllItems(valueInput, inventory);
+        timer = valueInput.getLongOr("Timer", 0L);
+        super.loadAdditional(valueInput);
     }
 
     public static int getGolemSpawnTime() {

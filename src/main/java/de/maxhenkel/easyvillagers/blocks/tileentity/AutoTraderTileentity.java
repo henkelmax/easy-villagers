@@ -1,6 +1,7 @@
 package de.maxhenkel.easyvillagers.blocks.tileentity;
 
 import de.maxhenkel.corelib.blockentity.ITickableBlockEntity;
+import de.maxhenkel.corelib.codec.ValueInputOutputUtils;
 import de.maxhenkel.corelib.inventory.ItemListInventory;
 import de.maxhenkel.corelib.item.ItemUtils;
 import de.maxhenkel.easyvillagers.Main;
@@ -9,11 +10,9 @@ import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.datacomponents.VillagerData;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Container;
-import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.item.ItemStack;
@@ -21,6 +20,8 @@ import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
 
@@ -227,20 +228,27 @@ public class AutoTraderTileentity extends TraderTileentityBase implements ITicka
     }
 
     @Override
-    protected void saveAdditional(CompoundTag compound, HolderLookup.Provider provider) {
-        super.saveAdditional(compound, provider);
+    protected void saveAdditional(ValueOutput valueOutput) {
+        super.saveAdditional(valueOutput);
 
-        compound.putInt("Trade", tradeIndex);
-        compound.put("InputInventory", ContainerHelper.saveAllItems(new CompoundTag(), inputInventory, true, provider));
-        compound.put("OutputInventory", ContainerHelper.saveAllItems(new CompoundTag(), outputInventory, true, provider));
+        valueOutput.putInt("Trade", tradeIndex);
+
+        CompoundTag inputInv = new CompoundTag();
+        ItemUtils.saveInventory(inputInv, "Items", inputInventory);
+        ValueInputOutputUtils.setTag(valueOutput, "InputInventory", inputInv);
+
+        CompoundTag outputInv = new CompoundTag();
+        ItemUtils.saveInventory(outputInv, "Items", outputInventory);
+        ValueInputOutputUtils.setTag(valueOutput, "OutputInventory", outputInv);
     }
 
     @Override
-    protected void loadAdditional(CompoundTag compound, HolderLookup.Provider provider) {
-        super.loadAdditional(compound, provider);
-        tradeIndex = compound.getIntOr("Trade", 0);
-        compound.getCompound("InputInventory").ifPresent(t -> VillagerData.convertInventory(t, inputInventory, provider));
-        compound.getCompound("OutputInventory").ifPresent(t -> VillagerData.convertInventory(t, outputInventory, provider));
+    protected void loadAdditional(ValueInput valueInput) {
+        super.loadAdditional(valueInput);
+        tradeIndex = valueInput.getIntOr("Trade", 0);
+
+        ValueInputOutputUtils.getTag(valueInput, "InputInventory").ifPresent(t -> VillagerData.convertInventory(t, inputInventory));
+        ValueInputOutputUtils.getTag(valueInput, "OutputInventory").ifPresent(t -> VillagerData.convertInventory(t, inputInventory));
     }
 
     public Container getInputInventory() {

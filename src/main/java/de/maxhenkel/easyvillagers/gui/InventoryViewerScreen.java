@@ -27,7 +27,7 @@ public class InventoryViewerScreen extends ScreenBase<InventoryViewerContainer> 
     protected void renderLabels(GuiGraphics guiGraphics, int x, int y) {
         drawCentered(guiGraphics, VILLAGER_INVENTORY, 9, FONT_COLOR);
         drawCentered(guiGraphics, VILLAGER_EQUIPMENT, 58, FONT_COLOR);
-        guiGraphics.drawString(font, playerInventory.getDisplayName().getVisualOrderText(), 8F, (float) (imageHeight - 96 + 3), FONT_COLOR, false);
+        guiGraphics.drawString(font, playerInventory.getDisplayName().getVisualOrderText(), 8, imageHeight - 96 + 3, FONT_COLOR, false);
     }
 
 }

@@ -6,9 +6,7 @@ import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -20,6 +18,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 
 import java.util.Optional;
 
@@ -180,25 +180,25 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
     }
 
     @Override
-    protected void saveAdditional(CompoundTag compound, HolderLookup.Provider provider) {
-        super.saveAdditional(compound, provider);
+    protected void saveAdditional(ValueOutput valueOutput) {
+        super.saveAdditional(valueOutput);
 
         if (hasWorkstation()) {
-            compound.putString("Workstation", BuiltInRegistries.BLOCK.getKey(workstation).toString());
+            valueOutput.putString("Workstation", BuiltInRegistries.BLOCK.getKey(workstation).toString());
         }
-        compound.putLong("NextRestock", nextRestock);
+        valueOutput.putLong("NextRestock", nextRestock);
     }
 
     @Override
-    protected void loadAdditional(CompoundTag compound, HolderLookup.Provider provider) {
-        Optional<Block> optionalWorkstation = compound.read("Workstation", ResourceLocation.CODEC).map(r -> BuiltInRegistries.BLOCK.get(r).map(Holder.Reference::value).orElse(Blocks.AIR));
+    protected void loadAdditional(ValueInput valueInput) {
+        Optional<Block> optionalWorkstation = valueInput.read("Workstation", ResourceLocation.CODEC).map(r -> BuiltInRegistries.BLOCK.get(r).map(Holder.Reference::value).orElse(Blocks.AIR));
         if (optionalWorkstation.isPresent()) {
             workstation = optionalWorkstation.get();
         } else {
             removeWorkstation();
         }
-        nextRestock = compound.getLongOr("NextRestock", 0L);
-        super.loadAdditional(compound, provider);
+        nextRestock = valueInput.getLongOr("NextRestock", 0L);
+        super.loadAdditional(valueInput);
     }
 
 }

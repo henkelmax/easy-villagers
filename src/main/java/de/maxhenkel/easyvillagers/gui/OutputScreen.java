@@ -24,12 +24,12 @@ public class OutputScreen extends ScreenBase<OutputContainer> {
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int x, int y) {
         drawCentered(guiGraphics, Component.translatable("gui.easy_villagers.output"), 9, FONT_COLOR);
-        guiGraphics.drawString(font, playerInventory.getDisplayName().getVisualOrderText(), 8F, (float) (imageHeight - 96 + 3), FONT_COLOR, false);
+        guiGraphics.drawString(font, playerInventory.getDisplayName().getVisualOrderText(), 8, imageHeight - 96 + 3, FONT_COLOR, false);
     }
 
     protected void drawCentered(GuiGraphics guiGraphics, MutableComponent text, int y, int color) {
         int width = font.width(text);
-        guiGraphics.drawString(font, text.getVisualOrderText(), imageWidth / 2F - width / 2F, y, color, false);
+        guiGraphics.drawString(font, text.getVisualOrderText(), imageWidth / 2 - width / 2, y, color, false);
     }
 
 }
