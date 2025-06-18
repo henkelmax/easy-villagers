@@ -26,7 +26,6 @@ public class VillagerSpecialRenderer implements SpecialModelRenderer<VillagerRen
     protected static final Minecraft minecraft = Minecraft.getInstance();
 
     private VillagerRenderer renderer;
-    private VillagerRenderState renderState;
 
     public VillagerSpecialRenderer(EntityModelSet modelSet) {
 
@@ -49,9 +48,7 @@ public class VillagerSpecialRenderer implements SpecialModelRenderer<VillagerRen
     @Override
     public VillagerRenderState extractArgument(ItemStack stack) {
         EasyVillagerEntity cacheVillager = VillagerData.getCacheVillager(stack, minecraft.level);
-        if (renderState == null) {
-            renderState = getRenderer().createRenderState();
-        }
+        VillagerRenderState renderState = getRenderer().createRenderState();
         renderer.extractRenderState(cacheVillager, renderState, 0F);
         return renderState;
     }
