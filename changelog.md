@@ -1,1 +1,1 @@
-- Fixed issues when saving and loading block inventories
+- Fixed Jade compatibility

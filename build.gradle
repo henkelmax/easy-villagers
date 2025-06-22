@@ -16,7 +16,7 @@ dependencies {
 
     compileOnly "maven.modrinth:jei:${jei_version}"
     compileOnly "maven.modrinth:the-one-probe:${theoneprobe_version}"
-    compileOnly "maven.modrinth:jade:${jade_version}"
+    implementation "maven.modrinth:jade:${jade_version}"
 }
 
 processResources {
