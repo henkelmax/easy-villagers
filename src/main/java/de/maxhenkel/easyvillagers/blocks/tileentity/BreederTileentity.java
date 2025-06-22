@@ -1,7 +1,6 @@
 package de.maxhenkel.easyvillagers.blocks.tileentity;
 
 import de.maxhenkel.corelib.blockentity.IServerTickableBlockEntity;
-import de.maxhenkel.corelib.codec.ValueInputOutputUtils;
 import de.maxhenkel.corelib.inventory.ItemListInventory;
 import de.maxhenkel.corelib.item.ItemUtils;
 import de.maxhenkel.easyvillagers.Main;
@@ -16,7 +15,6 @@ import de.maxhenkel.easyvillagers.net.MessageVillagerParticles;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.Container;
@@ -215,33 +213,28 @@ public class BreederTileentity extends FakeWorldTileentity implements IServerTic
             valueOutput.store("Villager2", ItemStack.CODEC, getVillager2());
         }
 
-        CompoundTag foodInv = new CompoundTag();
-        ItemUtils.saveInventory(foodInv, "Items", foodInventory);
-        ValueInputOutputUtils.setTag(valueOutput, "FoodInventory", foodInv);
-
-        CompoundTag outputInv = new CompoundTag();
-        ItemUtils.saveInventory(outputInv, "Items", outputInventory);
-        ValueInputOutputUtils.setTag(valueOutput, "OutputInventory", outputInv);
+        ItemUtils.saveInventory(valueOutput.child("FoodInventory"), "Items", foodInventory);
+        ItemUtils.saveInventory(valueOutput.child("OutputInventory"), "Items", outputInventory);
     }
 
     @Override
     protected void loadAdditional(ValueInput valueInput) {
-        Optional<ItemStack> optionalVillager1 = ValueInputOutputUtils.getTag(valueInput, "Villager1").map(VillagerData::convert);
+        Optional<ItemStack> optionalVillager1 = valueInput.read("Villager1", ItemStack.CODEC);
         if (optionalVillager1.isPresent()) {
             villager1 = optionalVillager1.get();
             villagerEntity1 = null;
         } else {
             removeVillager1();
         }
-        Optional<ItemStack> optionalVillager2 = ValueInputOutputUtils.getTag(valueInput, "Villager2").map(VillagerData::convert);
+        Optional<ItemStack> optionalVillager2 = valueInput.read("Villager2", ItemStack.CODEC);
         if (optionalVillager2.isPresent()) {
             villager2 = optionalVillager2.get();
             villagerEntity2 = null;
         } else {
             removeVillager1();
         }
-        ValueInputOutputUtils.getTag(valueInput, "FoodInventory").ifPresent(t -> VillagerData.convertInventory(t, foodInventory));
-        ValueInputOutputUtils.getTag(valueInput, "OutputInventory").ifPresent(t -> VillagerData.convertInventory(t, outputInventory));
+        ItemUtils.readInventory(valueInput.childOrEmpty("FoodInventory"), "Items", foodInventory);
+        ItemUtils.readInventory(valueInput.childOrEmpty("OutputInventory"), "Items", outputInventory);
 
         super.loadAdditional(valueInput);
     }

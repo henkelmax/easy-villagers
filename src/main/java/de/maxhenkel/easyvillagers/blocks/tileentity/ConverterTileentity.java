@@ -1,14 +1,12 @@
 package de.maxhenkel.easyvillagers.blocks.tileentity;
 
 import de.maxhenkel.corelib.blockentity.IServerTickableBlockEntity;
-import de.maxhenkel.corelib.codec.ValueInputOutputUtils;
 import de.maxhenkel.corelib.inventory.ItemListInventory;
 import de.maxhenkel.corelib.item.ItemUtils;
 import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.MultiItemStackHandler;
 import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
-import de.maxhenkel.easyvillagers.datacomponents.VillagerData;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import de.maxhenkel.easyvillagers.gui.VillagerConvertSlot;
 import de.maxhenkel.easyvillagers.items.VillagerItem;
@@ -16,7 +14,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.Container;
@@ -165,13 +162,8 @@ public class ConverterTileentity extends VillagerTileentity implements IServerTi
     protected void saveAdditional(ValueOutput valueOutput) {
         super.saveAdditional(valueOutput);
 
-        CompoundTag inputInv = new CompoundTag();
-        ItemUtils.saveInventory(inputInv, "Items", inputInventory);
-        ValueInputOutputUtils.setTag(valueOutput, "InputInventory", inputInv);
-
-        CompoundTag outputInv = new CompoundTag();
-        ItemUtils.saveInventory(outputInv, "Items", outputInventory);
-        ValueInputOutputUtils.setTag(valueOutput, "OutputInventory", outputInv);
+        ItemUtils.saveInventory(valueOutput.child("InputInventory"), "Items", inputInventory);
+        ItemUtils.saveInventory(valueOutput.child("OutputInventory"), "Items", outputInventory);
 
         valueOutput.putLong("Timer", timer);
         if (owner != null) {
@@ -181,8 +173,8 @@ public class ConverterTileentity extends VillagerTileentity implements IServerTi
 
     @Override
     protected void loadAdditional(ValueInput valueInput) {
-        ValueInputOutputUtils.getTag(valueInput, "InputInventory").ifPresent(t -> VillagerData.convertInventory(t, inputInventory));
-        ValueInputOutputUtils.getTag(valueInput, "OutputInventory").ifPresent(t -> VillagerData.convertInventory(t, outputInventory));
+        ItemUtils.readInventory(valueInput.childOrEmpty("InputInventory"), "Items", inputInventory);
+        ItemUtils.readInventory(valueInput.childOrEmpty("OutputInventory"), "Items", outputInventory);
 
         timer = valueInput.getLongOr("Timer", 0L);
         owner = valueInput.read("Owner", UUIDUtil.CODEC).orElse(null);

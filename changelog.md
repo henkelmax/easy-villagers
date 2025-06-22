@@ -1,1 +1,1 @@
-- Fixed villagers not rendering properly in inventory
+- Fixed issues when saving and loading block inventories

@@ -1,6 +1,5 @@
 package de.maxhenkel.easyvillagers.blocks.tileentity;
 
-import de.maxhenkel.corelib.codec.ValueInputOutputUtils;
 import de.maxhenkel.easyvillagers.datacomponents.VillagerData;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import net.minecraft.core.BlockPos;
@@ -118,7 +117,7 @@ public class VillagerTileentity extends FakeWorldTileentity {
 
     @Override
     protected void loadAdditional(ValueInput valueInput) {
-        Optional<ItemStack> optionalItemStack = ValueInputOutputUtils.getTag(valueInput, "Villager").map(VillagerData::convert);
+        Optional<ItemStack> optionalItemStack = valueInput.read("Villager", ItemStack.CODEC);
         if (optionalItemStack.isPresent()) {
             villager = optionalItemStack.get();
             villagerEntity = null;

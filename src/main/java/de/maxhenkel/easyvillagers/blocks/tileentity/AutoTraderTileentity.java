@@ -1,17 +1,14 @@
 package de.maxhenkel.easyvillagers.blocks.tileentity;
 
 import de.maxhenkel.corelib.blockentity.ITickableBlockEntity;
-import de.maxhenkel.corelib.codec.ValueInputOutputUtils;
 import de.maxhenkel.corelib.inventory.ItemListInventory;
 import de.maxhenkel.corelib.item.ItemUtils;
 import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.MultiItemStackHandler;
 import de.maxhenkel.easyvillagers.blocks.ModBlocks;
-import de.maxhenkel.easyvillagers.datacomponents.VillagerData;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.npc.Villager;
@@ -232,14 +229,8 @@ public class AutoTraderTileentity extends TraderTileentityBase implements ITicka
         super.saveAdditional(valueOutput);
 
         valueOutput.putInt("Trade", tradeIndex);
-
-        CompoundTag inputInv = new CompoundTag();
-        ItemUtils.saveInventory(inputInv, "Items", inputInventory);
-        ValueInputOutputUtils.setTag(valueOutput, "InputInventory", inputInv);
-
-        CompoundTag outputInv = new CompoundTag();
-        ItemUtils.saveInventory(outputInv, "Items", outputInventory);
-        ValueInputOutputUtils.setTag(valueOutput, "OutputInventory", outputInv);
+        ItemUtils.saveInventory(valueOutput.child("InputInventory"), "Items", inputInventory);
+        ItemUtils.saveInventory(valueOutput.child("OutputInventory"), "Items", outputInventory);
     }
 
     @Override
@@ -247,8 +238,8 @@ public class AutoTraderTileentity extends TraderTileentityBase implements ITicka
         super.loadAdditional(valueInput);
         tradeIndex = valueInput.getIntOr("Trade", 0);
 
-        ValueInputOutputUtils.getTag(valueInput, "InputInventory").ifPresent(t -> VillagerData.convertInventory(t, inputInventory));
-        ValueInputOutputUtils.getTag(valueInput, "OutputInventory").ifPresent(t -> VillagerData.convertInventory(t, inputInventory));
+        ItemUtils.readInventory(valueInput.childOrEmpty("InputInventory"), "Items", inputInventory);
+        ItemUtils.readInventory(valueInput.childOrEmpty("OutputInventory"), "Items", outputInventory);
     }
 
     public Container getInputInventory() {

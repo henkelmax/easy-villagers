@@ -1,30 +1,25 @@
 package de.maxhenkel.easyvillagers.datacomponents;
 
 import com.mojang.serialization.Codec;
-import de.maxhenkel.corelib.codec.CodecUtils;
 import de.maxhenkel.corelib.codec.ValueInputOutputUtils;
 import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import de.maxhenkel.easyvillagers.items.ModItems;
 import de.maxhenkel.easyvillagers.items.VillagerItem;
-import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.TagValueOutput;
 
 import javax.annotation.Nullable;
 import java.lang.ref.WeakReference;
 import java.util.Objects;
-import java.util.Optional;
 
 public class VillagerData {
 
@@ -63,7 +58,6 @@ public class VillagerData {
         if (!(stack.getItem() instanceof VillagerItem)) {
             throw new IllegalArgumentException("Tried to set villager data to non-villager item (%s)".formatted(stack.getHoverName().getString()));
         }
-        convert(stack);
         return stack.get(ModItems.VILLAGER_DATA_COMPONENT);
     }
 
@@ -116,87 +110,6 @@ public class VillagerData {
 
     public static EasyVillagerEntity getCacheVillager(ItemStack stack, Level level) {
         return getOrCreate(stack).getCacheVillager(level);
-    }
-
-    public static void convertInventory(CompoundTag tag, NonNullList<ItemStack> stacks) {
-        Optional<ListTag> optionalItems = tag.getList("Items");
-
-        if (optionalItems.isEmpty()) {
-            return;
-        }
-
-        ListTag listTag = optionalItems.get();
-
-        for (int i = 0; i < listTag.size(); i++) {
-            Optional<CompoundTag> tagOptional = listTag.getCompound(i);
-            if (tagOptional.isEmpty()) {
-                continue;
-            }
-            CompoundTag itemTag = tagOptional.get();
-            Optional<Byte> optionalByte = itemTag.getByte("Slot");
-            if (optionalByte.isEmpty()) {
-                continue;
-            }
-            int pos = optionalByte.get() & 255;
-            if (pos < stacks.size()) {
-                ItemStack convert = convert(itemTag);
-                stacks.set(pos, convert);
-            }
-        }
-    }
-
-    public static ItemStack convert(CompoundTag itemCompound) {
-        ItemStack stack = CodecUtils.fromNBT(ItemStack.CODEC, itemCompound).orElse(ItemStack.EMPTY);
-        if (stack.isEmpty()) {
-            return stack;
-        }
-        if (!(stack.getItem() instanceof VillagerItem)) {
-            return stack;
-        }
-        if (stack.has(ModItems.VILLAGER_DATA_COMPONENT)) {
-            return stack;
-        }
-        Optional<CompoundTag> tagOptional = itemCompound.getCompound("tag");
-        if (tagOptional.isEmpty()) {
-            return stack;
-        }
-        CompoundTag tag = tagOptional.get();
-        Optional<CompoundTag> optionalVillager = tag.getCompound("villager");
-        if (optionalVillager.isEmpty()) {
-            return stack;
-        }
-        CompoundTag villagerTag = optionalVillager.get();
-        VillagerData villagerData = VillagerData.of(villagerTag);
-        stack.set(ModItems.VILLAGER_DATA_COMPONENT, villagerData);
-        return stack;
-    }
-
-    public static void convert(ItemStack stack) {
-        if (!(stack.getItem() instanceof VillagerItem)) {
-            return;
-        }
-        if (stack.has(ModItems.VILLAGER_DATA_COMPONENT)) {
-            return;
-        }
-        CustomData customData = stack.get(DataComponents.CUSTOM_DATA);
-        if (customData == null) {
-            setEmptyVillagerTag(stack);
-            return;
-        }
-        CompoundTag customTag = customData.copyTag();
-        Optional<CompoundTag> villagerTag = customTag.getCompound("villager");
-        if (villagerTag.isEmpty()) {
-            setEmptyVillagerTag(stack);
-            return;
-        }
-        customTag.remove("villager");
-        if (customTag.isEmpty()) {
-            stack.remove(DataComponents.CUSTOM_DATA);
-        } else {
-            stack.set(DataComponents.CUSTOM_DATA, CustomData.of(customTag));
-        }
-        VillagerData villagerData = VillagerData.of(villagerTag.get());
-        stack.set(ModItems.VILLAGER_DATA_COMPONENT, villagerData);
     }
 
     private static VillagerData setEmptyVillagerTag(ItemStack stack) {
