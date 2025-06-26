@@ -1,1 +1,1 @@
-- Fixed Jade compatibility
+- Fixed invalid_farmer_crop tag lot loading properly
