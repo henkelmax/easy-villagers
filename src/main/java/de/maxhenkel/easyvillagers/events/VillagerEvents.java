@@ -15,8 +15,8 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.InputEvent;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
-import net.neoforged.neoforge.network.PacketDistributor;
 
 public class VillagerEvents {
 
@@ -44,7 +44,7 @@ public class VillagerEvents {
             return;
         }
 
-        PacketDistributor.sendToServer(new MessagePickUpVillager(villager.getUUID()));
+        ClientPacketDistributor.sendToServer(new MessagePickUpVillager(villager.getUUID()));
 
         event.setCancellationResult(InteractionResult.SUCCESS);
         event.setCanceled(true);
@@ -63,7 +63,7 @@ public class VillagerEvents {
             return;
         }
 
-        PacketDistributor.sendToServer(new MessagePickUpVillager(villager.getUUID()));
+        ClientPacketDistributor.sendToServer(new MessagePickUpVillager(villager.getUUID()));
     }
 
     public static void pickUp(Villager villager, Player player) {

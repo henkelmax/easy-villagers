@@ -18,7 +18,7 @@ import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.InputEvent;
 import net.neoforged.neoforge.client.event.ScreenEvent;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 public class GuiEvents {
 
@@ -54,7 +54,7 @@ public class GuiEvents {
         }
 
         event.addListener(new CycleTradesButton(posX, merchantScreen.getGuiTop() + 8, b -> {
-            PacketDistributor.sendToServer(new MessageCycleTrades());
+            ClientPacketDistributor.sendToServer(new MessageCycleTrades());
         }, merchantScreen));
     }
 
@@ -85,7 +85,7 @@ public class GuiEvents {
             return;
         }
 
-        PacketDistributor.sendToServer(new MessageCycleTrades());
+        ClientPacketDistributor.sendToServer(new MessageCycleTrades());
         mc.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1F));
     }
 
