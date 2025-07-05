@@ -78,7 +78,6 @@ public class VillagerItem extends Item {
         return super.getName(stack);
     }
 
-
     @Override
     public void inventoryTick(ItemStack stack, ServerLevel level, Entity entity, @Nullable EquipmentSlot equipmentSlot) {
         super.inventoryTick(stack, level, entity, equipmentSlot);

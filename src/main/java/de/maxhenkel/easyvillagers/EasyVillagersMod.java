@@ -19,6 +19,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -33,6 +34,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 @Mod(EasyVillagersMod.MODID)
+@EventBusSubscriber(modid = EasyVillagersMod.MODID)
 public class EasyVillagersMod {
 
     public static final String MODID = "easy_villagers";
