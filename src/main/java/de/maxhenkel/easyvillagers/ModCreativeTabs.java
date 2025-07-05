@@ -13,7 +13,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class ModCreativeTabs {
 
-    private static final DeferredRegister<CreativeModeTab> TAB_REGISTER = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, Main.MODID);
+    private static final DeferredRegister<CreativeModeTab> TAB_REGISTER = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, EasyVillagersMod.MODID);
 
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> TAB_EASY_VILLAGERS = TAB_REGISTER.register("easy_villagers", () -> {
         return CreativeModeTab.builder()

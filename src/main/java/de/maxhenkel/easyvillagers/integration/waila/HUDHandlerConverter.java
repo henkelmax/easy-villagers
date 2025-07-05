@@ -1,6 +1,6 @@
 package de.maxhenkel.easyvillagers.integration.waila;
 
-import de.maxhenkel.easyvillagers.Main;
+import de.maxhenkel.easyvillagers.EasyVillagersMod;
 import de.maxhenkel.easyvillagers.blocks.tileentity.ConverterTileentity;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import net.minecraft.core.Holder;
@@ -16,7 +16,7 @@ public class HUDHandlerConverter implements IBlockComponentProvider {
 
     public static final HUDHandlerConverter INSTANCE = new HUDHandlerConverter();
 
-    private static final ResourceLocation UID = ResourceLocation.fromNamespaceAndPath(Main.MODID, "converter");
+    private static final ResourceLocation UID = ResourceLocation.fromNamespaceAndPath(EasyVillagersMod.MODID, "converter");
 
     @Override
     public void appendTooltip(ITooltip iTooltip, BlockAccessor blockAccessor, IPluginConfig iPluginConfig) {

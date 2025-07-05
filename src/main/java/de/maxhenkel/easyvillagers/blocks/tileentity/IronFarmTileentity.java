@@ -2,7 +2,7 @@ package de.maxhenkel.easyvillagers.blocks.tileentity;
 
 import de.maxhenkel.corelib.blockentity.ITickableBlockEntity;
 import de.maxhenkel.corelib.inventory.ItemListInventory;
-import de.maxhenkel.easyvillagers.Main;
+import de.maxhenkel.easyvillagers.EasyVillagersMod;
 import de.maxhenkel.easyvillagers.OutputItemHandler;
 import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
@@ -131,7 +131,7 @@ public class IronFarmTileentity extends VillagerTileentity implements ITickableB
     }
 
     public static int getGolemSpawnTime() {
-        return Main.SERVER_CONFIG.golemSpawnTime.get() - 20 * 10;
+        return EasyVillagersMod.SERVER_CONFIG.golemSpawnTime.get() - 20 * 10;
     }
 
     public static int getGolemKillTime() {

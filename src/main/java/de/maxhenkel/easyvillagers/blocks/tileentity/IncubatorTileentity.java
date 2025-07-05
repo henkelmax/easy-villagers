@@ -3,7 +3,7 @@ package de.maxhenkel.easyvillagers.blocks.tileentity;
 import de.maxhenkel.corelib.blockentity.IServerTickableBlockEntity;
 import de.maxhenkel.corelib.inventory.ItemListInventory;
 import de.maxhenkel.corelib.item.ItemUtils;
-import de.maxhenkel.easyvillagers.Main;
+import de.maxhenkel.easyvillagers.EasyVillagersMod;
 import de.maxhenkel.easyvillagers.MultiItemStackHandler;
 import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
@@ -54,7 +54,7 @@ public class IncubatorTileentity extends VillagerTileentity implements IServerTi
             Villager villagerEntity = getVillagerEntity();
 
             if (villagerEntity.isBaby()) {
-                if (advanceAge(Math.min(Main.SERVER_CONFIG.incubatorSpeed.get(), Math.abs(villagerEntity.getAge())))) {
+                if (advanceAge(Math.min(EasyVillagersMod.SERVER_CONFIG.incubatorSpeed.get(), Math.abs(villagerEntity.getAge())))) {
                     sync();
                 }
             } else {

@@ -3,7 +3,7 @@ package de.maxhenkel.easyvillagers.blocks.tileentity;
 import de.maxhenkel.corelib.blockentity.IServerTickableBlockEntity;
 import de.maxhenkel.corelib.inventory.ItemListInventory;
 import de.maxhenkel.corelib.item.ItemUtils;
-import de.maxhenkel.easyvillagers.Main;
+import de.maxhenkel.easyvillagers.EasyVillagersMod;
 import de.maxhenkel.easyvillagers.MultiItemStackHandler;
 import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
@@ -132,7 +132,7 @@ public class BreederTileentity extends FakeWorldTileentity implements IServerTic
             VillagerBlockBase.playRandomVillagerSound(level, getBlockPos(), SoundEvents.VILLAGER_AMBIENT);
         }
 
-        if (level.getGameTime() % Main.SERVER_CONFIG.breedingTime.get() == 0) {
+        if (level.getGameTime() % EasyVillagersMod.SERVER_CONFIG.breedingTime.get() == 0) {
             tryBreed();
         }
     }

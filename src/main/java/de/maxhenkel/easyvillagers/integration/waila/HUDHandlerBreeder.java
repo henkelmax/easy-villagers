@@ -1,6 +1,6 @@
 package de.maxhenkel.easyvillagers.integration.waila;
 
-import de.maxhenkel.easyvillagers.Main;
+import de.maxhenkel.easyvillagers.EasyVillagersMod;
 import de.maxhenkel.easyvillagers.blocks.tileentity.BreederTileentity;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import net.minecraft.resources.ResourceLocation;
@@ -13,7 +13,7 @@ public class HUDHandlerBreeder implements IBlockComponentProvider {
 
     public static final HUDHandlerBreeder INSTANCE = new HUDHandlerBreeder();
 
-    private static final ResourceLocation UID = ResourceLocation.fromNamespaceAndPath(Main.MODID, "breeder");
+    private static final ResourceLocation UID = ResourceLocation.fromNamespaceAndPath(EasyVillagersMod.MODID, "breeder");
 
     @Override
     public void appendTooltip(ITooltip iTooltip, BlockAccessor blockAccessor, IPluginConfig iPluginConfig) {

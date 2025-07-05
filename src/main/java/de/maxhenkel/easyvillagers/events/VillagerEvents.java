@@ -1,6 +1,7 @@
 package de.maxhenkel.easyvillagers.events;
 
-import de.maxhenkel.easyvillagers.Main;
+import de.maxhenkel.easyvillagers.EasyVillagersClientMod;
+import de.maxhenkel.easyvillagers.EasyVillagersMod;
 import de.maxhenkel.easyvillagers.datacomponents.VillagerData;
 import de.maxhenkel.easyvillagers.items.ModItems;
 import de.maxhenkel.easyvillagers.net.MessagePickUpVillager;
@@ -27,7 +28,7 @@ public class VillagerEvents {
             return;
         }
 
-        if (!Main.CLIENT_CONFIG.enableRightClickPickup.get()) {
+        if (!EasyVillagersMod.CLIENT_CONFIG.enableRightClickPickup.get()) {
             return;
         }
 
@@ -50,7 +51,7 @@ public class VillagerEvents {
 
     @SubscribeEvent
     public void onKeyInput(InputEvent.Key event) {
-        if (!Main.PICKUP_KEY.consumeClick()) {
+        if (!EasyVillagersClientMod.PICKUP_KEY.consumeClick()) {
             return;
         }
 

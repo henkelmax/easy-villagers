@@ -1,7 +1,7 @@
 package de.maxhenkel.easyvillagers.net;
 
 import de.maxhenkel.corelib.net.Message;
-import de.maxhenkel.easyvillagers.Main;
+import de.maxhenkel.easyvillagers.EasyVillagersMod;
 import de.maxhenkel.easyvillagers.events.VillagerEvents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.PacketFlow;
@@ -15,7 +15,7 @@ import java.util.UUID;
 
 public class MessagePickUpVillager implements Message<MessagePickUpVillager> {
 
-    public static final CustomPacketPayload.Type<MessagePickUpVillager> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(Main.MODID, "pick_up_villager"));
+    public static final CustomPacketPayload.Type<MessagePickUpVillager> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(EasyVillagersMod.MODID, "pick_up_villager"));
 
     private UUID villager;
 

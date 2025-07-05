@@ -1,7 +1,8 @@
 package de.maxhenkel.easyvillagers.events;
 
 import de.maxhenkel.easyvillagers.ClientConfig;
-import de.maxhenkel.easyvillagers.Main;
+import de.maxhenkel.easyvillagers.EasyVillagersClientMod;
+import de.maxhenkel.easyvillagers.EasyVillagersMod;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import de.maxhenkel.easyvillagers.gui.CycleTradesButton;
 import de.maxhenkel.easyvillagers.net.MessageCycleTrades;
@@ -28,11 +29,11 @@ public class GuiEvents {
         if (Minecraft.getInstance().player == null) {
             return;
         }
-        if (!Main.SERVER_CONFIG.tradeCycling.get()) {
+        if (!EasyVillagersMod.SERVER_CONFIG.tradeCycling.get()) {
             return;
         }
 
-        ClientConfig.CycleTradesButtonLocation loc = Main.CLIENT_CONFIG.cycleTradesButtonLocation.get();
+        ClientConfig.CycleTradesButtonLocation loc = EasyVillagersMod.CLIENT_CONFIG.cycleTradesButtonLocation.get();
 
         if (loc.equals(ClientConfig.CycleTradesButtonLocation.NONE)) {
             return;
@@ -61,11 +62,11 @@ public class GuiEvents {
         if (mc.player == null) {
             return;
         }
-        if (event.getKey() != Main.CYCLE_TRADES_KEY.getKey().getValue() || event.getAction() != 0) {
+        if (event.getKey() != EasyVillagersClientMod.CYCLE_TRADES_KEY.getKey().getValue() || event.getAction() != 0) {
             return;
         }
 
-        if (!Main.SERVER_CONFIG.tradeCycling.get()) {
+        if (!EasyVillagersMod.SERVER_CONFIG.tradeCycling.get()) {
             return;
         }
 
@@ -86,7 +87,7 @@ public class GuiEvents {
     }
 
     public static void onCycleTrades(ServerPlayer player) {
-        if (!Main.SERVER_CONFIG.tradeCycling.get()) {
+        if (!EasyVillagersMod.SERVER_CONFIG.tradeCycling.get()) {
             return;
         }
 

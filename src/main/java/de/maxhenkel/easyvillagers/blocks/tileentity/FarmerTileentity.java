@@ -3,7 +3,7 @@ package de.maxhenkel.easyvillagers.blocks.tileentity;
 import de.maxhenkel.corelib.blockentity.IServerTickableBlockEntity;
 import de.maxhenkel.corelib.codec.ValueInputOutputUtils;
 import de.maxhenkel.corelib.inventory.ItemListInventory;
-import de.maxhenkel.easyvillagers.Main;
+import de.maxhenkel.easyvillagers.EasyVillagersMod;
 import de.maxhenkel.easyvillagers.OutputItemHandler;
 import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
@@ -90,7 +90,7 @@ public class FarmerTileentity extends VillagerTileentity implements IServerTicka
         if (!seedStack.is(ItemTags.VILLAGER_PLANTABLE_SEEDS)) {
             return null;
         }
-        if (Main.SERVER_CONFIG.farmCropsBlacklist.stream().anyMatch(itemTag -> itemTag.contains(seed))) {
+        if (EasyVillagersMod.SERVER_CONFIG.farmCropsBlacklist.stream().anyMatch(itemTag -> itemTag.contains(seed))) {
             return null;
         }
         return blockitem.getBlock().defaultBlockState();
@@ -113,7 +113,7 @@ public class FarmerTileentity extends VillagerTileentity implements IServerTicka
             setChanged();
         }
 
-        if (level.getGameTime() % 20 == 0 && level.random.nextInt(Main.SERVER_CONFIG.farmSpeed.get()) == 0) {
+        if (level.getGameTime() % 20 == 0 && level.random.nextInt(EasyVillagersMod.SERVER_CONFIG.farmSpeed.get()) == 0) {
             if (ageCrop(v)) {
                 sync();
                 setChanged();

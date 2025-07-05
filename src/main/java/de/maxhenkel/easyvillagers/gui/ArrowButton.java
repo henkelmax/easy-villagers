@@ -1,6 +1,6 @@
 package de.maxhenkel.easyvillagers.gui;
 
-import de.maxhenkel.easyvillagers.Main;
+import de.maxhenkel.easyvillagers.EasyVillagersMod;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -10,8 +10,8 @@ import net.minecraft.resources.ResourceLocation;
 
 public class ArrowButton extends AbstractButton {
 
-    private static final ResourceLocation ARROW_LEFT = ResourceLocation.fromNamespaceAndPath(Main.MODID, "textures/gui/arrow_left.png");
-    private static final ResourceLocation ARROW_RIGHT = ResourceLocation.fromNamespaceAndPath(Main.MODID, "textures/gui/arrow_right.png");
+    private static final ResourceLocation ARROW_LEFT = ResourceLocation.fromNamespaceAndPath(EasyVillagersMod.MODID, "textures/gui/arrow_left.png");
+    private static final ResourceLocation ARROW_RIGHT = ResourceLocation.fromNamespaceAndPath(EasyVillagersMod.MODID, "textures/gui/arrow_right.png");
 
     private final boolean left;
     private final OnPress onPress;

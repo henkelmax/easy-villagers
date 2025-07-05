@@ -1,6 +1,6 @@
 package de.maxhenkel.easyvillagers.blocks;
 
-import de.maxhenkel.easyvillagers.Main;
+import de.maxhenkel.easyvillagers.EasyVillagersMod;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.neoforged.bus.api.IEventBus;
@@ -9,7 +9,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class ModBlocks {
 
-    private static final DeferredRegister.Blocks BLOCK_REGISTER = DeferredRegister.createBlocks(Main.MODID);
+    private static final DeferredRegister.Blocks BLOCK_REGISTER = DeferredRegister.createBlocks(EasyVillagersMod.MODID);
 
     public static final DeferredHolder<Block, TraderBlock> TRADER = BLOCK_REGISTER.registerBlock("trader", TraderBlock::new, BlockBehaviour.Properties.of());
     public static final DeferredHolder<Block, AutoTraderBlock> AUTO_TRADER = BLOCK_REGISTER.registerBlock("auto_trader", AutoTraderBlock::new, BlockBehaviour.Properties.of());

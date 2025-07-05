@@ -1,6 +1,6 @@
 package de.maxhenkel.easyvillagers.integration.jei.converter;
 
-import de.maxhenkel.easyvillagers.Main;
+import de.maxhenkel.easyvillagers.EasyVillagersMod;
 import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.integration.jei.JEIPlugin;
 import de.maxhenkel.easyvillagers.items.ModItems;
@@ -27,7 +27,7 @@ public class ConverterCategory implements IRecipeCategory<ItemStack> {
 
     @Override
     public IDrawable getBackground() {
-        return helper.createDrawable(ResourceLocation.fromNamespaceAndPath(Main.MODID, "textures/gui/container/jei_input_output.png"), 0, 0, 72, 49);
+        return helper.createDrawable(ResourceLocation.fromNamespaceAndPath(EasyVillagersMod.MODID, "textures/gui/container/jei_input_output.png"), 0, 0, 72, 49);
     }
 
     @Override

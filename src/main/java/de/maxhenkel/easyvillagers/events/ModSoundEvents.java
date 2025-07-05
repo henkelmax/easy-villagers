@@ -1,6 +1,6 @@
 package de.maxhenkel.easyvillagers.events;
 
-import de.maxhenkel.easyvillagers.Main;
+import de.maxhenkel.easyvillagers.EasyVillagersMod;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -12,14 +12,14 @@ public class ModSoundEvents {
     @SubscribeEvent
     public void onSound(PlayLevelSoundEvent.AtEntity event) {
         if (event.getSound() != null && event.getSource() != null && isVillagerSound(event.getSound().value()) && event.getSource().equals(SoundSource.BLOCKS)) {
-            event.setNewVolume(Main.CLIENT_CONFIG.villagerVolume.get().floatValue());
+            event.setNewVolume(EasyVillagersMod.CLIENT_CONFIG.villagerVolume.get().floatValue());
         }
     }
 
     @SubscribeEvent
     public void onSound(PlayLevelSoundEvent.AtPosition event) {
         if (event.getSound() != null && event.getSound().value() != null && event.getSource() != null && isVillagerSound(event.getSound().value()) && event.getSource().equals(SoundSource.BLOCKS)) {
-            event.setNewVolume(Main.CLIENT_CONFIG.villagerVolume.get().floatValue());
+            event.setNewVolume(EasyVillagersMod.CLIENT_CONFIG.villagerVolume.get().floatValue());
         }
     }
 

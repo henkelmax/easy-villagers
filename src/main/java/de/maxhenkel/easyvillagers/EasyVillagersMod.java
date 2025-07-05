@@ -3,48 +3,37 @@ package de.maxhenkel.easyvillagers;
 import de.maxhenkel.corelib.CommonRegistry;
 import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
-import de.maxhenkel.easyvillagers.blocks.tileentity.ModClientTileEntities;
 import de.maxhenkel.easyvillagers.blocks.tileentity.ModTileEntities;
 import de.maxhenkel.easyvillagers.events.BlockEvents;
-import de.maxhenkel.easyvillagers.events.GuiEvents;
-import de.maxhenkel.easyvillagers.events.ModSoundEvents;
 import de.maxhenkel.easyvillagers.events.VillagerEvents;
 import de.maxhenkel.easyvillagers.gui.Containers;
 import de.maxhenkel.easyvillagers.integration.IMC;
 import de.maxhenkel.easyvillagers.items.ModItems;
-import de.maxhenkel.easyvillagers.items.render.*;
 import de.maxhenkel.easyvillagers.loottable.ModLootTables;
 import de.maxhenkel.easyvillagers.net.MessageCycleTrades;
 import de.maxhenkel.easyvillagers.net.MessagePickUpVillager;
 import de.maxhenkel.easyvillagers.net.MessageSelectTrade;
 import de.maxhenkel.easyvillagers.net.MessageVillagerParticles;
-import net.minecraft.client.KeyMapping;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.fml.loading.FMLEnvironment;
-import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
-import net.neoforged.neoforge.client.event.RegisterSpecialModelRendererEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.lwjgl.glfw.GLFW;
 
 import java.util.LinkedList;
 import java.util.List;
 
-@Mod(Main.MODID)
-public class Main {
+@Mod(EasyVillagersMod.MODID)
+public class EasyVillagersMod {
 
     public static final String MODID = "easy_villagers";
 
@@ -53,12 +42,7 @@ public class Main {
     public static ServerConfig SERVER_CONFIG;
     public static ClientConfig CLIENT_CONFIG;
 
-    public static KeyMapping PICKUP_KEY;
-    public static KeyMapping CYCLE_TRADES_KEY;
-
-    public Main(IEventBus eventBus) {
-        eventBus.addListener(this::commonSetup);
-        eventBus.addListener(this::onRegisterPayloadHandler);
+    public EasyVillagersMod(IEventBus eventBus) {
         eventBus.addListener(IMC::enqueueIMC);
         eventBus.addListener(ModTileEntities::onRegisterCapabilities);
 
@@ -71,30 +55,17 @@ public class Main {
 
         SERVER_CONFIG = CommonRegistry.registerConfig(MODID, ModConfig.Type.SERVER, ServerConfig.class, true);
         CLIENT_CONFIG = CommonRegistry.registerConfig(MODID, ModConfig.Type.CLIENT, ClientConfig.class);
-
-        if (FMLEnvironment.dist.isClient()) {
-            eventBus.addListener(Main.this::clientSetup);
-            eventBus.addListener(Main.this::onRegisterKeyBinds);
-            eventBus.addListener(Main.this::registerItemModels);
-            Containers.initClient(eventBus);
-        }
     }
 
-    public void commonSetup(FMLCommonSetupEvent event) {
-        NeoForge.EVENT_BUS.register(this);
+    @SubscribeEvent
+    static void commonSetup(FMLCommonSetupEvent event) {
         NeoForge.EVENT_BUS.register(new VillagerEvents());
         NeoForge.EVENT_BUS.register(new BlockEvents());
     }
 
-    public void clientSetup(FMLClientSetupEvent event) {
-        ModClientTileEntities.clientSetup();
-
-        NeoForge.EVENT_BUS.register(new ModSoundEvents());
-        NeoForge.EVENT_BUS.register(new GuiEvents());
-    }
 
     @SubscribeEvent
-    public void onItemTooltip(ItemTooltipEvent event) {
+    static void onItemTooltip(ItemTooltipEvent event) {
         ItemStack itemStack = event.getItemStack();
         if (!(itemStack.getItem() instanceof BlockItem blockItem)) {
             return;
@@ -109,32 +80,13 @@ public class Main {
         }
     }
 
-    public void onRegisterPayloadHandler(RegisterPayloadHandlersEvent event) {
+    @SubscribeEvent
+    static void onRegisterPayloadHandler(RegisterPayloadHandlersEvent event) {
         PayloadRegistrar registrar = event.registrar(MODID).versioned("0");
         CommonRegistry.registerMessage(registrar, MessageVillagerParticles.class);
         CommonRegistry.registerMessage(registrar, MessagePickUpVillager.class);
         CommonRegistry.registerMessage(registrar, MessageSelectTrade.class);
         CommonRegistry.registerMessage(registrar, MessageCycleTrades.class);
-    }
-
-    public void onRegisterKeyBinds(RegisterKeyMappingsEvent event) {
-        PICKUP_KEY = new KeyMapping("key.easy_villagers.pick_up", GLFW.GLFW_KEY_V, "category.easy_villagers");
-        CYCLE_TRADES_KEY = new KeyMapping("key.easy_villagers.cycle_trades", GLFW.GLFW_KEY_C, "category.easy_villagers");
-        event.register(PICKUP_KEY);
-        event.register(CYCLE_TRADES_KEY);
-    }
-
-    public void registerItemModels(RegisterSpecialModelRendererEvent event) {
-        event.register(ResourceLocation.fromNamespaceAndPath(MODID, "auto_trader"), AutoTraderSpecialRenderer.Unbaked.MAP_CODEC);
-        event.register(ResourceLocation.fromNamespaceAndPath(MODID, "breeder"), BreederSpecialRenderer.Unbaked.MAP_CODEC);
-        event.register(ResourceLocation.fromNamespaceAndPath(MODID, "converter"), ConverterSpecialRenderer.Unbaked.MAP_CODEC);
-        event.register(ResourceLocation.fromNamespaceAndPath(MODID, "farmer"), FarmerSpecialRenderer.Unbaked.MAP_CODEC);
-        event.register(ResourceLocation.fromNamespaceAndPath(MODID, "incubator"), IncubatorSpecialRenderer.Unbaked.MAP_CODEC);
-        event.register(ResourceLocation.fromNamespaceAndPath(MODID, "inventory_viewer"), InventoryViewerSpecialRenderer.Unbaked.MAP_CODEC);
-        event.register(ResourceLocation.fromNamespaceAndPath(MODID, "trader"), TraderSpecialRenderer.Unbaked.MAP_CODEC);
-        event.register(ResourceLocation.fromNamespaceAndPath(MODID, "iron_farm"), IronFarmSpecialRenderer.Unbaked.MAP_CODEC);
-
-        event.register(ResourceLocation.fromNamespaceAndPath(MODID, "villager"), VillagerSpecialRenderer.Unbaked.MAP_CODEC);
     }
 
 }

@@ -1,6 +1,6 @@
 package de.maxhenkel.easyvillagers.gui;
 
-import de.maxhenkel.easyvillagers.Main;
+import de.maxhenkel.easyvillagers.EasyVillagersMod;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -15,7 +15,7 @@ import java.util.function.Consumer;
 
 public class CycleTradesButton extends AbstractButton {
 
-    private static final ResourceLocation ARROW_BUTTON = ResourceLocation.fromNamespaceAndPath(Main.MODID, "textures/gui/container/arrow_button.png");
+    private static final ResourceLocation ARROW_BUTTON = ResourceLocation.fromNamespaceAndPath(EasyVillagersMod.MODID, "textures/gui/container/arrow_button.png");
 
     public static final int WIDTH = 18;
     public static final int HEIGHT = 14;

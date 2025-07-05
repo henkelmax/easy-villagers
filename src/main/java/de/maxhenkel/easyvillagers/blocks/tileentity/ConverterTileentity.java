@@ -3,7 +3,7 @@ package de.maxhenkel.easyvillagers.blocks.tileentity;
 import de.maxhenkel.corelib.blockentity.IServerTickableBlockEntity;
 import de.maxhenkel.corelib.inventory.ItemListInventory;
 import de.maxhenkel.corelib.item.ItemUtils;
-import de.maxhenkel.easyvillagers.Main;
+import de.maxhenkel.easyvillagers.EasyVillagersMod;
 import de.maxhenkel.easyvillagers.MultiItemStackHandler;
 import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
@@ -198,7 +198,7 @@ public class ConverterTileentity extends VillagerTileentity implements IServerTi
     }
 
     public static int getConvertTime() {
-        return getCureTime() + Main.SERVER_CONFIG.convertingTime.get();
+        return getCureTime() + EasyVillagersMod.SERVER_CONFIG.convertingTime.get();
     }
 
     public static int getFinalizeTime() {

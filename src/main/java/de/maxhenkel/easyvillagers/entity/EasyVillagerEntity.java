@@ -1,6 +1,6 @@
 package de.maxhenkel.easyvillagers.entity;
 
-import de.maxhenkel.easyvillagers.Main;
+import de.maxhenkel.easyvillagers.EasyVillagersMod;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
@@ -34,7 +34,7 @@ public class EasyVillagerEntity extends Villager {
 
     @Override
     public int getPlayerReputation(Player player) {
-        if (Main.SERVER_CONFIG.universalReputation.get()) {
+        if (EasyVillagersMod.SERVER_CONFIG.universalReputation.get()) {
             return getUniversalReputation(this);
         } else {
             return super.getPlayerReputation(player);
@@ -42,7 +42,7 @@ public class EasyVillagerEntity extends Villager {
     }
 
     public static int getReputation(Villager villager) {
-        if (Main.SERVER_CONFIG.universalReputation.get()) {
+        if (EasyVillagersMod.SERVER_CONFIG.universalReputation.get()) {
             return getUniversalReputation(villager);
         } else {
             return 0;

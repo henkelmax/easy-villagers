@@ -1,13 +1,13 @@
 package de.maxhenkel.easyvillagers.blocks.tileentity;
 
-import de.maxhenkel.easyvillagers.Main;
+import de.maxhenkel.easyvillagers.EasyVillagersMod;
 import de.maxhenkel.easyvillagers.blocks.tileentity.render.*;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 
 public class ModClientTileEntities {
 
     public static void clientSetup() {
-        if (!Main.CLIENT_CONFIG.renderBlockContents.get()) {
+        if (!EasyVillagersMod.CLIENT_CONFIG.renderBlockContents.get()) {
             return;
         }
         BlockEntityRenderers.register(ModTileEntities.TRADER.get(), c -> new TraderRenderer(c.getModelSet()));

@@ -1,6 +1,6 @@
 package de.maxhenkel.easyvillagers.integration.jei;
 
-import de.maxhenkel.easyvillagers.Main;
+import de.maxhenkel.easyvillagers.EasyVillagersMod;
 import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.integration.jei.breeder.BreederCategory;
 import de.maxhenkel.easyvillagers.integration.jei.converter.ConverterCategory;
@@ -26,13 +26,13 @@ import java.util.List;
 @JeiPlugin
 public class JEIPlugin implements IModPlugin {
 
-    public static final IRecipeType<ItemStack> CATEGORY_BREEDING = IRecipeType.create(Main.MODID, "breeding", ItemStack.class);
-    public static final IRecipeType<ItemStack> CATEGORY_CONVERTING = IRecipeType.create(Main.MODID, "converting", ItemStack.class);
-    public static final IRecipeType<ItemStack> CATEGORY_INCUBATING = IRecipeType.create(Main.MODID, "incubating", ItemStack.class);
+    public static final IRecipeType<ItemStack> CATEGORY_BREEDING = IRecipeType.create(EasyVillagersMod.MODID, "breeding", ItemStack.class);
+    public static final IRecipeType<ItemStack> CATEGORY_CONVERTING = IRecipeType.create(EasyVillagersMod.MODID, "converting", ItemStack.class);
+    public static final IRecipeType<ItemStack> CATEGORY_INCUBATING = IRecipeType.create(EasyVillagersMod.MODID, "incubating", ItemStack.class);
 
     @Override
     public ResourceLocation getPluginUid() {
-        return ResourceLocation.fromNamespaceAndPath(Main.MODID, "easy_villagers");
+        return ResourceLocation.fromNamespaceAndPath(EasyVillagersMod.MODID, "easy_villagers");
     }
 
     @Override

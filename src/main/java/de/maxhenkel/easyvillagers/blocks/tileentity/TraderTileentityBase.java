@@ -1,7 +1,7 @@
 package de.maxhenkel.easyvillagers.blocks.tileentity;
 
 import de.maxhenkel.corelib.blockentity.IServerTickableBlockEntity;
-import de.maxhenkel.easyvillagers.Main;
+import de.maxhenkel.easyvillagers.EasyVillagersMod;
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import net.minecraft.core.BlockPos;
@@ -152,7 +152,7 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
     }
 
     protected long calculateNextRestock() {
-        return Main.SERVER_CONFIG.traderMinRestockTime.get() + level.random.nextInt(Math.max(Main.SERVER_CONFIG.traderMaxRestockTime.get() - Main.SERVER_CONFIG.traderMinRestockTime.get(), 1));
+        return EasyVillagersMod.SERVER_CONFIG.traderMinRestockTime.get() + level.random.nextInt(Math.max(EasyVillagersMod.SERVER_CONFIG.traderMaxRestockTime.get() - EasyVillagersMod.SERVER_CONFIG.traderMinRestockTime.get(), 1));
     }
 
     protected void restock() {
@@ -167,7 +167,7 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
                 VillagerBlockBase.playVillagerSound(level, getBlockPos(), workSound);
             }
         } catch (Exception e) {
-            Main.LOGGER.error("Error restocking villager", e);
+            EasyVillagersMod.LOGGER.error("Error restocking villager", e);
         }
     }
 

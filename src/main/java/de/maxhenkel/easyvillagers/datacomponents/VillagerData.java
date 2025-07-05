@@ -2,7 +2,7 @@ package de.maxhenkel.easyvillagers.datacomponents;
 
 import com.mojang.serialization.Codec;
 import de.maxhenkel.corelib.codec.ValueInputOutputUtils;
-import de.maxhenkel.easyvillagers.Main;
+import de.maxhenkel.easyvillagers.EasyVillagersMod;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import de.maxhenkel.easyvillagers.items.ModItems;
 import de.maxhenkel.easyvillagers.items.VillagerItem;
@@ -80,7 +80,7 @@ public class VillagerData {
 
     public EasyVillagerEntity createEasyVillager(Level level, @Nullable ItemStack stack) {
         EasyVillagerEntity v = new EasyVillagerEntity(EntityType.VILLAGER, level);
-        v.readAdditionalSaveData(ValueInputOutputUtils.createValueInput(Main.MODID, level.registryAccess(), nbt));
+        v.readAdditionalSaveData(ValueInputOutputUtils.createValueInput(EasyVillagersMod.MODID, level.registryAccess(), nbt));
         if (stack != null) {
             Component customName = stack.get(DataComponents.CUSTOM_NAME);
             if (customName != null) {

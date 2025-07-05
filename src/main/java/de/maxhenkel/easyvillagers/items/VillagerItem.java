@@ -1,10 +1,8 @@
 package de.maxhenkel.easyvillagers.items;
 
-import de.maxhenkel.easyvillagers.Main;
+import de.maxhenkel.easyvillagers.EasyVillagersMod;
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
 import de.maxhenkel.easyvillagers.datacomponents.VillagerData;
-import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -24,8 +22,6 @@ import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.fml.loading.FMLEnvironment;
 import org.jetbrains.annotations.Nullable;
-
-import static de.maxhenkel.easyvillagers.datacomponents.VillagerData.getCacheVillager;
 
 public class VillagerItem extends Item {
 
@@ -89,7 +85,7 @@ public class VillagerItem extends Item {
         if (!(entity instanceof Player player)) {
             return;
         }
-        if (!Main.SERVER_CONFIG.villagerInventorySounds.get()) {
+        if (!EasyVillagersMod.SERVER_CONFIG.villagerInventorySounds.get()) {
             return;
         }
         VillagerBlockBase.playRandomVillagerSound(player, SoundEvents.VILLAGER_AMBIENT);

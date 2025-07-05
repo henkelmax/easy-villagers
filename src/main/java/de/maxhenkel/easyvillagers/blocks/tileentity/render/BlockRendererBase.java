@@ -1,7 +1,7 @@
 package de.maxhenkel.easyvillagers.blocks.tileentity.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import de.maxhenkel.easyvillagers.Main;
+import de.maxhenkel.easyvillagers.EasyVillagersMod;
 import de.maxhenkel.easyvillagers.blocks.tileentity.FakeWorldTileentity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.EntityModelSet;
@@ -39,6 +39,6 @@ public class BlockRendererBase<T extends FakeWorldTileentity> implements BlockEn
 
     @Override
     public int getViewDistance() {
-        return Main.CLIENT_CONFIG.blockRenderDistance.get();
+        return EasyVillagersMod.CLIENT_CONFIG.blockRenderDistance.get();
     }
 }

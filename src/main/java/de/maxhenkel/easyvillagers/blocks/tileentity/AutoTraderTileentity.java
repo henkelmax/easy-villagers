@@ -3,7 +3,7 @@ package de.maxhenkel.easyvillagers.blocks.tileentity;
 import de.maxhenkel.corelib.blockentity.ITickableBlockEntity;
 import de.maxhenkel.corelib.inventory.ItemListInventory;
 import de.maxhenkel.corelib.item.ItemUtils;
-import de.maxhenkel.easyvillagers.Main;
+import de.maxhenkel.easyvillagers.EasyVillagersMod;
 import de.maxhenkel.easyvillagers.MultiItemStackHandler;
 import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
@@ -52,7 +52,7 @@ public class AutoTraderTileentity extends TraderTileentityBase implements ITicka
             return;
         }
 
-        if (level.getGameTime() % Main.SERVER_CONFIG.autoTraderCooldown.get() != 0) {
+        if (level.getGameTime() % EasyVillagersMod.SERVER_CONFIG.autoTraderCooldown.get() != 0) {
             return;
         }
 
@@ -221,7 +221,7 @@ public class AutoTraderTileentity extends TraderTileentityBase implements ITicka
 
     @Override
     protected long calculateNextRestock() {
-        return Main.SERVER_CONFIG.autoTraderMinRestockTime.get() + level.random.nextInt(Math.max(Main.SERVER_CONFIG.autoTraderMaxRestockTime.get() - Main.SERVER_CONFIG.autoTraderMinRestockTime.get(), 1));
+        return EasyVillagersMod.SERVER_CONFIG.autoTraderMinRestockTime.get() + level.random.nextInt(Math.max(EasyVillagersMod.SERVER_CONFIG.autoTraderMaxRestockTime.get() - EasyVillagersMod.SERVER_CONFIG.autoTraderMinRestockTime.get(), 1));
     }
 
     @Override
