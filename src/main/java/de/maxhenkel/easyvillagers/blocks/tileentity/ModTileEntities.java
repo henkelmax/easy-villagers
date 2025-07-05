@@ -2,12 +2,8 @@ package de.maxhenkel.easyvillagers.blocks.tileentity;
 
 import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.blocks.ModBlocks;
-import de.maxhenkel.easyvillagers.blocks.tileentity.render.*;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
@@ -55,21 +51,6 @@ public class ModTileEntities {
         event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, IRON_FARM.get(), (object, context) -> object.getItemHandler());
         event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, INCUBATOR.get(), (object, context) -> object.getItemHandler());
         event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, INVENTORY_VIEWER.get(), (object, context) -> object.getItemHandler());
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public static void clientSetup() {
-        if (!Main.CLIENT_CONFIG.renderBlockContents.get()) {
-            return;
-        }
-        BlockEntityRenderers.register(ModTileEntities.TRADER.get(), c -> new TraderRenderer(c.getModelSet()));
-        BlockEntityRenderers.register(ModTileEntities.AUTO_TRADER.get(), c -> new AutoTraderRenderer(c.getModelSet()));
-        BlockEntityRenderers.register(ModTileEntities.FARMER.get(), c -> new FarmerRenderer(c.getModelSet()));
-        BlockEntityRenderers.register(ModTileEntities.BREEDER.get(), c -> new BreederRenderer(c.getModelSet()));
-        BlockEntityRenderers.register(ModTileEntities.CONVERTER.get(), c -> new ConverterRenderer(c.getModelSet()));
-        BlockEntityRenderers.register(ModTileEntities.IRON_FARM.get(), c -> new IronFarmRenderer(c.getModelSet()));
-        BlockEntityRenderers.register(ModTileEntities.INCUBATOR.get(), c -> new IncubatorRenderer(c.getModelSet()));
-        BlockEntityRenderers.register(ModTileEntities.INVENTORY_VIEWER.get(), c -> new InventoryViewerRenderer(c.getModelSet()));
     }
 
 }

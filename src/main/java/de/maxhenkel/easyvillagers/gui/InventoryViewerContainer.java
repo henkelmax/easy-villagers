@@ -17,8 +17,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.block.Block;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 public class InventoryViewerContainer extends VillagerContainerBase {
 
@@ -88,7 +86,6 @@ public class InventoryViewerContainer extends VillagerContainerBase {
         this(id, playerInventory, te, ContainerLevelAccess.create(te.getLevel(), te.getBlockPos()));
     }
 
-    @OnlyIn(Dist.CLIENT)
     private static InventoryViewerTileentity get(BlockPos pos) {
         ClientLevel level = Minecraft.getInstance().level;
         if (level == null) {

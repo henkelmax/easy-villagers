@@ -13,14 +13,11 @@ import net.minecraft.client.renderer.entity.state.VillagerRenderState;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
 import java.util.Set;
 
-@OnlyIn(Dist.CLIENT)
 public class VillagerSpecialRenderer implements SpecialModelRenderer<VillagerRenderState> {
 
     protected static final Minecraft minecraft = Minecraft.getInstance();
@@ -60,7 +57,6 @@ public class VillagerSpecialRenderer implements SpecialModelRenderer<VillagerRen
         return renderer;
     }
 
-    @OnlyIn(Dist.CLIENT)
     public static class Unbaked implements SpecialModelRenderer.Unbaked {
 
         public static final MapCodec<VillagerSpecialRenderer.Unbaked> MAP_CODEC = MapCodec.unit(VillagerSpecialRenderer.Unbaked::new);

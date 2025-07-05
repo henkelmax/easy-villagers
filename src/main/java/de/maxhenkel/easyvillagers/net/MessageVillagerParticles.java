@@ -9,8 +9,6 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class MessageVillagerParticles implements Message<MessageVillagerParticles> {
@@ -37,7 +35,6 @@ public class MessageVillagerParticles implements Message<MessageVillagerParticle
         spawnParticles();
     }
 
-    @OnlyIn(Dist.CLIENT)
     private void spawnParticles() {
         Minecraft mc = Minecraft.getInstance();
         if (mc.level != null && mc.level.getBlockEntity(pos) instanceof BreederTileentity breeder) {

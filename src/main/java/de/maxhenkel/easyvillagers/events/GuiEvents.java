@@ -13,8 +13,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.inventory.MerchantMenu;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.InputEvent;
 import net.neoforged.neoforge.client.event.ScreenEvent;
@@ -22,7 +20,6 @@ import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 public class GuiEvents {
 
-    @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
     public void onOpenScreen(ScreenEvent.Init.Post event) {
         if (!(event.getScreen() instanceof MerchantScreen merchantScreen)) {
@@ -58,7 +55,6 @@ public class GuiEvents {
         }, merchantScreen));
     }
 
-    @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
     public void onKeyInput(InputEvent.Key event) {
         Minecraft mc = Minecraft.getInstance();

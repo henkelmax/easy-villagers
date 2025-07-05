@@ -7,12 +7,9 @@ import de.maxhenkel.easyvillagers.blocks.tileentity.render.BreederRenderer;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.function.Supplier;
 
-@OnlyIn(Dist.CLIENT)
 public class BreederSpecialRenderer extends ItemSpecialRendererBase<BreederTileentity> {
 
     public BreederSpecialRenderer(EntityModelSet modelSet, Supplier<BlockState> blockSupplier) {
@@ -20,7 +17,6 @@ public class BreederSpecialRenderer extends ItemSpecialRendererBase<BreederTilee
         renderer = new BreederRenderer(modelSet);
     }
 
-    @OnlyIn(Dist.CLIENT)
     public static class Unbaked implements SpecialModelRenderer.Unbaked {
 
         public static final MapCodec<BreederSpecialRenderer.Unbaked> MAP_CODEC = MapCodec.unit(BreederSpecialRenderer.Unbaked::new);

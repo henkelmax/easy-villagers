@@ -12,15 +12,12 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
 import java.util.Set;
 import java.util.function.Supplier;
 
-@OnlyIn(Dist.CLIENT)
 public class ItemSpecialRendererBase<T extends FakeWorldTileentity> implements SpecialModelRenderer<T> {
 
     protected static final Minecraft minecraft = Minecraft.getInstance();

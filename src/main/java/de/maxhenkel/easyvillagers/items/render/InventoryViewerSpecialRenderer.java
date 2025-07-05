@@ -7,12 +7,9 @@ import de.maxhenkel.easyvillagers.blocks.tileentity.render.InventoryViewerRender
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.function.Supplier;
 
-@OnlyIn(Dist.CLIENT)
 public class InventoryViewerSpecialRenderer extends ItemSpecialRendererBase<InventoryViewerTileentity> {
 
     public InventoryViewerSpecialRenderer(EntityModelSet modelSet, Supplier<BlockState> blockSupplier) {
@@ -20,7 +17,6 @@ public class InventoryViewerSpecialRenderer extends ItemSpecialRendererBase<Inve
         renderer = new InventoryViewerRenderer(modelSet);
     }
 
-    @OnlyIn(Dist.CLIENT)
     public static class Unbaked implements SpecialModelRenderer.Unbaked {
 
         public static final MapCodec<InventoryViewerSpecialRenderer.Unbaked> MAP_CODEC = MapCodec.unit(InventoryViewerSpecialRenderer.Unbaked::new);

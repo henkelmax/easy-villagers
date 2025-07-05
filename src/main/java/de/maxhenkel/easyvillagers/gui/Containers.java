@@ -3,8 +3,6 @@ package de.maxhenkel.easyvillagers.gui;
 import de.maxhenkel.easyvillagers.Main;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.inventory.MenuType;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
@@ -42,7 +40,6 @@ public class Containers {
         eventBus.addListener(Containers::onRegisterScreens);
     }
 
-    @OnlyIn(Dist.CLIENT)
     public static void onRegisterScreens(RegisterMenuScreensEvent containers) {
         containers.<AutoTraderContainer, AutoTraderScreen>register(AUTO_TRADER_CONTAINER.get(), AutoTraderScreen::new);
         containers.<BreederContainer, BreederScreen>register(BREEDER_CONTAINER.get(), BreederScreen::new);

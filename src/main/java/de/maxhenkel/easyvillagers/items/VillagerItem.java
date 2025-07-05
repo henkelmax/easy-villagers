@@ -22,8 +22,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.fml.loading.FMLEnvironment;
 import org.jetbrains.annotations.Nullable;
 
 import static de.maxhenkel.easyvillagers.datacomponents.VillagerData.getCacheVillager;
@@ -72,20 +71,17 @@ public class VillagerItem extends Item {
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Override
     public Component getName(ItemStack stack) {
-        Level world = Minecraft.getInstance().level;
-        if (world == null) {
-            return super.getName(stack);
-        } else {
-            EasyVillagerEntity villager = getCacheVillager(stack, world);
-            if (!villager.hasCustomName() && villager.isBaby()) {
-                return Component.translatable("item.easy_villagers.baby_villager");
+        if (FMLEnvironment.dist.isClient()) {
+            Component clientName = ClientVillagerItemUtils.getClientName(stack);
+            if (clientName != null) {
+                return clientName;
             }
-            return villager.getDisplayName();
         }
+        return super.getName(stack);
     }
+
 
     @Override
     public void inventoryTick(ItemStack stack, ServerLevel level, Entity entity, @Nullable EquipmentSlot equipmentSlot) {

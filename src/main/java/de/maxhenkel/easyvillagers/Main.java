@@ -3,6 +3,7 @@ package de.maxhenkel.easyvillagers;
 import de.maxhenkel.corelib.CommonRegistry;
 import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
+import de.maxhenkel.easyvillagers.blocks.tileentity.ModClientTileEntities;
 import de.maxhenkel.easyvillagers.blocks.tileentity.ModTileEntities;
 import de.maxhenkel.easyvillagers.events.BlockEvents;
 import de.maxhenkel.easyvillagers.events.GuiEvents;
@@ -22,8 +23,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
@@ -87,9 +86,8 @@ public class Main {
         NeoForge.EVENT_BUS.register(new BlockEvents());
     }
 
-    @OnlyIn(Dist.CLIENT)
     public void clientSetup(FMLClientSetupEvent event) {
-        ModTileEntities.clientSetup();
+        ModClientTileEntities.clientSetup();
 
         NeoForge.EVENT_BUS.register(new ModSoundEvents());
         NeoForge.EVENT_BUS.register(new GuiEvents());
@@ -119,7 +117,6 @@ public class Main {
         CommonRegistry.registerMessage(registrar, MessageCycleTrades.class);
     }
 
-    @OnlyIn(Dist.CLIENT)
     public void onRegisterKeyBinds(RegisterKeyMappingsEvent event) {
         PICKUP_KEY = new KeyMapping("key.easy_villagers.pick_up", GLFW.GLFW_KEY_V, "category.easy_villagers");
         CYCLE_TRADES_KEY = new KeyMapping("key.easy_villagers.cycle_trades", GLFW.GLFW_KEY_C, "category.easy_villagers");
@@ -127,7 +124,6 @@ public class Main {
         event.register(CYCLE_TRADES_KEY);
     }
 
-    @OnlyIn(Dist.CLIENT)
     public void registerItemModels(RegisterSpecialModelRendererEvent event) {
         event.register(ResourceLocation.fromNamespaceAndPath(MODID, "auto_trader"), AutoTraderSpecialRenderer.Unbaked.MAP_CODEC);
         event.register(ResourceLocation.fromNamespaceAndPath(MODID, "breeder"), BreederSpecialRenderer.Unbaked.MAP_CODEC);
