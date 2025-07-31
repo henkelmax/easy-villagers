@@ -69,7 +69,7 @@ public class GuiEvents {
             return;
         }
 
-        if (!Main.SERVER_CONFIG.tradeCycling.get()) {
+        if (!Main.SERVER_CONFIG.getConfigSpec().isLoaded() || !Main.SERVER_CONFIG.tradeCycling.get()) {
             return;
         }
 
