@@ -66,7 +66,7 @@ public class GuiEvents {
             return;
         }
 
-        if (!EasyVillagersMod.SERVER_CONFIG.tradeCycling.get()) {
+        if (!EasyVillagersMod.SERVER_CONFIG.getConfigSpec().isLoaded() || !EasyVillagersMod.SERVER_CONFIG.tradeCycling.get()) {
             return;
         }
 
