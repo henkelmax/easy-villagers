@@ -9,12 +9,19 @@ plugins {
 
 apply from: "https://raw.githubusercontent.com/henkelmax/mod-gradle-scripts/${mod_gradle_script_version}/mod.gradle"
 
+repositories {
+    maven { url = "https://maven.blamejared.com/" }
+}
+
 dependencies {
     shadow "de.maxhenkel.corelib:corelib:${minecraft_version}-${corelib_version}:api"
     runtimeOnly "de.maxhenkel.corelib:corelib:${minecraft_version}-${corelib_version}"
     compileOnly "de.maxhenkel.corelib:corelib:${minecraft_version}-${corelib_version}:javadoc"
 
-    compileOnly "maven.modrinth:jei:${jei_version}"
+    compileOnly("mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}")
+    //runtimeOnly("mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}")
+    //implementation "maven.modrinth:jei:${jei_version}"
+    implementation "maven.modrinth:jei:24.0.0.1"
     compileOnly "maven.modrinth:the-one-probe:${theoneprobe_version}"
     implementation "maven.modrinth:jade:${jade_version}"
 }

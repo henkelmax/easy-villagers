@@ -1,1 +1,1 @@
-- Fixed error when cycling trades on servers
+- Updated JEI integration

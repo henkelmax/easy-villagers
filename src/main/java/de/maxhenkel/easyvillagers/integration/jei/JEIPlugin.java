@@ -26,13 +26,15 @@ import java.util.List;
 @JeiPlugin
 public class JEIPlugin implements IModPlugin {
 
+    public static ResourceLocation PLUGIN_UID = ResourceLocation.fromNamespaceAndPath(EasyVillagersMod.MODID, "easy_villagers");
+
     public static final IRecipeType<ItemStack> CATEGORY_BREEDING = IRecipeType.create(EasyVillagersMod.MODID, "breeding", ItemStack.class);
     public static final IRecipeType<ItemStack> CATEGORY_CONVERTING = IRecipeType.create(EasyVillagersMod.MODID, "converting", ItemStack.class);
     public static final IRecipeType<ItemStack> CATEGORY_INCUBATING = IRecipeType.create(EasyVillagersMod.MODID, "incubating", ItemStack.class);
 
     @Override
     public ResourceLocation getPluginUid() {
-        return ResourceLocation.fromNamespaceAndPath(EasyVillagersMod.MODID, "easy_villagers");
+        return PLUGIN_UID;
     }
 
     @Override

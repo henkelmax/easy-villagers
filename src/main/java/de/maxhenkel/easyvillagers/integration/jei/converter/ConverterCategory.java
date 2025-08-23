@@ -1,38 +1,28 @@
 package de.maxhenkel.easyvillagers.integration.jei.converter;
 
-import de.maxhenkel.easyvillagers.EasyVillagersMod;
 import de.maxhenkel.easyvillagers.blocks.ModBlocks;
+import de.maxhenkel.easyvillagers.integration.jei.InputOutputCategory;
 import de.maxhenkel.easyvillagers.integration.jei.JEIPlugin;
 import de.maxhenkel.easyvillagers.items.ModItems;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
-import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
-import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
-public class ConverterCategory implements IRecipeCategory<ItemStack> {
-
-    private IGuiHelper helper;
+public class ConverterCategory extends InputOutputCategory {
 
     public ConverterCategory(IGuiHelper helper) {
-        this.helper = helper;
+        super(helper);
     }
 
     @Override
-    public IDrawable getBackground() {
-        return helper.createDrawable(ResourceLocation.fromNamespaceAndPath(EasyVillagersMod.MODID, "textures/gui/container/jei_input_output.png"), 0, 0, 72, 49);
-    }
-
-    @Override
-    public IDrawable getIcon() {
-        return helper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.CONVERTER.get()));
+    public ItemStack icon() {
+        return new ItemStack(ModBlocks.CONVERTER.get());
     }
 
     @Override
