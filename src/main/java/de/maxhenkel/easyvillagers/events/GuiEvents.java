@@ -3,17 +3,13 @@ package de.maxhenkel.easyvillagers.events;
 import de.maxhenkel.easyvillagers.ClientConfig;
 import de.maxhenkel.easyvillagers.EasyVillagersClientMod;
 import de.maxhenkel.easyvillagers.EasyVillagersMod;
-import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import de.maxhenkel.easyvillagers.gui.CycleTradesButton;
 import de.maxhenkel.easyvillagers.net.MessageCycleTrades;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.MerchantScreen;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.entity.npc.Villager;
-import net.minecraft.world.inventory.MerchantMenu;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.InputEvent;
 import net.neoforged.neoforge.client.event.ScreenEvent;
@@ -84,29 +80,6 @@ public class GuiEvents {
 
         ClientPacketDistributor.sendToServer(new MessageCycleTrades());
         mc.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1F));
-    }
-
-    public static void onCycleTrades(ServerPlayer player) {
-        if (!EasyVillagersMod.SERVER_CONFIG.tradeCycling.get()) {
-            return;
-        }
-
-        if (!(player.containerMenu instanceof MerchantMenu)) {
-            return;
-        }
-        MerchantMenu container = (MerchantMenu) player.containerMenu;
-
-        if (container.getTraderXp() > 0 && container.tradeContainer.getActiveOffer() != null) {
-            return;
-        }
-
-        if (!(container.trader instanceof Villager)) {
-            return;
-        }
-        Villager villager = (Villager) container.trader;
-        villager.offers = null;
-        EasyVillagerEntity.recalculateOffers(villager);
-        player.sendMerchantOffers(container.containerId, villager.getOffers(), villager.getVillagerData().level(), villager.getVillagerXp(), villager.showProgressBar(), villager.canRestock());
     }
 
 }

@@ -2,7 +2,7 @@ package de.maxhenkel.easyvillagers.net;
 
 import de.maxhenkel.corelib.net.Message;
 import de.maxhenkel.easyvillagers.EasyVillagersMod;
-import de.maxhenkel.easyvillagers.events.GuiEvents;
+import de.maxhenkel.easyvillagers.events.TradeCycleEvents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -28,7 +28,7 @@ public class MessageCycleTrades implements Message<MessageCycleTrades> {
         if (!(context.player() instanceof ServerPlayer sender)) {
             return;
         }
-        GuiEvents.onCycleTrades(sender);
+        TradeCycleEvents.onCycleTrades(sender);
     }
 
     @Override

@@ -1,1 +1,1 @@
-- Fixed potential crash
+- Fixed error when cycling trades on servers
