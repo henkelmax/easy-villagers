@@ -1,4 +1,5 @@
 {
+  "key.category.easy_villagers.easy_villagers": "Easy Villagers",
   "item.easy_villagers.villager": "Villager",
   "item.easy_villagers.baby_villager": "Baby Villager",
   "block.easy_villagers.trader": "Trader",
@@ -27,7 +28,6 @@
   "jei.easy_villagers.incubating": "Incubating",
   "key.easy_villagers.pick_up": "Pick Up",
   "key.easy_villagers.cycle_trades": "Cycle Trades",
-  "category.easy_villagers": "Easy Villagers",
   "config.jade.plugin_easy_villagers.villager": "Villager",
   "config.jade.plugin_easy_villagers.converter": "Converter",
   "config.jade.plugin_easy_villagers.breeder": "Breeder"

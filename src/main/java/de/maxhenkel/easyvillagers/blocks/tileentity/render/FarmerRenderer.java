@@ -3,78 +3,97 @@ package de.maxhenkel.easyvillagers.blocks.tileentity.render;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import de.maxhenkel.corelib.client.RenderUtils;
-import de.maxhenkel.easyvillagers.blocks.TraderBlock;
 import de.maxhenkel.easyvillagers.blocks.tileentity.FarmerTileentity;
 import net.minecraft.client.model.geom.EntityModelSet;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.entity.VillagerRenderer;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
-public class FarmerRenderer extends VillagerRendererBase<FarmerTileentity> {
+public class FarmerRenderer extends VillagerRendererBase<FarmerTileentity, FarmerRenderState> {
 
-    public FarmerRenderer(EntityModelSet entityModelSet) {
+    private final BlockRenderDispatcher blockRenderer;
+
+    public FarmerRenderer(EntityModelSet entityModelSet, BlockRenderDispatcher blockRenderer) {
         super(entityModelSet);
+        this.blockRenderer = blockRenderer;
     }
 
     @Override
-    public void render(FarmerTileentity farmer, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay, Vec3 vec) {
-        super.render(farmer, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay, vec);
-        matrixStack.pushPose();
+    public FarmerRenderState createRenderState() {
+        return new FarmerRenderState();
+    }
 
-        Direction direction = Direction.SOUTH;
-        if (!farmer.isFakeWorld()) {
-            direction = farmer.getBlockState().getValue(TraderBlock.FACING);
-        }
+    @Override
+    public void extractRenderState(FarmerTileentity farmer, FarmerRenderState state, float partialTicks, Vec3 pos, @Nullable ModelFeatureRenderer.CrumblingOverlay crumblingOverlay) {
+        super.extractRenderState(farmer, state, partialTicks, pos, crumblingOverlay);
+        state.apply(farmer);
 
+        state.renderVillager = false;
         if (farmer.getVillagerEntity() != null) {
-            matrixStack.pushPose();
-
-            matrixStack.translate(0.5D, 1D / 16D, 0.5D);
-            matrixStack.mulPose(Axis.YP.rotationDegrees(-direction.toYRot()));
-            matrixStack.translate(0D, 0D, -4D / 16D);
-            matrixStack.scale(0.45F, 0.45F, 0.45F);
+            state.renderVillager = true;
             VillagerRenderer villagerRenderer = getVillagerRenderer();
-            villagerRenderer.render(getVillagerRenderState(villagerRenderer, farmer.getVillagerEntity()), matrixStack, buffer, combinedLight);
-            matrixStack.popPose();
+            villagerRenderer.extractRenderState(farmer.getVillagerEntity(), state.villagerRenderState, partialTicks);
+            state.villagerRenderState.lightCoords = getLightOrDefault(farmer, state);
         }
 
-        BlockState crop = farmer.getCrop();
-        if (crop != null) {
-            matrixStack.pushPose();
+        state.crop = farmer.getCrop();
+    }
 
-            matrixStack.translate(0.5D, 1D / 16D, 0.5D);
-            matrixStack.mulPose(Axis.YP.rotationDegrees(-direction.toYRot()));
-            matrixStack.translate(0D, 0D, 2D / 16D);
-            matrixStack.translate(-0.5D, 0D, -0.5D);
-            matrixStack.scale(0.45F, 0.45F, 0.45F);
-            matrixStack.translate(0.5D / 0.45D - 0.5D, 0D, 0.5D / 0.45D - 0.5D);
+    @Override
+    public void submit(FarmerRenderState state, PoseStack stack, SubmitNodeCollector collector, CameraRenderState cameraRenderState) {
+        stack.pushPose();
+
+        if (state.renderVillager) {
+            stack.pushPose();
+
+            stack.translate(0.5D, 1D / 16D, 0.5D);
+            stack.mulPose(Axis.YP.rotationDegrees(-state.direction.toYRot()));
+            stack.translate(0D, 0D, -4D / 16D);
+            stack.scale(0.45F, 0.45F, 0.45F);
+            VillagerRenderer villagerRenderer = getVillagerRenderer();
+            villagerRenderer.submit(state.villagerRenderState, stack, collector, cameraRenderState);
+            stack.popPose();
+        }
+
+        BlockState crop = state.crop;
+        if (crop != null) {
+            stack.pushPose();
+
+            stack.translate(0.5D, 1D / 16D, 0.5D);
+            stack.mulPose(Axis.YP.rotationDegrees(-state.direction.toYRot()));
+            stack.translate(0D, 0D, 2D / 16D);
+            stack.translate(-0.5D, 0D, -0.5D);
+            stack.scale(0.45F, 0.45F, 0.45F);
+            stack.translate(0.5D / 0.45D - 0.5D, 0D, 0.5D / 0.45D - 0.5D);
 
             if (minecraft.level != null) {
-                BlockRenderDispatcher dispatcher = minecraft.getBlockRenderer();
                 int color = minecraft.getBlockColors().getColor(crop, null, null, 0);
-                dispatcher.getModelRenderer().renderModel(
-                        matrixStack.last(),
-                        buffer,
-                        dispatcher.getBlockModel(crop),
+                // See ItemFrameRenderer
+                collector.submitBlockModel(
+                        stack,
+                        RenderType.entityCutout(TextureAtlas.LOCATION_BLOCKS),
+                        blockRenderer.getBlockModel(crop),
                         RenderUtils.getRedFloat(color),
                         RenderUtils.getGreenFloat(color),
                         RenderUtils.getBlueFloat(color),
-                        combinedLight,
-                        combinedOverlay,
-                        minecraft.level,
-                        BlockPos.ZERO,
-                        crop
+                        state.lightCoords,
+                        OverlayTexture.NO_OVERLAY,
+                        0
                 );
             }
 
-            matrixStack.popPose();
+            stack.popPose();
         }
 
-        matrixStack.popPose();
+        stack.popPose();
     }
 
 }

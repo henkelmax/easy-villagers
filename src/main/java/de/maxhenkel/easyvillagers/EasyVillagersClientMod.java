@@ -22,6 +22,7 @@ import org.lwjgl.glfw.GLFW;
 @EventBusSubscriber(modid = EasyVillagersMod.MODID, value = Dist.CLIENT)
 public class EasyVillagersClientMod {
 
+    public static KeyMapping.Category CATEGORY_EASY_VILLAGERS;
     public static KeyMapping CYCLE_TRADES_KEY;
     public static KeyMapping PICKUP_KEY;
 
@@ -39,8 +40,10 @@ public class EasyVillagersClientMod {
 
     @SubscribeEvent
     static void onRegisterKeyBinds(RegisterKeyMappingsEvent event) {
-        PICKUP_KEY = new KeyMapping("key.easy_villagers.pick_up", GLFW.GLFW_KEY_V, "category.easy_villagers");
-        CYCLE_TRADES_KEY = new KeyMapping("key.easy_villagers.cycle_trades", GLFW.GLFW_KEY_C, "category.easy_villagers");
+        CATEGORY_EASY_VILLAGERS = new KeyMapping.Category(ResourceLocation.fromNamespaceAndPath(EasyVillagersMod.MODID, "easy_villagers"));
+        event.registerCategory(CATEGORY_EASY_VILLAGERS);
+        PICKUP_KEY = new KeyMapping("key.easy_villagers.pick_up", GLFW.GLFW_KEY_V, CATEGORY_EASY_VILLAGERS);
+        CYCLE_TRADES_KEY = new KeyMapping("key.easy_villagers.cycle_trades", GLFW.GLFW_KEY_C, CATEGORY_EASY_VILLAGERS);
         event.register(PICKUP_KEY);
         event.register(CYCLE_TRADES_KEY);
     }

@@ -165,7 +165,7 @@ public class AutoTraderTileentity extends TraderTileentityBase implements ITicka
     }
 
     protected void updateTradeInv() {
-        if (level == null || level.isClientSide) {
+        if (level == null || level.isClientSide()) {
             return;
         }
         EasyVillagerEntity villagerEntity = getVillagerEntity();

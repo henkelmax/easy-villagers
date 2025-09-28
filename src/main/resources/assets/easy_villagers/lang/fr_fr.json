@@ -1,4 +1,5 @@
 {
+  "key.category.easy_villagers.easy_villagers": "Villageois faciles",
   "item.easy_villagers.villager": "Villageois",
   "item.easy_villagers.baby_villager": "Bébé Villageois",
   "block.easy_villagers.trader": "Commerçant",
@@ -22,6 +23,5 @@
   "jei.easy_villagers.converting": "Conversion",
   "jei.easy_villagers.incubating": "Incubation",
   "key.easy_villagers.pick_up": "Récupérer",
-  "key.easy_villagers.cycle_trades": "Cycler les échanges",
-  "category.easy_villagers": "Villageois faciles"
+  "key.easy_villagers.cycle_trades": "Cycler les échanges"
 }

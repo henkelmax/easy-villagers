@@ -21,7 +21,7 @@ public class VillagerEvents {
 
     @SubscribeEvent
     public void onClick(PlayerInteractEvent.EntityInteract event) {
-        if (!event.getLevel().isClientSide) {
+        if (!event.getLevel().isClientSide()) {
             return;
         }
         if (!(event.getTarget() instanceof Villager)) {

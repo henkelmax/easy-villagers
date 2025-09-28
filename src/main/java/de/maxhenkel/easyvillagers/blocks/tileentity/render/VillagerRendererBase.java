@@ -2,19 +2,16 @@ package de.maxhenkel.easyvillagers.blocks.tileentity.render;
 
 import de.maxhenkel.easyvillagers.blocks.tileentity.FakeWorldTileentity;
 import net.minecraft.client.model.geom.EntityModelSet;
+import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import net.minecraft.client.renderer.entity.VillagerRenderer;
-import net.minecraft.client.renderer.entity.state.VillagerRenderState;
-import net.minecraft.world.entity.npc.Villager;
 
-import javax.annotation.Nullable;
 import java.lang.ref.WeakReference;
 
-public class VillagerRendererBase<T extends FakeWorldTileentity> extends BlockRendererBase<T> {
+public abstract class VillagerRendererBase<T extends FakeWorldTileentity, S extends BlockEntityRenderState> extends BlockRendererBase<T, S> {
+
+    public static final int DEFAULT_LIGHT = 0xF000F0;
 
     protected WeakReference<VillagerRenderer> villagerRendererCache = new WeakReference<>(null);
-
-    @Nullable
-    protected static VillagerRenderState villagerRenderState;
 
     public VillagerRendererBase(EntityModelSet entityModelSet) {
         super(entityModelSet);
@@ -29,12 +26,11 @@ public class VillagerRendererBase<T extends FakeWorldTileentity> extends BlockRe
         return villagerRenderer;
     }
 
-    protected static VillagerRenderState getVillagerRenderState(VillagerRenderer renderer, Villager villager) {
-        if (villagerRenderState == null) {
-            villagerRenderState = renderer.createRenderState();
+    public static int getLightOrDefault(FakeWorldTileentity blockEntity, BlockEntityRenderState state) {
+        if (blockEntity.isFakeWorld()) {
+            return DEFAULT_LIGHT;
         }
-        renderer.extractRenderState(villager, villagerRenderState, 0F);
-        return villagerRenderState;
+        return state.lightCoords;
     }
 
 }

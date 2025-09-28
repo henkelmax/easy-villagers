@@ -1,4 +1,5 @@
 {
+  "key.category.easy_villagers.easy_villagers": "简易村民",
   "item.easy_villagers.villager": "村民",
   "item.easy_villagers.baby_villager": "幼年村民",
   "block.easy_villagers.trader": "交易器",
@@ -23,7 +24,6 @@
   "jei.easy_villagers.incubating": "培育",
   "key.easy_villagers.pick_up": "拾取",
   "key.easy_villagers.cycle_trades": "刷新交易",
-  "category.easy_villagers": "简易村民",
   "config.jade.plugin_easy_villagers.villager": "村民",
   "config.jade.plugin_easy_villagers.converter": "转化器",
   "config.jade.plugin_easy_villagers.breeder": "繁殖器"

@@ -7,7 +7,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.item.component.TypedEntityData;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.Nullable;
 import snownee.jade.api.BlockAccessor;
@@ -39,7 +39,7 @@ public class HUDHandlerVillager implements IBlockComponentProvider {
         ItemStack stack = new ItemStack(te.getBlockState().getBlock().asItem());
         if (te.getLevel() != null) {
             CompoundTag blockEntityTag = te.saveWithoutMetadata(te.getLevel().registryAccess());
-            stack.set(DataComponents.BLOCK_ENTITY_DATA, CustomData.of(blockEntityTag));
+            stack.set(DataComponents.BLOCK_ENTITY_DATA, TypedEntityData.of(te.getType(), blockEntityTag));
         }
         return ItemStackElement.of(stack);
     }

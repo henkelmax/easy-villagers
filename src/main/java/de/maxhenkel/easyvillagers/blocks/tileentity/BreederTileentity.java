@@ -118,7 +118,7 @@ public class BreederTileentity extends FakeWorldTileentity implements IServerTic
 
     @Override
     public void tickServer() {
-        if (level.isClientSide) {
+        if (level.isClientSide()) {
             return;
         }
 
@@ -149,7 +149,7 @@ public class BreederTileentity extends FakeWorldTileentity implements IServerTic
         if (level instanceof ServerLevel serverLevel) {
             PacketDistributor.sendToPlayersTrackingChunk(serverLevel, new ChunkPos(worldPosition), new MessageVillagerParticles(worldPosition));
 
-        } else if (level.isClientSide) {
+        } else if (level.isClientSide()) {
             for (int i = 0; i < 5; i++) {
                 level.addParticle(ParticleTypes.HEART,
                         worldPosition.getX() + (level.random.nextDouble() - 0.5D) + 0.5D,

@@ -3,37 +3,41 @@ package de.maxhenkel.easyvillagers.items.render;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.serialization.MapCodec;
 import de.maxhenkel.easyvillagers.blocks.tileentity.render.BlockRendererBase;
+import de.maxhenkel.easyvillagers.blocks.tileentity.render.VillagerRendererBase;
 import de.maxhenkel.easyvillagers.datacomponents.VillagerData;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.EntityModelSet;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.VillagerRenderer;
 import net.minecraft.client.renderer.entity.state.VillagerRenderState;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
+import javax.annotation.Nullable;
 import java.util.Set;
 
 public class VillagerSpecialRenderer implements SpecialModelRenderer<VillagerRenderState> {
 
     protected static final Minecraft minecraft = Minecraft.getInstance();
 
+    @Nullable
     private VillagerRenderer renderer;
+    private final CameraRenderState cameraRenderState;
 
     public VillagerSpecialRenderer(EntityModelSet modelSet) {
-
+        cameraRenderState = new CameraRenderState();
     }
 
     @Override
-    public void render(@Nullable VillagerRenderState villagerRenderState, ItemDisplayContext itemDisplayContext, PoseStack stack, MultiBufferSource bufferSource, int light, int overlay, boolean b) {
-        if (villagerRenderState == null) {
+    public void submit(@Nullable VillagerRenderState state, ItemDisplayContext context, PoseStack stack, SubmitNodeCollector collector, int light, int overlay, boolean b) {
+        if (state == null) {
             return;
         }
-        getRenderer().render(villagerRenderState, stack, bufferSource, light);
+        getRenderer().submit(state, stack, collector, cameraRenderState);
     }
 
     @Override
@@ -46,7 +50,8 @@ public class VillagerSpecialRenderer implements SpecialModelRenderer<VillagerRen
     public VillagerRenderState extractArgument(ItemStack stack) {
         EasyVillagerEntity cacheVillager = VillagerData.getCacheVillager(stack, minecraft.level);
         VillagerRenderState renderState = getRenderer().createRenderState();
-        renderer.extractRenderState(cacheVillager, renderState, 0F);
+        getRenderer().extractRenderState(cacheVillager, renderState, 0F);
+        renderState.lightCoords = VillagerRendererBase.DEFAULT_LIGHT;
         return renderState;
     }
 
@@ -66,14 +71,16 @@ public class VillagerSpecialRenderer implements SpecialModelRenderer<VillagerRen
         }
 
         @Override
+        @Nullable
+        public SpecialModelRenderer<?> bake(BakingContext context) {
+            return new VillagerSpecialRenderer(context.entityModelSet());
+        }
+
+        @Override
         public MapCodec<VillagerSpecialRenderer.Unbaked> type() {
             return MAP_CODEC;
         }
 
-        @Override
-        public SpecialModelRenderer<?> bake(EntityModelSet modelSet) {
-            return new VillagerSpecialRenderer(modelSet);
-        }
     }
 
 }
