@@ -69,7 +69,7 @@ public class VillagerItem extends Item {
 
     @Override
     public Component getName(ItemStack stack) {
-        if (FMLEnvironment.dist.isClient()) {
+        if (FMLEnvironment.getDist().isClient()) {
             Component clientName = ClientVillagerItemUtils.getClientName(stack);
             if (clientName != null) {
                 return clientName;

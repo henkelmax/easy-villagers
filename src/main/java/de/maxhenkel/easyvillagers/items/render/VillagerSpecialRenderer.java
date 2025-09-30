@@ -33,7 +33,7 @@ public class VillagerSpecialRenderer implements SpecialModelRenderer<VillagerRen
     }
 
     @Override
-    public void submit(@Nullable VillagerRenderState state, ItemDisplayContext context, PoseStack stack, SubmitNodeCollector collector, int light, int overlay, boolean b) {
+    public void submit(@Nullable VillagerRenderState state, ItemDisplayContext context, PoseStack stack, SubmitNodeCollector collector, int light, int overlay, boolean b, int i) {
         if (state == null) {
             return;
         }

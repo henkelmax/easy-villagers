@@ -17,7 +17,6 @@ public abstract class BlockRendererBase<T extends FakeWorldTileentity, S extends
         this.entityModelSet = entityModelSet;
     }
 
-
     public static EntityRendererProvider.Context createEntityRenderer() {
         return new EntityRendererProvider.Context(
                 minecraft.getEntityRenderDispatcher(),
