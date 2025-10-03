@@ -39,7 +39,7 @@ public class ItemSpecialRendererBase<T extends FakeWorldTileentity, U extends Bl
 
     @Override
     public void submit(@Nullable T blockEntity, ItemDisplayContext context, PoseStack stack, SubmitNodeCollector collector, int light, int overlay, boolean b, int i) {
-        collector.submitBlock(stack, blockSupplier.get(), light, overlay, 0xFFFFFFFF);
+        collector.submitBlock(stack, blockSupplier.get(), light, overlay, 0);
         if (blockEntity == null) {
             return;
         }
