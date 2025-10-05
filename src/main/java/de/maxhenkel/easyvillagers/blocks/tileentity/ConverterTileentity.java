@@ -4,14 +4,15 @@ import de.maxhenkel.corelib.blockentity.IServerTickableBlockEntity;
 import de.maxhenkel.corelib.inventory.ItemListInventory;
 import de.maxhenkel.corelib.item.ItemUtils;
 import de.maxhenkel.easyvillagers.EasyVillagersMod;
-import de.maxhenkel.easyvillagers.MultiItemStackHandler;
 import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import de.maxhenkel.easyvillagers.gui.VillagerConvertSlot;
+import de.maxhenkel.easyvillagers.inventory.ListAccessItemStacksResourceHandler;
+import de.maxhenkel.easyvillagers.inventory.OutputOnlyResourceHandler;
+import de.maxhenkel.easyvillagers.inventory.ValidateResourceHandler;
 import de.maxhenkel.easyvillagers.items.VillagerItem;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.NonNullList;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
@@ -26,38 +27,50 @@ import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.transfer.CombinedResourceHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
 import java.util.UUID;
 
 public class ConverterTileentity extends VillagerTileentity implements IServerTickableBlockEntity {
 
-    protected NonNullList<ItemStack> inputInventory;
-    protected NonNullList<ItemStack> outputInventory;
+    protected ValidateResourceHandler inputInventory;
+    protected ListAccessItemStacksResourceHandler outputInventory;
 
     protected long timer;
     protected UUID owner;
 
-    protected MultiItemStackHandler itemHandler;
+    protected CombinedResourceHandler<ItemResource> itemHandler;
 
     public ConverterTileentity(BlockPos pos, BlockState state) {
         super(ModTileEntities.CONVERTER.get(), ModBlocks.CONVERTER.get().defaultBlockState(), pos, state);
-        inputInventory = NonNullList.withSize(4, ItemStack.EMPTY);
-        outputInventory = NonNullList.withSize(4, ItemStack.EMPTY);
-        itemHandler = new MultiItemStackHandler(inputInventory, outputInventory, VillagerConvertSlot::isValid);
+        inputInventory = new ValidateResourceHandler(4, VillagerConvertSlot::isValid);
+        outputInventory = new ListAccessItemStacksResourceHandler(4);
+        itemHandler = new CombinedResourceHandler<>(new OutputOnlyResourceHandler(inputInventory), new OutputOnlyResourceHandler(outputInventory));
     }
 
     @Override
     public void tickServer() {
         if (timer <= 0L && !hasVillager()) {
-            for (ItemStack stack : inputInventory) {
-                if (stack.getItem() instanceof VillagerItem && consumeConvertItems()) {
-                    ItemStack copy = stack.copy();
-                    copy.setCount(1);
-                    setVillager(copy);
-                    stack.shrink(1);
-                    sync();
-                    break;
+            try (Transaction transaction = Transaction.open(null)) {
+                if (consumeConvertItems(transaction)) {
+                    for (int i = 0; i < inputInventory.size(); i++) {
+                        ItemResource resource = inputInventory.getResource(i);
+                        if (!(resource.getItem() instanceof VillagerItem)) {
+                            continue;
+                        }
+                        if (inputInventory.extract(resource, 1, transaction) > 0) {
+                            ItemStack copy = resource.toStack();
+                            copy.setCount(1);
+                            setVillager(copy);
+                            sync();
+                            transaction.commit();
+                            break;
+                        }
+                    }
                 }
             }
         }
@@ -78,11 +91,11 @@ public class ConverterTileentity extends VillagerTileentity implements IServerTi
                 Player ownerPlayer = getOwnerPlayer();
                 if (ownerPlayer != null) {
                     for (int i = 0; i < outputInventory.size(); i++) {
-                        ItemStack stack = outputInventory.get(i);
+                        ItemResource stack = outputInventory.getResource(i);
                         if (stack.isEmpty()) {
                             EasyVillagerEntity villagerEntity = getVillagerEntity();
                             villagerEntity.onReputationEventFrom(ReputationEventType.ZOMBIE_VILLAGER_CURED, ownerPlayer);
-                            outputInventory.set(i, removeVillager().copy());
+                            outputInventory.set(i, ItemResource.of(removeVillager().copy()), 1);
                             timer = 0L;
                             sync();
                             break;
@@ -105,28 +118,32 @@ public class ConverterTileentity extends VillagerTileentity implements IServerTi
         }
     }
 
-    private boolean consumeConvertItems() {
-        ItemStack appleStack = null;
-        ItemStack potionStack = null;
-        for (ItemStack stack : inputInventory) {
-            if (appleStack == null && !stack.isEmpty() && stack.getItem() == Items.GOLDEN_APPLE) {
-                appleStack = stack;
+    private boolean consumeConvertItems(TransactionContext transaction) {
+        ItemResource appleStack = null;
+        ItemResource potionStack = null;
+        for (int i = 0; i < inputInventory.size(); i++) {
+            ItemResource resource = inputInventory.getResource(i);
+            if (resource.getItem() == Items.GOLDEN_APPLE) {
+                appleStack = resource;
             }
-            if (potionStack == null && !stack.isEmpty() && isWeakness(stack)) {
-                potionStack = stack;
+            if (isWeakness(resource)) {
+                potionStack = resource;
             }
         }
 
-        if (appleStack != null && potionStack != null) {
-            appleStack.shrink(1);
-            potionStack.shrink(1);
-            return true;
-        } else {
+        if (appleStack == null || potionStack == null) {
             return false;
         }
+        if (inputInventory.extract(appleStack, 1, transaction) <= 0) {
+            return false;
+        }
+        if (inputInventory.extract(potionStack, 1, transaction) <= 0) {
+            return false;
+        }
+        return true;
     }
 
-    public static boolean isWeakness(ItemStack stack) {
+    public static boolean isWeakness(ItemResource stack) {
         PotionContents potionContents = stack.get(DataComponents.POTION_CONTENTS);
         if (potionContents == null) {
             return false;
@@ -162,8 +179,8 @@ public class ConverterTileentity extends VillagerTileentity implements IServerTi
     protected void saveAdditional(ValueOutput valueOutput) {
         super.saveAdditional(valueOutput);
 
-        ItemUtils.saveInventory(valueOutput.child("InputInventory"), "Items", inputInventory);
-        ItemUtils.saveInventory(valueOutput.child("OutputInventory"), "Items", outputInventory);
+        ItemUtils.saveInventory(valueOutput.child("InputInventory"), "Items", inputInventory.getRaw());
+        ItemUtils.saveInventory(valueOutput.child("OutputInventory"), "Items", outputInventory.getRaw());
 
         valueOutput.putLong("Timer", timer);
         if (owner != null) {
@@ -173,8 +190,8 @@ public class ConverterTileentity extends VillagerTileentity implements IServerTi
 
     @Override
     protected void loadAdditional(ValueInput valueInput) {
-        ItemUtils.readInventory(valueInput.childOrEmpty("InputInventory"), "Items", inputInventory);
-        ItemUtils.readInventory(valueInput.childOrEmpty("OutputInventory"), "Items", outputInventory);
+        ItemUtils.readInventory(valueInput.childOrEmpty("InputInventory"), "Items", inputInventory.getRaw());
+        ItemUtils.readInventory(valueInput.childOrEmpty("OutputInventory"), "Items", outputInventory.getRaw());
 
         timer = valueInput.getLongOr("Timer", 0L);
         owner = valueInput.read("Owner", UUIDUtil.CODEC).orElse(null);
@@ -182,11 +199,11 @@ public class ConverterTileentity extends VillagerTileentity implements IServerTi
     }
 
     public Container getInputInventory() {
-        return new ItemListInventory(inputInventory, this::setChanged);
+        return new ItemListInventory(inputInventory.getRaw(), this::setChanged);
     }
 
     public Container getOutputInventory() {
-        return new ItemListInventory(outputInventory, this::setChanged);
+        return new ItemListInventory(outputInventory.getRaw(), this::setChanged);
     }
 
     public static int getZombifyTime() {
@@ -205,7 +222,7 @@ public class ConverterTileentity extends VillagerTileentity implements IServerTi
         return getConvertTime() + 20 * 3;
     }
 
-    public IItemHandler getItemHandler() {
+    public ResourceHandler<ItemResource> getItemHandler() {
         return itemHandler;
     }
 

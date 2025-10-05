@@ -44,13 +44,13 @@ public class ModTileEntities {
     }
 
     public static void onRegisterCapabilities(RegisterCapabilitiesEvent event) {
-        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, BREEDER.get(), (object, context) -> object.getItemHandler());
-        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, AUTO_TRADER.get(), (object, context) -> object.getItemHandler());
-        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, FARMER.get(), (object, context) -> object.getItemHandler());
-        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, CONVERTER.get(), (object, context) -> object.getItemHandler());
-        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, IRON_FARM.get(), (object, context) -> object.getItemHandler());
-        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, INCUBATOR.get(), (object, context) -> object.getItemHandler());
-        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, INVENTORY_VIEWER.get(), (object, context) -> object.getItemHandler());
+        event.registerBlockEntity(Capabilities.Item.BLOCK, BREEDER.get(), (object, context) -> object.getItemHandler());
+        event.registerBlockEntity(Capabilities.Item.BLOCK, AUTO_TRADER.get(), (object, context) -> object.getItemHandler());
+        event.registerBlockEntity(Capabilities.Item.BLOCK, FARMER.get(), (object, context) -> object.getItemHandler());
+        event.registerBlockEntity(Capabilities.Item.BLOCK, CONVERTER.get(), (object, context) -> object.getItemHandler());
+        event.registerBlockEntity(Capabilities.Item.BLOCK, IRON_FARM.get(), (object, context) -> object.getItemHandler());
+        event.registerBlockEntity(Capabilities.Item.BLOCK, INCUBATOR.get(), (object, context) -> object.getItemHandler());
+        event.registerBlockEntity(Capabilities.Item.BLOCK, INVENTORY_VIEWER.get(), (object, context) -> object.getItemHandler());
     }
 
 }

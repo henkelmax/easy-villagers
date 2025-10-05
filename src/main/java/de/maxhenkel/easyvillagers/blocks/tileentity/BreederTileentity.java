@@ -4,16 +4,17 @@ import de.maxhenkel.corelib.blockentity.IServerTickableBlockEntity;
 import de.maxhenkel.corelib.inventory.ItemListInventory;
 import de.maxhenkel.corelib.item.ItemUtils;
 import de.maxhenkel.easyvillagers.EasyVillagersMod;
-import de.maxhenkel.easyvillagers.MultiItemStackHandler;
 import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
 import de.maxhenkel.easyvillagers.datacomponents.VillagerData;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import de.maxhenkel.easyvillagers.gui.FoodSlot;
+import de.maxhenkel.easyvillagers.inventory.ListAccessItemStacksResourceHandler;
+import de.maxhenkel.easyvillagers.inventory.OutputOnlyResourceHandler;
+import de.maxhenkel.easyvillagers.inventory.ValidateResourceHandler;
 import de.maxhenkel.easyvillagers.items.ModItems;
 import de.maxhenkel.easyvillagers.net.MessageVillagerParticles;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -26,28 +27,32 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.transfer.CombinedResourceHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
 import java.util.Optional;
 
 public class BreederTileentity extends FakeWorldTileentity implements IServerTickableBlockEntity {
 
-    protected NonNullList<ItemStack> foodInventory;
-    protected NonNullList<ItemStack> outputInventory;
+    protected final ValidateResourceHandler foodInventory;
+    protected final ListAccessItemStacksResourceHandler outputInventory;
     protected ItemStack villager1;
     protected EasyVillagerEntity villagerEntity1;
     protected ItemStack villager2;
     protected EasyVillagerEntity villagerEntity2;
-    private MultiItemStackHandler itemHandler;
+    private final CombinedResourceHandler<ItemResource> itemHandler;
 
     public BreederTileentity(BlockPos pos, BlockState state) {
         super(ModTileEntities.BREEDER.get(), ModBlocks.BREEDER.get().defaultBlockState(), pos, state);
-        foodInventory = NonNullList.withSize(4, ItemStack.EMPTY);
-        outputInventory = NonNullList.withSize(4, ItemStack.EMPTY);
+        foodInventory = new ValidateResourceHandler(4, FoodSlot::isValid);
+        outputInventory = new ListAccessItemStacksResourceHandler(4);
         villager1 = ItemStack.EMPTY;
         villager2 = ItemStack.EMPTY;
-        itemHandler = new MultiItemStackHandler(foodInventory, outputInventory, FoodSlot::isValid);
+        itemHandler = new CombinedResourceHandler<>(new OutputOnlyResourceHandler(foodInventory), new OutputOnlyResourceHandler(outputInventory));
     }
 
     public ItemStack getVillager1() {
@@ -138,10 +143,19 @@ public class BreederTileentity extends FakeWorldTileentity implements IServerTic
     }
 
     public void tryBreed() {
-        if (canBreed() && addVillager()) {
-            removeBreedingItems();
+        if (!canBreed()) {
+            return;
+        }
+        try (Transaction transaction = Transaction.open(null)) {
+            if (!removeBreedingItems(transaction)) {
+                return;
+            }
+            if (!addVillager(transaction)) {
+                return;
+            }
             VillagerBlockBase.playVillagerSound(level, worldPosition, SoundEvents.VILLAGER_CELEBRATE);
             spawnParticles();
+            transaction.commit();
         }
     }
 
@@ -160,19 +174,13 @@ public class BreederTileentity extends FakeWorldTileentity implements IServerTic
         }
     }
 
-    private boolean addVillager() {
-        for (int i = 0; i < outputInventory.size(); i++) {
-            if (outputInventory.get(i).isEmpty()) {
-                EasyVillagerEntity villagerEntity = new EasyVillagerEntity(EntityType.VILLAGER, level);
-                villagerEntity.setVillagerData(villagerEntity.getVillagerData().withType(level.registryAccess(), VillagerType.byBiome(level.getBiome(getBlockPos()))));
-                villagerEntity.setAge(-24000);
-                ItemStack villager = new ItemStack(ModItems.VILLAGER.get());
-                VillagerData.applyToItem(villager, villagerEntity);
-                outputInventory.set(i, villager);
-                return true;
-            }
-        }
-        return false;
+    private boolean addVillager(TransactionContext transaction) {
+        EasyVillagerEntity villagerEntity = new EasyVillagerEntity(EntityType.VILLAGER, level);
+        villagerEntity.setVillagerData(villagerEntity.getVillagerData().withType(level.registryAccess(), VillagerType.byBiome(level.getBiome(getBlockPos()))));
+        villagerEntity.setAge(-24000);
+        ItemStack villager = new ItemStack(ModItems.VILLAGER.get());
+        VillagerData.applyToItem(villager, villagerEntity);
+        return outputInventory.insert(ItemResource.of(villager), 1, transaction) > 0;
     }
 
     public boolean canBreed() {
@@ -183,23 +191,33 @@ public class BreederTileentity extends FakeWorldTileentity implements IServerTic
             return false;
         }
         int value = 0;
-        for (ItemStack stack : foodInventory) {
-            value += Villager.FOOD_POINTS.getOrDefault(stack.getItem(), 0) * stack.getCount();
+        for (int i = 0; i < foodInventory.size(); i++) {
+            ItemResource resource = foodInventory.getResource(i);
+            value += Villager.FOOD_POINTS.getOrDefault(resource.getItem(), 0) * foodInventory.getAmountAsInt(i);
         }
         return value >= 24;
     }
 
-    private void removeBreedingItems() {
+    private boolean removeBreedingItems(TransactionContext transaction) {
         int value = 0;
-        for (ItemStack stack : foodInventory) {
-            for (int i = 0; i < stack.getCount(); i++) {
-                value += Villager.FOOD_POINTS.getOrDefault(stack.getItem(), 0);
-                stack.shrink(1);
-                if (value >= 24) {
-                    return;
-                }
+        for (int i = 0; i < foodInventory.size(); i++) {
+            ItemResource resource = foodInventory.getResource(i);
+            if (resource.isEmpty()) {
+                continue;
+            }
+            int itemValue = Villager.FOOD_POINTS.getOrDefault(resource.getItem(), 0);
+            if (itemValue <= 0) {
+                continue;
+            }
+            int amountNeeded = 24 - value;
+            int amountToRemove = (amountNeeded + itemValue - 1) / itemValue;
+            int extracted = foodInventory.extract(i, resource, amountToRemove, transaction);
+            value += extracted * itemValue;
+            if (value >= 24) {
+                return true;
             }
         }
+        return false;
     }
 
     @Override
@@ -212,9 +230,8 @@ public class BreederTileentity extends FakeWorldTileentity implements IServerTic
         if (hasVillager2()) {
             valueOutput.store("Villager2", ItemStack.CODEC, getVillager2());
         }
-
-        ItemUtils.saveInventory(valueOutput.child("FoodInventory"), "Items", foodInventory);
-        ItemUtils.saveInventory(valueOutput.child("OutputInventory"), "Items", outputInventory);
+        ItemUtils.saveInventory(valueOutput.child("FoodInventory"), "Items", foodInventory.copyToList());
+        ItemUtils.saveInventory(valueOutput.child("OutputInventory"), "Items", outputInventory.copyToList());
     }
 
     @Override
@@ -233,21 +250,23 @@ public class BreederTileentity extends FakeWorldTileentity implements IServerTic
         } else {
             removeVillager1();
         }
-        ItemUtils.readInventory(valueInput.childOrEmpty("FoodInventory"), "Items", foodInventory);
-        ItemUtils.readInventory(valueInput.childOrEmpty("OutputInventory"), "Items", outputInventory);
+
+
+        ItemUtils.readInventory(valueInput.childOrEmpty("FoodInventory"), "Items", foodInventory.getRaw());
+        ItemUtils.readInventory(valueInput.childOrEmpty("OutputInventory"), "Items", outputInventory.getRaw());
 
         super.loadAdditional(valueInput);
     }
 
     public Container getFoodInventory() {
-        return new ItemListInventory(foodInventory, this::setChanged);
+        return new ItemListInventory(foodInventory.getRaw(), this::setChanged);
     }
 
     public Container getOutputInventory() {
-        return new ItemListInventory(outputInventory, this::setChanged);
+        return new ItemListInventory(outputInventory.getRaw(), this::setChanged);
     }
 
-    public IItemHandler getItemHandler() {
+    public ResourceHandler<ItemResource> getItemHandler() {
         return itemHandler;
     }
 

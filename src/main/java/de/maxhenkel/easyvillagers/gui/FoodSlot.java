@@ -4,6 +4,7 @@ import net.minecraft.world.Container;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 
 public class FoodSlot extends Slot {
 
@@ -13,11 +14,11 @@ public class FoodSlot extends Slot {
 
     @Override
     public boolean mayPlace(ItemStack stack) {
-        return isValid(stack);
+        return isValid(ItemResource.of(stack));
     }
 
-    public static boolean isValid(ItemStack stack) {
-        return Villager.FOOD_POINTS.getOrDefault(stack.getItem(), 0) > 0;
+    public static boolean isValid(ItemResource resource) {
+        return Villager.FOOD_POINTS.getOrDefault(resource.getItem(), 0) > 0;
     }
 
 }

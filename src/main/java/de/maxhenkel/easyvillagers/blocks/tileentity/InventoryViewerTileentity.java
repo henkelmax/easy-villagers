@@ -6,12 +6,16 @@ import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import de.maxhenkel.easyvillagers.gui.VillagerArmorContainer;
-import de.maxhenkel.easyvillagers.gui.VillagerItemStackHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.Container;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.transfer.EmptyResourceHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.VanillaContainerWrapper;
+
+import javax.annotation.Nullable;
 
 public class InventoryViewerTileentity extends VillagerTileentity implements IServerTickableBlockEntity {
 
@@ -26,20 +30,30 @@ public class InventoryViewerTileentity extends VillagerTileentity implements ISe
         }
     }
 
+    @Nullable
     public Container getVillagerInventory() {
-        return new ItemListInventory(getVillagerEntity().getInventory().getItems(), this::setChanged);
-    }
-
-    public Container getVillagerArmorInventory() {
-        return new VillagerArmorContainer(getVillagerEntity(), this::setChanged);
-    }
-
-    public IItemHandler getItemHandler() {
-        EasyVillagerEntity ve = getVillagerEntity();
-        if (ve == null) {
+        EasyVillagerEntity v = getVillagerEntity();
+        if (v == null) {
             return null;
         }
-        return new VillagerItemStackHandler(ve.getInventory().getItems(), this);
+        return new ItemListInventory(v.getInventory().getItems(), this::setChanged);
+    }
+
+    @Nullable
+    public Container getVillagerArmorInventory() {
+        EasyVillagerEntity v = getVillagerEntity();
+        if (v == null) {
+            return null;
+        }
+        return new VillagerArmorContainer(v, this::setChanged);
+    }
+
+    public ResourceHandler<ItemResource> getItemHandler() {
+        Container inv = getVillagerInventory();
+        if (inv == null) {
+            return EmptyResourceHandler.instance();
+        }
+        return VanillaContainerWrapper.of(inv);
     }
 
     @Override

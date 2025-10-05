@@ -3,12 +3,12 @@ package de.maxhenkel.easyvillagers.blocks.tileentity;
 import de.maxhenkel.corelib.blockentity.ITickableBlockEntity;
 import de.maxhenkel.corelib.inventory.ItemListInventory;
 import de.maxhenkel.easyvillagers.EasyVillagersMod;
-import de.maxhenkel.easyvillagers.OutputItemHandler;
 import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
+import de.maxhenkel.easyvillagers.inventory.ListAccessItemStacksResourceHandler;
+import de.maxhenkel.easyvillagers.inventory.OutputOnlyResourceHandler;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -27,28 +27,26 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 import java.util.Collections;
 import java.util.List;
 
 public class IronFarmTileentity extends VillagerTileentity implements ITickableBlockEntity {
 
-    private static ResourceKey<LootTable> GOLEM_LOOT_TABLE = ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.withDefaultNamespace("entities/iron_golem"));
+    private static final ResourceKey<LootTable> GOLEM_LOOT_TABLE = ResourceKey.create(Registries.LOOT_TABLE, ResourceLocation.withDefaultNamespace("entities/iron_golem"));
 
-    protected NonNullList<ItemStack> inventory;
+    protected ListAccessItemStacksResourceHandler inventory;
+    protected OutputOnlyResourceHandler outputInventoryDelegate;
 
     protected long timer;
 
-    protected ItemStackHandler itemHandler;
-    protected OutputItemHandler outputItemHandler;
-
     public IronFarmTileentity(BlockPos pos, BlockState state) {
         super(ModTileEntities.IRON_FARM.get(), ModBlocks.IRON_FARM.get().defaultBlockState(), pos, state);
-        inventory = NonNullList.withSize(4, ItemStack.EMPTY);
-        itemHandler = new ItemStackHandler(inventory);
-        outputItemHandler = new OutputItemHandler(inventory);
+        inventory = new ListAccessItemStacksResourceHandler(4);
+        outputInventoryDelegate = new OutputOnlyResourceHandler(inventory);
     }
 
     public long getTimer() {
@@ -78,13 +76,14 @@ public class IronFarmTileentity extends VillagerTileentity implements ITickableB
                 }
             } else if (timer >= getGolemKillTime()) {
                 VillagerBlockBase.playVillagerSound(level, getBlockPos(), SoundEvents.IRON_GOLEM_DEATH);
-                for (ItemStack drop : getDrops()) {
-                    for (int i = 0; i < itemHandler.getSlots(); i++) {
-                        drop = itemHandler.insertItem(i, drop, false);
-                        if (drop.isEmpty()) {
-                            break;
+                try (Transaction transaction = Transaction.open(null)) {
+                    for (ItemStack stack : getDrops()) {
+                        if (stack.isEmpty()) {
+                            continue;
                         }
+                        inventory.insert(ItemResource.of(stack), stack.getCount(), transaction);
                     }
+                    transaction.commit();
                 }
 
                 timer = 0L;
@@ -94,38 +93,37 @@ public class IronFarmTileentity extends VillagerTileentity implements ITickableB
     }
 
     private List<ItemStack> getDrops() {
-        if (!(level instanceof ServerLevel)) {
+        if (!(level instanceof ServerLevel serverLevel)) {
             return Collections.emptyList();
         }
-        ServerLevel serverWorld = (ServerLevel) level;
 
-        LootParams.Builder builder = new LootParams.Builder(serverWorld)
+        LootParams.Builder builder = new LootParams.Builder(serverLevel)
                 .withParameter(LootContextParams.THIS_ENTITY, new IronGolem(EntityType.IRON_GOLEM, level))
                 .withParameter(LootContextParams.ORIGIN, new Vec3(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ()))
-                .withParameter(LootContextParams.DAMAGE_SOURCE, serverWorld.damageSources().lava());
+                .withParameter(LootContextParams.DAMAGE_SOURCE, serverLevel.damageSources().lava());
 
         LootParams lootContext = builder.create(LootContextParamSets.ENTITY);
 
-        LootTable lootTable = serverWorld.getServer().reloadableRegistries().getLootTable(GOLEM_LOOT_TABLE);
+        LootTable lootTable = serverLevel.getServer().reloadableRegistries().getLootTable(GOLEM_LOOT_TABLE);
 
         return lootTable.getRandomItems(lootContext);
     }
 
     public Container getOutputInventory() {
-        return new ItemListInventory(inventory, this::setChanged);
+        return new ItemListInventory(inventory.getRaw(), this::setChanged);
     }
 
     @Override
     protected void saveAdditional(ValueOutput valueOutput) {
         super.saveAdditional(valueOutput);
 
-        ContainerHelper.saveAllItems(valueOutput, inventory, false);
+        ContainerHelper.saveAllItems(valueOutput, inventory.getRaw(), false);
         valueOutput.putLong("Timer", timer);
     }
 
     @Override
     protected void loadAdditional(ValueInput valueInput) {
-        ContainerHelper.loadAllItems(valueInput, inventory);
+        ContainerHelper.loadAllItems(valueInput, inventory.getRaw());
         timer = valueInput.getLongOr("Timer", 0L);
         super.loadAdditional(valueInput);
     }
@@ -138,8 +136,8 @@ public class IronFarmTileentity extends VillagerTileentity implements ITickableB
         return getGolemSpawnTime() + 20 * 10;
     }
 
-    public IItemHandler getItemHandler() {
-        return outputItemHandler;
+    public ResourceHandler<ItemResource> getItemHandler() {
+        return outputInventoryDelegate;
     }
 
 }

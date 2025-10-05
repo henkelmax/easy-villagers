@@ -4,12 +4,12 @@ import de.maxhenkel.corelib.blockentity.IServerTickableBlockEntity;
 import de.maxhenkel.corelib.codec.ValueInputOutputUtils;
 import de.maxhenkel.corelib.inventory.ItemListInventory;
 import de.maxhenkel.easyvillagers.EasyVillagersMod;
-import de.maxhenkel.easyvillagers.OutputItemHandler;
 import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
+import de.maxhenkel.easyvillagers.inventory.ListAccessItemStacksResourceHandler;
+import de.maxhenkel.easyvillagers.inventory.OutputOnlyResourceHandler;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.server.level.ServerLevel;
@@ -30,8 +30,9 @@ import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -40,15 +41,13 @@ import java.util.Optional;
 public class FarmerTileentity extends VillagerTileentity implements IServerTickableBlockEntity {
 
     protected BlockState crop;
-    protected NonNullList<ItemStack> inventory;
-    protected ItemStackHandler itemHandler;
-    protected OutputItemHandler outputItemHandler;
+    protected ListAccessItemStacksResourceHandler inventory;
+    protected OutputOnlyResourceHandler outputInventoryDelegate;
 
     public FarmerTileentity(BlockPos pos, BlockState state) {
         super(ModTileEntities.FARMER.get(), ModBlocks.FARMER.get().defaultBlockState(), pos, state);
-        inventory = NonNullList.withSize(4, ItemStack.EMPTY);
-        itemHandler = new ItemStackHandler(inventory);
-        outputItemHandler = new OutputItemHandler(inventory);
+        inventory = new ListAccessItemStacksResourceHandler(4);
+        outputInventoryDelegate = new OutputOnlyResourceHandler(inventory);
     }
 
     @Override
@@ -144,10 +143,11 @@ public class FarmerTileentity extends VillagerTileentity implements IServerTicka
             }
             LootParams.Builder context = new LootParams.Builder((ServerLevel) level).withParameter(LootContextParams.ORIGIN, new Vec3(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ())).withParameter(LootContextParams.BLOCK_STATE, c).withParameter(LootContextParams.TOOL, ItemStack.EMPTY);
             List<ItemStack> drops = c.getDrops(context);
-            for (ItemStack stack : drops) {
-                for (int i = 0; i < itemHandler.getSlots(); i++) {
-                    stack = itemHandler.insertItem(i, stack, false);
+            try (Transaction transaction = Transaction.open(null)) {
+                for (ItemStack stack : drops) {
+                    inventory.insert(ItemResource.of(stack), stack.getCount(), transaction);
                 }
+                transaction.commit();
             }
 
             crop = crop.setValue(p, 0);
@@ -160,7 +160,7 @@ public class FarmerTileentity extends VillagerTileentity implements IServerTicka
     }
 
     public Container getOutputInventory() {
-        return new ItemListInventory(inventory, this::setChanged);
+        return new ItemListInventory(inventory.getRaw(), this::setChanged);
     }
 
     @Override
@@ -170,7 +170,7 @@ public class FarmerTileentity extends VillagerTileentity implements IServerTicka
         if (crop != null) {
             ValueInputOutputUtils.setTag(valueOutput, "Crop", NbtUtils.writeBlockState(crop));
         }
-        ContainerHelper.saveAllItems(valueOutput, inventory, false);
+        ContainerHelper.saveAllItems(valueOutput, inventory.getRaw(), false);
     }
 
     @Override
@@ -182,12 +182,12 @@ public class FarmerTileentity extends VillagerTileentity implements IServerTicka
             removeSeed();
         }
 
-        ContainerHelper.loadAllItems(valueInput, inventory);
+        ContainerHelper.loadAllItems(valueInput, inventory.getRaw());
         super.loadAdditional(valueInput);
     }
 
-    public IItemHandler getItemHandler() {
-        return outputItemHandler;
+    public ResourceHandler<ItemResource> getItemHandler() {
+        return outputInventoryDelegate;
     }
 
 }

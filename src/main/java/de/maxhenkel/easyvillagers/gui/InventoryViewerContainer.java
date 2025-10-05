@@ -41,38 +41,42 @@ public class InventoryViewerContainer extends VillagerContainerBase {
         Container villagerInventory = inventoryViewer.getVillagerInventory();
         Container armorInventory = inventoryViewer.getVillagerArmorInventory();
 
-        for (int i = 0; i < villagerInventory.getContainerSize() && i < 4; i++) {
-            addSlot(new VillagerInventorySlot(villagerInventory, i, 52 + i * 18, 20, inventoryViewer));
+        if (villagerInventory != null) {
+            for (int i = 0; i < villagerInventory.getContainerSize() && i < 4; i++) {
+                addSlot(new VillagerInventorySlot(villagerInventory, i, 52 + i * 18, 20, inventoryViewer));
+            }
+            for (int i = 4; i < villagerInventory.getContainerSize() && i < 8; i++) {
+                addSlot(new VillagerInventorySlot(villagerInventory, i, 52 + (i - 4) * 18, 38, inventoryViewer));
+            }
         }
-        for (int i = 4; i < villagerInventory.getContainerSize() && i < 8; i++) {
-            addSlot(new VillagerInventorySlot(villagerInventory, i, 52 + (i - 4) * 18, 38, inventoryViewer));
-        }
 
-        for (int i = 0; i < 4; i++) {
-            EquipmentSlot equipmentslot = SLOT_IDS[i];
-            addSlot(new Slot(armorInventory, 3 - i, 52 + i * 18, 69) { //51
+        if (armorInventory != null) {
+            for (int i = 0; i < 4; i++) {
+                EquipmentSlot equipmentslot = SLOT_IDS[i];
+                addSlot(new Slot(armorInventory, 3 - i, 52 + i * 18, 69) { //51
 
-                @Override
-                public int getMaxStackSize() {
-                    return 1;
-                }
+                    @Override
+                    public int getMaxStackSize() {
+                        return 1;
+                    }
 
-                @Override
-                public boolean mayPlace(ItemStack stack) {
-                    return villager.getEquipmentSlotForItem(stack) == equipmentslot;
-                }
+                    @Override
+                    public boolean mayPlace(ItemStack stack) {
+                        return villager.getEquipmentSlotForItem(stack) == equipmentslot;
+                    }
 
-                @Override
-                public boolean mayPickup(Player player) {
-                    ItemStack itemstack = getItem();
-                    return !itemstack.isEmpty() && !player.isCreative() && EnchantmentHelper.has(itemstack, EnchantmentEffectComponents.PREVENT_ARMOR_CHANGE) ? false : super.mayPickup(player);
-                }
+                    @Override
+                    public boolean mayPickup(Player player) {
+                        ItemStack itemstack = getItem();
+                        return !itemstack.isEmpty() && !player.isCreative() && EnchantmentHelper.has(itemstack, EnchantmentEffectComponents.PREVENT_ARMOR_CHANGE) ? false : super.mayPickup(player);
+                    }
 
-                @Override
-                public ResourceLocation getNoItemIcon() {
-                    return TEXTURE_EMPTY_SLOTS[equipmentslot.getIndex()];
-                }
-            });
+                    @Override
+                    public ResourceLocation getNoItemIcon() {
+                        return TEXTURE_EMPTY_SLOTS[equipmentslot.getIndex()];
+                    }
+                });
+            }
         }
 
         addPlayerInventorySlots();

@@ -4,11 +4,12 @@ import de.maxhenkel.corelib.blockentity.ITickableBlockEntity;
 import de.maxhenkel.corelib.inventory.ItemListInventory;
 import de.maxhenkel.corelib.item.ItemUtils;
 import de.maxhenkel.easyvillagers.EasyVillagersMod;
-import de.maxhenkel.easyvillagers.MultiItemStackHandler;
 import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
+import de.maxhenkel.easyvillagers.inventory.InputOnlyResourceHandler;
+import de.maxhenkel.easyvillagers.inventory.ListAccessItemStacksResourceHandler;
+import de.maxhenkel.easyvillagers.inventory.OutputOnlyResourceHandler;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.NonNullList;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.npc.Villager;
@@ -19,8 +20,11 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.transfer.CombinedResourceHandler;
+import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
 import javax.annotation.Nullable;
 
@@ -28,22 +32,20 @@ public class AutoTraderTileentity extends TraderTileentityBase implements ITicka
 
     protected Container tradeGuiInv;
 
-    protected final NonNullList<ItemStack> inputInventory;
-    protected final NonNullList<ItemStack> outputInventory;
+    protected final ListAccessItemStacksResourceHandler inputInventory;
+    protected final ListAccessItemStacksResourceHandler outputInventory;
 
     protected int tradeIndex;
-    protected ItemStackHandler outputHandler;
-    protected MultiItemStackHandler itemHandler;
+    protected CombinedResourceHandler<ItemResource> itemHandler;
 
     public AutoTraderTileentity(BlockPos pos, BlockState state) {
         super(ModTileEntities.AUTO_TRADER.get(), ModBlocks.AUTO_TRADER.get().defaultBlockState(), pos, state);
         tradeGuiInv = new SimpleContainer(3);
 
-        inputInventory = NonNullList.withSize(4, ItemStack.EMPTY);
-        outputInventory = NonNullList.withSize(4, ItemStack.EMPTY);
+        inputInventory = new ListAccessItemStacksResourceHandler(4);
+        outputInventory = new ListAccessItemStacksResourceHandler(4);
 
-        outputHandler = new ItemStackHandler(outputInventory);
-        itemHandler = new MultiItemStackHandler(inputInventory, outputInventory);
+        itemHandler = new CombinedResourceHandler<>(new InputOnlyResourceHandler(inputInventory), new OutputOnlyResourceHandler(outputInventory));
     }
 
     @Override
@@ -57,27 +59,25 @@ public class AutoTraderTileentity extends TraderTileentityBase implements ITicka
         }
 
         MerchantOffer offer = getOffer();
-        if (offer == null || offer.isOutOfStock() || inputInventory.isEmpty()) {
+        if (offer == null || offer.isOutOfStock() || ResourceHandlerUtil.isEmpty(inputInventory)) {
             return;
+        }
+
+
+        try (Transaction transaction = Transaction.open(null)) {
+            if (!removeNeededItems(getAutoTradeInputA(), transaction)) {
+                return;
+            }
+            if (!removeNeededItems(offer.getCostB(), transaction)) {
+                return;
+            }
+            if (!insertItems(offer.getResult(), transaction)) {
+                return;
+            }
+            transaction.commit();
         }
 
         Villager villager = getVillagerEntity();
-
-        ItemStack autoTradeInputA = getAutoTradeInputA();
-        ItemStack costB = offer.getCostB();
-        ItemStack result = offer.getResult();
-
-        if (!hasEnoughItems(autoTradeInputA, false)
-                || !hasEnoughItems(costB, false)
-                || !canFitItems(result, false)) {
-            return;
-        }
-
-        hasEnoughItems(autoTradeInputA, true);
-        hasEnoughItems(costB, true);
-        canFitItems(result, true);
-
-        // villager.onTrade(offer) spawns XP, so we manually do all necessary stuff
         offer.increaseUses();
         villager.setVillagerXp(villager.getVillagerXp() + offer.getXp());
         if (villager.shouldIncreaseLevel()) {
@@ -87,40 +87,19 @@ public class AutoTraderTileentity extends TraderTileentityBase implements ITicka
         setChanged();
     }
 
-    protected boolean hasEnoughItems(ItemStack buying, boolean remove) {
+    protected boolean removeNeededItems(ItemStack buying, TransactionContext transaction) {
         if (buying.isEmpty()) {
             return true;
         }
-        int amount = buying.getCount();
-        for (ItemStack stack : inputInventory) {
-            if (ItemUtils.isStackable(stack, buying)) {
-                int am = Math.min(amount, stack.getCount());
-                if (remove) {
-                    stack.shrink(am);
-                }
-                amount -= am;
-                if (amount <= 0) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        int extract = inputInventory.extract(ItemResource.of(buying), buying.getCount(), transaction);
+        return extract >= buying.getCount();
     }
 
-    protected boolean canFitItems(ItemStack insert, boolean doInsert) {
+    protected boolean insertItems(ItemStack insert, TransactionContext transaction) {
         if (insert.isEmpty()) {
             return true;
         }
-        ItemStack stack = insert.copy();
-
-        for (int i = 0; i < outputHandler.getSlots(); i++) {
-            stack = outputHandler.insertItem(i, stack, !doInsert);
-            if (stack.isEmpty()) {
-                break;
-            }
-        }
-
-        return stack.isEmpty();
+        return outputInventory.insert(ItemResource.of(insert), insert.getCount(), transaction) >= insert.getCount();
     }
 
     public Container getTradeGuiInv() {
@@ -187,7 +166,7 @@ public class AutoTraderTileentity extends TraderTileentityBase implements ITicka
     public ItemStack getAutoTradeInputA() {
         MerchantOffer offer = getOffer();
         if (offer == null) {
-            return ItemStack.EMPTY.copy();
+            return ItemStack.EMPTY;
         }
         ItemStack costA = offer.getCostA().copy();
         int amount = Math.min(costA.getCount(), offer.getBaseCostA().getCount());
@@ -229,8 +208,8 @@ public class AutoTraderTileentity extends TraderTileentityBase implements ITicka
         super.saveAdditional(valueOutput);
 
         valueOutput.putInt("Trade", tradeIndex);
-        ItemUtils.saveInventory(valueOutput.child("InputInventory"), "Items", inputInventory);
-        ItemUtils.saveInventory(valueOutput.child("OutputInventory"), "Items", outputInventory);
+        ItemUtils.saveInventory(valueOutput.child("InputInventory"), "Items", inputInventory.getRaw());
+        ItemUtils.saveInventory(valueOutput.child("OutputInventory"), "Items", outputInventory.getRaw());
     }
 
     @Override
@@ -238,19 +217,19 @@ public class AutoTraderTileentity extends TraderTileentityBase implements ITicka
         super.loadAdditional(valueInput);
         tradeIndex = valueInput.getIntOr("Trade", 0);
 
-        ItemUtils.readInventory(valueInput.childOrEmpty("InputInventory"), "Items", inputInventory);
-        ItemUtils.readInventory(valueInput.childOrEmpty("OutputInventory"), "Items", outputInventory);
+        ItemUtils.readInventory(valueInput.childOrEmpty("InputInventory"), "Items", inputInventory.getRaw());
+        ItemUtils.readInventory(valueInput.childOrEmpty("OutputInventory"), "Items", outputInventory.getRaw());
     }
 
     public Container getInputInventory() {
-        return new ItemListInventory(inputInventory, this::setChanged);
+        return new ItemListInventory(inputInventory.getRaw(), this::setChanged);
     }
 
     public Container getOutputInventory() {
-        return new ItemListInventory(outputInventory, this::setChanged);
+        return new ItemListInventory(outputInventory.getRaw(), this::setChanged);
     }
 
-    public IItemHandler getItemHandler() {
+    public CombinedResourceHandler<ItemResource> getItemHandler() {
         return itemHandler;
     }
 
