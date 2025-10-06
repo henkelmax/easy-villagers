@@ -8,6 +8,7 @@ import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import de.maxhenkel.easyvillagers.gui.VillagerConvertSlot;
+import de.maxhenkel.easyvillagers.inventory.InputOnlyResourceHandler;
 import de.maxhenkel.easyvillagers.inventory.ListAccessItemStacksResourceHandler;
 import de.maxhenkel.easyvillagers.inventory.OutputOnlyResourceHandler;
 import de.maxhenkel.easyvillagers.inventory.ValidateResourceHandler;
@@ -49,7 +50,7 @@ public class ConverterTileentity extends VillagerTileentity implements IServerTi
         super(ModTileEntities.CONVERTER.get(), ModBlocks.CONVERTER.get().defaultBlockState(), pos, state);
         inputInventory = new ValidateResourceHandler(4, VillagerConvertSlot::isValid);
         outputInventory = new ListAccessItemStacksResourceHandler(4);
-        itemHandler = new CombinedResourceHandler<>(new OutputOnlyResourceHandler(inputInventory), new OutputOnlyResourceHandler(outputInventory));
+        itemHandler = new CombinedResourceHandler<>(new InputOnlyResourceHandler(inputInventory), new OutputOnlyResourceHandler(outputInventory));
     }
 
     @Override

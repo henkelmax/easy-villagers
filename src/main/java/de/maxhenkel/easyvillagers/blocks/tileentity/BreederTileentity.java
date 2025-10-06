@@ -9,6 +9,7 @@ import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
 import de.maxhenkel.easyvillagers.datacomponents.VillagerData;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import de.maxhenkel.easyvillagers.gui.FoodSlot;
+import de.maxhenkel.easyvillagers.inventory.InputOnlyResourceHandler;
 import de.maxhenkel.easyvillagers.inventory.ListAccessItemStacksResourceHandler;
 import de.maxhenkel.easyvillagers.inventory.OutputOnlyResourceHandler;
 import de.maxhenkel.easyvillagers.inventory.ValidateResourceHandler;
@@ -52,7 +53,7 @@ public class BreederTileentity extends FakeWorldTileentity implements IServerTic
         outputInventory = new ListAccessItemStacksResourceHandler(4);
         villager1 = ItemStack.EMPTY;
         villager2 = ItemStack.EMPTY;
-        itemHandler = new CombinedResourceHandler<>(new OutputOnlyResourceHandler(foodInventory), new OutputOnlyResourceHandler(outputInventory));
+        itemHandler = new CombinedResourceHandler<>(new InputOnlyResourceHandler(foodInventory), new OutputOnlyResourceHandler(outputInventory));
     }
 
     public ItemStack getVillager1() {

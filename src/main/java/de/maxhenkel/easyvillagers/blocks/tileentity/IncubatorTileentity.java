@@ -7,6 +7,7 @@ import de.maxhenkel.easyvillagers.EasyVillagersMod;
 import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
 import de.maxhenkel.easyvillagers.gui.VillagerIncubateSlot;
+import de.maxhenkel.easyvillagers.inventory.InputOnlyResourceHandler;
 import de.maxhenkel.easyvillagers.inventory.ListAccessItemStacksResourceHandler;
 import de.maxhenkel.easyvillagers.inventory.OutputOnlyResourceHandler;
 import de.maxhenkel.easyvillagers.inventory.ValidateResourceHandler;
@@ -35,7 +36,7 @@ public class IncubatorTileentity extends VillagerTileentity implements IServerTi
         super(ModTileEntities.INCUBATOR.get(), ModBlocks.INCUBATOR.get().defaultBlockState(), pos, state);
         inputInventory = new ValidateResourceHandler(4, VillagerIncubateSlot::isValid);
         outputInventory = new ListAccessItemStacksResourceHandler(4);
-        itemHandler = new CombinedResourceHandler<>(new OutputOnlyResourceHandler(inputInventory), new OutputOnlyResourceHandler(outputInventory));
+        itemHandler = new CombinedResourceHandler<>(new InputOnlyResourceHandler(inputInventory), new OutputOnlyResourceHandler(outputInventory));
     }
 
     @Override
