@@ -21,7 +21,6 @@ dependencies {
     compileOnly("mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}")
     runtimeOnly("mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}")
     //implementation "maven.modrinth:jei:${jei_version}"
-    compileOnly "maven.modrinth:the-one-probe:${theoneprobe_version}"
     implementation "maven.modrinth:jade:${jade_version}"
 }
 

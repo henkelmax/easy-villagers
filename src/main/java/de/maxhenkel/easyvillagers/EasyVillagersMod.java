@@ -7,7 +7,6 @@ import de.maxhenkel.easyvillagers.blocks.tileentity.ModTileEntities;
 import de.maxhenkel.easyvillagers.events.BlockEvents;
 import de.maxhenkel.easyvillagers.events.VillagerEvents;
 import de.maxhenkel.easyvillagers.gui.Containers;
-import de.maxhenkel.easyvillagers.integration.IMC;
 import de.maxhenkel.easyvillagers.items.ModItems;
 import de.maxhenkel.easyvillagers.loottable.ModLootTables;
 import de.maxhenkel.easyvillagers.net.MessageCycleTrades;
@@ -45,7 +44,6 @@ public class EasyVillagersMod {
     public static ClientConfig CLIENT_CONFIG;
 
     public EasyVillagersMod(IEventBus eventBus) {
-        eventBus.addListener(IMC::enqueueIMC);
         eventBus.addListener(ModTileEntities::onRegisterCapabilities);
 
         ModBlocks.init(eventBus);
