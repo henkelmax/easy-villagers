@@ -1,4 +1,1 @@
-- Updated required NeoForge version
-- Fixed breeder input items being sucked out with hoppers
-- Fixed converter input items being sucked out with hoppers
-- Fixed incubator input items being sucked out with hoppers
+- Updated to 1.21.10

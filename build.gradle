@@ -18,8 +18,9 @@ dependencies {
     runtimeOnly "de.maxhenkel.corelib:corelib:${minecraft_version}-${corelib_version}"
     compileOnly "de.maxhenkel.corelib:corelib:${minecraft_version}-${corelib_version}:javadoc"
 
-    compileOnly("mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}")
-    runtimeOnly("mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}")
+    //compileOnly("mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}")
+    compileOnly("mezz.jei:jei-1.21.9-neoforge-api:${jei_version}")
+    //runtimeOnly("mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}")
     //implementation "maven.modrinth:jei:${jei_version}"
     implementation "maven.modrinth:jade:${jade_version}"
 }
