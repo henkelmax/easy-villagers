@@ -1,1 +1,1 @@
-- Fixed potential crash
+- Added Literary Chinese translation
