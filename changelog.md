@@ -1,1 +1,1 @@
-- Updated JEI integration
+- Added Literary Chinese translation
