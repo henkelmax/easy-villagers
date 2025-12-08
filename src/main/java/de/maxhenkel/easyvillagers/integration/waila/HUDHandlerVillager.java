@@ -5,7 +5,7 @@ import de.maxhenkel.easyvillagers.blocks.tileentity.VillagerTileentity;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.TypedEntityData;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -21,7 +21,7 @@ public class HUDHandlerVillager implements IBlockComponentProvider {
 
     public static final HUDHandlerVillager INSTANCE = new HUDHandlerVillager();
 
-    private static final ResourceLocation UID = ResourceLocation.fromNamespaceAndPath(EasyVillagersMod.MODID, "villager");
+    private static final Identifier UID = Identifier.fromNamespaceAndPath(EasyVillagersMod.MODID, "villager");
 
     @Override
     public void appendTooltip(ITooltip iTooltip, BlockAccessor blockAccessor, IPluginConfig iPluginConfig) {
@@ -45,7 +45,7 @@ public class HUDHandlerVillager implements IBlockComponentProvider {
     }
 
     @Override
-    public ResourceLocation getUid() {
+    public Identifier getUid() {
         return UID;
     }
 

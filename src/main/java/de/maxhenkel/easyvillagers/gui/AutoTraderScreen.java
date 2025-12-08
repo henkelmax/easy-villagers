@@ -6,13 +6,13 @@ import de.maxhenkel.easyvillagers.net.MessageSelectTrade;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 public class AutoTraderScreen extends ScreenBase<AutoTraderContainer> {
 
-    public static final ResourceLocation BACKGROUND = ResourceLocation.fromNamespaceAndPath(EasyVillagersMod.MODID, "textures/gui/container/auto_trader.png");
+    public static final Identifier BACKGROUND = Identifier.fromNamespaceAndPath(EasyVillagersMod.MODID, "textures/gui/container/auto_trader.png");
 
     private final Inventory playerInventory;
 

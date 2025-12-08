@@ -4,12 +4,12 @@ import de.maxhenkel.corelib.inventory.ScreenBase;
 import de.maxhenkel.easyvillagers.EasyVillagersMod;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 
 public class InventoryViewerScreen extends ScreenBase<InventoryViewerContainer> {
 
-    public static final ResourceLocation BACKGROUND = ResourceLocation.fromNamespaceAndPath(EasyVillagersMod.MODID, "textures/gui/container/villager_inventory.png");
+    public static final Identifier BACKGROUND = Identifier.fromNamespaceAndPath(EasyVillagersMod.MODID, "textures/gui/container/villager_inventory.png");
 
     public static final Component VILLAGER_INVENTORY = Component.translatable("gui.easy_villagers.villager_inventory");
     public static final Component VILLAGER_EQUIPMENT = Component.translatable("gui.easy_villagers.villager_equipment");

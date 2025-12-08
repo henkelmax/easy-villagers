@@ -15,10 +15,10 @@ import net.minecraft.client.renderer.special.SpecialModelRenderer;
 import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import org.joml.Vector3f;
+import org.joml.Vector3fc;
 
 import javax.annotation.Nullable;
-import java.util.Set;
+import java.util.function.Consumer;
 
 public class VillagerSpecialRenderer implements SpecialModelRenderer<VillagerRenderState> {
 
@@ -41,7 +41,7 @@ public class VillagerSpecialRenderer implements SpecialModelRenderer<VillagerRen
     }
 
     @Override
-    public void getExtents(Set<Vector3f> vecs) {
+    public void getExtents(Consumer<Vector3fc> vecs) {
 
     }
 

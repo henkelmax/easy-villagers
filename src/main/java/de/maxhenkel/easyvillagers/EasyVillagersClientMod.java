@@ -6,7 +6,7 @@ import de.maxhenkel.easyvillagers.events.ModSoundEvents;
 import de.maxhenkel.easyvillagers.gui.Containers;
 import de.maxhenkel.easyvillagers.items.render.*;
 import net.minecraft.client.KeyMapping;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -40,7 +40,7 @@ public class EasyVillagersClientMod {
 
     @SubscribeEvent
     static void onRegisterKeyBinds(RegisterKeyMappingsEvent event) {
-        CATEGORY_EASY_VILLAGERS = new KeyMapping.Category(ResourceLocation.fromNamespaceAndPath(EasyVillagersMod.MODID, "easy_villagers"));
+        CATEGORY_EASY_VILLAGERS = new KeyMapping.Category(Identifier.fromNamespaceAndPath(EasyVillagersMod.MODID, "easy_villagers"));
         event.registerCategory(CATEGORY_EASY_VILLAGERS);
         PICKUP_KEY = new KeyMapping("key.easy_villagers.pick_up", GLFW.GLFW_KEY_V, CATEGORY_EASY_VILLAGERS);
         CYCLE_TRADES_KEY = new KeyMapping("key.easy_villagers.cycle_trades", GLFW.GLFW_KEY_C, CATEGORY_EASY_VILLAGERS);
@@ -50,16 +50,16 @@ public class EasyVillagersClientMod {
 
     @SubscribeEvent
     static void registerItemModels(RegisterSpecialModelRendererEvent event) {
-        event.register(ResourceLocation.fromNamespaceAndPath(EasyVillagersMod.MODID, "auto_trader"), AutoTraderSpecialRenderer.Unbaked.MAP_CODEC);
-        event.register(ResourceLocation.fromNamespaceAndPath(EasyVillagersMod.MODID, "breeder"), BreederSpecialRenderer.Unbaked.MAP_CODEC);
-        event.register(ResourceLocation.fromNamespaceAndPath(EasyVillagersMod.MODID, "converter"), ConverterSpecialRenderer.Unbaked.MAP_CODEC);
-        event.register(ResourceLocation.fromNamespaceAndPath(EasyVillagersMod.MODID, "farmer"), FarmerSpecialRenderer.Unbaked.MAP_CODEC);
-        event.register(ResourceLocation.fromNamespaceAndPath(EasyVillagersMod.MODID, "incubator"), IncubatorSpecialRenderer.Unbaked.MAP_CODEC);
-        event.register(ResourceLocation.fromNamespaceAndPath(EasyVillagersMod.MODID, "inventory_viewer"), InventoryViewerSpecialRenderer.Unbaked.MAP_CODEC);
-        event.register(ResourceLocation.fromNamespaceAndPath(EasyVillagersMod.MODID, "trader"), TraderSpecialRenderer.Unbaked.MAP_CODEC);
-        event.register(ResourceLocation.fromNamespaceAndPath(EasyVillagersMod.MODID, "iron_farm"), IronFarmSpecialRenderer.Unbaked.MAP_CODEC);
+        event.register(Identifier.fromNamespaceAndPath(EasyVillagersMod.MODID, "auto_trader"), AutoTraderSpecialRenderer.Unbaked.MAP_CODEC);
+        event.register(Identifier.fromNamespaceAndPath(EasyVillagersMod.MODID, "breeder"), BreederSpecialRenderer.Unbaked.MAP_CODEC);
+        event.register(Identifier.fromNamespaceAndPath(EasyVillagersMod.MODID, "converter"), ConverterSpecialRenderer.Unbaked.MAP_CODEC);
+        event.register(Identifier.fromNamespaceAndPath(EasyVillagersMod.MODID, "farmer"), FarmerSpecialRenderer.Unbaked.MAP_CODEC);
+        event.register(Identifier.fromNamespaceAndPath(EasyVillagersMod.MODID, "incubator"), IncubatorSpecialRenderer.Unbaked.MAP_CODEC);
+        event.register(Identifier.fromNamespaceAndPath(EasyVillagersMod.MODID, "inventory_viewer"), InventoryViewerSpecialRenderer.Unbaked.MAP_CODEC);
+        event.register(Identifier.fromNamespaceAndPath(EasyVillagersMod.MODID, "trader"), TraderSpecialRenderer.Unbaked.MAP_CODEC);
+        event.register(Identifier.fromNamespaceAndPath(EasyVillagersMod.MODID, "iron_farm"), IronFarmSpecialRenderer.Unbaked.MAP_CODEC);
 
-        event.register(ResourceLocation.fromNamespaceAndPath(EasyVillagersMod.MODID, "villager"), VillagerSpecialRenderer.Unbaked.MAP_CODEC);
+        event.register(Identifier.fromNamespaceAndPath(EasyVillagersMod.MODID, "villager"), VillagerSpecialRenderer.Unbaked.MAP_CODEC);
     }
 
 }

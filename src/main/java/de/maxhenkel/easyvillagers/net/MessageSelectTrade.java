@@ -6,13 +6,13 @@ import de.maxhenkel.easyvillagers.gui.AutoTraderContainer;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class MessageSelectTrade implements Message<MessageSelectTrade> {
 
-    public static final CustomPacketPayload.Type<MessageSelectTrade> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(EasyVillagersMod.MODID, "select_trade"));
+    public static final CustomPacketPayload.Type<MessageSelectTrade> TYPE = new CustomPacketPayload.Type<>(Identifier.fromNamespaceAndPath(EasyVillagersMod.MODID, "select_trade"));
 
     private boolean next;
 

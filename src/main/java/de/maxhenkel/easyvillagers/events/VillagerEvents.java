@@ -9,7 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -24,7 +24,7 @@ public class VillagerEvents {
         if (!event.getLevel().isClientSide()) {
             return;
         }
-        if (!(event.getTarget() instanceof Villager)) {
+        if (!(event.getTarget() instanceof Villager villager)) {
             return;
         }
 
@@ -32,7 +32,6 @@ public class VillagerEvents {
             return;
         }
 
-        Villager villager = (Villager) event.getTarget();
         Player player = event.getEntity();
 
         if (!player.isShiftKeyDown()) {

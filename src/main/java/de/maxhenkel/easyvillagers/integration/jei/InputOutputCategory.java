@@ -12,12 +12,12 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 
 public abstract class InputOutputCategory implements IRecipeCategory<ItemStack> {
 
-    protected static final ResourceLocation BACKGROUND = ResourceLocation.fromNamespaceAndPath(EasyVillagersMod.MODID, "textures/gui/container/jei_input_output.png");
+    protected static final Identifier BACKGROUND = Identifier.fromNamespaceAndPath(EasyVillagersMod.MODID, "textures/gui/container/jei_input_output.png");
 
     protected final IGuiHelper helper;
     protected final IDrawableStatic background;

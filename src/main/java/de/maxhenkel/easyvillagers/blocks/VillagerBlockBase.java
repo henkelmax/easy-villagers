@@ -3,7 +3,10 @@ package de.maxhenkel.easyvillagers.blocks;
 import de.maxhenkel.corelib.block.VoxelUtils;
 import de.maxhenkel.easyvillagers.EasyVillagersMod;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundSoundPacket;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -45,9 +48,20 @@ public abstract class VillagerBlockBase extends HorizontalRotatableBlock impleme
         }
     }
 
-    public static void playRandomVillagerSound(Player player, SoundEvent soundEvent) {
+    public static void playRandomVillagerSound(ServerPlayer player, SoundEvent soundEvent) {
         if (player.level().getGameTime() % EasyVillagersMod.SERVER_CONFIG.villagerSoundAmount.get() == 0 && player.level().random.nextInt(40) == 0) {
-            player.playNotifySound(soundEvent, SoundSource.BLOCKS, 1F, 1F);
+            player.connection.send(
+                    new ClientboundSoundPacket(
+                            BuiltInRegistries.SOUND_EVENT.wrapAsHolder(soundEvent),
+                            SoundSource.BLOCKS,
+                            player.getX(),
+                            player.getY(),
+                            player.getZ(),
+                            1F,
+                            1F,
+                            player.getRandom().nextLong()
+                    )
+            );
         }
     }
 

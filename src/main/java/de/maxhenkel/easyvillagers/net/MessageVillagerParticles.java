@@ -8,12 +8,12 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class MessageVillagerParticles implements Message<MessageVillagerParticles> {
 
-    public static final CustomPacketPayload.Type<MessageVillagerParticles> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(EasyVillagersMod.MODID, "villager_particles"));
+    public static final CustomPacketPayload.Type<MessageVillagerParticles> TYPE = new CustomPacketPayload.Type<>(Identifier.fromNamespaceAndPath(EasyVillagersMod.MODID, "villager_particles"));
 
     private BlockPos pos;
 

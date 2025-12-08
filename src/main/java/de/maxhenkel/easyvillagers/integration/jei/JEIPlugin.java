@@ -12,8 +12,8 @@ import mezz.jei.api.recipe.types.IRecipeType;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionContents;
@@ -26,14 +26,14 @@ import java.util.List;
 @JeiPlugin
 public class JEIPlugin implements IModPlugin {
 
-    public static ResourceLocation PLUGIN_UID = ResourceLocation.fromNamespaceAndPath(EasyVillagersMod.MODID, "easy_villagers");
+    public static Identifier PLUGIN_UID = Identifier.fromNamespaceAndPath(EasyVillagersMod.MODID, "easy_villagers");
 
     public static final IRecipeType<ItemStack> CATEGORY_BREEDING = IRecipeType.create(EasyVillagersMod.MODID, "breeding", ItemStack.class);
     public static final IRecipeType<ItemStack> CATEGORY_CONVERTING = IRecipeType.create(EasyVillagersMod.MODID, "converting", ItemStack.class);
     public static final IRecipeType<ItemStack> CATEGORY_INCUBATING = IRecipeType.create(EasyVillagersMod.MODID, "incubating", ItemStack.class);
 
     @Override
-    public ResourceLocation getPluginUid() {
+    public Identifier getPluginUid() {
         return PLUGIN_UID;
     }
 

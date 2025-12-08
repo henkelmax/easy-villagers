@@ -6,13 +6,13 @@ import de.maxhenkel.easyvillagers.events.TradeCycleEvents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class MessageCycleTrades implements Message<MessageCycleTrades> {
 
-    public static final CustomPacketPayload.Type<MessageCycleTrades> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(EasyVillagersMod.MODID, "cycle_trades"));
+    public static final CustomPacketPayload.Type<MessageCycleTrades> TYPE = new CustomPacketPayload.Type<>(Identifier.fromNamespaceAndPath(EasyVillagersMod.MODID, "cycle_trades"));
 
     public MessageCycleTrades() {
 

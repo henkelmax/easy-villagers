@@ -5,11 +5,11 @@ import com.mojang.math.Axis;
 import de.maxhenkel.corelib.client.RenderUtils;
 import de.maxhenkel.easyvillagers.blocks.tileentity.FarmerTileentity;
 import net.minecraft.client.model.geom.EntityModelSet;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.entity.VillagerRenderer;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
@@ -79,7 +79,7 @@ public class FarmerRenderer extends VillagerRendererBase<FarmerTileentity, Farme
                 // See ItemFrameRenderer
                 collector.submitBlockModel(
                         stack,
-                        RenderType.entityCutout(TextureAtlas.LOCATION_BLOCKS),
+                        RenderTypes.entityCutout(TextureAtlas.LOCATION_BLOCKS),
                         blockRenderer.getBlockModel(crop),
                         RenderUtils.getRedFloat(color),
                         RenderUtils.getGreenFloat(color),

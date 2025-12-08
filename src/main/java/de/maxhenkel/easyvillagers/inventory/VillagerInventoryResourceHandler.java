@@ -1,7 +1,7 @@
 package de.maxhenkel.easyvillagers.inventory;
 
 import net.minecraft.core.NonNullList;
-import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;

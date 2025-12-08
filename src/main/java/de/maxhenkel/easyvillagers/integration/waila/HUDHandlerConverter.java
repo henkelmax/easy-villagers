@@ -5,8 +5,8 @@ import de.maxhenkel.easyvillagers.blocks.tileentity.ConverterTileentity;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.npc.VillagerProfession;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.npc.villager.VillagerProfession;
 import snownee.jade.api.BlockAccessor;
 import snownee.jade.api.IBlockComponentProvider;
 import snownee.jade.api.ITooltip;
@@ -16,7 +16,7 @@ public class HUDHandlerConverter implements IBlockComponentProvider {
 
     public static final HUDHandlerConverter INSTANCE = new HUDHandlerConverter();
 
-    private static final ResourceLocation UID = ResourceLocation.fromNamespaceAndPath(EasyVillagersMod.MODID, "converter");
+    private static final Identifier UID = Identifier.fromNamespaceAndPath(EasyVillagersMod.MODID, "converter");
 
     @Override
     public void appendTooltip(ITooltip iTooltip, BlockAccessor blockAccessor, IPluginConfig iPluginConfig) {
@@ -44,7 +44,7 @@ public class HUDHandlerConverter implements IBlockComponentProvider {
     }
 
     @Override
-    public ResourceLocation getUid() {
+    public Identifier getUid() {
         return UID;
     }
 }

@@ -3,7 +3,7 @@ package de.maxhenkel.easyvillagers.events;
 import de.maxhenkel.easyvillagers.EasyVillagersMod;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.inventory.MerchantMenu;
 
 public class TradeCycleEvents {
@@ -22,10 +22,9 @@ public class TradeCycleEvents {
             return;
         }
 
-        if (!(container.trader instanceof Villager)) {
+        if (!(container.trader instanceof Villager villager)) {
             return;
         }
-        Villager villager = (Villager) container.trader;
         villager.offers = null;
         EasyVillagerEntity.recalculateOffers(villager);
         player.sendMerchantOffers(container.containerId, villager.getOffers(), villager.getVillagerData().level(), villager.getVillagerXp(), villager.showProgressBar(), villager.canRestock());

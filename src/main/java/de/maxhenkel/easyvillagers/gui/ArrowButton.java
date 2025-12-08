@@ -7,12 +7,12 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class ArrowButton extends AbstractButton {
 
-    private static final ResourceLocation ARROW_LEFT = ResourceLocation.fromNamespaceAndPath(EasyVillagersMod.MODID, "textures/gui/arrow_left.png");
-    private static final ResourceLocation ARROW_RIGHT = ResourceLocation.fromNamespaceAndPath(EasyVillagersMod.MODID, "textures/gui/arrow_right.png");
+    private static final Identifier ARROW_LEFT = Identifier.fromNamespaceAndPath(EasyVillagersMod.MODID, "textures/gui/arrow_left.png");
+    private static final Identifier ARROW_RIGHT = Identifier.fromNamespaceAndPath(EasyVillagersMod.MODID, "textures/gui/arrow_right.png");
 
     private final boolean left;
     private final OnPress onPress;
@@ -24,8 +24,8 @@ public class ArrowButton extends AbstractButton {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
-        super.renderWidget(guiGraphics, mouseX, mouseY, delta);
+    protected void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
+        renderDefaultSprite(guiGraphics);
         guiGraphics.blit(RenderPipelines.GUI_TEXTURED, left ? ARROW_LEFT : ARROW_RIGHT, getX(), getY() + 2, 0, 0, width, height, 16, 16);
     }
 

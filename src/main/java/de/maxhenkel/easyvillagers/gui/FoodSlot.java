@@ -1,7 +1,7 @@
 package de.maxhenkel.easyvillagers.gui;
 
 import net.minecraft.world.Container;
-import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.transfer.item.ItemResource;

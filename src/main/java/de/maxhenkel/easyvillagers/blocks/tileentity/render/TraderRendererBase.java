@@ -6,17 +6,17 @@ import de.maxhenkel.corelib.CachedMap;
 import de.maxhenkel.corelib.client.RenderUtils;
 import de.maxhenkel.easyvillagers.blocks.tileentity.TraderTileentityBase;
 import net.minecraft.client.model.geom.EntityModelSet;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.entity.VillagerRenderer;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.GrindstoneBlock;
@@ -114,7 +114,7 @@ public abstract class TraderRendererBase<T extends TraderTileentityBase> extends
         // See ItemFrameRenderer
         collector.submitBlockModel(
                 stack,
-                RenderType.entityCutout(TextureAtlas.LOCATION_BLOCKS),
+                RenderTypes.entityCutout(TextureAtlas.LOCATION_BLOCKS),
                 blockRenderer.getBlockModel(state),
                 RenderUtils.getRedFloat(color),
                 RenderUtils.getGreenFloat(color),
@@ -136,20 +136,20 @@ public abstract class TraderRendererBase<T extends TraderTileentityBase> extends
         return block.defaultBlockState();
     }
 
-    public static final Map<ResourceLocation, Consumer<PoseStack>> TRANSFORMS = new HashMap<>();
+    public static final Map<Identifier, Consumer<PoseStack>> TRANSFORMS = new HashMap<>();
     private static final Map<Block, Consumer<PoseStack>> TRANSFORMS_CACHE = new HashMap<>();
 
-    public static final Map<ResourceLocation, ResourceLocation> TOP_BLOCKS = new HashMap<>();
+    public static final Map<Identifier, Identifier> TOP_BLOCKS = new HashMap<>();
     private static final Map<Block, BlockState> TOP_BLOCK_CACHE = new HashMap<>();
 
     static {
         Consumer<PoseStack> immersiveEngineering = stack -> {
             stack.translate(-0.5D, 0D, 0D);
         };
-        TRANSFORMS.put(ResourceLocation.fromNamespaceAndPath("immersiveengineering", "workbench"), immersiveEngineering);
-        TRANSFORMS.put(ResourceLocation.fromNamespaceAndPath("immersiveengineering", "circuit_table"), immersiveEngineering);
+        TRANSFORMS.put(Identifier.fromNamespaceAndPath("immersiveengineering", "workbench"), immersiveEngineering);
+        TRANSFORMS.put(Identifier.fromNamespaceAndPath("immersiveengineering", "circuit_table"), immersiveEngineering);
 
-        TOP_BLOCKS.put(ResourceLocation.fromNamespaceAndPath("car", "gas_station"), ResourceLocation.fromNamespaceAndPath("car", "gas_station_top"));
+        TOP_BLOCKS.put(Identifier.fromNamespaceAndPath("car", "gas_station"), Identifier.fromNamespaceAndPath("car", "gas_station_top"));
     }
 
     protected static Consumer<PoseStack> getTransforms(BlockState block) {
@@ -171,7 +171,7 @@ public abstract class TraderRendererBase<T extends TraderTileentityBase> extends
         if (cached != null) {
             return cached;
         }
-        ResourceLocation resourceLocation = TOP_BLOCKS.get(BuiltInRegistries.BLOCK.getKey(bottom.getBlock()));
+        Identifier resourceLocation = TOP_BLOCKS.get(BuiltInRegistries.BLOCK.getKey(bottom.getBlock()));
         if (resourceLocation == null) {
             BlockState state = Blocks.AIR.defaultBlockState();
             TOP_BLOCK_CACHE.put(bottom.getBlock(), state);

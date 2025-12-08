@@ -14,9 +14,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Vector3f;
+import org.joml.Vector3fc;
 
-import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class ItemSpecialRendererBase<T extends FakeWorldTileentity, U extends BlockEntityRenderState> implements SpecialModelRenderer<T> {
@@ -53,7 +53,7 @@ public class ItemSpecialRendererBase<T extends FakeWorldTileentity, U extends Bl
     }
 
     @Override
-    public void getExtents(Set<Vector3f> vecs) {
+    public void getExtents(Consumer<Vector3fc> vecs) {
 
     }
 

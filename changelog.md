@@ -1,1 +1,1 @@
-- Added Literary Chinese translation
+- Updated to 1.21.11

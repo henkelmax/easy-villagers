@@ -6,16 +6,16 @@ import de.maxhenkel.easyvillagers.events.VillagerEvents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.npc.villager.Villager;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.UUID;
 
 public class MessagePickUpVillager implements Message<MessagePickUpVillager> {
 
-    public static final CustomPacketPayload.Type<MessagePickUpVillager> TYPE = new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(EasyVillagersMod.MODID, "pick_up_villager"));
+    public static final CustomPacketPayload.Type<MessagePickUpVillager> TYPE = new CustomPacketPayload.Type<>(Identifier.fromNamespaceAndPath(EasyVillagersMod.MODID, "pick_up_villager"));
 
     private UUID villager;
 
