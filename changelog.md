@@ -1,1 +1,1 @@
-- Added Literary Chinese translation
+- Updated Brazilian Portuguese translation
