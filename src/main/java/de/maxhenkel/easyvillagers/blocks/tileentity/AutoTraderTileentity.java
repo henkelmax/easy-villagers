@@ -200,7 +200,7 @@ public class AutoTraderTileentity extends TraderTileentityBase implements ITicka
 
     @Override
     protected long calculateNextRestock() {
-        return EasyVillagersMod.SERVER_CONFIG.autoTraderMinRestockTime.get() + level.random.nextInt(Math.max(EasyVillagersMod.SERVER_CONFIG.autoTraderMaxRestockTime.get() - EasyVillagersMod.SERVER_CONFIG.autoTraderMinRestockTime.get(), 1));
+        return EasyVillagersMod.SERVER_CONFIG.autoTraderMinRestockTime.get() + level.getRandom().nextInt(Math.max(EasyVillagersMod.SERVER_CONFIG.autoTraderMaxRestockTime.get() - EasyVillagersMod.SERVER_CONFIG.autoTraderMinRestockTime.get(), 1));
     }
 
     @Override

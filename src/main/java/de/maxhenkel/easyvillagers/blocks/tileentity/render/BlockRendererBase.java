@@ -20,9 +20,9 @@ public abstract class BlockRendererBase<T extends FakeWorldTileentity, S extends
     public static EntityRendererProvider.Context createEntityRenderer() {
         return new EntityRendererProvider.Context(
                 minecraft.getEntityRenderDispatcher(),
+                minecraft.getBlockModelResolver(),
                 minecraft.getItemModelResolver(),
                 minecraft.getMapRenderer(),
-                minecraft.getBlockRenderer(),
                 minecraft.getResourceManager(),
                 minecraft.getEntityModels(),
                 minecraft.getEntityRenderDispatcher().equipmentAssets,

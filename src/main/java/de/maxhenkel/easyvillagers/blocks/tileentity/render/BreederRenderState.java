@@ -5,6 +5,7 @@ import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import net.minecraft.client.renderer.entity.state.VillagerRenderState;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.level.block.state.properties.BedPart;
 
 public class BreederRenderState extends BlockEntityRenderState {
 
@@ -18,8 +19,9 @@ public class BreederRenderState extends BlockEntityRenderState {
 
     public BreederRenderState() {
         bedRenderStateBottom.color = DyeColor.RED;
+        bedRenderStateBottom.part = BedPart.FOOT;
         bedRenderStateTop.color = DyeColor.RED;
-        bedRenderStateTop.isHead = true;
+        bedRenderStateTop.part = BedPart.HEAD;
     }
 
 }

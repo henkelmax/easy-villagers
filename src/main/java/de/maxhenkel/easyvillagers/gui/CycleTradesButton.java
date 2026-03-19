@@ -1,7 +1,7 @@
 package de.maxhenkel.easyvillagers.gui;
 
 import de.maxhenkel.easyvillagers.EasyVillagersMod;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.inventory.MerchantScreen;
@@ -31,7 +31,7 @@ public class CycleTradesButton extends AbstractButton {
     }
 
     @Override
-    public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+    public void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
         visible = canCycle(screen.getMenu());
         if (isHovered) {
             guiGraphics.blit(RenderPipelines.GUI_TEXTURED, ARROW_BUTTON, getX(), getY(), 0, 14, WIDTH, HEIGHT, 32, 32);

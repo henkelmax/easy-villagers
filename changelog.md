@@ -1,1 +1,1 @@
-- Added Mexican Spanish translation
+- Updated to 26.1

@@ -162,14 +162,14 @@ public class BreederTileentity extends FakeWorldTileentity implements IServerTic
 
     public void spawnParticles() {
         if (level instanceof ServerLevel serverLevel) {
-            PacketDistributor.sendToPlayersTrackingChunk(serverLevel, new ChunkPos(worldPosition), new MessageVillagerParticles(worldPosition));
+            PacketDistributor.sendToPlayersTrackingChunk(serverLevel, ChunkPos.containing(worldPosition), new MessageVillagerParticles(worldPosition));
 
         } else if (level.isClientSide()) {
             for (int i = 0; i < 5; i++) {
                 level.addParticle(ParticleTypes.HEART,
-                        worldPosition.getX() + (level.random.nextDouble() - 0.5D) + 0.5D,
-                        worldPosition.getY() + level.random.nextDouble() + 1D,
-                        worldPosition.getZ() + (level.random.nextDouble() - 0.5D) + 0.5D,
+                        worldPosition.getX() + (level.getRandom().nextDouble() - 0.5D) + 0.5D,
+                        worldPosition.getY() + level.getRandom().nextDouble() + 1D,
+                        worldPosition.getZ() + (level.getRandom().nextDouble() - 0.5D) + 0.5D,
                         0D, 0D, 0D);
             }
         }

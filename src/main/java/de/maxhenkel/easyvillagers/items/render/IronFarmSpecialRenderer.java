@@ -19,9 +19,9 @@ public class IronFarmSpecialRenderer extends ItemSpecialRendererBase<IronFarmTil
         renderer = new IronFarmRenderer(modelSet);
     }
 
-    public static class Unbaked implements SpecialModelRenderer.Unbaked {
+    public static class Unbaked implements SpecialModelRenderer.Unbaked<IronFarmTileentity> {
 
-        public static final MapCodec<IronFarmSpecialRenderer.Unbaked> MAP_CODEC = MapCodec.unit(IronFarmSpecialRenderer.Unbaked::new);
+        public static final MapCodec<Unbaked> MAP_CODEC = MapCodec.unit(Unbaked::new);
 
         public Unbaked() {
 
@@ -29,7 +29,7 @@ public class IronFarmSpecialRenderer extends ItemSpecialRendererBase<IronFarmTil
 
         @Override
         @Nullable
-        public SpecialModelRenderer<?> bake(BakingContext context) {
+        public SpecialModelRenderer<IronFarmTileentity> bake(BakingContext context) {
             return new IronFarmSpecialRenderer(context.entityModelSet(), () -> ModBlocks.IRON_FARM.get().defaultBlockState());
         }
 

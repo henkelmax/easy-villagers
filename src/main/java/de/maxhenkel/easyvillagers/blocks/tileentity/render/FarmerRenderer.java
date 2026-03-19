@@ -2,28 +2,27 @@ package de.maxhenkel.easyvillagers.blocks.tileentity.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import de.maxhenkel.corelib.client.RenderUtils;
 import de.maxhenkel.easyvillagers.blocks.tileentity.FarmerTileentity;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.SubmitNodeCollector;
-import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+import net.minecraft.client.renderer.block.BlockModelResolver;
+import net.minecraft.client.renderer.block.model.BlockDisplayContext;
 import net.minecraft.client.renderer.entity.VillagerRenderer;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
-import net.minecraft.client.renderer.rendertype.RenderTypes;
-import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 public class FarmerRenderer extends VillagerRendererBase<FarmerTileentity, FarmerRenderState> {
 
-    private final BlockRenderDispatcher blockRenderer;
+    private static final BlockDisplayContext BLOCK_DISPLAY_CONTEXT = BlockDisplayContext.create();
 
-    public FarmerRenderer(EntityModelSet entityModelSet, BlockRenderDispatcher blockRenderer) {
+    private final BlockModelResolver blockModelResolver;
+
+    public FarmerRenderer(EntityModelSet entityModelSet, BlockModelResolver blockModelResolver) {
         super(entityModelSet);
-        this.blockRenderer = blockRenderer;
+        this.blockModelResolver = blockModelResolver;
     }
 
     @Override
@@ -44,7 +43,11 @@ public class FarmerRenderer extends VillagerRendererBase<FarmerTileentity, Farme
             state.villagerRenderState.lightCoords = getLightOrDefault(farmer, state);
         }
 
-        state.crop = farmer.getCrop();
+        if (farmer.getCrop() != null) {
+            blockModelResolver.update(state.crop, farmer.getCrop(), BLOCK_DISPLAY_CONTEXT);
+        } else {
+            state.crop.clear();
+        }
     }
 
     @Override
@@ -63,8 +66,7 @@ public class FarmerRenderer extends VillagerRendererBase<FarmerTileentity, Farme
             stack.popPose();
         }
 
-        BlockState crop = state.crop;
-        if (crop != null) {
+        if (!state.crop.isEmpty()) {
             stack.pushPose();
 
             stack.translate(0.5D, 1D / 16D, 0.5D);
@@ -75,19 +77,7 @@ public class FarmerRenderer extends VillagerRendererBase<FarmerTileentity, Farme
             stack.translate(0.5D / 0.45D - 0.5D, 0D, 0.5D / 0.45D - 0.5D);
 
             if (minecraft.level != null) {
-                int color = minecraft.getBlockColors().getColor(crop, null, null, 0);
-                // See ItemFrameRenderer
-                collector.submitBlockModel(
-                        stack,
-                        RenderTypes.entityCutout(TextureAtlas.LOCATION_BLOCKS),
-                        blockRenderer.getBlockModel(crop),
-                        RenderUtils.getRedFloat(color),
-                        RenderUtils.getGreenFloat(color),
-                        RenderUtils.getBlueFloat(color),
-                        state.lightCoords,
-                        OverlayTexture.NO_OVERLAY,
-                        0
-                );
+                state.crop.submit(stack, collector, state.lightCoords, OverlayTexture.NO_OVERLAY, 0);
             }
 
             stack.popPose();

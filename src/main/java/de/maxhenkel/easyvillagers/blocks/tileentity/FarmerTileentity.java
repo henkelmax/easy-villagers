@@ -112,7 +112,7 @@ public class FarmerTileentity extends VillagerTileentity implements IServerTicka
             setChanged();
         }
 
-        if (level.getGameTime() % 20 == 0 && level.random.nextInt(EasyVillagersMod.SERVER_CONFIG.farmSpeed.get()) == 0) {
+        if (level.getGameTime() % 20 == 0 && level.getRandom().nextInt(EasyVillagersMod.SERVER_CONFIG.farmSpeed.get()) == 0) {
             if (ageCrop(v)) {
                 sync();
                 setChanged();

@@ -43,13 +43,13 @@ public abstract class VillagerBlockBase extends HorizontalRotatableBlock impleme
     }
 
     public static void playRandomVillagerSound(Level world, BlockPos pos, SoundEvent soundEvent) {
-        if (world.getGameTime() % EasyVillagersMod.SERVER_CONFIG.villagerSoundAmount.get() == 0 && world.random.nextInt(40) == 0) {
+        if (world.getGameTime() % EasyVillagersMod.SERVER_CONFIG.villagerSoundAmount.get() == 0 && world.getRandom().nextInt(40) == 0) {
             playVillagerSound(world, pos, soundEvent);
         }
     }
 
     public static void playRandomVillagerSound(ServerPlayer player, SoundEvent soundEvent) {
-        if (player.level().getGameTime() % EasyVillagersMod.SERVER_CONFIG.villagerSoundAmount.get() == 0 && player.level().random.nextInt(40) == 0) {
+        if (player.level().getGameTime() % EasyVillagersMod.SERVER_CONFIG.villagerSoundAmount.get() == 0 && player.level().getRandom().nextInt(40) == 0) {
             player.connection.send(
                     new ClientboundSoundPacket(
                             BuiltInRegistries.SOUND_EVENT.wrapAsHolder(soundEvent),

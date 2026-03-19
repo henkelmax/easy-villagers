@@ -19,9 +19,9 @@ public class IncubatorSpecialRenderer extends ItemSpecialRendererBase<IncubatorT
         renderer = new IncubatorRenderer(modelSet);
     }
 
-    public static class Unbaked implements SpecialModelRenderer.Unbaked {
+    public static class Unbaked implements SpecialModelRenderer.Unbaked<IncubatorTileentity> {
 
-        public static final MapCodec<IncubatorSpecialRenderer.Unbaked> MAP_CODEC = MapCodec.unit(IncubatorSpecialRenderer.Unbaked::new);
+        public static final MapCodec<Unbaked> MAP_CODEC = MapCodec.unit(Unbaked::new);
 
         public Unbaked() {
 
@@ -29,7 +29,7 @@ public class IncubatorSpecialRenderer extends ItemSpecialRendererBase<IncubatorT
 
         @Override
         @Nullable
-        public SpecialModelRenderer<?> bake(BakingContext context) {
+        public SpecialModelRenderer<IncubatorTileentity> bake(BakingContext context) {
             return new IncubatorSpecialRenderer(context.entityModelSet(), () -> ModBlocks.INCUBATOR.get().defaultBlockState());
         }
 

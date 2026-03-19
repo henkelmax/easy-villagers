@@ -1,7 +1,7 @@
 package de.maxhenkel.easyvillagers.gui;
 
 import de.maxhenkel.easyvillagers.EasyVillagersMod;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.InputWithModifiers;
@@ -24,8 +24,8 @@ public class ArrowButton extends AbstractButton {
     }
 
     @Override
-    protected void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
-        renderDefaultSprite(guiGraphics);
+    protected void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float delta) {
+        extractDefaultSprite(guiGraphics);
         guiGraphics.blit(RenderPipelines.GUI_TEXTURED, left ? ARROW_LEFT : ARROW_RIGHT, getX(), getY() + 2, 0, 0, width, height, 16, 16);
     }
 

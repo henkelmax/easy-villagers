@@ -12,8 +12,7 @@ import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.VillagerRenderer;
 import net.minecraft.client.renderer.entity.state.VillagerRenderState;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
-import net.minecraft.client.renderer.state.CameraRenderState;
-import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.world.item.ItemStack;
 import org.joml.Vector3fc;
 
@@ -33,7 +32,7 @@ public class VillagerSpecialRenderer implements SpecialModelRenderer<VillagerRen
     }
 
     @Override
-    public void submit(@Nullable VillagerRenderState state, ItemDisplayContext context, PoseStack stack, SubmitNodeCollector collector, int light, int overlay, boolean b, int i) {
+    public void submit(@Nullable VillagerRenderState state, PoseStack stack, SubmitNodeCollector collector, int light, int overlay, boolean b, int i) {
         if (state == null) {
             return;
         }
@@ -62,9 +61,9 @@ public class VillagerSpecialRenderer implements SpecialModelRenderer<VillagerRen
         return renderer;
     }
 
-    public static class Unbaked implements SpecialModelRenderer.Unbaked {
+    public static class Unbaked implements SpecialModelRenderer.Unbaked<VillagerRenderState> {
 
-        public static final MapCodec<VillagerSpecialRenderer.Unbaked> MAP_CODEC = MapCodec.unit(VillagerSpecialRenderer.Unbaked::new);
+        public static final MapCodec<Unbaked> MAP_CODEC = MapCodec.unit(Unbaked::new);
 
         public Unbaked() {
 
@@ -72,7 +71,7 @@ public class VillagerSpecialRenderer implements SpecialModelRenderer<VillagerRen
 
         @Override
         @Nullable
-        public SpecialModelRenderer<?> bake(BakingContext context) {
+        public SpecialModelRenderer<VillagerRenderState> bake(BakingContext context) {
             return new VillagerSpecialRenderer(context.entityModelSet());
         }
 

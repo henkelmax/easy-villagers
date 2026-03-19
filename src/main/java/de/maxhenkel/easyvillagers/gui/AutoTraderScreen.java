@@ -3,7 +3,7 @@ package de.maxhenkel.easyvillagers.gui;
 import de.maxhenkel.corelib.inventory.ScreenBase;
 import de.maxhenkel.easyvillagers.EasyVillagersMod;
 import de.maxhenkel.easyvillagers.net.MessageSelectTrade;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -17,10 +17,8 @@ public class AutoTraderScreen extends ScreenBase<AutoTraderContainer> {
     private final Inventory playerInventory;
 
     public AutoTraderScreen(AutoTraderContainer container, Inventory playerInventory, Component name) {
-        super(BACKGROUND, container, playerInventory, name);
+        super(BACKGROUND, container, playerInventory, name, 176, 202);
         this.playerInventory = playerInventory;
-        imageWidth = 176;
-        imageHeight = 202;
     }
 
     @Override
@@ -37,25 +35,25 @@ public class AutoTraderScreen extends ScreenBase<AutoTraderContainer> {
     }
 
     @Override
-    protected void renderBg(GuiGraphics guiGraphics, float partialTicks, int mouseX, int mouseY) {
-        super.renderBg(guiGraphics, partialTicks, mouseX, mouseY);
+    public void extractBackground(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
+        super.extractBackground(guiGraphics, mouseX, mouseY, partialTicks);
         if (getMenu().isLocked()) {
             guiGraphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, leftPos + 83, topPos + 19, 176, 0, 28, 21, 256, 256);
         }
     }
 
     @Override
-    protected void renderLabels(GuiGraphics guiGraphics, int x, int y) {
-        super.renderLabels(guiGraphics, x, y);
+    protected void extractLabels(GuiGraphicsExtractor guiGraphics, int x, int y) {
+        super.extractLabels(guiGraphics, x, y);
         drawCenteredText(guiGraphics, title, 6, FONT_COLOR);
         drawCenteredText(guiGraphics, Component.translatable("gui.easy_villagers.input"), 45, FONT_COLOR);
         drawCenteredText(guiGraphics, Component.translatable("gui.easy_villagers.output"), 77, FONT_COLOR);
-        guiGraphics.drawString(font, playerInventory.getDisplayName().getVisualOrderText(), 8, imageHeight - 96 + 3, FONT_COLOR, false);
+        guiGraphics.text(font, playerInventory.getDisplayName().getVisualOrderText(), 8, imageHeight - 96 + 3, FONT_COLOR, false);
     }
 
-    protected void drawCenteredText(GuiGraphics guiGraphics, Component text, int y, int color) {
+    protected void drawCenteredText(GuiGraphicsExtractor guiGraphics, Component text, int y, int color) {
         int width = font.width(text);
-        guiGraphics.drawString(font, text.getVisualOrderText(), imageWidth / 2 - width / 2, y, color, false);
+        guiGraphics.text(font, text.getVisualOrderText(), imageWidth / 2 - width / 2, y, color, false);
     }
 
 }

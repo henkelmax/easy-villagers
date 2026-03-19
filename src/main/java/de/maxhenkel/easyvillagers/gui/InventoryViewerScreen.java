@@ -2,7 +2,7 @@ package de.maxhenkel.easyvillagers.gui;
 
 import de.maxhenkel.corelib.inventory.ScreenBase;
 import de.maxhenkel.easyvillagers.EasyVillagersMod;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
@@ -17,17 +17,15 @@ public class InventoryViewerScreen extends ScreenBase<InventoryViewerContainer> 
     protected final Inventory playerInventory;
 
     public InventoryViewerScreen(InventoryViewerContainer container, Inventory playerInventory, Component title) {
-        super(BACKGROUND, container, playerInventory, title);
+        super(BACKGROUND, container, playerInventory, title, 176, 182);
         this.playerInventory = playerInventory;
-        imageWidth = 176;
-        imageHeight = 182;
     }
 
     @Override
-    protected void renderLabels(GuiGraphics guiGraphics, int x, int y) {
+    protected void extractLabels(GuiGraphicsExtractor guiGraphics, int x, int y) {
         drawCentered(guiGraphics, VILLAGER_INVENTORY, 9, FONT_COLOR);
         drawCentered(guiGraphics, VILLAGER_EQUIPMENT, 58, FONT_COLOR);
-        guiGraphics.drawString(font, playerInventory.getDisplayName().getVisualOrderText(), 8, imageHeight - 96 + 3, FONT_COLOR, false);
+        guiGraphics.text(font, playerInventory.getDisplayName().getVisualOrderText(), 8, imageHeight - 96 + 3, FONT_COLOR, false);
     }
 
 }

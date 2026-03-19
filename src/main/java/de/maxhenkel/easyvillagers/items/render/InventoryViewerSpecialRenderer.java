@@ -19,9 +19,9 @@ public class InventoryViewerSpecialRenderer extends ItemSpecialRendererBase<Inve
         renderer = new InventoryViewerRenderer(modelSet);
     }
 
-    public static class Unbaked implements SpecialModelRenderer.Unbaked {
+    public static class Unbaked implements SpecialModelRenderer.Unbaked<InventoryViewerTileentity> {
 
-        public static final MapCodec<InventoryViewerSpecialRenderer.Unbaked> MAP_CODEC = MapCodec.unit(InventoryViewerSpecialRenderer.Unbaked::new);
+        public static final MapCodec<Unbaked> MAP_CODEC = MapCodec.unit(Unbaked::new);
 
         public Unbaked() {
 
@@ -29,7 +29,7 @@ public class InventoryViewerSpecialRenderer extends ItemSpecialRendererBase<Inve
 
         @Override
         @Nullable
-        public SpecialModelRenderer<?> bake(BakingContext context) {
+        public SpecialModelRenderer<InventoryViewerTileentity> bake(BakingContext context) {
             return new InventoryViewerSpecialRenderer(context.entityModelSet(), () -> ModBlocks.INVENTORY_VIEWER.get().defaultBlockState());
         }
 

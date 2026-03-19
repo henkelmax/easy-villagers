@@ -9,8 +9,8 @@ import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BedRenderer;
 import net.minecraft.client.renderer.entity.VillagerRenderer;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
-import net.minecraft.client.renderer.state.CameraRenderState;
-import net.minecraft.client.resources.model.MaterialSet;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.client.resources.model.sprite.SpriteGetter;
 import net.minecraft.core.Direction;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -21,11 +21,11 @@ public class BreederRenderer extends VillagerRendererBase<BreederTileentity, Bre
 
     private WeakReference<BedRenderer> bedRendererCache = new WeakReference<>(null);
 
-    private final MaterialSet materialSet;
+    private final SpriteGetter spriteGetter;
 
-    public BreederRenderer(EntityModelSet entityModelSet, MaterialSet materialSet) {
+    public BreederRenderer(EntityModelSet entityModelSet, SpriteGetter spriteGetter) {
         super(entityModelSet);
-        this.materialSet = materialSet;
+        this.spriteGetter = spriteGetter;
     }
 
     @Override
@@ -70,7 +70,7 @@ public class BreederRenderer extends VillagerRendererBase<BreederTileentity, Bre
 
         BedRenderer bedRenderer = bedRendererCache.get();
         if (bedRenderer == null) {
-            bedRenderer = new BedRenderer(materialSet, entityModelSet);
+            bedRenderer = new BedRenderer(spriteGetter, entityModelSet);
             bedRendererCache = new WeakReference<>(bedRenderer);
         }
 

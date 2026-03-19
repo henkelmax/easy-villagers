@@ -19,9 +19,9 @@ public class ConverterSpecialRenderer extends ItemSpecialRendererBase<ConverterT
         renderer = new ConverterRenderer(modelSet);
     }
 
-    public static class Unbaked implements SpecialModelRenderer.Unbaked {
+    public static class Unbaked implements SpecialModelRenderer.Unbaked<ConverterTileentity> {
 
-        public static final MapCodec<ConverterSpecialRenderer.Unbaked> MAP_CODEC = MapCodec.unit(ConverterSpecialRenderer.Unbaked::new);
+        public static final MapCodec<Unbaked> MAP_CODEC = MapCodec.unit(Unbaked::new);
 
         public Unbaked() {
 
@@ -29,7 +29,7 @@ public class ConverterSpecialRenderer extends ItemSpecialRendererBase<ConverterT
 
         @Override
         @Nullable
-        public SpecialModelRenderer<?> bake(BakingContext context) {
+        public SpecialModelRenderer<ConverterTileentity> bake(BakingContext context) {
             return new ConverterSpecialRenderer(context.entityModelSet(), () -> ModBlocks.CONVERTER.get().defaultBlockState());
         }
 

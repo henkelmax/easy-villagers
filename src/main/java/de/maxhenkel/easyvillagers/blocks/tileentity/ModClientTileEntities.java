@@ -10,10 +10,10 @@ public class ModClientTileEntities {
         if (!EasyVillagersMod.CLIENT_CONFIG.renderBlockContents.get()) {
             return;
         }
-        BlockEntityRenderers.register(ModTileEntities.TRADER.get(), c -> new TraderRenderer(c.entityModelSet(), c.blockRenderDispatcher()));
-        BlockEntityRenderers.register(ModTileEntities.AUTO_TRADER.get(), c -> new AutoTraderRenderer(c.entityModelSet(), c.blockRenderDispatcher()));
-        BlockEntityRenderers.register(ModTileEntities.FARMER.get(), c -> new FarmerRenderer(c.entityModelSet(), c.blockRenderDispatcher()));
-        BlockEntityRenderers.register(ModTileEntities.BREEDER.get(), c -> new BreederRenderer(c.entityModelSet(), c.materials()));
+        BlockEntityRenderers.register(ModTileEntities.TRADER.get(), c -> new TraderRenderer(c.entityModelSet(), c.blockModelResolver()));
+        BlockEntityRenderers.register(ModTileEntities.AUTO_TRADER.get(), c -> new AutoTraderRenderer(c.entityModelSet(), c.blockModelResolver()));
+        BlockEntityRenderers.register(ModTileEntities.FARMER.get(), c -> new FarmerRenderer(c.entityModelSet(), c.blockModelResolver()));
+        BlockEntityRenderers.register(ModTileEntities.BREEDER.get(), c -> new BreederRenderer(c.entityModelSet(), c.sprites()));
         BlockEntityRenderers.register(ModTileEntities.CONVERTER.get(), c -> new ConverterRenderer(c.entityModelSet()));
         BlockEntityRenderers.register(ModTileEntities.IRON_FARM.get(), c -> new IronFarmRenderer(c.entityModelSet()));
         BlockEntityRenderers.register(ModTileEntities.INCUBATOR.get(), c -> new IncubatorRenderer(c.entityModelSet()));

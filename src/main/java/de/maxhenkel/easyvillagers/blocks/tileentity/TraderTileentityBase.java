@@ -156,7 +156,7 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
     }
 
     protected long calculateNextRestock() {
-        return EasyVillagersMod.SERVER_CONFIG.traderMinRestockTime.get() + level.random.nextInt(Math.max(EasyVillagersMod.SERVER_CONFIG.traderMaxRestockTime.get() - EasyVillagersMod.SERVER_CONFIG.traderMinRestockTime.get(), 1));
+        return EasyVillagersMod.SERVER_CONFIG.traderMinRestockTime.get() + level.getRandom().nextInt(Math.max(EasyVillagersMod.SERVER_CONFIG.traderMaxRestockTime.get() - EasyVillagersMod.SERVER_CONFIG.traderMinRestockTime.get(), 1));
     }
 
     protected void restock() {

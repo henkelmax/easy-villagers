@@ -1,12 +1,9 @@
 package de.maxhenkel.easyvillagers.blocks.tileentity.render;
 
-import net.minecraft.world.level.block.state.BlockState;
-
-import javax.annotation.Nullable;
+import net.minecraft.client.renderer.block.BlockModelRenderState;
 
 public class FarmerRenderState extends VillagerRenderStateBase {
 
-    @Nullable
-    public BlockState crop;
+    public final BlockModelRenderState crop = new BlockModelRenderState();
 
 }

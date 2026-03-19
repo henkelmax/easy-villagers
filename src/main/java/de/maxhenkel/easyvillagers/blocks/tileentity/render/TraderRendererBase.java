@@ -3,17 +3,16 @@ package de.maxhenkel.easyvillagers.blocks.tileentity.render;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import de.maxhenkel.corelib.CachedMap;
-import de.maxhenkel.corelib.client.RenderUtils;
 import de.maxhenkel.easyvillagers.blocks.tileentity.TraderTileentityBase;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.SubmitNodeCollector;
-import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+import net.minecraft.client.renderer.block.BlockModelRenderState;
+import net.minecraft.client.renderer.block.BlockModelResolver;
+import net.minecraft.client.renderer.block.model.BlockDisplayContext;
 import net.minecraft.client.renderer.entity.VillagerRenderer;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
-import net.minecraft.client.renderer.rendertype.RenderTypes;
-import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
@@ -31,13 +30,14 @@ import java.util.function.Consumer;
 
 public abstract class TraderRendererBase<T extends TraderTileentityBase> extends VillagerRendererBase<T, TraderRenderState> {
 
+    private static final BlockDisplayContext BLOCK_DISPLAY_CONTEXT = BlockDisplayContext.create();
     private static final CachedMap<Block, BlockState> blockStateCache = new CachedMap<>(10_000);
 
-    private final BlockRenderDispatcher blockRenderer;
+    private final BlockModelResolver blockModelResolver;
 
-    public TraderRendererBase(EntityModelSet entityModelSet, BlockRenderDispatcher blockRenderer) {
+    public TraderRendererBase(EntityModelSet entityModelSet, BlockModelResolver blockModelResolver) {
         super(entityModelSet);
-        this.blockRenderer = blockRenderer;
+        this.blockModelResolver = blockModelResolver;
     }
 
     @Override
@@ -60,18 +60,27 @@ public abstract class TraderRendererBase<T extends TraderTileentityBase> extends
         }
 
         if (trader.hasWorkstation()) {
-            state.workstation = getState(trader.getWorkstation());
+            BlockState workstationState = getState(trader.getWorkstation());
+            blockModelResolver.update(state.workstation, workstationState, BLOCK_DISPLAY_CONTEXT);
+            state.blockTransforms = getTransforms(workstationState);
+            BlockState topBlock = getTopBlock(workstationState);
+            if (!topBlock.isAir()) {
+                blockModelResolver.update(state.topBlock, topBlock, BLOCK_DISPLAY_CONTEXT);
+            } else {
+                state.topBlock.clear();
+            }
         } else {
-            state.workstation = null;
+            state.workstation.clear();
+            state.topBlock.clear();
         }
     }
 
     @Override
     public void submit(TraderRenderState state, PoseStack stack, SubmitNodeCollector collector, CameraRenderState cameraRenderState) {
-        submitTraderBase(getVillagerRenderer(), blockRenderer, state, stack, collector, cameraRenderState);
+        submitTraderBase(getVillagerRenderer(), state, stack, collector, cameraRenderState);
     }
 
-    public static void submitTraderBase(VillagerRenderer villagerRenderer, BlockRenderDispatcher blockRenderer, TraderRenderState state, PoseStack stack, SubmitNodeCollector collector, CameraRenderState cameraRenderState) {
+    public static void submitTraderBase(VillagerRenderer villagerRenderer, TraderRenderState state, PoseStack stack, SubmitNodeCollector collector, CameraRenderState cameraRenderState) {
         stack.pushPose();
 
         if (state.renderVillager) {
@@ -85,7 +94,7 @@ public abstract class TraderRendererBase<T extends TraderTileentityBase> extends
             stack.popPose();
         }
 
-        if (state.workstation != null) {
+        if (!state.workstation.isEmpty()) {
             stack.pushPose();
 
             stack.translate(0.5D, 1D / 16D, 0.5D);
@@ -95,13 +104,14 @@ public abstract class TraderRendererBase<T extends TraderTileentityBase> extends
             stack.scale(0.45F, 0.45F, 0.45F);
             stack.translate(0.5D / 0.45D - 0.5D, 0D, 0.5D / 0.45D - 0.5D);
 
-            getTransforms(state.workstation).accept(stack);
-            renderBlock(blockRenderer, state.workstation, state.lightCoords, stack, collector);
+            if (state.blockTransforms != null) {
+                state.blockTransforms.accept(stack);
+            }
+            renderBlock(state.workstation, state.lightCoords, stack, collector);
 
-            BlockState topBlock = getTopBlock(state.workstation);
-            if (!topBlock.isAir()) {
+            if (!state.topBlock.isEmpty()) {
                 stack.translate(0D, 1D, 0D);
-                renderBlock(blockRenderer, topBlock, state.lightCoords, stack, collector);
+                renderBlock(state.topBlock, state.lightCoords, stack, collector);
             }
             stack.popPose();
         }
@@ -109,20 +119,8 @@ public abstract class TraderRendererBase<T extends TraderTileentityBase> extends
         stack.popPose();
     }
 
-    public static void renderBlock(BlockRenderDispatcher blockRenderer, BlockState state, int lightCoords, PoseStack stack, SubmitNodeCollector collector) {
-        int color = minecraft.getBlockColors().getColor(state, null, null, 0);
-        // See ItemFrameRenderer
-        collector.submitBlockModel(
-                stack,
-                RenderTypes.entityCutout(TextureAtlas.LOCATION_BLOCKS),
-                blockRenderer.getBlockModel(state),
-                RenderUtils.getRedFloat(color),
-                RenderUtils.getGreenFloat(color),
-                RenderUtils.getBlueFloat(color),
-                lightCoords,
-                OverlayTexture.NO_OVERLAY,
-                0
-        );
+    public static void renderBlock(BlockModelRenderState state, int lightCoords, PoseStack stack, SubmitNodeCollector collector) {
+        state.submit(stack, collector, lightCoords, OverlayTexture.NO_OVERLAY, 0);
     }
 
     public static BlockState getState(Block block) {
