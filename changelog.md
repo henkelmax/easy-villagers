@@ -1,1 +1,1 @@
-- Added Mexican Spanish translation
+- Updated Chinese Simplified (China) translation
