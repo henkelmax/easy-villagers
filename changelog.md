@@ -1,1 +1,1 @@
-- Updated Chinese Simplified (China) translation
+- Fixed potential crash when reading invalid villager data

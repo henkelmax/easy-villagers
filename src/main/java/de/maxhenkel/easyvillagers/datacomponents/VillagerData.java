@@ -1,6 +1,7 @@
 package de.maxhenkel.easyvillagers.datacomponents;
 
 import com.mojang.serialization.Codec;
+import de.maxhenkel.easyvillagers.Main;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import de.maxhenkel.easyvillagers.items.ModItems;
 import de.maxhenkel.easyvillagers.items.VillagerItem;
@@ -51,7 +52,11 @@ public class VillagerData {
 
     public static VillagerData of(Villager villager) {
         CompoundTag nbt = new CompoundTag();
-        villager.addAdditionalSaveData(nbt);
+        try {
+            villager.addAdditionalSaveData(nbt);
+        } catch (Exception e) {
+            Main.LOGGER.error("Failed to save villager data for villager {}", villager, e);
+        }
         return new VillagerData(nbt);
     }
 
