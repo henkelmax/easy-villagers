@@ -6,26 +6,29 @@ import de.maxhenkel.easyvillagers.blocks.TraderBlock;
 import de.maxhenkel.easyvillagers.blocks.tileentity.BreederTileentity;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.SubmitNodeCollector;
-import net.minecraft.client.renderer.blockentity.BedRenderer;
+import net.minecraft.client.renderer.block.BlockModelRenderState;
+import net.minecraft.client.renderer.block.BlockModelResolver;
+import net.minecraft.client.renderer.block.model.BlockDisplayContext;
 import net.minecraft.client.renderer.entity.VillagerRenderer;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
-import net.minecraft.client.resources.model.sprite.SpriteGetter;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.BedBlock;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.properties.BedPart;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-import java.lang.ref.WeakReference;
-
 public class BreederRenderer extends VillagerRendererBase<BreederTileentity, BreederRenderState> {
 
-    private WeakReference<BedRenderer> bedRendererCache = new WeakReference<>(null);
+    private static final BlockDisplayContext BLOCK_DISPLAY_CONTEXT = BlockDisplayContext.create();
 
-    private final SpriteGetter spriteGetter;
+    private final BlockModelResolver blockModelResolver;
 
-    public BreederRenderer(EntityModelSet entityModelSet, SpriteGetter spriteGetter) {
+    public BreederRenderer(EntityModelSet entityModelSet, BlockModelResolver blockModelResolver) {
         super(entityModelSet);
-        this.spriteGetter = spriteGetter;
+        this.blockModelResolver = blockModelResolver;
     }
 
     @Override
@@ -60,20 +63,13 @@ public class BreederRenderer extends VillagerRendererBase<BreederTileentity, Bre
             state.renderVillager2 = false;
         }
 
-        state.bedRenderStateBottom.lightCoords = getLightOrDefault(breeder, state);
-        state.bedRenderStateTop.lightCoords = getLightOrDefault(breeder, state);
+        blockModelResolver.update(state.bedFoot, Blocks.BED.red().defaultBlockState(), BLOCK_DISPLAY_CONTEXT);
+        blockModelResolver.update(state.bedHead, Blocks.BED.red().defaultBlockState().setValue(BedBlock.PART, BedPart.HEAD), BLOCK_DISPLAY_CONTEXT);
     }
 
     @Override
     public void submit(BreederRenderState state, PoseStack stack, SubmitNodeCollector collector, CameraRenderState cameraRenderState) {
         stack.pushPose();
-
-        BedRenderer bedRenderer = bedRendererCache.get();
-        if (bedRenderer == null) {
-            bedRenderer = new BedRenderer(spriteGetter, entityModelSet);
-            bedRendererCache = new WeakReference<>(bedRenderer);
-        }
-
         VillagerRenderer villagerRenderer = getVillagerRenderer();
 
         if (state.renderVillager1) {
@@ -106,12 +102,17 @@ public class BreederRenderer extends VillagerRendererBase<BreederTileentity, Bre
         stack.translate(-0.5D, 0D, -0.5D);
         stack.scale(0.4F, 0.4F, 0.4F);
         stack.translate(0.5D / 0.4D - 0.5D, 0D, 0.5D / 0.4D - 0.5D);
-        bedRenderer.submit(state.bedRenderStateBottom, stack, collector, cameraRenderState);
+
+        renderBlock(state.bedFoot, state.lightCoords, stack, collector);
         stack.translate(0D, 0D, -1D);
-        bedRenderer.submit(state.bedRenderStateTop, stack, collector, cameraRenderState);
-        stack.popPose();
+        renderBlock(state.bedHead, state.lightCoords, stack, collector);
 
         stack.popPose();
+        stack.popPose();
+    }
+
+    public static void renderBlock(BlockModelRenderState state, int lightCoords, PoseStack stack, SubmitNodeCollector collector) {
+        state.submit(stack, collector, lightCoords, OverlayTexture.NO_OVERLAY, 0);
     }
 
 }

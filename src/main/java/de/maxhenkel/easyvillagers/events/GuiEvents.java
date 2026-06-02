@@ -40,14 +40,14 @@ public class GuiEvents {
         switch (loc) {
             case TOP_LEFT:
             default:
-                posX = merchantScreen.getGuiLeft() + 107;
+                posX = merchantScreen.getLeftPos() + 107;
                 break;
             case TOP_RIGHT:
-                posX = merchantScreen.getGuiLeft() + 250;
+                posX = merchantScreen.getLeftPos() + 250;
                 break;
         }
 
-        event.addListener(new CycleTradesButton(posX, merchantScreen.getGuiTop() + 8, b -> {
+        event.addListener(new CycleTradesButton(posX, merchantScreen.getTopPos() + 8, b -> {
             ClientPacketDistributor.sendToServer(new MessageCycleTrades());
         }, merchantScreen));
     }
@@ -66,7 +66,7 @@ public class GuiEvents {
             return;
         }
 
-        Screen currentScreen = mc.screen;
+        Screen currentScreen = mc.gui.screen();
 
         if (!(currentScreen instanceof MerchantScreen)) {
             return;

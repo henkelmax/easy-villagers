@@ -11,7 +11,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -79,7 +79,7 @@ public class VillagerData {
     }
 
     public EasyVillagerEntity createEasyVillager(Level level, @Nullable ItemStack stack) {
-        EasyVillagerEntity v = new EasyVillagerEntity(EntityType.VILLAGER, level);
+        EasyVillagerEntity v = new EasyVillagerEntity(EntityTypes.VILLAGER, level);
         v.readAdditionalSaveData(ValueInputOutputUtils.createValueInput(EasyVillagersMod.MODID, level.registryAccess(), nbt));
         if (stack != null) {
             Component customName = stack.get(DataComponents.CUSTOM_NAME);

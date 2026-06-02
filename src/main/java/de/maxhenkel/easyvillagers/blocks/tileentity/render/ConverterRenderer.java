@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.entity.ZombieRenderer;
 import net.minecraft.client.renderer.entity.ZombieVillagerRenderer;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.entity.monster.zombie.ZombieVillager;
 import net.minecraft.world.phys.Vec3;
@@ -83,7 +83,7 @@ public class ConverterRenderer extends VillagerRendererBase<ConverterTileentity,
         }
         ZombieVillager zombieVillager = zombieVillagerCache.get();
         if (zombieVillager == null) {
-            zombieVillager = new ZombieVillager(EntityType.ZOMBIE_VILLAGER, minecraft.level);
+            zombieVillager = new ZombieVillager(EntityTypes.ZOMBIE_VILLAGER, minecraft.level);
             zombieVillagerCache = new WeakReference<>(zombieVillager);
         }
 

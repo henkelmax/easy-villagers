@@ -16,7 +16,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.animal.golem.IronGolem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
@@ -98,7 +98,7 @@ public class IronFarmTileentity extends VillagerTileentity implements ITickableB
         }
 
         LootParams.Builder builder = new LootParams.Builder(serverLevel)
-                .withParameter(LootContextParams.THIS_ENTITY, new IronGolem(EntityType.IRON_GOLEM, level))
+                .withParameter(LootContextParams.THIS_ENTITY, new IronGolem(EntityTypes.IRON_GOLEM, level))
                 .withParameter(LootContextParams.ORIGIN, new Vec3(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ()))
                 .withParameter(LootContextParams.DAMAGE_SOURCE, serverLevel.damageSources().lava());
 

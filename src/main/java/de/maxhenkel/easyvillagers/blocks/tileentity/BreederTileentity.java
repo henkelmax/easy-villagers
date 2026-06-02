@@ -20,7 +20,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.Container;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.entity.npc.villager.VillagerType;
 import net.minecraft.world.item.ItemStack;
@@ -176,7 +176,7 @@ public class BreederTileentity extends FakeWorldTileentity implements IServerTic
     }
 
     private boolean addVillager(TransactionContext transaction) {
-        EasyVillagerEntity villagerEntity = new EasyVillagerEntity(EntityType.VILLAGER, level);
+        EasyVillagerEntity villagerEntity = new EasyVillagerEntity(EntityTypes.VILLAGER, level);
         villagerEntity.setVillagerData(villagerEntity.getVillagerData().withType(level.registryAccess(), VillagerType.byBiome(level.getBiome(getBlockPos()))));
         villagerEntity.setAge(-24000);
         ItemStack villager = new ItemStack(ModItems.VILLAGER.get());

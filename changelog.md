@@ -1,1 +1,1 @@
-- Updated Chinese Simplified (China) translation
+- Updated to 26.2

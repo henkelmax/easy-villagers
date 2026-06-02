@@ -4,14 +4,13 @@ import de.maxhenkel.easyvillagers.EasyVillagersMod;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.ai.gossip.GossipType;
 import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.entity.npc.villager.VillagerData;
 import net.minecraft.world.entity.npc.villager.VillagerProfession;
-import net.minecraft.world.entity.npc.villager.VillagerType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.level.Level;
@@ -24,12 +23,12 @@ public class EasyVillagerEntity extends Villager {
         super(type, level);
     }
 
-    public EasyVillagerEntity(EntityType<? extends Villager> type, Level level, ResourceKey<VillagerType> villagerTypeResourceKey) {
-        super(type, level, villagerTypeResourceKey);
-    }
-
-    public EasyVillagerEntity(EntityType<? extends Villager> type, Level level, Holder<VillagerType> villagerTypeHolder) {
-        super(type, level, villagerTypeHolder);
+    @Override
+    public int getId() {
+        if (id == 0) {
+            return Integer.MIN_VALUE;
+        }
+        return super.getId();
     }
 
     @Override
@@ -102,7 +101,7 @@ public class EasyVillagerEntity extends Villager {
         VillagerData villagerData = getVillagerData();
         Holder<VillagerProfession> profession = villagerData.profession();
         if (profession.is(VillagerProfession.NONE)) {
-            return EntityType.VILLAGER.getDescription().copy();
+            return EntityTypes.VILLAGER.getDescription().copy();
         } else {
             return getTypeName();
         }
