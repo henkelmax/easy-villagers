@@ -2,7 +2,7 @@ package de.maxhenkel.easyvillagers.blocks.tileentity.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import de.maxhenkel.corelib.CachedMap;
+import de.maxhenkel.easyvillagers.utils.CachedMap;
 import de.maxhenkel.easyvillagers.blocks.tileentity.TraderTileentityBase;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.SubmitNodeCollector;
@@ -124,7 +124,7 @@ public abstract class TraderRendererBase<T extends TraderTileentityBase> extends
     }
 
     public static BlockState getState(Block block) {
-        return blockStateCache.get(block, () -> getFittingState(block));
+        return blockStateCache.computeIfAbsent(block, b -> getFittingState(b));
     }
 
     protected static BlockState getFittingState(Block block) {

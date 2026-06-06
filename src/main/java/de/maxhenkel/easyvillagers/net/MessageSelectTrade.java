@@ -1,62 +1,17 @@
 package de.maxhenkel.easyvillagers.net;
 
-import de.maxhenkel.corelib.net.Message;
 import de.maxhenkel.easyvillagers.EasyVillagersMod;
-import de.maxhenkel.easyvillagers.gui.AutoTraderContainer;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.protocol.PacketFlow;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
-import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-public class MessageSelectTrade implements Message<MessageSelectTrade> {
-
+public record MessageSelectTrade(boolean next) implements CustomPacketPayload {
     public static final CustomPacketPayload.Type<MessageSelectTrade> TYPE = new CustomPacketPayload.Type<>(Identifier.fromNamespaceAndPath(EasyVillagersMod.MODID, "select_trade"));
-
-    private boolean next;
-
-    public MessageSelectTrade(boolean next) {
-        this.next = next;
-    }
-
-    public MessageSelectTrade() {
-
-    }
-
+    public static final StreamCodec<RegistryFriendlyByteBuf, MessageSelectTrade> CODEC = StreamCodec.of(
+        (buf, msg) -> buf.writeBoolean(msg.next()),
+        buf -> new MessageSelectTrade(buf.readBoolean())
+    );
     @Override
-    public PacketFlow getExecutingSide() {
-        return PacketFlow.SERVERBOUND;
-    }
-
-    @Override
-    public void executeServerSide(IPayloadContext context) {
-        if (!(context.player() instanceof ServerPlayer sender)) {
-            return;
-        }
-        if (sender.containerMenu instanceof AutoTraderContainer container) {
-            if (next) {
-                container.getTrader().nextTrade();
-            } else {
-                container.getTrader().prevTrade();
-            }
-        }
-    }
-
-    @Override
-    public MessageSelectTrade fromBytes(RegistryFriendlyByteBuf packetBuffer) {
-        next = packetBuffer.readBoolean();
-        return this;
-    }
-
-    @Override
-    public void toBytes(RegistryFriendlyByteBuf packetBuffer) {
-        packetBuffer.writeBoolean(next);
-    }
-
-    @Override
-    public Type<MessageSelectTrade> type() {
-        return TYPE;
-    }
-
+    public Type<? extends CustomPacketPayload> type() { return TYPE; }
 }

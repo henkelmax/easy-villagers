@@ -1,61 +1,18 @@
 package de.maxhenkel.easyvillagers.net;
 
-import de.maxhenkel.corelib.net.Message;
 import de.maxhenkel.easyvillagers.EasyVillagersMod;
-import de.maxhenkel.easyvillagers.blocks.tileentity.BreederTileentity;
-import net.minecraft.client.Minecraft;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.protocol.PacketFlow;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
+import net.minecraft.core.BlockPos;
 
-public class MessageVillagerParticles implements Message<MessageVillagerParticles> {
-
-    public static final CustomPacketPayload.Type<MessageVillagerParticles> TYPE = new CustomPacketPayload.Type<>(Identifier.fromNamespaceAndPath(EasyVillagersMod.MODID, "villager_particles"));
-
-    private BlockPos pos;
-
-    public MessageVillagerParticles(BlockPos pos) {
-        this.pos = pos;
-    }
-
-    public MessageVillagerParticles() {
-
-    }
-
+public record MessageVillagerParticles(BlockPos pos) implements CustomPacketPayload {
+    public static final CustomPacketPayload.Type<MessageVillagerParticles> TYPE = new CustomPacketPayload.Type<>(Identifier.withDefaultNamespace("easy_villagers_villager_particles"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, MessageVillagerParticles> CODEC = StreamCodec.of(
+        (buf, msg) -> buf.writeBlockPos(msg.pos()),
+        buf -> new MessageVillagerParticles(buf.readBlockPos())
+    );
     @Override
-    public PacketFlow getExecutingSide() {
-        return PacketFlow.CLIENTBOUND;
-    }
-
-    @Override
-    public void executeClientSide(IPayloadContext context) {
-        spawnParticles();
-    }
-
-    private void spawnParticles() {
-        Minecraft mc = Minecraft.getInstance();
-        if (mc.level != null && mc.level.getBlockEntity(pos) instanceof BreederTileentity breeder) {
-            breeder.spawnParticles();
-        }
-    }
-
-    @Override
-    public MessageVillagerParticles fromBytes(RegistryFriendlyByteBuf packetBuffer) {
-        pos = packetBuffer.readBlockPos();
-        return this;
-    }
-
-    @Override
-    public void toBytes(RegistryFriendlyByteBuf packetBuffer) {
-        packetBuffer.writeBlockPos(pos);
-    }
-
-    @Override
-    public Type<MessageVillagerParticles> type() {
-        return TYPE;
-    }
-
+    public Type<? extends CustomPacketPayload> type() { return TYPE; }
 }

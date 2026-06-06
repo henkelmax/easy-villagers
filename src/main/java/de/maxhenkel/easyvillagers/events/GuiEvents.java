@@ -1,85 +1,62 @@
 package de.maxhenkel.easyvillagers.events;
 
-import de.maxhenkel.easyvillagers.ClientConfig;
 import de.maxhenkel.easyvillagers.EasyVillagersClientMod;
 import de.maxhenkel.easyvillagers.EasyVillagersMod;
+import de.maxhenkel.easyvillagers.config.ModConfig;
 import de.maxhenkel.easyvillagers.gui.CycleTradesButton;
 import de.maxhenkel.easyvillagers.net.MessageCycleTrades;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
+import net.fabricmc.fabric.api.client.screen.v1.Screens;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.MerchantScreen;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.sounds.SoundEvents;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.client.event.InputEvent;
-import net.neoforged.neoforge.client.event.ScreenEvent;
-import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 public class GuiEvents {
 
-    @SubscribeEvent
-    public void onOpenScreen(ScreenEvent.Init.Post event) {
-        if (!(event.getScreen() instanceof MerchantScreen merchantScreen)) {
-            return;
-        }
-        if (Minecraft.getInstance().player == null) {
-            return;
-        }
-        if (!EasyVillagersMod.SERVER_CONFIG.tradeCycling.get()) {
-            return;
-        }
+    public static void init() {
+        ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
+            if (!(screen instanceof MerchantScreen merchantScreen)) {
+                return;
+            }
+            if (client.player == null) {
+                return;
+            }
+            if (!EasyVillagersMod.CONFIG.server.tradeCycling.get()) {
+                return;
+            }
 
-        ClientConfig.CycleTradesButtonLocation loc = EasyVillagersMod.CLIENT_CONFIG.cycleTradesButtonLocation.get();
+            ModConfig.CycleTradesButtonLocation loc = EasyVillagersMod.CONFIG.client.cycleTradesButtonLocation;
 
-        if (loc.equals(ClientConfig.CycleTradesButtonLocation.NONE)) {
-            return;
-        }
+            if (loc.equals(ModConfig.CycleTradesButtonLocation.NONE)) {
+                return;
+            }
 
-        int posX;
+            int posX;
 
-        switch (loc) {
-            case TOP_LEFT:
-            default:
-                posX = merchantScreen.getLeftPos() + 107;
-                break;
-            case TOP_RIGHT:
-                posX = merchantScreen.getLeftPos() + 250;
-                break;
-        }
+            switch (loc) {
+                case TOP_LEFT:
+                default:
+                    posX = (merchantScreen.width - 276) / 2 + 107;
+                    break;
+                case TOP_RIGHT:
+                    posX = (merchantScreen.width - 276) / 2 + 250;
+                    break;
+            }
 
-        event.addListener(new CycleTradesButton(posX, merchantScreen.getTopPos() + 8, b -> {
-            ClientPacketDistributor.sendToServer(new MessageCycleTrades());
-        }, merchantScreen));
+            Screens.getWidgets(screen).add(new CycleTradesButton(posX, (merchantScreen.height - 166) / 2 + 8, b -> {
+                ClientPlayNetworking.send(new MessageCycleTrades());
+            }, merchantScreen));
+
+            net.fabricmc.fabric.api.client.screen.v1.ScreenKeyboardEvents.allowKeyPress(screen).register((scr, keyEvent) -> {
+                if (keyEvent.key() == EasyVillagersClientMod.CYCLE_TRADES_KEY.getDefaultKey().getValue() && CycleTradesButton.canCycle(merchantScreen.getMenu())) {
+                    ClientPlayNetworking.send(new MessageCycleTrades());
+                    Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1F));
+                    return false;
+                }
+                return true;
+            });
+        });
     }
-
-    @SubscribeEvent
-    public void onKeyInput(InputEvent.Key event) {
-        Minecraft mc = Minecraft.getInstance();
-        if (mc.player == null) {
-            return;
-        }
-        if (event.getKey() != EasyVillagersClientMod.CYCLE_TRADES_KEY.getKey().getValue() || event.getAction() != 0) {
-            return;
-        }
-
-        if (!EasyVillagersMod.SERVER_CONFIG.getConfigSpec().isLoaded() || !EasyVillagersMod.SERVER_CONFIG.tradeCycling.get()) {
-            return;
-        }
-
-        Screen currentScreen = mc.gui.screen();
-
-        if (!(currentScreen instanceof MerchantScreen)) {
-            return;
-        }
-
-        MerchantScreen screen = (MerchantScreen) currentScreen;
-
-        if (!CycleTradesButton.canCycle(screen.getMenu())) {
-            return;
-        }
-
-        ClientPacketDistributor.sendToServer(new MessageCycleTrades());
-        mc.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1F));
-    }
-
 }

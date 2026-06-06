@@ -3,7 +3,7 @@ package de.maxhenkel.easyvillagers.blocks.tileentity.render;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.block.BlockModelRenderState;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.function.Consumer;
 
 public class TraderRenderState extends VillagerRenderStateBase {

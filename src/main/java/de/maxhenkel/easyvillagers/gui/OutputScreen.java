@@ -1,6 +1,6 @@
 package de.maxhenkel.easyvillagers.gui;
 
-import de.maxhenkel.corelib.inventory.ScreenBase;
+import de.maxhenkel.easyvillagers.gui.ScreenBase;
 import de.maxhenkel.easyvillagers.EasyVillagersMod;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
@@ -21,11 +21,11 @@ public class OutputScreen extends ScreenBase<OutputContainer> {
 
     @Override
     protected void extractLabels(GuiGraphicsExtractor guiGraphics, int x, int y) {
-        drawCentered(guiGraphics, Component.translatable("gui.easy_villagers.output"), 9, FONT_COLOR);
-        guiGraphics.text(font, playerInventory.getDisplayName().getVisualOrderText(), 8, imageHeight - 96 + 3, FONT_COLOR, false);
+        drawCenteredText(guiGraphics, Component.translatable("gui.easy_villagers.output"), 9, fontColor);
+        guiGraphics.text(font, playerInventory.getDisplayName().getVisualOrderText(), 8, imageHeight - 96 + 3, fontColor, false);
     }
 
-    protected void drawCentered(GuiGraphicsExtractor guiGraphics, MutableComponent text, int y, int color) {
+    protected void drawCenteredText(GuiGraphicsExtractor guiGraphics, MutableComponent text, int y, int color) {
         int width = font.width(text);
         guiGraphics.text(font, text.getVisualOrderText(), imageWidth / 2 - width / 2, y, color, false);
     }

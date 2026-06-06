@@ -30,7 +30,7 @@ public class IncubatorSpecialRenderer extends ItemSpecialRendererBase<IncubatorT
         @Override
         @Nullable
         public SpecialModelRenderer<IncubatorTileentity> bake(BakingContext context) {
-            return new IncubatorSpecialRenderer(context.entityModelSet(), () -> ModBlocks.INCUBATOR.get().defaultBlockState());
+            return new IncubatorSpecialRenderer(context.entityModelSet(), () -> ModBlocks.INCUBATOR.defaultBlockState());
         }
 
         @Override

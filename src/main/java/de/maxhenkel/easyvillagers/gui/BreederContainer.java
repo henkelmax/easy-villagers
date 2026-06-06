@@ -10,11 +10,15 @@ import net.minecraft.world.level.block.Block;
 public class BreederContainer extends InputOutputContainer {
 
     public BreederContainer(int id, Inventory playerInventory, Container foodInventory, Container outputInventory, ContainerLevelAccess access) {
-        super(Containers.BREEDER_CONTAINER.get(), id, playerInventory, foodInventory, outputInventory, access);
+        super(Containers.BREEDER_CONTAINER, id, playerInventory, foodInventory, outputInventory, access);
     }
 
-    public BreederContainer(int id, Inventory playerInventory) {
-        super(Containers.BREEDER_CONTAINER.get(), id, playerInventory);
+        public BreederContainer(int id, Inventory playerInventory) {
+        super(Containers.BREEDER_CONTAINER, id, playerInventory);
+    }
+
+    public BreederContainer(int id, Inventory playerInventory, net.minecraft.core.BlockPos pos) {
+        super(Containers.BREEDER_CONTAINER, id, playerInventory, pos);
     }
 
     @Override
@@ -24,6 +28,6 @@ public class BreederContainer extends InputOutputContainer {
 
     @Override
     public Block getBlock() {
-        return ModBlocks.BREEDER.get();
+        return ModBlocks.BREEDER;
     }
 }

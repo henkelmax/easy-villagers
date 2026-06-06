@@ -5,6 +5,9 @@ import de.maxhenkel.easyvillagers.EasyVillagersMod;
 import de.maxhenkel.easyvillagers.datacomponents.VillagerData;
 import de.maxhenkel.easyvillagers.items.ModItems;
 import de.maxhenkel.easyvillagers.net.MessagePickUpVillager;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -12,55 +15,40 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.client.event.InputEvent;
-import net.neoforged.neoforge.client.network.ClientPacketDistributor;
-import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
 public class VillagerEvents {
 
-    @SubscribeEvent
-    public void onClick(PlayerInteractEvent.EntityInteract event) {
-        if (!event.getLevel().isClientSide()) {
-            return;
-        }
-        if (!(event.getTarget() instanceof Villager villager)) {
-            return;
-        }
+    public static void clientSetup() {
+        UseEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
+            if (!world.isClientSide()) {
+                return InteractionResult.PASS;
+            }
+            if (!(entity instanceof Villager villager)) {
+                return InteractionResult.PASS;
+            }
+            if (!EasyVillagersMod.CONFIG.client.enableRightClickPickup.get()) {
+                return InteractionResult.PASS;
+            }
+            if (!player.isShiftKeyDown()) {
+                return InteractionResult.PASS;
+            }
+            if (!arePickupConditionsMet(villager)) {
+                return InteractionResult.PASS;
+            }
+            
+            ClientPlayNetworking.send(new MessagePickUpVillager(villager.getUUID()));
+            return InteractionResult.SUCCESS;
+        });
 
-        if (!EasyVillagersMod.CLIENT_CONFIG.enableRightClickPickup.get()) {
-            return;
-        }
-
-        Player player = event.getEntity();
-
-        if (!player.isShiftKeyDown()) {
-            return;
-        }
-
-        if (!arePickupConditionsMet(villager)) {
-            return;
-        }
-
-        ClientPacketDistributor.sendToServer(new MessagePickUpVillager(villager.getUUID()));
-
-        event.setCancellationResult(InteractionResult.SUCCESS);
-        event.setCanceled(true);
-    }
-
-    @SubscribeEvent
-    public void onKeyInput(InputEvent.Key event) {
-        if (!EasyVillagersClientMod.PICKUP_KEY.consumeClick()) {
-            return;
-        }
-
-        Entity pointedEntity = Minecraft.getInstance().crosshairPickEntity;
-
-        if (!(pointedEntity instanceof Villager villager) || !arePickupConditionsMet(villager)) {
-            return;
-        }
-
-        ClientPacketDistributor.sendToServer(new MessagePickUpVillager(villager.getUUID()));
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            while (EasyVillagersClientMod.PICKUP_KEY.consumeClick()) {
+                Entity pointedEntity = client.crosshairPickEntity;
+                if (!(pointedEntity instanceof Villager villager) || !arePickupConditionsMet(villager)) {
+                    continue;
+                }
+                ClientPlayNetworking.send(new MessagePickUpVillager(villager.getUUID()));
+            }
+        });
     }
 
     public static void pickUp(Villager villager, Player player) {
@@ -68,8 +56,7 @@ public class VillagerEvents {
             return;
         }
 
-        ItemStack stack = new ItemStack(ModItems.VILLAGER.get());
-
+        ItemStack stack = new ItemStack(ModItems.VILLAGER);
         VillagerData.applyToItem(stack, villager);
 
         if (player.getMainHandItem().isEmpty()) {
@@ -89,7 +76,6 @@ public class VillagerEvents {
         if (villager.isSleeping()) {
             return false;
         }
-
         return true;
     }
 

@@ -1,6 +1,6 @@
 package de.maxhenkel.easyvillagers.blocks.tileentity;
 
-import de.maxhenkel.corelib.codec.ValueInputOutputUtils;
+// import de.maxhenkel.corelib.codec.ValueInputOutputUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -14,7 +14,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
-import net.minecraft.world.level.storage.TagValueOutput;
+// import net.minecraft.world.level.storage.TagValueOutput;
 
 public class SyncableTileentity extends BlockEntity {
 
@@ -42,9 +42,7 @@ public class SyncableTileentity extends BlockEntity {
 
     @Override
     public CompoundTag getUpdateTag(HolderLookup.Provider provider) {
-        TagValueOutput valueOutput = ValueInputOutputUtils.createValueOutput(this, provider);
-        saveAdditional(valueOutput);
-        return ValueInputOutputUtils.toTag(valueOutput);
+        return saveCustomOnly(provider);
     }
 
 }

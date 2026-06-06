@@ -10,11 +10,15 @@ import net.minecraft.world.level.block.Block;
 public class ConverterContainer extends InputOutputContainer {
 
     public ConverterContainer(int id, Inventory playerInventory, Container inputInventory, Container outputInventory, ContainerLevelAccess access) {
-        super(Containers.CONVERTER_CONTAINER.get(), id, playerInventory, inputInventory, outputInventory, access);
+        super(Containers.CONVERTER_CONTAINER, id, playerInventory, inputInventory, outputInventory, access);
     }
 
-    public ConverterContainer(int id, Inventory playerInventory) {
-        super(Containers.CONVERTER_CONTAINER.get(), id, playerInventory);
+        public ConverterContainer(int id, Inventory playerInventory) {
+        super(Containers.CONVERTER_CONTAINER, id, playerInventory);
+    }
+
+    public ConverterContainer(int id, Inventory playerInventory, net.minecraft.core.BlockPos pos) {
+        super(Containers.CONVERTER_CONTAINER, id, playerInventory, pos);
     }
 
     @Override
@@ -24,6 +28,6 @@ public class ConverterContainer extends InputOutputContainer {
 
     @Override
     public Block getBlock() {
-        return ModBlocks.CONVERTER.get();
+        return ModBlocks.CONVERTER;
     }
 }

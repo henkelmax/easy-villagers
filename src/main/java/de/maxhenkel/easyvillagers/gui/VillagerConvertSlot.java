@@ -6,7 +6,6 @@ import net.minecraft.world.Container;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.neoforged.neoforge.transfer.item.ItemResource;
 
 public class VillagerConvertSlot extends Slot {
 
@@ -16,10 +15,10 @@ public class VillagerConvertSlot extends Slot {
 
     @Override
     public boolean mayPlace(ItemStack stack) {
-        return isValid(ItemResource.of(stack));
+        return isValid(stack);
     }
 
-    public static boolean isValid(ItemResource stack) {
+    public static boolean isValid(ItemStack stack) {
         if (stack.getItem() instanceof VillagerItem) {
             return true;
         } else if (stack.getItem() == Items.GOLDEN_APPLE) {

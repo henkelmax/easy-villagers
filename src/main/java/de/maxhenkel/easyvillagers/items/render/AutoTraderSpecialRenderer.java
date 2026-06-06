@@ -32,7 +32,7 @@ public class AutoTraderSpecialRenderer extends ItemSpecialRendererBase<AutoTrade
         @Override
         @Nullable
         public SpecialModelRenderer<AutoTraderTileentity> bake(BakingContext context) {
-            return new AutoTraderSpecialRenderer(context.entityModelSet(), Minecraft.getInstance().getBlockModelResolver(), () -> ModBlocks.AUTO_TRADER.get().defaultBlockState());
+            return new AutoTraderSpecialRenderer(context.entityModelSet(), new net.minecraft.client.renderer.block.BlockModelResolver(net.minecraft.client.Minecraft.getInstance().getModelManager()), () -> ModBlocks.AUTO_TRADER.defaultBlockState());
         }
 
         @Override

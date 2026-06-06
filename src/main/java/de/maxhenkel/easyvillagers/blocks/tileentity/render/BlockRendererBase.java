@@ -20,7 +20,7 @@ public abstract class BlockRendererBase<T extends FakeWorldTileentity, S extends
     public static EntityRendererProvider.Context createEntityRenderer() {
         return new EntityRendererProvider.Context(
                 minecraft.getEntityRenderDispatcher(),
-                minecraft.getBlockModelResolver(),
+                new net.minecraft.client.renderer.block.BlockModelResolver(minecraft.getModelManager()),
                 minecraft.getItemModelResolver(),
                 minecraft.getMapRenderer(),
                 minecraft.getResourceManager(),
@@ -34,6 +34,6 @@ public abstract class BlockRendererBase<T extends FakeWorldTileentity, S extends
 
     @Override
     public int getViewDistance() {
-        return EasyVillagersMod.CLIENT_CONFIG.blockRenderDistance.get();
+        return EasyVillagersMod.CONFIG.client.blockRenderDistance.get();
     }
 }

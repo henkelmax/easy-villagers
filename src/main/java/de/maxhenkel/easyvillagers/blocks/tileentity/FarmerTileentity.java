@@ -1,14 +1,12 @@
 package de.maxhenkel.easyvillagers.blocks.tileentity;
 
-import de.maxhenkel.corelib.blockentity.IServerTickableBlockEntity;
-import de.maxhenkel.corelib.codec.ValueInputOutputUtils;
-import de.maxhenkel.corelib.inventory.ItemListInventory;
+import de.maxhenkel.easyvillagers.blocks.tileentity.IServerTickableBlockEntity;
+// import de.maxhenkel.corelib.codec.ValueInputOutputUtils;
+import de.maxhenkel.easyvillagers.inventory.SimpleInventory;
 import de.maxhenkel.easyvillagers.EasyVillagersMod;
 import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
-import de.maxhenkel.easyvillagers.inventory.ListAccessItemStacksResourceHandler;
-import de.maxhenkel.easyvillagers.inventory.OutputOnlyResourceHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.NbtUtils;
@@ -23,31 +21,41 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import de.maxhenkel.easyvillagers.integration.techreborn.ITRCompatible;
+import de.maxhenkel.easyvillagers.integration.techreborn.TRSlotConfiguration;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.transfer.ResourceHandler;
-import net.neoforged.neoforge.transfer.item.ItemResource;
-import net.neoforged.neoforge.transfer.transaction.Transaction;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Optional;
 
-public class FarmerTileentity extends VillagerTileentity implements IServerTickableBlockEntity {
+public class FarmerTileentity extends VillagerTileentity implements IServerTickableBlockEntity, ITRCompatible {
+
+    protected TRSlotConfiguration trSlotConfig;
+
+    @Override
+    public Object getSlotConfiguration() {
+        return trSlotConfig;
+    }
+
 
     protected BlockState crop;
-    protected ListAccessItemStacksResourceHandler inventory;
-    protected OutputOnlyResourceHandler outputInventoryDelegate;
+    protected SimpleInventory inventory;
 
+    @SuppressWarnings("this-escape")
     public FarmerTileentity(BlockPos pos, BlockState state) {
-        super(ModTileEntities.FARMER.get(), ModBlocks.FARMER.get().defaultBlockState(), pos, state);
-        inventory = new ListAccessItemStacksResourceHandler(4);
-        outputInventoryDelegate = new OutputOnlyResourceHandler(inventory);
+        super(ModTileEntities.FARMER, ModBlocks.FARMER.defaultBlockState(), pos, state);
+        inventory = new SimpleInventory(4, this::setChanged);
+        if (net.fabricmc.loader.api.FabricLoader.getInstance().isModLoaded("techreborn")) {
+            trSlotConfig = new TRSlotConfiguration();
+        }
     }
 
     @Override
@@ -89,7 +97,7 @@ public class FarmerTileentity extends VillagerTileentity implements IServerTicka
         if (!seedStack.is(ItemTags.VILLAGER_PLANTABLE_SEEDS)) {
             return null;
         }
-        if (EasyVillagersMod.SERVER_CONFIG.farmCropsBlacklist.stream().anyMatch(itemTag -> itemTag.contains(seed))) {
+        if (EasyVillagersMod.CONFIG.server.farmCropsBlacklist.stream().anyMatch(itemTag -> itemTag.equals(net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(seed).toString()))) {
             return null;
         }
         return blockitem.getBlock().defaultBlockState();
@@ -112,7 +120,7 @@ public class FarmerTileentity extends VillagerTileentity implements IServerTicka
             setChanged();
         }
 
-        if (level.getGameTime() % 20 == 0 && level.getRandom().nextInt(EasyVillagersMod.SERVER_CONFIG.farmSpeed.get()) == 0) {
+        if (level.getGameTime() % 20 == 0 && level.getRandom().nextInt(EasyVillagersMod.CONFIG.server.farmSpeed.get()) == 0) {
             if (ageCrop(v)) {
                 sync();
                 setChanged();
@@ -143,11 +151,21 @@ public class FarmerTileentity extends VillagerTileentity implements IServerTicka
             }
             LootParams.Builder context = new LootParams.Builder((ServerLevel) level).withParameter(LootContextParams.ORIGIN, new Vec3(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ())).withParameter(LootContextParams.BLOCK_STATE, c).withParameter(LootContextParams.TOOL, ItemStack.EMPTY);
             List<ItemStack> drops = c.getDrops(context);
-            try (Transaction transaction = Transaction.open(null)) {
-                for (ItemStack stack : drops) {
-                    inventory.insert(ItemResource.of(stack), stack.getCount(), transaction);
+            for (ItemStack stack : drops) {
+                for (int i = 0; i < inventory.getContainerSize(); i++) {
+                    if (stack.isEmpty()) {
+                        break;
+                    }
+                    ItemStack invStack = inventory.getItem(i);
+                    if (invStack.isEmpty()) {
+                        inventory.setItem(i, stack.copy());
+                        stack.setCount(0);
+                    } else if (ItemStack.isSameItemSameComponents(invStack, stack) && invStack.getCount() < invStack.getMaxStackSize()) {
+                        int amount = Math.min(stack.getCount(), invStack.getMaxStackSize() - invStack.getCount());
+                        invStack.grow(amount);
+                        stack.shrink(amount);
+                    }
                 }
-                transaction.commit();
             }
 
             crop = crop.setValue(p, 0);
@@ -160,7 +178,7 @@ public class FarmerTileentity extends VillagerTileentity implements IServerTicka
     }
 
     public Container getOutputInventory() {
-        return new ItemListInventory(inventory.getRaw(), this::setChanged);
+        return inventory;
     }
 
     @Override
@@ -168,26 +186,32 @@ public class FarmerTileentity extends VillagerTileentity implements IServerTicka
         super.saveAdditional(valueOutput);
 
         if (crop != null) {
-            ValueInputOutputUtils.setTag(valueOutput, "Crop", NbtUtils.writeBlockState(crop));
+            valueOutput.storeNullable("Crop", net.minecraft.world.level.block.state.BlockState.CODEC, crop);
+    
+        if (trSlotConfig != null) {
+            valueOutput.store("TRSlotConfig", net.minecraft.nbt.CompoundTag.CODEC, trSlotConfig.serialize());
         }
-        ContainerHelper.saveAllItems(valueOutput, inventory.getRaw(), false);
+    }
+        ContainerHelper.saveAllItems(valueOutput, inventory.getItems());
     }
 
     @Override
     protected void loadAdditional(ValueInput valueInput) {
-        Optional<BlockState> optionalCrop = ValueInputOutputUtils.getTag(valueInput, "Crop").map(t -> NbtUtils.readBlockState(valueInput.lookup().lookupOrThrow(Registries.BLOCK), t));
+        Optional<BlockState> optionalCrop = valueInput.read("Crop", net.minecraft.world.level.block.state.BlockState.CODEC);
         if (optionalCrop.isPresent()) {
             crop = optionalCrop.get();
         } else {
             removeSeed();
         }
 
-        ContainerHelper.loadAllItems(valueInput, inventory.getRaw());
+        ContainerHelper.loadAllItems(valueInput, inventory.getItems());
+
+        if (trSlotConfig != null && valueInput.contains("TRSlotConfig")) {
+            valueInput.read("TRSlotConfig", net.minecraft.nbt.CompoundTag.CODEC).ifPresent(tag -> trSlotConfig.deserialize(tag));
+        }
+
         super.loadAdditional(valueInput);
     }
 
-    public ResourceHandler<ItemResource> getItemHandler() {
-        return outputInventoryDelegate;
-    }
-
 }
+

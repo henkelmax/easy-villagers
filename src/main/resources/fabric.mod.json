@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "id": "easy_villagers",
+  "version": "${version}",
+  "name": "Easy Villagers",
+  "description": "Easy Villagers mod ported to Fabric.",
+  "authors": [
+    "Maxhenkel"
+  ],
+  "contact": {
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/easy-villagers"
+  },
+  "license": "All Rights Reserved",
+  "icon": "icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "de.maxhenkel.easyvillagers.EasyVillagersMod"
+    ],
+    "client": [
+      "de.maxhenkel.easyvillagers.EasyVillagersClientMod"
+    ]
+  },
+  "mixins": [ "easy_villagers.techreborn.mixins.json" ],
+  "depends": {
+    "fabricloader": ">=0.14.21",
+    "minecraft": "~26.1",
+    "java": ">=21",
+    "fabric-api": "*",
+    "fzzy_config": "*"
+  },
+  "accessWidener": "easy_villagers.accesswidener"
+}
+

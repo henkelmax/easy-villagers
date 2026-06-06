@@ -1,6 +1,6 @@
 package de.maxhenkel.easyvillagers.gui;
 
-import de.maxhenkel.corelib.inventory.ContainerBase;
+import de.maxhenkel.easyvillagers.gui.ContainerBase;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -12,12 +12,17 @@ public abstract class VillagerContainerBase extends ContainerBase {
 
     protected ContainerLevelAccess access;
 
-    public VillagerContainerBase(MenuType containerType, int id, Container playerInventory, Container inventory, ContainerLevelAccess access) {
+    @SuppressWarnings("this-escape")
+    public VillagerContainerBase(MenuType<?> containerType, int id, Container playerInventory, Container inventory, ContainerLevelAccess access) {
         super(containerType, id, playerInventory, inventory);
         this.access = access;
     }
 
     public abstract Block getBlock();
+
+    public net.minecraft.world.level.block.entity.BlockEntity getBlockEntity() {
+        return access.evaluate((level, pos) -> level.getBlockEntity(pos)).orElse(null);
+    }
 
     @Override
     public boolean stillValid(Player player) {

@@ -43,7 +43,7 @@ public class ItemSpecialRendererBase<T extends FakeWorldTileentity, U extends Bl
 
     @Override
     public void submit(@Nullable T blockEntity, PoseStack stack, SubmitNodeCollector collector, int light, int overlay, boolean hasFoil, int outlineColor) {
-        minecraft.getBlockModelResolver().update(blockModelRenderState, blockSupplier.get(), BLOCK_DISPLAY_CONTEXT);
+        new net.minecraft.client.renderer.block.BlockModelResolver(minecraft.getModelManager()).update(blockModelRenderState, blockSupplier.get(), BLOCK_DISPLAY_CONTEXT);
         blockModelRenderState.submit(stack, collector, light, overlay, 0);
         if (blockEntity == null) {
             return;
@@ -65,7 +65,7 @@ public class ItemSpecialRendererBase<T extends FakeWorldTileentity, U extends Bl
     @Nullable
     @Override
     public T extractArgument(ItemStack stack) {
-        return BlockItemDataCache.get(minecraft.level, stack, typeClass);
+        return BlockItemDataCache.get(minecraft.level.registryAccess(), stack, typeClass);
     }
 }
 

@@ -4,13 +4,14 @@ import de.maxhenkel.easyvillagers.EasyVillagersMod;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.ai.gossip.GossipType;
 import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.entity.npc.villager.VillagerData;
 import net.minecraft.world.entity.npc.villager.VillagerProfession;
+import net.minecraft.world.entity.npc.villager.VillagerType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.level.Level;
@@ -23,17 +24,17 @@ public class EasyVillagerEntity extends Villager {
         super(type, level);
     }
 
-    @Override
-    public int getId() {
-        if (id == 0) {
-            return Integer.MIN_VALUE;
-        }
-        return super.getId();
+    public EasyVillagerEntity(EntityType<? extends Villager> type, Level level, ResourceKey<VillagerType> villagerTypeResourceKey) {
+        super(type, level, villagerTypeResourceKey);
+    }
+
+    public EasyVillagerEntity(EntityType<? extends Villager> type, Level level, Holder<VillagerType> villagerTypeHolder) {
+        super(type, level, villagerTypeHolder);
     }
 
     @Override
     public int getPlayerReputation(Player player) {
-        if (EasyVillagersMod.SERVER_CONFIG.universalReputation.get()) {
+        if (EasyVillagersMod.CONFIG.server.universalReputation.get()) {
             return getUniversalReputation(this);
         } else {
             return super.getPlayerReputation(player);
@@ -41,7 +42,7 @@ public class EasyVillagerEntity extends Villager {
     }
 
     public static int getReputation(Villager villager) {
-        if (EasyVillagersMod.SERVER_CONFIG.universalReputation.get()) {
+        if (EasyVillagersMod.CONFIG.server.universalReputation.get()) {
             return getUniversalReputation(villager);
         } else {
             return 0;
@@ -101,7 +102,7 @@ public class EasyVillagerEntity extends Villager {
         VillagerData villagerData = getVillagerData();
         Holder<VillagerProfession> profession = villagerData.profession();
         if (profession.is(VillagerProfession.NONE)) {
-            return EntityTypes.VILLAGER.getDescription().copy();
+            return EntityType.VILLAGER.getDescription().copy();
         } else {
             return getTypeName();
         }
@@ -119,5 +120,9 @@ public class EasyVillagerEntity extends Villager {
     @Override
     public void readAdditionalSaveData(ValueInput valueInput) {
         super.readAdditionalSaveData(valueInput);
+    }
+
+    public void forceUpdateTrades(net.minecraft.server.level.ServerLevel serverLevel) {
+        this.updateTrades(serverLevel);
     }
 }

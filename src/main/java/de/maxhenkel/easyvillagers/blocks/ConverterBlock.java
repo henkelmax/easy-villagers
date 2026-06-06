@@ -1,6 +1,6 @@
 package de.maxhenkel.easyvillagers.blocks;
 
-import de.maxhenkel.corelib.blockentity.SimpleBlockEntityTicker;
+
 import de.maxhenkel.easyvillagers.blocks.tileentity.ConverterTileentity;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import de.maxhenkel.easyvillagers.gui.ConverterContainer;
@@ -27,7 +27,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.function.Consumer;
 
 public class ConverterBlock extends VillagerBlockBase {
@@ -39,11 +39,9 @@ public class ConverterBlock extends VillagerBlockBase {
     @Override
     public void onTooltip(ItemStack stack, Item.TooltipContext context, Consumer<Component> component) {
         super.onTooltip(stack, context, component);
-        Level level = context.level();
-        if (level == null) {
-            return;
-        }
-        ConverterTileentity converter = BlockItemDataCache.get(level, stack, ConverterTileentity.class);
+        net.minecraft.core.HolderLookup.Provider registries = context.registries();
+        
+        ConverterTileentity converter = BlockItemDataCache.get(registries, stack, ConverterTileentity.class);
         if (converter == null) {
             return;
         }
@@ -61,20 +59,26 @@ public class ConverterBlock extends VillagerBlockBase {
         }
         ConverterTileentity converter = (ConverterTileentity) tileEntity;
 
-        player.openMenu(new MenuProvider() {
-            @Override
-            public Component getDisplayName() {
-                return Component.translatable(state.getBlock().getDescriptionId());
-            }
+                    if (player instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
+                serverPlayer.openMenu(new net.fabricmc.fabric.api.menu.v1.ExtendedMenuProvider<net.minecraft.core.BlockPos>() {
+                    @Override
+                    public Component getDisplayName() {
+                        return Component.translatable(state.getBlock().getDescriptionId());
+                    }
 
-            @Nullable
-            @Override
-            public AbstractContainerMenu createMenu(int id, Inventory playerInventory, Player player) {
-                return new ConverterContainer(id, playerInventory, converter.getInputInventory(), converter.getOutputInventory(), ContainerLevelAccess.create(worldIn, pos));
-            }
-        });
+                    @Nullable
+                    @Override
+                    public AbstractContainerMenu createMenu(int id, Inventory playerInventory, Player player) {
+                        return new ConverterContainer(id, playerInventory, converter.getInputInventory(), converter.getOutputInventory(), ContainerLevelAccess.create(worldIn, pos));
+                    }
 
-        return InteractionResult.SUCCESS;
+                    @Override
+                    public net.minecraft.core.BlockPos getScreenOpeningData(net.minecraft.server.level.ServerPlayer player) {
+                        return pos;
+                    }
+                });
+            }
+            return InteractionResult.SUCCESS;
     }
 
     @Override
@@ -85,12 +89,6 @@ public class ConverterBlock extends VillagerBlockBase {
             converter.setOwner(placer.getUUID());
         }
         super.setPlacedBy(worldIn, pos, state, placer, stack);
-    }
-
-    @Nullable
-    @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level1, BlockState state, BlockEntityType<T> type) {
-        return new SimpleBlockEntityTicker<>();
     }
 
     @Nullable
@@ -109,4 +107,9 @@ public class ConverterBlock extends VillagerBlockBase {
         return 1F;
     }
 
+
+
+
 }
+
+

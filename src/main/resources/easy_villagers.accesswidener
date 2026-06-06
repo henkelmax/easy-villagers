@@ -1,0 +1,11 @@
+accessWidener v2 official
+
+accessible method net/minecraft/world/entity/npc/villager/Villager shouldIncreaseLevel ()Z
+accessible field net/minecraft/world/entity/npc/villager/Villager increaseProfessionLevelOnUpdate Z
+accessible field net/minecraft/world/entity/npc/villager/Villager lastRestockGameTime J
+accessible field net/minecraft/client/renderer/entity/EntityRenderDispatcher equipmentAssets Lnet/minecraft/client/resources/model/EquipmentAssetManager;
+accessible field net/minecraft/world/inventory/MerchantMenu tradeContainer Lnet/minecraft/world/inventory/MerchantContainer;
+accessible field net/minecraft/world/inventory/MerchantMenu trader Lnet/minecraft/world/item/trading/Merchant;
+accessible field net/minecraft/world/entity/npc/villager/AbstractVillager offers Lnet/minecraft/world/item/trading/MerchantOffers;
+accessible field net/minecraft/server/level/ServerPlayer server Lnet/minecraft/server/MinecraftServer;
+

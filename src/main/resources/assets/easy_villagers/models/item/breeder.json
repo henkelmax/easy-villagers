@@ -1,5 +1,5 @@
 {
-    "parent": "builtin/entity",
+    "type": "minecraft:special", "model": { "type": "easy_villagers:breeder" },
     "display": {
         "gui": {
             "rotation": [ 30, 45, 0 ],
@@ -33,3 +33,6 @@
         }
     }
 }
+
+
+

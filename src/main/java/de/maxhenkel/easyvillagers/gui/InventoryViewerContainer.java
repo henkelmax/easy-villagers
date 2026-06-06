@@ -33,8 +33,9 @@ public class InventoryViewerContainer extends VillagerContainerBase {
     protected InventoryViewerTileentity inventoryViewer;
     protected EasyVillagerEntity villager;
 
+    @SuppressWarnings("this-escape")
     public InventoryViewerContainer(int id, Container playerInventory, InventoryViewerTileentity inventoryViewer, ContainerLevelAccess access) {
-        super(Containers.INVENTORY_VIEWER_CONTAINER.get(), id, playerInventory, null, access);
+        super(Containers.INVENTORY_VIEWER_CONTAINER, id, playerInventory, null, access);
         this.inventoryViewer = inventoryViewer;
         villager = inventoryViewer.getVillagerEntity();
 
@@ -103,15 +104,13 @@ public class InventoryViewerContainer extends VillagerContainerBase {
 
     @Override
     public Block getBlock() {
-        return ModBlocks.INVENTORY_VIEWER.get();
+        return ModBlocks.INVENTORY_VIEWER;
     }
 
-    @Override
     public int getInvOffset() {
         return -2 + 18;
     }
 
-    @Override
     public int getInventorySize() {
         return 12;
     }

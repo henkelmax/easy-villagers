@@ -1,7 +1,7 @@
 package de.maxhenkel.easyvillagers.blocks;
 
-import de.maxhenkel.corelib.blockentity.SimpleBlockEntityTicker;
-import de.maxhenkel.corelib.item.ItemUtils;
+
+import de.maxhenkel.easyvillagers.utils.ItemUtils;
 import de.maxhenkel.easyvillagers.blocks.tileentity.InventoryViewerTileentity;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import de.maxhenkel.easyvillagers.gui.InventoryViewerContainer;
@@ -30,7 +30,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.function.Consumer;
 
 public class InventoryViewerBlock extends VillagerBlockBase {
@@ -42,11 +42,9 @@ public class InventoryViewerBlock extends VillagerBlockBase {
     @Override
     public void onTooltip(ItemStack stack, Item.TooltipContext context, Consumer<Component> component) {
         super.onTooltip(stack, context, component);
-        Level level = context.level();
-        if (level == null) {
-            return;
-        }
-        InventoryViewerTileentity invViewer = BlockItemDataCache.get(level, stack, InventoryViewerTileentity.class);
+        net.minecraft.core.HolderLookup.Provider registries = context.registries();
+        
+        InventoryViewerTileentity invViewer = BlockItemDataCache.get(registries, stack, InventoryViewerTileentity.class);
         if (invViewer == null) {
             return;
         }
@@ -82,7 +80,7 @@ public class InventoryViewerBlock extends VillagerBlockBase {
             return InteractionResult.SUCCESS;
         } else if (inventoryViewer.hasVillager()) {
             if (player instanceof ServerPlayer serverPlayer) {
-                serverPlayer.openMenu(new MenuProvider() {
+                serverPlayer.openMenu(new net.fabricmc.fabric.api.menu.v1.ExtendedMenuProvider<net.minecraft.core.BlockPos>() {
                     @Override
                     public Component getDisplayName() {
                         return Component.translatable(state.getBlock().getDescriptionId());
@@ -92,17 +90,16 @@ public class InventoryViewerBlock extends VillagerBlockBase {
                     public AbstractContainerMenu createMenu(int id, Inventory playerInventory, Player player) {
                         return new InventoryViewerContainer(id, playerInventory, inventoryViewer, ContainerLevelAccess.create(worldIn, pos));
                     }
-                }, packetBuffer -> packetBuffer.writeBlockPos(inventoryViewer.getBlockPos()));
+
+                    @Override
+                    public net.minecraft.core.BlockPos getScreenOpeningData(ServerPlayer player) {
+                        return pos;
+                    }
+                });
             }
             return InteractionResult.SUCCESS;
         }
         return InteractionResult.SUCCESS;
-    }
-
-    @Nullable
-    @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level1, BlockState state, BlockEntityType<T> type) {
-        return new SimpleBlockEntityTicker<>();
     }
 
     @Nullable
@@ -121,4 +118,12 @@ public class InventoryViewerBlock extends VillagerBlockBase {
         return 1F;
     }
 
+
+    @Override
+    protected InteractionResult useWithoutItem(BlockState state, Level worldIn, BlockPos pos, Player player, BlockHitResult hitResult) {
+        return useItemOn(ItemStack.EMPTY, state, worldIn, pos, player, net.minecraft.world.InteractionHand.MAIN_HAND, hitResult);
+    }
+
 }
+
+

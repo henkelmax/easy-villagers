@@ -1,6 +1,6 @@
 package de.maxhenkel.easyvillagers.gui;
 
-import de.maxhenkel.corelib.inventory.ScreenBase;
+import de.maxhenkel.easyvillagers.gui.ScreenBase;
 import de.maxhenkel.easyvillagers.EasyVillagersMod;
 import de.maxhenkel.easyvillagers.net.MessageSelectTrade;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
-import net.neoforged.neoforge.client.network.ClientPacketDistributor;
+// import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
 public class AutoTraderScreen extends ScreenBase<AutoTraderContainer> {
 
@@ -26,11 +26,11 @@ public class AutoTraderScreen extends ScreenBase<AutoTraderContainer> {
         super.init();
 
         addRenderableWidget(new ArrowButton(leftPos + 8, topPos + 19, true, button -> {
-            ClientPacketDistributor.sendToServer(new MessageSelectTrade(false));
+            net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking.send(new MessageSelectTrade(false));
         }));
 
         addRenderableWidget(new ArrowButton(leftPos + imageWidth - 16 - 8, topPos + 19, false, button -> {
-            ClientPacketDistributor.sendToServer(new MessageSelectTrade(true));
+            net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking.send(new MessageSelectTrade(true));
         }));
     }
 
@@ -44,11 +44,10 @@ public class AutoTraderScreen extends ScreenBase<AutoTraderContainer> {
 
     @Override
     protected void extractLabels(GuiGraphicsExtractor guiGraphics, int x, int y) {
-        super.extractLabels(guiGraphics, x, y);
-        drawCenteredText(guiGraphics, title, 6, FONT_COLOR);
-        drawCenteredText(guiGraphics, Component.translatable("gui.easy_villagers.input"), 45, FONT_COLOR);
-        drawCenteredText(guiGraphics, Component.translatable("gui.easy_villagers.output"), 77, FONT_COLOR);
-        guiGraphics.text(font, playerInventory.getDisplayName().getVisualOrderText(), 8, imageHeight - 96 + 3, FONT_COLOR, false);
+        drawCenteredText(guiGraphics, title, 6, fontColor);
+        drawCenteredText(guiGraphics, Component.translatable("gui.easy_villagers.input"), 45, fontColor);
+        drawCenteredText(guiGraphics, Component.translatable("gui.easy_villagers.output"), 77, fontColor);
+        guiGraphics.text(font, playerInventory.getDisplayName().getVisualOrderText(), 8, imageHeight - 96 + 3, fontColor, false);
     }
 
     protected void drawCenteredText(GuiGraphicsExtractor guiGraphics, Component text, int y, int color) {

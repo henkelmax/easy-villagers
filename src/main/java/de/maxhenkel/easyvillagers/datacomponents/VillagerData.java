@@ -1,7 +1,7 @@
 package de.maxhenkel.easyvillagers.datacomponents;
 
 import com.mojang.serialization.Codec;
-import de.maxhenkel.corelib.codec.ValueInputOutputUtils;
+// import de.maxhenkel.corelib.codec.ValueInputOutputUtils;
 import de.maxhenkel.easyvillagers.EasyVillagersMod;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import de.maxhenkel.easyvillagers.items.ModItems;
@@ -11,13 +11,13 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.storage.TagValueOutput;
+// import net.minecraft.world.level.storage.TagValueOutput;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.lang.ref.WeakReference;
 import java.util.Objects;
 
@@ -48,9 +48,11 @@ public class VillagerData {
     }
 
     public static VillagerData of(Villager villager) {
-        TagValueOutput valueOutput = ValueInputOutputUtils.createValueOutput(villager, villager.registryAccess());
-        villager.addAdditionalSaveData(valueOutput);
-        return new VillagerData(ValueInputOutputUtils.toTag(valueOutput));
+        CompoundTag tag = new CompoundTag();
+        net.minecraft.world.level.storage.TagValueOutput output = net.minecraft.world.level.storage.TagValueOutput.createWithContext(new net.minecraft.util.ProblemReporter.Collector(), villager.registryAccess());
+        villager.saveWithoutId(output);
+        tag = output.buildResult();
+        return new VillagerData(tag);
     }
 
     @Nullable
@@ -79,8 +81,8 @@ public class VillagerData {
     }
 
     public EasyVillagerEntity createEasyVillager(Level level, @Nullable ItemStack stack) {
-        EasyVillagerEntity v = new EasyVillagerEntity(EntityTypes.VILLAGER, level);
-        v.readAdditionalSaveData(ValueInputOutputUtils.createValueInput(EasyVillagersMod.MODID, level.registryAccess(), nbt));
+        EasyVillagerEntity v = new EasyVillagerEntity(EntityType.VILLAGER, level);
+        v.load(net.minecraft.world.level.storage.TagValueInput.create(new net.minecraft.util.ProblemReporter.Collector(), v.registryAccess(), nbt));
         if (stack != null) {
             Component customName = stack.get(DataComponents.CUSTOM_NAME);
             if (customName != null) {
@@ -90,6 +92,11 @@ public class VillagerData {
         v.hurtTime = 0;
         v.yHeadRot = 0F;
         v.yHeadRotO = 0F;
+        v.setYBodyRot(0F);
+        v.yBodyRotO = 0F;
+        v.setYRot(0F);
+        v.xRotO = 0F;
+        v.setXRot(0F);
         return v;
     }
 

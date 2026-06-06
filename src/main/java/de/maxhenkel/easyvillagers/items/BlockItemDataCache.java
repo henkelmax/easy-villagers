@@ -1,6 +1,6 @@
 package de.maxhenkel.easyvillagers.items;
 
-import de.maxhenkel.corelib.CachedMap;
+import de.maxhenkel.easyvillagers.utils.CachedMap;
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
 import de.maxhenkel.easyvillagers.blocks.tileentity.FakeWorldTileentity;
 import net.minecraft.core.BlockPos;
@@ -13,15 +13,15 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class BlockItemDataCache {
 
     private static final CachedMap<TypedEntityData<BlockEntityType<?>>, FakeWorldTileentity> CACHE = new CachedMap<>(10_000L);
 
     @Nullable
-    public static <T extends FakeWorldTileentity> T get(Level level, ItemStack stack, Class<T> beClass) {
-        FakeWorldTileentity fakeWorldTileentity = get(level, stack);
+    public static <T extends FakeWorldTileentity> T get(net.minecraft.core.HolderLookup.Provider registries, ItemStack stack, Class<T> beClass) {
+        FakeWorldTileentity fakeWorldTileentity = get(registries, stack);
         if (!beClass.isInstance(fakeWorldTileentity)) {
             return null;
         }
@@ -29,15 +29,15 @@ public class BlockItemDataCache {
     }
 
     @Nullable
-    public static FakeWorldTileentity get(Level level, ItemStack stack) {
+    public static FakeWorldTileentity get(net.minecraft.core.HolderLookup.Provider registries, ItemStack stack) {
         TypedEntityData<BlockEntityType<?>> data = stack.get(DataComponents.BLOCK_ENTITY_DATA);
         if (data == null) {
             return null;
         }
-        return CACHE.get(data, () -> load(level, stack, data));
+        return CACHE.computeIfAbsent(data, d -> load(registries, stack, d));
     }
 
-    private static FakeWorldTileentity load(Level level, ItemStack stack, TypedEntityData<BlockEntityType<?>> data) {
+    private static FakeWorldTileentity load(net.minecraft.core.HolderLookup.Provider registries, ItemStack stack, TypedEntityData<BlockEntityType<?>> data) {
         if (!(stack.getItem() instanceof BlockItem blockItem)) {
             throw new IllegalArgumentException("Item is not a block item");
         }
@@ -53,15 +53,33 @@ public class BlockItemDataCache {
             throw new IllegalArgumentException("Item is no fake world block entity");
         }
 
-        fakeWorldTileentity.setFakeWorld(level);
+        // Set the client level so that Villager initialization doesn't NPE when accessing registryAccess
+        Level level = getClientLevel();
+        if (level != null) {
+            fakeWorldTileentity.setFakeWorld(level);
+        }
+
         if (data != null) {
             if (!fakeWorldTileentity.getType().isValid(blockState)) {
                 throw new IllegalArgumentException("Block entity type is not valid for block state");
             }
-            data.loadInto(fakeWorldTileentity, level.registryAccess());
+            data.loadInto(fakeWorldTileentity, registries);
         }
 
         return fakeWorldTileentity;
+    }
+
+    @Nullable
+    private static Level getClientLevel() {
+        if (net.fabricmc.loader.api.FabricLoader.getInstance().getEnvironmentType() == net.fabricmc.api.EnvType.CLIENT) {
+            return getClientLevelInternal();
+        }
+        return null;
+    }
+
+    @Nullable
+    private static Level getClientLevelInternal() {
+        return net.minecraft.client.Minecraft.getInstance().level;
     }
 
 }

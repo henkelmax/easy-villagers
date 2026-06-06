@@ -7,17 +7,17 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 public class ModClientTileEntities {
 
     public static void clientSetup() {
-        if (!EasyVillagersMod.CLIENT_CONFIG.renderBlockContents.get()) {
+        if (!EasyVillagersMod.CONFIG.client.renderBlockContents.get()) {
             return;
         }
-        BlockEntityRenderers.register(ModTileEntities.TRADER.get(), c -> new TraderRenderer(c.entityModelSet(), c.blockModelResolver()));
-        BlockEntityRenderers.register(ModTileEntities.AUTO_TRADER.get(), c -> new AutoTraderRenderer(c.entityModelSet(), c.blockModelResolver()));
-        BlockEntityRenderers.register(ModTileEntities.FARMER.get(), c -> new FarmerRenderer(c.entityModelSet(), c.blockModelResolver()));
-        BlockEntityRenderers.register(ModTileEntities.BREEDER.get(), c -> new BreederRenderer(c.entityModelSet(), c.blockModelResolver()));
-        BlockEntityRenderers.register(ModTileEntities.CONVERTER.get(), c -> new ConverterRenderer(c.entityModelSet()));
-        BlockEntityRenderers.register(ModTileEntities.IRON_FARM.get(), c -> new IronFarmRenderer(c.entityModelSet()));
-        BlockEntityRenderers.register(ModTileEntities.INCUBATOR.get(), c -> new IncubatorRenderer(c.entityModelSet()));
-        BlockEntityRenderers.register(ModTileEntities.INVENTORY_VIEWER.get(), c -> new InventoryViewerRenderer(c.entityModelSet()));
+        BlockEntityRenderers.register(ModTileEntities.TRADER, c -> new TraderRenderer(c.entityModelSet(), c.blockModelResolver()));
+        BlockEntityRenderers.register(ModTileEntities.AUTO_TRADER, c -> new AutoTraderRenderer(c.entityModelSet(), c.blockModelResolver()));
+        BlockEntityRenderers.register(ModTileEntities.FARMER, c -> new FarmerRenderer(c.entityModelSet(), c.blockModelResolver()));
+        BlockEntityRenderers.register(ModTileEntities.BREEDER, c -> new BreederRenderer(c.entityModelSet(), c.sprites()));
+        BlockEntityRenderers.register(ModTileEntities.CONVERTER, c -> new ConverterRenderer(c.entityModelSet()));
+        BlockEntityRenderers.register(ModTileEntities.IRON_FARM, c -> new IronFarmRenderer(c.entityModelSet()));
+        BlockEntityRenderers.register(ModTileEntities.INCUBATOR, c -> new IncubatorRenderer(c.entityModelSet()));
+        BlockEntityRenderers.register(ModTileEntities.INVENTORY_VIEWER, c -> new InventoryViewerRenderer(c.entityModelSet()));
     }
 
 }

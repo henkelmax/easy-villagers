@@ -1,42 +1,42 @@
 package de.maxhenkel.easyvillagers;
 
+import de.maxhenkel.easyvillagers.EasyVillagersMod;
 import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.items.ModItems;
 import de.maxhenkel.easyvillagers.items.VillagerItem;
-import net.minecraft.core.registries.Registries;
+
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class ModCreativeTabs {
 
-    private static final DeferredRegister<CreativeModeTab> TAB_REGISTER = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, EasyVillagersMod.MODID);
+    public static final CreativeModeTab TAB_EASY_VILLAGERS = Registry.register(
+            BuiltInRegistries.CREATIVE_MODE_TAB,
+            Identifier.fromNamespaceAndPath(EasyVillagersMod.MODID, "easy_villagers"),
+            net.minecraft.world.item.CreativeModeTab.builder(net.minecraft.world.item.CreativeModeTab.Row.TOP, 0)
+                    .title(Component.translatable("itemGroup.easy_villagers"))
+                    .icon(() -> new ItemStack(ModItems.VILLAGER))
+                    .displayItems((features, output) -> {
+                        output.accept(new ItemStack(ModItems.VILLAGER));
+                        output.accept(VillagerItem.createBabyVillager());
 
-    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> TAB_EASY_VILLAGERS = TAB_REGISTER.register("easy_villagers", () -> {
-        return CreativeModeTab.builder()
-                .icon(() -> new ItemStack(ModItems.VILLAGER.get()))
-                .displayItems((features, output) -> {
-                    output.accept(new ItemStack(ModItems.VILLAGER.get()));
-                    output.accept(VillagerItem.createBabyVillager());
+                        output.accept(new ItemStack(ModBlocks.TRADER));
+                        output.accept(new ItemStack(ModBlocks.AUTO_TRADER));
+                        output.accept(new ItemStack(ModBlocks.FARMER));
+                        output.accept(new ItemStack(ModBlocks.BREEDER));
+                        output.accept(new ItemStack(ModBlocks.CONVERTER));
+                        output.accept(new ItemStack(ModBlocks.IRON_FARM));
+                        output.accept(new ItemStack(ModBlocks.INCUBATOR));
+                        output.accept(new ItemStack(ModBlocks.INVENTORY_VIEWER));
+                    })
+                    .build()
+    );
 
-                    output.accept(new ItemStack(ModBlocks.TRADER.get()));
-                    output.accept(new ItemStack(ModBlocks.AUTO_TRADER.get()));
-                    output.accept(new ItemStack(ModBlocks.FARMER.get()));
-                    output.accept(new ItemStack(ModBlocks.BREEDER.get()));
-                    output.accept(new ItemStack(ModBlocks.CONVERTER.get()));
-                    output.accept(new ItemStack(ModBlocks.IRON_FARM.get()));
-                    output.accept(new ItemStack(ModBlocks.INCUBATOR.get()));
-                    output.accept(new ItemStack(ModBlocks.INVENTORY_VIEWER.get()));
-                })
-                .title(Component.translatable("itemGroup.easy_villagers"))
-                .build();
-    });
-
-    public static void init(IEventBus eventBus) {
-        TAB_REGISTER.register(eventBus);
+    public static void init() {
     }
 
 }

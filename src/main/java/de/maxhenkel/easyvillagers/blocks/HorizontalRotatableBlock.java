@@ -14,6 +14,7 @@ public class HorizontalRotatableBlock extends Block {
 
     public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
 
+    @SuppressWarnings("this-escape")
     public HorizontalRotatableBlock(Properties properties) {
         super(properties);
         registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH));

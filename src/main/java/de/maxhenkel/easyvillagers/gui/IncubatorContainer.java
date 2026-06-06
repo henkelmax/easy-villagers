@@ -10,11 +10,15 @@ import net.minecraft.world.level.block.Block;
 public class IncubatorContainer extends InputOutputContainer {
 
     public IncubatorContainer(int id, Inventory playerInventory, Container inputInventory, Container outputInventory, ContainerLevelAccess access) {
-        super(Containers.INCUBATOR_CONTAINER.get(), id, playerInventory, inputInventory, outputInventory, access);
+        super(Containers.INCUBATOR_CONTAINER, id, playerInventory, inputInventory, outputInventory, access);
     }
 
-    public IncubatorContainer(int id, Inventory playerInventory) {
-        super(Containers.INCUBATOR_CONTAINER.get(), id, playerInventory);
+        public IncubatorContainer(int id, Inventory playerInventory) {
+        super(Containers.INCUBATOR_CONTAINER, id, playerInventory);
+    }
+
+    public IncubatorContainer(int id, Inventory playerInventory, net.minecraft.core.BlockPos pos) {
+        super(Containers.INCUBATOR_CONTAINER, id, playerInventory, pos);
     }
 
     @Override
@@ -24,6 +28,6 @@ public class IncubatorContainer extends InputOutputContainer {
 
     @Override
     public Block getBlock() {
-        return ModBlocks.INCUBATOR.get();
+        return ModBlocks.INCUBATOR;
     }
 }

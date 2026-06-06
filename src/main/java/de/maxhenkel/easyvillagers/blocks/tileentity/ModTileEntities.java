@@ -2,55 +2,27 @@ package de.maxhenkel.easyvillagers.blocks.tileentity;
 
 import de.maxhenkel.easyvillagers.EasyVillagersMod;
 import de.maxhenkel.easyvillagers.blocks.ModBlocks;
+import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
-import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class ModTileEntities {
 
-    private static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_REGISTER = DeferredRegister.create(BuiltInRegistries.BLOCK_ENTITY_TYPE, EasyVillagersMod.MODID);
+    public static final BlockEntityType<TraderTileentity> TRADER = registerBlockEntity("trader", net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder.create(TraderTileentity::new, ModBlocks.TRADER).build());
+    public static final BlockEntityType<AutoTraderTileentity> AUTO_TRADER = registerBlockEntity("auto_trader", net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder.create(AutoTraderTileentity::new, ModBlocks.AUTO_TRADER).build());
+    public static final BlockEntityType<FarmerTileentity> FARMER = registerBlockEntity("farmer", net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder.create(FarmerTileentity::new, ModBlocks.FARMER).build());
+    public static final BlockEntityType<BreederTileentity> BREEDER = registerBlockEntity("breeder", net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder.create(BreederTileentity::new, ModBlocks.BREEDER).build());
+    public static final BlockEntityType<ConverterTileentity> CONVERTER = registerBlockEntity("converter", net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder.create(ConverterTileentity::new, ModBlocks.CONVERTER).build());
+    public static final BlockEntityType<IronFarmTileentity> IRON_FARM = registerBlockEntity("iron_farm", net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder.create(IronFarmTileentity::new, ModBlocks.IRON_FARM).build());
+    public static final BlockEntityType<IncubatorTileentity> INCUBATOR = registerBlockEntity("incubator", net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder.create(IncubatorTileentity::new, ModBlocks.INCUBATOR).build());
+    public static final BlockEntityType<InventoryViewerTileentity> INVENTORY_VIEWER = registerBlockEntity("inventory_viewer", net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder.create(InventoryViewerTileentity::new, ModBlocks.INVENTORY_VIEWER).build());
 
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<TraderTileentity>> TRADER = BLOCK_ENTITY_REGISTER.register("trader", () ->
-            new BlockEntityType<>(TraderTileentity::new, ModBlocks.TRADER.get())
-    );
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<AutoTraderTileentity>> AUTO_TRADER = BLOCK_ENTITY_REGISTER.register("auto_trader", () ->
-            new BlockEntityType<>(AutoTraderTileentity::new, ModBlocks.AUTO_TRADER.get())
-    );
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FarmerTileentity>> FARMER = BLOCK_ENTITY_REGISTER.register("farmer", () ->
-            new BlockEntityType<>(FarmerTileentity::new, ModBlocks.FARMER.get())
-    );
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<BreederTileentity>> BREEDER = BLOCK_ENTITY_REGISTER.register("breeder", () ->
-            new BlockEntityType<>(BreederTileentity::new, ModBlocks.BREEDER.get())
-    );
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ConverterTileentity>> CONVERTER = BLOCK_ENTITY_REGISTER.register("converter", () ->
-            new BlockEntityType<>(ConverterTileentity::new, ModBlocks.CONVERTER.get())
-    );
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<IronFarmTileentity>> IRON_FARM = BLOCK_ENTITY_REGISTER.register("iron_farm", () ->
-            new BlockEntityType<>(IronFarmTileentity::new, ModBlocks.IRON_FARM.get())
-    );
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<IncubatorTileentity>> INCUBATOR = BLOCK_ENTITY_REGISTER.register("incubator", () ->
-            new BlockEntityType<>(IncubatorTileentity::new, ModBlocks.INCUBATOR.get())
-    );
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<InventoryViewerTileentity>> INVENTORY_VIEWER = BLOCK_ENTITY_REGISTER.register("inventory_viewer", () ->
-            new BlockEntityType<>(InventoryViewerTileentity::new, ModBlocks.INVENTORY_VIEWER.get())
-    );
-
-    public static void init(IEventBus eventBus) {
-        BLOCK_ENTITY_REGISTER.register(eventBus);
+    private static <T extends BlockEntityType<?>> T registerBlockEntity(String name, T blockEntityType) {
+        return Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Identifier.fromNamespaceAndPath(EasyVillagersMod.MODID, name), blockEntityType);
     }
 
-    public static void onRegisterCapabilities(RegisterCapabilitiesEvent event) {
-        event.registerBlockEntity(Capabilities.Item.BLOCK, BREEDER.get(), (object, context) -> object.getItemHandler());
-        event.registerBlockEntity(Capabilities.Item.BLOCK, AUTO_TRADER.get(), (object, context) -> object.getItemHandler());
-        event.registerBlockEntity(Capabilities.Item.BLOCK, FARMER.get(), (object, context) -> object.getItemHandler());
-        event.registerBlockEntity(Capabilities.Item.BLOCK, CONVERTER.get(), (object, context) -> object.getItemHandler());
-        event.registerBlockEntity(Capabilities.Item.BLOCK, IRON_FARM.get(), (object, context) -> object.getItemHandler());
-        event.registerBlockEntity(Capabilities.Item.BLOCK, INCUBATOR.get(), (object, context) -> object.getItemHandler());
-        event.registerBlockEntity(Capabilities.Item.BLOCK, INVENTORY_VIEWER.get(), (object, context) -> object.getItemHandler());
+    public static void init() {
     }
 
 }

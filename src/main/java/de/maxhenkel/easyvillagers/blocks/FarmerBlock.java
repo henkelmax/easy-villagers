@@ -1,7 +1,7 @@
 package de.maxhenkel.easyvillagers.blocks;
 
-import de.maxhenkel.corelib.blockentity.SimpleBlockEntityTicker;
-import de.maxhenkel.corelib.item.ItemUtils;
+
+import de.maxhenkel.easyvillagers.utils.ItemUtils;
 import de.maxhenkel.easyvillagers.blocks.tileentity.FarmerTileentity;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import de.maxhenkel.easyvillagers.gui.OutputContainer;
@@ -30,7 +30,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.function.Consumer;
 
 public class FarmerBlock extends VillagerBlockBase {
@@ -42,11 +42,9 @@ public class FarmerBlock extends VillagerBlockBase {
     @Override
     public void onTooltip(ItemStack stack, Item.TooltipContext context, Consumer<Component> component) {
         super.onTooltip(stack, context, component);
-        Level level = context.level();
-        if (level == null) {
-            return;
-        }
-        FarmerTileentity farmer = BlockItemDataCache.get(level, stack, FarmerTileentity.class);
+        net.minecraft.core.HolderLookup.Provider registries = context.registries();
+        
+        FarmerTileentity farmer = BlockItemDataCache.get(registries, stack, FarmerTileentity.class);
         if (farmer == null) {
             return;
         }
@@ -105,26 +103,27 @@ public class FarmerBlock extends VillagerBlockBase {
             VillagerBlockBase.playVillagerSound(worldIn, pos, SoundEvents.VILLAGER_CELEBRATE);
             return InteractionResult.SUCCESS;
         } else {
-            player.openMenu(new MenuProvider() {
-                @Override
-                public Component getDisplayName() {
-                    return Component.translatable(state.getBlock().getDescriptionId());
-                }
+                        if (player instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
+                serverPlayer.openMenu(new net.fabricmc.fabric.api.menu.v1.ExtendedMenuProvider<net.minecraft.core.BlockPos>() {
+                    @Override
+                    public Component getDisplayName() {
+                        return Component.translatable(state.getBlock().getDescriptionId());
+                    }
 
-                @Nullable
-                @Override
-                public AbstractContainerMenu createMenu(int id, Inventory playerInventory, Player player) {
-                    return new OutputContainer(id, playerInventory, farmer.getOutputInventory(), ContainerLevelAccess.create(worldIn, pos), ModBlocks.FARMER::get);
-                }
-            });
+                    @Nullable
+                    @Override
+                    public AbstractContainerMenu createMenu(int id, Inventory playerInventory, Player player) {
+                        return new OutputContainer(id, playerInventory, farmer.getOutputInventory(), ContainerLevelAccess.create(worldIn, pos), () -> de.maxhenkel.easyvillagers.blocks.ModBlocks.FARMER);
+                    }
+
+                    @Override
+                    public net.minecraft.core.BlockPos getScreenOpeningData(net.minecraft.server.level.ServerPlayer player) {
+                        return pos;
+                    }
+                });
+            }
             return InteractionResult.SUCCESS;
         }
-    }
-
-    @Nullable
-    @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level1, BlockState state, BlockEntityType<T> type) {
-        return new SimpleBlockEntityTicker<>();
     }
 
     @Nullable
@@ -143,4 +142,11 @@ public class FarmerBlock extends VillagerBlockBase {
         return 1F;
     }
 
+
+    @Override
+    protected InteractionResult useWithoutItem(BlockState state, Level worldIn, BlockPos pos, Player player, BlockHitResult hitResult) {
+        return useItemOn(ItemStack.EMPTY, state, worldIn, pos, player, net.minecraft.world.InteractionHand.MAIN_HAND, hitResult);
+    }
+
 }
+

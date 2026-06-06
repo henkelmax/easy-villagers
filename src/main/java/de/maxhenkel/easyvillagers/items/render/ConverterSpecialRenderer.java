@@ -30,7 +30,7 @@ public class ConverterSpecialRenderer extends ItemSpecialRendererBase<ConverterT
         @Override
         @Nullable
         public SpecialModelRenderer<ConverterTileentity> bake(BakingContext context) {
-            return new ConverterSpecialRenderer(context.entityModelSet(), () -> ModBlocks.CONVERTER.get().defaultBlockState());
+            return new ConverterSpecialRenderer(context.entityModelSet(), () -> ModBlocks.CONVERTER.defaultBlockState());
         }
 
         @Override

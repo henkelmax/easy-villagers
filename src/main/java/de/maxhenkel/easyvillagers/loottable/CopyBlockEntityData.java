@@ -2,11 +2,11 @@ package de.maxhenkel.easyvillagers.loottable;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import de.maxhenkel.corelib.codec.ValueInputOutputUtils;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.storage.TagValueOutput;
+// import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
@@ -28,9 +28,8 @@ public class CopyBlockEntityData extends LootItemConditionalFunction {
         if (blockEntity == null) {
             return stack;
         }
-        TagValueOutput valueOutput = ValueInputOutputUtils.createValueOutput(blockEntity, context.getLevel().registryAccess());
-        blockEntity.saveWithFullMetadata(valueOutput);
-        BlockItem.setBlockEntityData(stack, blockEntity.getType(), valueOutput);
+        CompoundTag tag = blockEntity.saveWithFullMetadata(context.getLevel().registryAccess());
+        stack.set(net.minecraft.core.component.DataComponents.BLOCK_ENTITY_DATA, net.minecraft.world.item.component.TypedEntityData.of(blockEntity.getType(), tag));
         stack.applyComponents(blockEntity.collectComponents());
         return stack;
     }

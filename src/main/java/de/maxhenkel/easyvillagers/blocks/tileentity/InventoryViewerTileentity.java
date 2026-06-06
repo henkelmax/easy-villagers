@@ -1,7 +1,7 @@
 package de.maxhenkel.easyvillagers.blocks.tileentity;
 
-import de.maxhenkel.corelib.blockentity.IServerTickableBlockEntity;
-import de.maxhenkel.corelib.inventory.ItemListInventory;
+import de.maxhenkel.easyvillagers.blocks.tileentity.IServerTickableBlockEntity;
+import de.maxhenkel.easyvillagers.inventory.SimpleInventory;
 import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
@@ -10,17 +10,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.Container;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.transfer.EmptyResourceHandler;
-import net.neoforged.neoforge.transfer.ResourceHandler;
-import net.neoforged.neoforge.transfer.item.ItemResource;
-import net.neoforged.neoforge.transfer.item.VanillaContainerWrapper;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class InventoryViewerTileentity extends VillagerTileentity implements IServerTickableBlockEntity {
 
     public InventoryViewerTileentity(BlockPos pos, BlockState state) {
-        super(ModTileEntities.INVENTORY_VIEWER.get(), ModBlocks.INVENTORY_VIEWER.get().defaultBlockState(), pos, state);
+        super(ModTileEntities.INVENTORY_VIEWER, ModBlocks.INVENTORY_VIEWER.defaultBlockState(), pos, state);
     }
 
     @Override
@@ -36,7 +32,7 @@ public class InventoryViewerTileentity extends VillagerTileentity implements ISe
         if (v == null) {
             return null;
         }
-        return new ItemListInventory(v.getInventory().getItems(), this::setChanged);
+        return new net.minecraft.world.SimpleContainer(v.getInventory().getItems().toArray(new net.minecraft.world.item.ItemStack[0]));
     }
 
     @Nullable
@@ -48,20 +44,14 @@ public class InventoryViewerTileentity extends VillagerTileentity implements ISe
         return new VillagerArmorContainer(v, this::setChanged);
     }
 
-    public ResourceHandler<ItemResource> getItemHandler() {
-        Container inv = getVillagerInventory();
-        if (inv == null) {
-            return EmptyResourceHandler.instance();
-        }
-        return VanillaContainerWrapper.of(inv);
-    }
+    
 
     @Override
     public void setChanged() {
         super.setChanged();
         saveVillagerEntity();
         if (level != null) {
-            level.invalidateCapabilities(worldPosition);
+            
         }
     }
 }

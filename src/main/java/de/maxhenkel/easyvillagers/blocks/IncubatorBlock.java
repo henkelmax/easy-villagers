@@ -1,6 +1,6 @@
 package de.maxhenkel.easyvillagers.blocks;
 
-import de.maxhenkel.corelib.blockentity.SimpleBlockEntityTicker;
+
 import de.maxhenkel.easyvillagers.blocks.tileentity.IncubatorTileentity;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import de.maxhenkel.easyvillagers.gui.IncubatorContainer;
@@ -26,7 +26,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.function.Consumer;
 
 public class IncubatorBlock extends VillagerBlockBase {
@@ -38,11 +38,9 @@ public class IncubatorBlock extends VillagerBlockBase {
     @Override
     public void onTooltip(ItemStack stack, Item.TooltipContext context, Consumer<Component> component) {
         super.onTooltip(stack, context, component);
-        Level level = context.level();
-        if (level == null) {
-            return;
-        }
-        IncubatorTileentity incubator = BlockItemDataCache.get(level, stack, IncubatorTileentity.class);
+        net.minecraft.core.HolderLookup.Provider registries = context.registries();
+        
+        IncubatorTileentity incubator = BlockItemDataCache.get(registries, stack, IncubatorTileentity.class);
         if (incubator == null) {
             return;
         }
@@ -60,26 +58,26 @@ public class IncubatorBlock extends VillagerBlockBase {
         }
         IncubatorTileentity incubator = (IncubatorTileentity) tileEntity;
 
-        player.openMenu(new MenuProvider() {
-            @Override
-            public Component getDisplayName() {
-                return Component.translatable(state.getBlock().getDescriptionId());
+                    if (player instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
+                serverPlayer.openMenu(new net.fabricmc.fabric.api.menu.v1.ExtendedMenuProvider<net.minecraft.core.BlockPos>() {
+                    @Override
+                    public Component getDisplayName() {
+                        return Component.translatable(state.getBlock().getDescriptionId());
+                    }
+
+                    @Nullable
+                    @Override
+                    public AbstractContainerMenu createMenu(int id, Inventory playerInventory, Player player) {
+                        return new IncubatorContainer(id, playerInventory, incubator.getInputInventory(), incubator.getOutputInventory(), ContainerLevelAccess.create(worldIn, pos));
+                    }
+
+                    @Override
+                    public net.minecraft.core.BlockPos getScreenOpeningData(net.minecraft.server.level.ServerPlayer player) {
+                        return pos;
+                    }
+                });
             }
-
-            @Nullable
-            @Override
-            public AbstractContainerMenu createMenu(int id, Inventory playerInventory, Player player) {
-                return new IncubatorContainer(id, playerInventory, incubator.getInputInventory(), incubator.getOutputInventory(), ContainerLevelAccess.create(worldIn, pos));
-            }
-        });
-
-        return InteractionResult.SUCCESS;
-    }
-
-    @Nullable
-    @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level1, BlockState state, BlockEntityType<T> type) {
-        return new SimpleBlockEntityTicker<>();
+            return InteractionResult.SUCCESS;
     }
 
     @Nullable
@@ -98,4 +96,9 @@ public class IncubatorBlock extends VillagerBlockBase {
         return 1F;
     }
 
+
+
+
 }
+
+

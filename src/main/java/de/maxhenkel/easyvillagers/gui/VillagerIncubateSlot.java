@@ -4,7 +4,6 @@ import de.maxhenkel.easyvillagers.items.VillagerItem;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.transfer.item.ItemResource;
 
 public class VillagerIncubateSlot extends Slot {
 
@@ -14,10 +13,10 @@ public class VillagerIncubateSlot extends Slot {
 
     @Override
     public boolean mayPlace(ItemStack stack) {
-        return isValid(ItemResource.of(stack));
+        return isValid(stack);
     }
 
-    public static boolean isValid(ItemResource stack) {
+    public static boolean isValid(ItemStack stack) {
         return stack.getItem() instanceof VillagerItem;
     }
 

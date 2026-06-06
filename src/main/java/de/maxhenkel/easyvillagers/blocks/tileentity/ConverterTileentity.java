@@ -1,17 +1,12 @@
 package de.maxhenkel.easyvillagers.blocks.tileentity;
 
-import de.maxhenkel.corelib.blockentity.IServerTickableBlockEntity;
-import de.maxhenkel.corelib.inventory.ItemListInventory;
-import de.maxhenkel.corelib.item.ItemUtils;
+import de.maxhenkel.easyvillagers.blocks.tileentity.IServerTickableBlockEntity;
+import de.maxhenkel.easyvillagers.inventory.SimpleInventory;
 import de.maxhenkel.easyvillagers.EasyVillagersMod;
 import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
 import de.maxhenkel.easyvillagers.gui.VillagerConvertSlot;
-import de.maxhenkel.easyvillagers.inventory.InputOnlyResourceHandler;
-import de.maxhenkel.easyvillagers.inventory.ListAccessItemStacksResourceHandler;
-import de.maxhenkel.easyvillagers.inventory.OutputOnlyResourceHandler;
-import de.maxhenkel.easyvillagers.inventory.ValidateResourceHandler;
 import de.maxhenkel.easyvillagers.items.VillagerItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.UUIDUtil;
@@ -19,6 +14,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.Container;
+import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.ai.village.ReputationEventType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -26,52 +22,53 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.block.state.BlockState;
+import de.maxhenkel.easyvillagers.integration.techreborn.ITRCompatible;
+import de.maxhenkel.easyvillagers.integration.techreborn.TRSlotConfiguration;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import net.neoforged.neoforge.transfer.CombinedResourceHandler;
-import net.neoforged.neoforge.transfer.ResourceHandler;
-import net.neoforged.neoforge.transfer.item.ItemResource;
-import net.neoforged.neoforge.transfer.transaction.Transaction;
-import net.neoforged.neoforge.transfer.transaction.TransactionContext;
+
 
 import java.util.UUID;
 
-public class ConverterTileentity extends VillagerTileentity implements IServerTickableBlockEntity {
+public class ConverterTileentity extends VillagerTileentity implements IServerTickableBlockEntity, ITRCompatible {
 
-    protected ValidateResourceHandler inputInventory;
-    protected ListAccessItemStacksResourceHandler outputInventory;
+    protected TRSlotConfiguration trSlotConfig;
+
+    @Override
+    public Object getSlotConfiguration() {
+        return trSlotConfig;
+    }
+
+
+    protected SimpleInventory inputInventory;
+    protected SimpleInventory outputInventory;
 
     protected long timer;
     protected UUID owner;
 
-    protected CombinedResourceHandler<ItemResource> itemHandler;
-
+    @SuppressWarnings("this-escape")
     public ConverterTileentity(BlockPos pos, BlockState state) {
-        super(ModTileEntities.CONVERTER.get(), ModBlocks.CONVERTER.get().defaultBlockState(), pos, state);
-        inputInventory = new ValidateResourceHandler(4, VillagerConvertSlot::isValid);
-        outputInventory = new ListAccessItemStacksResourceHandler(4);
-        itemHandler = new CombinedResourceHandler<>(new InputOnlyResourceHandler(inputInventory), new OutputOnlyResourceHandler(outputInventory));
+        super(ModTileEntities.CONVERTER, ModBlocks.CONVERTER.defaultBlockState(), pos, state);
+        inputInventory = new SimpleInventory(4, this::setChanged);
+        outputInventory = new SimpleInventory(4, this::setChanged);
+        if (net.fabricmc.loader.api.FabricLoader.getInstance().isModLoaded("techreborn")) {
+            trSlotConfig = new TRSlotConfiguration();
+        }
     }
 
     @Override
     public void tickServer() {
         if (timer <= 0L && !hasVillager()) {
-            try (Transaction transaction = Transaction.open(null)) {
-                if (consumeConvertItems(transaction)) {
-                    for (int i = 0; i < inputInventory.size(); i++) {
-                        ItemResource resource = inputInventory.getResource(i);
-                        if (!(resource.getItem() instanceof VillagerItem)) {
-                            continue;
-                        }
-                        if (inputInventory.extract(resource, 1, transaction) > 0) {
-                            ItemStack copy = resource.toStack();
-                            copy.setCount(1);
-                            setVillager(copy);
-                            sync();
-                            transaction.commit();
-                            break;
-                        }
+            if (consumeConvertItems()) {
+                for (int i = 0; i < inputInventory.getContainerSize(); i++) {
+                    ItemStack stack = inputInventory.getItem(i);
+                    if (!(stack.getItem() instanceof VillagerItem)) {
+                        continue;
                     }
+                    ItemStack copy = inputInventory.removeItem(i, 1);
+                    setVillager(copy);
+                    sync();
+                    break;
                 }
             }
         }
@@ -91,12 +88,12 @@ public class ConverterTileentity extends VillagerTileentity implements IServerTi
             } else if (timer >= getFinalizeTime()) {
                 Player ownerPlayer = getOwnerPlayer();
                 if (ownerPlayer != null) {
-                    for (int i = 0; i < outputInventory.size(); i++) {
-                        ItemResource stack = outputInventory.getResource(i);
+                    for (int i = 0; i < outputInventory.getContainerSize(); i++) {
+                        ItemStack stack = outputInventory.getItem(i);
                         if (stack.isEmpty()) {
                             EasyVillagerEntity villagerEntity = getVillagerEntity();
                             villagerEntity.onReputationEventFrom(ReputationEventType.ZOMBIE_VILLAGER_CURED, ownerPlayer);
-                            outputInventory.set(i, ItemResource.of(removeVillager().copy()), 1);
+                            outputInventory.setItem(i, removeVillager().copy());
                             timer = 0L;
                             sync();
                             break;
@@ -119,32 +116,33 @@ public class ConverterTileentity extends VillagerTileentity implements IServerTi
         }
     }
 
-    private boolean consumeConvertItems(TransactionContext transaction) {
-        ItemResource appleStack = null;
-        ItemResource potionStack = null;
-        for (int i = 0; i < inputInventory.size(); i++) {
-            ItemResource resource = inputInventory.getResource(i);
-            if (resource.getItem() == Items.GOLDEN_APPLE) {
-                appleStack = resource;
+    private boolean consumeConvertItems() {
+        int appleSlot = -1;
+        int potionSlot = -1;
+        boolean hasVillagerItem = false;
+        for (int i = 0; i < inputInventory.getContainerSize(); i++) {
+            ItemStack stack = inputInventory.getItem(i);
+            if (stack.getItem() == Items.GOLDEN_APPLE) {
+                appleSlot = i;
             }
-            if (isWeakness(resource)) {
-                potionStack = resource;
+            if (isWeakness(stack)) {
+                potionSlot = i;
+            }
+            if (stack.getItem() instanceof VillagerItem) {
+                hasVillagerItem = true;
             }
         }
 
-        if (appleStack == null || potionStack == null) {
+        if (appleSlot == -1 || potionSlot == -1 || !hasVillagerItem) {
             return false;
         }
-        if (inputInventory.extract(appleStack, 1, transaction) <= 0) {
-            return false;
-        }
-        if (inputInventory.extract(potionStack, 1, transaction) <= 0) {
-            return false;
-        }
+        
+        inputInventory.removeItem(appleSlot, 1);
+        inputInventory.removeItem(potionSlot, 1);
         return true;
     }
 
-    public static boolean isWeakness(ItemResource stack) {
+    public static boolean isWeakness(ItemStack stack) {
         PotionContents potionContents = stack.get(DataComponents.POTION_CONTENTS);
         if (potionContents == null) {
             return false;
@@ -180,31 +178,41 @@ public class ConverterTileentity extends VillagerTileentity implements IServerTi
     protected void saveAdditional(ValueOutput valueOutput) {
         super.saveAdditional(valueOutput);
 
-        ItemUtils.saveInventory(valueOutput.child("InputInventory"), "Items", inputInventory.getRaw());
-        ItemUtils.saveInventory(valueOutput.child("OutputInventory"), "Items", outputInventory.getRaw());
+        ContainerHelper.saveAllItems(valueOutput.child("InputInventory"), inputInventory.getItems());
+        
+        ContainerHelper.saveAllItems(valueOutput.child("OutputInventory"), outputInventory.getItems());
 
         valueOutput.putLong("Timer", timer);
         if (owner != null) {
-            valueOutput.store("Owner", UUIDUtil.CODEC, owner);
+            valueOutput.storeNullable("Owner", net.minecraft.core.UUIDUtil.CODEC, owner);
+    
+        if (trSlotConfig != null) {
+            valueOutput.store("TRSlotConfig", net.minecraft.nbt.CompoundTag.CODEC, trSlotConfig.serialize());
         }
+    }
     }
 
     @Override
     protected void loadAdditional(ValueInput valueInput) {
-        ItemUtils.readInventory(valueInput.childOrEmpty("InputInventory"), "Items", inputInventory.getRaw());
-        ItemUtils.readInventory(valueInput.childOrEmpty("OutputInventory"), "Items", outputInventory.getRaw());
+        valueInput.child("InputInventory").ifPresent(input -> ContainerHelper.loadAllItems(input, inputInventory.getItems()));
+        valueInput.child("OutputInventory").ifPresent(input -> ContainerHelper.loadAllItems(input, outputInventory.getItems()));
 
         timer = valueInput.getLongOr("Timer", 0L);
-        owner = valueInput.read("Owner", UUIDUtil.CODEC).orElse(null);
+        owner = valueInput.read("Owner", net.minecraft.core.UUIDUtil.CODEC).orElse(null);
+
+        if (trSlotConfig != null && valueInput.contains("TRSlotConfig")) {
+            valueInput.read("TRSlotConfig", net.minecraft.nbt.CompoundTag.CODEC).ifPresent(tag -> trSlotConfig.deserialize(tag));
+        }
+
         super.loadAdditional(valueInput);
     }
 
     public Container getInputInventory() {
-        return new ItemListInventory(inputInventory.getRaw(), this::setChanged);
+        return inputInventory;
     }
 
     public Container getOutputInventory() {
-        return new ItemListInventory(outputInventory.getRaw(), this::setChanged);
+        return outputInventory;
     }
 
     public static int getZombifyTime() {
@@ -216,15 +224,12 @@ public class ConverterTileentity extends VillagerTileentity implements IServerTi
     }
 
     public static int getConvertTime() {
-        return getCureTime() + EasyVillagersMod.SERVER_CONFIG.convertingTime.get();
+        return getCureTime() + EasyVillagersMod.CONFIG.server.convertingTime.get();
     }
 
     public static int getFinalizeTime() {
         return getConvertTime() + 20 * 3;
     }
 
-    public ResourceHandler<ItemResource> getItemHandler() {
-        return itemHandler;
-    }
-
 }
+

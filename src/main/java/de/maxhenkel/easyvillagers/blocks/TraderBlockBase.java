@@ -1,7 +1,7 @@
 package de.maxhenkel.easyvillagers.blocks;
 
-import de.maxhenkel.corelib.blockentity.SimpleBlockEntityTicker;
-import de.maxhenkel.corelib.item.ItemUtils;
+
+import de.maxhenkel.easyvillagers.utils.ItemUtils;
 import de.maxhenkel.easyvillagers.blocks.tileentity.TraderTileentityBase;
 import de.maxhenkel.easyvillagers.items.VillagerItem;
 import net.minecraft.core.BlockPos;
@@ -27,7 +27,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class TraderBlockBase extends VillagerBlockBase {
 
@@ -38,10 +38,9 @@ public abstract class TraderBlockBase extends VillagerBlockBase {
     @Override
     protected InteractionResult useItemOn(ItemStack heldItem, BlockState state, Level level, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         BlockEntity tileEntity = level.getBlockEntity(pos);
-        if (!(tileEntity instanceof TraderTileentityBase)) {
+        if (!(tileEntity instanceof TraderTileentityBase trader)) {
             return super.useItemOn(heldItem, state, level, pos, player, handIn, hit);
         }
-        TraderTileentityBase trader = (TraderTileentityBase) tileEntity;
         if (!trader.hasVillager() && heldItem.getItem() instanceof VillagerItem) {
             trader.setVillager(heldItem.copy());
             ItemUtils.decrItemStack(heldItem, player);
@@ -62,7 +61,7 @@ public abstract class TraderBlockBase extends VillagerBlockBase {
             if (villagerEntity != null) {
                 playWorkstationSound(level, pos, trader);
             }
-            SoundType type = block.defaultBlockState().getSoundType(level, pos, player);
+            SoundType type = block.defaultBlockState().getSoundType();
             level.playSound(null, pos, type.getPlaceSound(), SoundSource.BLOCKS, type.getVolume(), type.getPitch());
             return InteractionResult.SUCCESS;
         } else if (player.isShiftKeyDown() && trader.hasVillager()) {
@@ -71,8 +70,7 @@ public abstract class TraderBlockBase extends VillagerBlockBase {
                 player.setItemInHand(handIn, stack);
             } else {
                 if (!player.getInventory().add(stack)) {
-                    Direction direction = state.getValue(TraderBlockBase.FACING);
-                    Containers.dropItemStack(level, direction.getStepX() + pos.getX() + 0.5D, pos.getY() + 0.5D, direction.getStepZ() + pos.getZ() + 0.5D, stack);
+                    Containers.dropItemStack(level, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, stack);
                 }
             }
             playVillagerSound(level, pos, SoundEvents.VILLAGER_CELEBRATE);
@@ -83,8 +81,7 @@ public abstract class TraderBlockBase extends VillagerBlockBase {
                 player.setItemInHand(handIn, blockStack);
             } else {
                 if (!player.getInventory().add(blockStack)) {
-                    Direction direction = state.getValue(TraderBlockBase.FACING);
-                    Containers.dropItemStack(level, direction.getStepX() + pos.getX() + 0.5D, pos.getY() + 0.5D, direction.getStepZ() + pos.getZ() + 0.5D, blockStack);
+                    Containers.dropItemStack(level, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, blockStack);
                 }
             }
             if (trader.hasVillager()) {
@@ -95,6 +92,11 @@ public abstract class TraderBlockBase extends VillagerBlockBase {
             return InteractionResult.SUCCESS;
         }
         return InteractionResult.SUCCESS;
+    }
+
+    @Override
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+        return useItemOn(ItemStack.EMPTY, state, level, pos, player, InteractionHand.MAIN_HAND, hitResult);
     }
 
     protected abstract boolean openGUI(TraderTileentityBase trader, Player player, Level level, BlockPos pos);
@@ -108,12 +110,6 @@ public abstract class TraderBlockBase extends VillagerBlockBase {
                 playVillagerSound(world, pos, SoundEvents.VILLAGER_NO);
             }
         }
-    }
-
-    @Nullable
-    @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level1, BlockState state, BlockEntityType<T> type) {
-        return new SimpleBlockEntityTicker<>();
     }
 
     @Nullable

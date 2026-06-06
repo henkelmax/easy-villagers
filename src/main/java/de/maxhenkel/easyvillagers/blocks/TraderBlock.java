@@ -13,7 +13,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.function.Consumer;
 
 public class TraderBlock extends TraderBlockBase {
@@ -25,11 +25,9 @@ public class TraderBlock extends TraderBlockBase {
     @Override
     public void onTooltip(ItemStack stack, Item.TooltipContext context, Consumer<Component> component) {
         super.onTooltip(stack, context, component);
-        Level level = context.level();
-        if (level == null) {
-            return;
-        }
-        TraderTileentity trader = BlockItemDataCache.get(level, stack, TraderTileentity.class);
+        net.minecraft.core.HolderLookup.Provider registries = context.registries();
+        
+        TraderTileentity trader = BlockItemDataCache.get(registries, stack, TraderTileentity.class);
         if (trader == null) {
             return;
         }

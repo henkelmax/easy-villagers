@@ -1,5 +1,5 @@
 {
-  "parent": "builtin/entity",
+  "type": "minecraft:special", "model": { "type": "easy_villagers:villager" },
   "display": {
     "gui": {
       "rotation": [ 0, 330, 0 ],
@@ -43,3 +43,6 @@
     }
   }
 }
+
+
+

@@ -21,11 +21,12 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.fml.loading.FMLEnvironment;
+import net.fabricmc.api.EnvType;
 import org.jetbrains.annotations.Nullable;
 
 public class VillagerItem extends Item {
 
+    @SuppressWarnings("this-escape")
     public VillagerItem(Item.Properties properties) {
         super(properties.stacksTo(1));
 
@@ -33,7 +34,7 @@ public class VillagerItem extends Item {
             Direction direction = source.state().getValue(DispenserBlock.FACING);
             BlockPos blockpos = source.pos().relative(direction);
             Level world = source.level();
-            Villager villager = VillagerData.getOrCreate(stack).createEasyVillager(world, stack);
+            Villager villager = VillagerData.getOrCreate(stack).createEasyVillager(world, stack.copy());
             villager.snapTo(blockpos.getX() + 0.5D, blockpos.getY(), blockpos.getZ() + 0.5D, direction.toYRot(), 0F);
             world.addFreshEntity(villager);
             stack.shrink(1);
@@ -56,12 +57,12 @@ public class VillagerItem extends Item {
                 blockpos = blockpos.relative(direction);
             }
 
-            Villager villager = VillagerData.getOrCreate(itemstack).createEasyVillager(world, itemstack);
+            Villager villager = VillagerData.getOrCreate(itemstack).createEasyVillager(world, itemstack.copy());
 
             villager.setPos(blockpos.getX() + 0.5D, blockpos.getY(), blockpos.getZ() + 0.5);
 
             if (world.addFreshEntity(villager)) {
-                itemstack.shrink(1);
+                de.maxhenkel.easyvillagers.utils.ItemUtils.decrItemStack(itemstack, context.getPlayer());
             }
 
             return InteractionResult.CONSUME;
@@ -70,7 +71,7 @@ public class VillagerItem extends Item {
 
     @Override
     public Component getName(ItemStack stack) {
-        if (FMLEnvironment.getDist().isClient()) {
+        if (net.fabricmc.api.EnvType.CLIENT == net.fabricmc.loader.api.FabricLoader.getInstance().getEnvironmentType()) {
             Component clientName = ClientVillagerItemUtils.getClientName(stack);
             if (clientName != null) {
                 return clientName;
@@ -85,14 +86,14 @@ public class VillagerItem extends Item {
         if (!(entity instanceof ServerPlayer player)) {
             return;
         }
-        if (!EasyVillagersMod.SERVER_CONFIG.villagerInventorySounds.get()) {
+        if (!EasyVillagersMod.CONFIG.server.villagerInventorySounds.get()) {
             return;
         }
         VillagerBlockBase.playRandomVillagerSound(player, SoundEvents.VILLAGER_AMBIENT);
     }
 
     public static ItemStack createBabyVillager() {
-        ItemStack babyVillager = new ItemStack(ModItems.VILLAGER.get());
+        ItemStack babyVillager = new ItemStack(ModItems.VILLAGER);
         CompoundTag compound = new CompoundTag();
         compound.putInt("Age", -24000);
         VillagerData data = VillagerData.of(compound);

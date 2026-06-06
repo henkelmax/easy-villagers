@@ -1,92 +1,138 @@
 package de.maxhenkel.easyvillagers;
 
-import de.maxhenkel.corelib.CommonRegistry;
 import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
 import de.maxhenkel.easyvillagers.blocks.tileentity.ModTileEntities;
-import de.maxhenkel.easyvillagers.events.BlockEvents;
+import de.maxhenkel.easyvillagers.config.ModConfig;
+
 import de.maxhenkel.easyvillagers.events.VillagerEvents;
 import de.maxhenkel.easyvillagers.gui.Containers;
 import de.maxhenkel.easyvillagers.items.ModItems;
 import de.maxhenkel.easyvillagers.loottable.ModLootTables;
-import de.maxhenkel.easyvillagers.net.MessageCycleTrades;
-import de.maxhenkel.easyvillagers.net.MessagePickUpVillager;
-import de.maxhenkel.easyvillagers.net.MessageSelectTrade;
-import de.maxhenkel.easyvillagers.net.MessageVillagerParticles;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.ItemStack;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.config.ModConfig;
-import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
-import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
-import net.neoforged.neoforge.network.registration.PayloadRegistrar;
+import me.fzzyhmstrs.fzzy_config.api.ConfigApiJava;
+import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.player.UseBlockCallback;
+import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.LinkedList;
-import java.util.List;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import de.maxhenkel.easyvillagers.net.MessagePickUpVillager;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.npc.villager.Villager;
 
-@Mod(EasyVillagersMod.MODID)
-@EventBusSubscriber(modid = EasyVillagersMod.MODID)
-public class EasyVillagersMod {
+public class EasyVillagersMod implements ModInitializer {
 
     public static final String MODID = "easy_villagers";
 
     public static final Logger LOGGER = LogManager.getLogger(MODID);
 
-    public static ServerConfig SERVER_CONFIG;
-    public static ClientConfig CLIENT_CONFIG;
+    public static ModConfig CONFIG;
 
-    public EasyVillagersMod(IEventBus eventBus) {
-        eventBus.addListener(ModTileEntities::onRegisterCapabilities);
+    @Override
+    public void onInitialize() {
+        CONFIG = ConfigApiJava.registerAndLoadConfig(ModConfig::new);
 
-        ModBlocks.init(eventBus);
-        ModItems.init(eventBus);
-        ModTileEntities.init(eventBus);
-        Containers.init(eventBus);
-        ModCreativeTabs.init(eventBus);
-        ModLootTables.init(eventBus);
+        ModBlocks.init();
+        ModItems.init();
+        ModTileEntities.init();
+        Containers.init();
+        ModCreativeTabs.init();
+        ModLootTables.init();
 
-        SERVER_CONFIG = CommonRegistry.registerConfig(MODID, ModConfig.Type.SERVER, ServerConfig.class, true);
-        CLIENT_CONFIG = CommonRegistry.registerConfig(MODID, ModConfig.Type.CLIENT, ClientConfig.class);
-    }
+        de.maxhenkel.easyvillagers.events.BlockEvents.init();
 
-    @SubscribeEvent
-    static void commonSetup(FMLCommonSetupEvent event) {
-        NeoForge.EVENT_BUS.register(new VillagerEvents());
-        NeoForge.EVENT_BUS.register(new BlockEvents());
-    }
+        net.fabricmc.fabric.api.transfer.v1.item.ItemStorage.SIDED.registerForBlockEntities((blockEntity, direction) -> {
+            if (blockEntity instanceof de.maxhenkel.easyvillagers.blocks.tileentity.AutoTraderTileentity trader) {
+                if (net.fabricmc.loader.api.FabricLoader.getInstance().isModLoaded("techreborn")) {
+                    Object config = ((de.maxhenkel.easyvillagers.integration.techreborn.ITRCompatible) trader).getSlotConfiguration();
+                    if (config instanceof de.maxhenkel.easyvillagers.integration.techreborn.TRSlotConfiguration trConfig) { if (!de.maxhenkel.easyvillagers.integration.techreborn.TRStorageWrapper.hasConfiguredSide(trConfig, trader.getInputInventory().getContainerSize() + trader.getOutputInventory().getContainerSize(), direction)) return null; return new de.maxhenkel.easyvillagers.integration.techreborn.TRStorageWrapper(trader.getInputInventory(), trader.getOutputInventory(), trConfig, direction); }
+                }
+                if (direction == net.minecraft.core.Direction.DOWN) {
+                    return new net.fabricmc.fabric.api.transfer.v1.storage.base.FilteringStorage<>(net.fabricmc.fabric.api.transfer.v1.item.ContainerStorage.of(trader.getOutputInventory(), direction)) { @Override protected boolean canInsert(net.fabricmc.fabric.api.transfer.v1.item.ItemVariant resource) { return false; } };
+                } else {
+                    return new net.fabricmc.fabric.api.transfer.v1.storage.base.FilteringStorage<>(net.fabricmc.fabric.api.transfer.v1.item.ContainerStorage.of(trader.getInputInventory(), direction)) { @Override protected boolean canExtract(net.fabricmc.fabric.api.transfer.v1.item.ItemVariant resource) { return false; } };
+                }
+            }
+            return null;
+        }, ModTileEntities.AUTO_TRADER);
 
+        net.fabricmc.fabric.api.transfer.v1.item.ItemStorage.SIDED.registerForBlockEntities((blockEntity, direction) -> {
+            if (blockEntity instanceof de.maxhenkel.easyvillagers.blocks.tileentity.BreederTileentity breeder) {
+                if (net.fabricmc.loader.api.FabricLoader.getInstance().isModLoaded("techreborn")) {
+                    Object config = ((de.maxhenkel.easyvillagers.integration.techreborn.ITRCompatible) breeder).getSlotConfiguration();
+                    if (config instanceof de.maxhenkel.easyvillagers.integration.techreborn.TRSlotConfiguration trConfig) { if (!de.maxhenkel.easyvillagers.integration.techreborn.TRStorageWrapper.hasConfiguredSide(trConfig, breeder.getFoodInventory().getContainerSize() + breeder.getOutputInventory().getContainerSize(), direction)) return null; return new de.maxhenkel.easyvillagers.integration.techreborn.TRStorageWrapper(breeder.getFoodInventory(), breeder.getOutputInventory(), trConfig, direction); }
+                }
+                if (direction == net.minecraft.core.Direction.DOWN) {
+                    return new net.fabricmc.fabric.api.transfer.v1.storage.base.FilteringStorage<>(net.fabricmc.fabric.api.transfer.v1.item.ContainerStorage.of(breeder.getOutputInventory(), direction)) { @Override protected boolean canInsert(net.fabricmc.fabric.api.transfer.v1.item.ItemVariant resource) { return false; } };
+                } else {
+                    return new net.fabricmc.fabric.api.transfer.v1.storage.base.FilteringStorage<>(net.fabricmc.fabric.api.transfer.v1.item.ContainerStorage.of(breeder.getFoodInventory(), direction)) { @Override protected boolean canExtract(net.fabricmc.fabric.api.transfer.v1.item.ItemVariant resource) { return false; } };
+                }
+            }
+            return null;
+        }, ModTileEntities.BREEDER);
 
-    @SubscribeEvent
-    static void onItemTooltip(ItemTooltipEvent event) {
-        ItemStack itemStack = event.getItemStack();
-        if (!(itemStack.getItem() instanceof BlockItem blockItem)) {
-            return;
-        }
-        if (!(blockItem.getBlock() instanceof VillagerBlockBase villagerBlock)) {
-            return;
-        }
-        List<Component> components = new LinkedList<>();
-        villagerBlock.onTooltip(event.getItemStack(), event.getContext(), components::add);
-        for (int i = components.size() - 1; i >= 0; i--) {
-            event.getToolTip().add(1, components.get(i));
-        }
-    }
+        net.fabricmc.fabric.api.transfer.v1.item.ItemStorage.SIDED.registerForBlockEntities((blockEntity, direction) -> {
+            if (blockEntity instanceof de.maxhenkel.easyvillagers.blocks.tileentity.ConverterTileentity converter) {
+                if (net.fabricmc.loader.api.FabricLoader.getInstance().isModLoaded("techreborn")) {
+                    Object config = ((de.maxhenkel.easyvillagers.integration.techreborn.ITRCompatible) converter).getSlotConfiguration();
+                    if (config instanceof de.maxhenkel.easyvillagers.integration.techreborn.TRSlotConfiguration trConfig) { if (!de.maxhenkel.easyvillagers.integration.techreborn.TRStorageWrapper.hasConfiguredSide(trConfig, converter.getInputInventory().getContainerSize() + converter.getOutputInventory().getContainerSize(), direction)) return null; return new de.maxhenkel.easyvillagers.integration.techreborn.TRStorageWrapper(converter.getInputInventory(), converter.getOutputInventory(), trConfig, direction); }
+                }
+                if (direction == net.minecraft.core.Direction.DOWN) {
+                    return new net.fabricmc.fabric.api.transfer.v1.storage.base.FilteringStorage<>(net.fabricmc.fabric.api.transfer.v1.item.ContainerStorage.of(converter.getOutputInventory(), direction)) { @Override protected boolean canInsert(net.fabricmc.fabric.api.transfer.v1.item.ItemVariant resource) { return false; } };
+                } else {
+                    return new net.fabricmc.fabric.api.transfer.v1.storage.base.FilteringStorage<>(net.fabricmc.fabric.api.transfer.v1.item.ContainerStorage.of(converter.getInputInventory(), direction)) { @Override protected boolean canExtract(net.fabricmc.fabric.api.transfer.v1.item.ItemVariant resource) { return false; } };
+                }
+            }
+            return null;
+        }, ModTileEntities.CONVERTER);
 
-    @SubscribeEvent
-    static void onRegisterPayloadHandler(RegisterPayloadHandlersEvent event) {
-        PayloadRegistrar registrar = event.registrar(MODID).versioned("0");
-        CommonRegistry.registerMessage(registrar, MessageVillagerParticles.class);
-        CommonRegistry.registerMessage(registrar, MessagePickUpVillager.class);
-        CommonRegistry.registerMessage(registrar, MessageSelectTrade.class);
-        CommonRegistry.registerMessage(registrar, MessageCycleTrades.class);
+        net.fabricmc.fabric.api.transfer.v1.item.ItemStorage.SIDED.registerForBlockEntities((blockEntity, direction) -> {
+            if (blockEntity instanceof de.maxhenkel.easyvillagers.blocks.tileentity.IncubatorTileentity incubator) {
+                if (net.fabricmc.loader.api.FabricLoader.getInstance().isModLoaded("techreborn")) {
+                    Object config = ((de.maxhenkel.easyvillagers.integration.techreborn.ITRCompatible) incubator).getSlotConfiguration();
+                    if (config instanceof de.maxhenkel.easyvillagers.integration.techreborn.TRSlotConfiguration trConfig) { if (!de.maxhenkel.easyvillagers.integration.techreborn.TRStorageWrapper.hasConfiguredSide(trConfig, incubator.getInputInventory().getContainerSize() + incubator.getOutputInventory().getContainerSize(), direction)) return null; return new de.maxhenkel.easyvillagers.integration.techreborn.TRStorageWrapper(incubator.getInputInventory(), incubator.getOutputInventory(), trConfig, direction); }
+                }
+                if (direction == net.minecraft.core.Direction.DOWN) {
+                    return new net.fabricmc.fabric.api.transfer.v1.storage.base.FilteringStorage<>(net.fabricmc.fabric.api.transfer.v1.item.ContainerStorage.of(incubator.getOutputInventory(), direction)) { @Override protected boolean canInsert(net.fabricmc.fabric.api.transfer.v1.item.ItemVariant resource) { return false; } };
+                } else {
+                    return new net.fabricmc.fabric.api.transfer.v1.storage.base.FilteringStorage<>(net.fabricmc.fabric.api.transfer.v1.item.ContainerStorage.of(incubator.getInputInventory(), direction)) { @Override protected boolean canExtract(net.fabricmc.fabric.api.transfer.v1.item.ItemVariant resource) { return false; } };
+                }
+            }
+            return null;
+        }, ModTileEntities.INCUBATOR);
+
+        net.fabricmc.fabric.api.transfer.v1.item.ItemStorage.SIDED.registerForBlockEntities((blockEntity, direction) -> {
+            if (blockEntity instanceof de.maxhenkel.easyvillagers.blocks.tileentity.FarmerTileentity farmer) {
+                if (net.fabricmc.loader.api.FabricLoader.getInstance().isModLoaded("techreborn")) {
+                    Object config = ((de.maxhenkel.easyvillagers.integration.techreborn.ITRCompatible) farmer).getSlotConfiguration();
+                    if (config instanceof de.maxhenkel.easyvillagers.integration.techreborn.TRSlotConfiguration trConfig) { if (!de.maxhenkel.easyvillagers.integration.techreborn.TRStorageWrapper.hasConfiguredSide(trConfig, farmer.getOutputInventory().getContainerSize(), direction)) return null; return new de.maxhenkel.easyvillagers.integration.techreborn.TRStorageWrapper(null, farmer.getOutputInventory(), trConfig, direction); }
+                }
+                if (direction == net.minecraft.core.Direction.DOWN) {
+                    return new net.fabricmc.fabric.api.transfer.v1.storage.base.FilteringStorage<>(net.fabricmc.fabric.api.transfer.v1.item.ContainerStorage.of(farmer.getOutputInventory(), direction)) { @Override protected boolean canInsert(net.fabricmc.fabric.api.transfer.v1.item.ItemVariant resource) { return false; } };
+                }
+                return null;
+            }
+            return null;
+        }, ModTileEntities.FARMER);
+
+        net.fabricmc.fabric.api.transfer.v1.item.ItemStorage.SIDED.registerForBlockEntities((blockEntity, direction) -> {
+            if (blockEntity instanceof de.maxhenkel.easyvillagers.blocks.tileentity.IronFarmTileentity ironFarm) {
+                if (net.fabricmc.loader.api.FabricLoader.getInstance().isModLoaded("techreborn")) {
+                    Object config = ((de.maxhenkel.easyvillagers.integration.techreborn.ITRCompatible) ironFarm).getSlotConfiguration();
+                    if (config instanceof de.maxhenkel.easyvillagers.integration.techreborn.TRSlotConfiguration trConfig) { if (!de.maxhenkel.easyvillagers.integration.techreborn.TRStorageWrapper.hasConfiguredSide(trConfig, ironFarm.getOutputInventory().getContainerSize(), direction)) return null; return new de.maxhenkel.easyvillagers.integration.techreborn.TRStorageWrapper(null, ironFarm.getOutputInventory(), trConfig, direction); }
+                }
+                if (direction == net.minecraft.core.Direction.DOWN) {
+                    return new net.fabricmc.fabric.api.transfer.v1.storage.base.FilteringStorage<>(net.fabricmc.fabric.api.transfer.v1.item.ContainerStorage.of(ironFarm.getOutputInventory(), direction)) { @Override protected boolean canInsert(net.fabricmc.fabric.api.transfer.v1.item.ItemVariant resource) { return false; } };
+                }
+                return null;
+            }
+            return null;
+        }, ModTileEntities.IRON_FARM);
+
+        de.maxhenkel.easyvillagers.net.Networking.init();
+
     }
 
 }

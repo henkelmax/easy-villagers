@@ -1,0 +1,16 @@
+{
+  "required": false,
+  "package": "de.maxhenkel.easyvillagers.mixin.techreborn",
+  "compatibilityLevel": "JAVA_21",
+  "plugin": "de.maxhenkel.easyvillagers.mixin.techreborn.TRMixinPlugin",
+  "mixins": [
+  ],
+  "client": [
+    "AbstractConfigPopupElementMixin",
+    "GuiBaseMixin",
+    "TRClientPayloadMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

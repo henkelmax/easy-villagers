@@ -1,38 +1,67 @@
 plugins {
-    id 'net.neoforged.moddev' version "${moddevgradle_version}"
-    id 'de.maxhenkel.cursegradle' version "${cursegradle_version}"
-    id 'com.modrinth.minotaur' version "${minotaur_version}"
-    id 'com.gradleup.shadow' version "${shadow_version}"
-    id 'mod-update' version "${mod_update_version}"
+    id 'net.fabricmc.fabric-loom' version "${loom_version}"
+    id 'maven-publish'
 }
 
-apply from: "https://raw.githubusercontent.com/henkelmax/mod-gradle-scripts/${mod_gradle_script_version}/mod.gradle"
+version = "${project.mod_version}+${project.minecraft_version}"
+group = project.maven_group
+
+base {
+    archivesName = project.archives_base_name
+}
 
 repositories {
+    maven { url = "https://maven.terraformersmc.com/releases/" }
+    maven { url = "https://maven.fzzyhmstrs.me/" }
+    maven { url = "https://maven.ladysnake.org/releases" }
+    maven {
+        url = "https://www.cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
     maven { url = "https://maven.blamejared.com/" }
 }
 
-dependencies {
-    shadow "de.maxhenkel.corelib:corelib:${corelib_version}+${minecraft_version}:api"
-    runtimeOnly "de.maxhenkel.corelib:corelib:${corelib_version}+${minecraft_version}"
-    compileOnly "de.maxhenkel.corelib:corelib:${corelib_version}+${minecraft_version}:javadoc"
+loom {
+    accessWidenerPath = file("src/main/resources/easy_villagers.accesswidener")
+}
 
-    //compileOnly("mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}")
-    //runtimeOnly("mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}")
-    compileOnly("mezz.jei:jei-26.1.2-neoforge-api:${jei_version}")
-    compileOnly "maven.modrinth:jei:${jei_version}"
-    compileOnly "maven.modrinth:jade:${jade_version}"
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+    implementation "com.terraformersmc:modmenu:18.0.0-alpha.8"
+    implementation "me.fzzyhmstrs:fzzy_config:${project.fzzy_config_version}"
+
+    compileOnly("curse.maven:jade-324717:${project.jade_version}")
+    runtimeOnly("curse.maven:jade-324717:${project.jade_version}")
 }
 
 processResources {
-    filesMatching('**/*.toml') {
-        expand 'mod_version': mod_version,
-                'neoforge_dependency': neoforge_dependency,
-                'minecraft_version': minecraft_version,
-                'minecraft_dependency': minecraft_dependency
+    inputs.property "version", project.version
+
+    filesMatching("fabric.mod.json") {
+        expand "version": inputs.properties.version
     }
 }
 
-shadowJar {
-    relocate 'de.maxhenkel.corelib', 'de.maxhenkel.easyvillagers.corelib'
+tasks.withType(JavaCompile).configureEach {
+    it.options.release = 25
+    options.compilerArgs += ["-Xlint:all"]
 }
+
+java {
+    withSourcesJar()
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
+}
+
+jar {
+    def archiveName = base.archivesName.get()
+    from("LICENSE") {
+        rename { "${it}_${archiveName}" }
+    }
+}
+dependencies { compileOnly files('C:/MCServer/MCMods/TechUpdate/TechReborn-26.1/RebornCore/build/libs/RebornCore-6.0.5+local.jar') }

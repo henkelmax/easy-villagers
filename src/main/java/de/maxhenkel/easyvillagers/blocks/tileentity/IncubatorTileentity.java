@@ -1,57 +1,58 @@
 package de.maxhenkel.easyvillagers.blocks.tileentity;
 
-import de.maxhenkel.corelib.blockentity.IServerTickableBlockEntity;
-import de.maxhenkel.corelib.inventory.ItemListInventory;
-import de.maxhenkel.corelib.item.ItemUtils;
+import de.maxhenkel.easyvillagers.blocks.tileentity.IServerTickableBlockEntity;
+import de.maxhenkel.easyvillagers.inventory.SimpleInventory;
 import de.maxhenkel.easyvillagers.EasyVillagersMod;
 import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.blocks.VillagerBlockBase;
 import de.maxhenkel.easyvillagers.gui.VillagerIncubateSlot;
-import de.maxhenkel.easyvillagers.inventory.InputOnlyResourceHandler;
-import de.maxhenkel.easyvillagers.inventory.ListAccessItemStacksResourceHandler;
-import de.maxhenkel.easyvillagers.inventory.OutputOnlyResourceHandler;
-import de.maxhenkel.easyvillagers.inventory.ValidateResourceHandler;
 import de.maxhenkel.easyvillagers.items.VillagerItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.Container;
+import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+import de.maxhenkel.easyvillagers.integration.techreborn.ITRCompatible;
+import de.maxhenkel.easyvillagers.integration.techreborn.TRSlotConfiguration;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import net.neoforged.neoforge.transfer.CombinedResourceHandler;
-import net.neoforged.neoforge.transfer.ResourceHandler;
-import net.neoforged.neoforge.transfer.item.ItemResource;
-import net.neoforged.neoforge.transfer.transaction.Transaction;
 
-public class IncubatorTileentity extends VillagerTileentity implements IServerTickableBlockEntity {
 
-    protected ValidateResourceHandler inputInventory;
-    protected ListAccessItemStacksResourceHandler outputInventory;
+public class IncubatorTileentity extends VillagerTileentity implements IServerTickableBlockEntity, ITRCompatible {
 
-    protected CombinedResourceHandler<ItemResource> itemHandler;
+    protected TRSlotConfiguration trSlotConfig;
 
+    @Override
+    public Object getSlotConfiguration() {
+        return trSlotConfig;
+    }
+
+
+    protected SimpleInventory inputInventory;
+    protected SimpleInventory outputInventory;
+
+    @SuppressWarnings("this-escape")
     public IncubatorTileentity(BlockPos pos, BlockState state) {
-        super(ModTileEntities.INCUBATOR.get(), ModBlocks.INCUBATOR.get().defaultBlockState(), pos, state);
-        inputInventory = new ValidateResourceHandler(4, VillagerIncubateSlot::isValid);
-        outputInventory = new ListAccessItemStacksResourceHandler(4);
-        itemHandler = new CombinedResourceHandler<>(new InputOnlyResourceHandler(inputInventory), new OutputOnlyResourceHandler(outputInventory));
+        super(ModTileEntities.INCUBATOR, ModBlocks.INCUBATOR.defaultBlockState(), pos, state);
+        inputInventory = new SimpleInventory(4, this::setChanged);
+        outputInventory = new SimpleInventory(4, this::setChanged);
+        if (net.fabricmc.loader.api.FabricLoader.getInstance().isModLoaded("techreborn")) {
+            trSlotConfig = new TRSlotConfiguration();
+        }
     }
 
     @Override
     public void tickServer() {
         if (!hasVillager()) {
-            try (Transaction transaction = Transaction.open(null)) {
-                for (int i = 0; i < inputInventory.size(); i++) {
-                    ItemResource resource = inputInventory.getResource(i);
-                    if (resource.getItem() instanceof VillagerItem) {
-                        inputInventory.extract(resource, 1, transaction);
-                        setVillager(resource.toStack());
-                        transaction.commit();
-                        sync();
-                        break;
-                    }
+            for (int i = 0; i < inputInventory.getContainerSize(); i++) {
+                ItemStack stack = inputInventory.getItem(i);
+                if (stack.getItem() instanceof VillagerItem) {
+                    ItemStack extracted = inputInventory.removeItem(i, 1);
+                    setVillager(extracted);
+                    sync();
+                    break;
                 }
             }
         }
@@ -61,7 +62,7 @@ public class IncubatorTileentity extends VillagerTileentity implements IServerTi
             Villager villagerEntity = getVillagerEntity();
 
             if (villagerEntity.isBaby()) {
-                if (advanceAge(Math.min(EasyVillagersMod.SERVER_CONFIG.incubatorSpeed.get(), Math.abs(villagerEntity.getAge())))) {
+                if (advanceAge(Math.min(EasyVillagersMod.CONFIG.server.incubatorSpeed.get(), Math.abs(villagerEntity.getAge())))) {
                     sync();
                 }
             } else {
@@ -70,11 +71,12 @@ public class IncubatorTileentity extends VillagerTileentity implements IServerTi
 
             if (villagerEntity.getAge() > 20) {
                 ItemStack villagerItem = getVillager();
-                try (Transaction transaction = Transaction.open(null)) {
-                    if (outputInventory.insert(ItemResource.of(villagerItem), 1, transaction) > 0) {
+                for (int i = 0; i < outputInventory.getContainerSize(); i++) {
+                    if (outputInventory.getItem(i).isEmpty()) {
+                        outputInventory.setItem(i, villagerItem.copy());
                         removeVillager();
-                        transaction.commit();
                         sync();
+                        break;
                     }
                 }
             }
@@ -85,28 +87,35 @@ public class IncubatorTileentity extends VillagerTileentity implements IServerTi
     protected void saveAdditional(ValueOutput valueOutput) {
         super.saveAdditional(valueOutput);
 
-        ItemUtils.saveInventory(valueOutput.child("InputInventory"), "Items", inputInventory.getRaw());
-        ItemUtils.saveInventory(valueOutput.child("OutputInventory"), "Items", outputInventory.getRaw());
+        ContainerHelper.saveAllItems(valueOutput.child("InputInventory"), inputInventory.getItems());
+        
+        ContainerHelper.saveAllItems(valueOutput.child("OutputInventory"), outputInventory.getItems());
+
+        if (trSlotConfig != null) {
+            valueOutput.store("TRSlotConfig", net.minecraft.nbt.CompoundTag.CODEC, trSlotConfig.serialize());
+        }
     }
 
     @Override
     protected void loadAdditional(ValueInput valueInput) {
-        ItemUtils.readInventory(valueInput.childOrEmpty("InputInventory"), "Items", inputInventory.getRaw());
-        ItemUtils.readInventory(valueInput.childOrEmpty("OutputInventory"), "Items", outputInventory.getRaw());
+        valueInput.child("InputInventory").ifPresent(input -> ContainerHelper.loadAllItems(input, inputInventory.getItems()));
+        valueInput.child("OutputInventory").ifPresent(input -> ContainerHelper.loadAllItems(input, outputInventory.getItems()));
+
+
+        if (trSlotConfig != null && valueInput.contains("TRSlotConfig")) {
+            valueInput.read("TRSlotConfig", net.minecraft.nbt.CompoundTag.CODEC).ifPresent(tag -> trSlotConfig.deserialize(tag));
+        }
 
         super.loadAdditional(valueInput);
     }
 
     public Container getInputInventory() {
-        return new ItemListInventory(inputInventory.getRaw(), this::setChanged);
+        return inputInventory;
     }
 
     public Container getOutputInventory() {
-        return new ItemListInventory(outputInventory.getRaw(), this::setChanged);
-    }
-
-    public ResourceHandler<ItemResource> getItemHandler() {
-        return itemHandler;
+        return outputInventory;
     }
 
 }
+

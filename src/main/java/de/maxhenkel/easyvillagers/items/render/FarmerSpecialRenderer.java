@@ -32,7 +32,7 @@ public class FarmerSpecialRenderer extends ItemSpecialRendererBase<FarmerTileent
         @Override
         @Nullable
         public SpecialModelRenderer<FarmerTileentity> bake(BakingContext context) {
-            return new FarmerSpecialRenderer(context.entityModelSet(), Minecraft.getInstance().getBlockModelResolver(), () -> ModBlocks.FARMER.get().defaultBlockState());
+            return new FarmerSpecialRenderer(context.entityModelSet(), new net.minecraft.client.renderer.block.BlockModelResolver(net.minecraft.client.Minecraft.getInstance().getModelManager()), () -> ModBlocks.FARMER.defaultBlockState());
         }
 
         @Override

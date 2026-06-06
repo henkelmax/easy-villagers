@@ -1,16 +1,13 @@
 package de.maxhenkel.easyvillagers.blocks.tileentity;
 
-import de.maxhenkel.corelib.blockentity.ITickableBlockEntity;
-import de.maxhenkel.corelib.inventory.ItemListInventory;
-import de.maxhenkel.corelib.item.ItemUtils;
+import de.maxhenkel.easyvillagers.blocks.tileentity.IServerTickableBlockEntity;
+import de.maxhenkel.easyvillagers.inventory.SimpleInventory;
 import de.maxhenkel.easyvillagers.EasyVillagersMod;
 import de.maxhenkel.easyvillagers.blocks.ModBlocks;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
-import de.maxhenkel.easyvillagers.inventory.InputOnlyResourceHandler;
-import de.maxhenkel.easyvillagers.inventory.ListAccessItemStacksResourceHandler;
-import de.maxhenkel.easyvillagers.inventory.OutputOnlyResourceHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.Container;
+import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.item.ItemStack;
@@ -20,62 +17,52 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import net.neoforged.neoforge.transfer.CombinedResourceHandler;
-import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
-import net.neoforged.neoforge.transfer.item.ItemResource;
-import net.neoforged.neoforge.transfer.transaction.Transaction;
-import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
-import javax.annotation.Nullable;
 
-public class AutoTraderTileentity extends TraderTileentityBase implements ITickableBlockEntity {
+import org.jetbrains.annotations.Nullable;
+
+public class AutoTraderTileentity extends TraderTileentityBase implements IServerTickableBlockEntity {
 
     protected Container tradeGuiInv;
 
-    protected final ListAccessItemStacksResourceHandler inputInventory;
-    protected final ListAccessItemStacksResourceHandler outputInventory;
+    protected final SimpleInventory inputInventory;
+    protected final SimpleInventory outputInventory;
 
     protected int tradeIndex;
-    protected CombinedResourceHandler<ItemResource> itemHandler;
 
+    @SuppressWarnings("this-escape")
     public AutoTraderTileentity(BlockPos pos, BlockState state) {
-        super(ModTileEntities.AUTO_TRADER.get(), ModBlocks.AUTO_TRADER.get().defaultBlockState(), pos, state);
+        super(ModTileEntities.AUTO_TRADER, ModBlocks.AUTO_TRADER.defaultBlockState(), pos, state);
         tradeGuiInv = new SimpleContainer(3);
 
-        inputInventory = new ListAccessItemStacksResourceHandler(4);
-        outputInventory = new ListAccessItemStacksResourceHandler(4);
-
-        itemHandler = new CombinedResourceHandler<>(new InputOnlyResourceHandler(inputInventory), new OutputOnlyResourceHandler(outputInventory));
+        inputInventory = new SimpleInventory(4, this::setChanged);
+        outputInventory = new SimpleInventory(4, this::setChanged);
     }
 
     @Override
-    public void tick() {
+    public void tickServer() {
+        super.tickServer();
         if (!hasVillager()) {
             return;
         }
 
-        if (level.getGameTime() % EasyVillagersMod.SERVER_CONFIG.autoTraderCooldown.get() != 0) {
+        if (level.getGameTime() % EasyVillagersMod.CONFIG.server.autoTraderCooldown.get() != 0) {
             return;
         }
 
         MerchantOffer offer = getOffer();
-        if (offer == null || offer.isOutOfStock() || ResourceHandlerUtil.isEmpty(inputInventory)) {
+        if (offer == null || offer.isOutOfStock() || inputInventory.isEmpty()) {
             return;
         }
 
 
-        try (Transaction transaction = Transaction.open(null)) {
-            if (!removeNeededItems(getAutoTradeInputA(), transaction)) {
-                return;
-            }
-            if (!removeNeededItems(offer.getCostB(), transaction)) {
-                return;
-            }
-            if (!insertItems(offer.getResult(), transaction)) {
-                return;
-            }
-            transaction.commit();
+        if (!hasNeededItems(getAutoTradeInputA()) || !hasNeededItems(offer.getCostB()) || !canInsertItems(offer.getResult())) {
+            return;
         }
+
+        removeNeededItems(getAutoTradeInputA());
+        removeNeededItems(offer.getCostB());
+        insertItems(offer.getResult());
 
         Villager villager = getVillagerEntity();
         offer.increaseUses();
@@ -87,19 +74,81 @@ public class AutoTraderTileentity extends TraderTileentityBase implements ITicka
         setChanged();
     }
 
-    protected boolean removeNeededItems(ItemStack buying, TransactionContext transaction) {
+    protected boolean hasNeededItems(ItemStack buying) {
         if (buying.isEmpty()) {
             return true;
         }
-        int extract = inputInventory.extract(ItemResource.of(buying), buying.getCount(), transaction);
-        return extract >= buying.getCount();
+        int remaining = buying.getCount();
+        for (int i = 0; i < inputInventory.getContainerSize(); i++) {
+            ItemStack stack = inputInventory.getItem(i);
+            if (ItemStack.isSameItemSameComponents(stack, buying)) {
+                remaining -= stack.getCount();
+                if (remaining <= 0) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
-    protected boolean insertItems(ItemStack insert, TransactionContext transaction) {
+    protected void removeNeededItems(ItemStack buying) {
+        if (buying.isEmpty()) {
+            return;
+        }
+        int remaining = buying.getCount();
+        for (int i = 0; i < inputInventory.getContainerSize(); i++) {
+            ItemStack stack = inputInventory.getItem(i);
+            if (ItemStack.isSameItemSameComponents(stack, buying)) {
+                int toRemove = Math.min(remaining, stack.getCount());
+                inputInventory.removeItem(i, toRemove);
+                remaining -= toRemove;
+                if (remaining <= 0) {
+                    return;
+                }
+            }
+        }
+    }
+
+    protected boolean canInsertItems(ItemStack insert) {
         if (insert.isEmpty()) {
             return true;
         }
-        return outputInventory.insert(ItemResource.of(insert), insert.getCount(), transaction) >= insert.getCount();
+        int remaining = insert.getCount();
+        for (int i = 0; i < outputInventory.getContainerSize(); i++) {
+            ItemStack stack = outputInventory.getItem(i);
+            if (stack.isEmpty()) {
+                return true;
+            } else if (ItemStack.isSameItemSameComponents(stack, insert)) {
+                remaining -= stack.getMaxStackSize() - stack.getCount();
+                if (remaining <= 0) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    protected void insertItems(ItemStack insert) {
+        if (insert.isEmpty()) {
+            return;
+        }
+        int remaining = insert.getCount();
+        for (int i = 0; i < outputInventory.getContainerSize(); i++) {
+            ItemStack stack = outputInventory.getItem(i);
+            if (stack.isEmpty()) {
+                ItemStack copy = insert.copy();
+                copy.setCount(remaining);
+                outputInventory.setItem(i, copy);
+                return;
+            } else if (ItemStack.isSameItemSameComponents(stack, insert)) {
+                int toAdd = Math.min(remaining, stack.getMaxStackSize() - stack.getCount());
+                stack.grow(toAdd);
+                remaining -= toAdd;
+                if (remaining <= 0) {
+                    return;
+                }
+            }
+        }
     }
 
     public Container getTradeGuiInv() {
@@ -200,7 +249,7 @@ public class AutoTraderTileentity extends TraderTileentityBase implements ITicka
 
     @Override
     protected long calculateNextRestock() {
-        return EasyVillagersMod.SERVER_CONFIG.autoTraderMinRestockTime.get() + level.getRandom().nextInt(Math.max(EasyVillagersMod.SERVER_CONFIG.autoTraderMaxRestockTime.get() - EasyVillagersMod.SERVER_CONFIG.autoTraderMinRestockTime.get(), 1));
+        return EasyVillagersMod.CONFIG.server.autoTraderMinRestockTime.get() + level.getRandom().nextInt(Math.max(EasyVillagersMod.CONFIG.server.autoTraderMaxRestockTime.get() - EasyVillagersMod.CONFIG.server.autoTraderMinRestockTime.get(), 1));
     }
 
     @Override
@@ -208,8 +257,8 @@ public class AutoTraderTileentity extends TraderTileentityBase implements ITicka
         super.saveAdditional(valueOutput);
 
         valueOutput.putInt("Trade", tradeIndex);
-        ItemUtils.saveInventory(valueOutput.child("InputInventory"), "Items", inputInventory.getRaw());
-        ItemUtils.saveInventory(valueOutput.child("OutputInventory"), "Items", outputInventory.getRaw());
+        ContainerHelper.saveAllItems(valueOutput.child("InputInventory"), inputInventory.getItems());
+        ContainerHelper.saveAllItems(valueOutput.child("OutputInventory"), outputInventory.getItems());
     }
 
     @Override
@@ -217,20 +266,16 @@ public class AutoTraderTileentity extends TraderTileentityBase implements ITicka
         super.loadAdditional(valueInput);
         tradeIndex = valueInput.getIntOr("Trade", 0);
 
-        ItemUtils.readInventory(valueInput.childOrEmpty("InputInventory"), "Items", inputInventory.getRaw());
-        ItemUtils.readInventory(valueInput.childOrEmpty("OutputInventory"), "Items", outputInventory.getRaw());
+        valueInput.child("InputInventory").ifPresent(input -> ContainerHelper.loadAllItems(input, inputInventory.getItems()));
+        valueInput.child("OutputInventory").ifPresent(input -> ContainerHelper.loadAllItems(input, outputInventory.getItems()));
     }
 
     public Container getInputInventory() {
-        return new ItemListInventory(inputInventory.getRaw(), this::setChanged);
+        return inputInventory;
     }
 
     public Container getOutputInventory() {
-        return new ItemListInventory(outputInventory.getRaw(), this::setChanged);
-    }
-
-    public CombinedResourceHandler<ItemResource> getItemHandler() {
-        return itemHandler;
+        return outputInventory;
     }
 
 }

@@ -9,7 +9,7 @@ import net.minecraft.world.inventory.MerchantMenu;
 public class TradeCycleEvents {
 
     public static void onCycleTrades(ServerPlayer player) {
-        if (!EasyVillagersMod.SERVER_CONFIG.tradeCycling.get()) {
+        if (!EasyVillagersMod.CONFIG.server.tradeCycling.get()) {
             return;
         }
 

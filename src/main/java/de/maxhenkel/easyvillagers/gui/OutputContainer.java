@@ -1,6 +1,6 @@
 package de.maxhenkel.easyvillagers.gui;
 
-import de.maxhenkel.corelib.inventory.LockedSlot;
+import de.maxhenkel.easyvillagers.gui.LockedSlot;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -8,7 +8,7 @@ import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.function.Supplier;
 
 public class OutputContainer extends VillagerContainerBase {
@@ -16,8 +16,9 @@ public class OutputContainer extends VillagerContainerBase {
     @Nullable
     protected Supplier<Block> blockSupplier;
 
+    @SuppressWarnings("this-escape")
     public OutputContainer(int id, Inventory playerInventory, Container outputInventory, ContainerLevelAccess access, Supplier<Block> blockSupplier) {
-        super(Containers.OUTPUT_CONTAINER.get(), id, playerInventory, outputInventory, access);
+        super(Containers.OUTPUT_CONTAINER, id, playerInventory, outputInventory, access);
         this.blockSupplier = blockSupplier;
 
         for (int i = 0; i < 4; i++) {
@@ -27,25 +28,27 @@ public class OutputContainer extends VillagerContainerBase {
         addPlayerInventorySlots();
     }
 
-    public OutputContainer(int id, Inventory playerInventory) {
+        public OutputContainer(int id, Inventory playerInventory) {
         this(id, playerInventory, new SimpleContainer(4), ContainerLevelAccess.NULL, null);
     }
 
-    @Override
+    public OutputContainer(int id, Inventory playerInventory, net.minecraft.core.BlockPos pos) {
+        this(id, playerInventory, new SimpleContainer(4), ContainerLevelAccess.create(net.minecraft.client.Minecraft.getInstance().level, pos), null);
+    }
+
     public int getInvOffset() {
         return -33;
     }
 
-    @Override
     public int getInventorySize() {
         return 4;
     }
 
-    @Override
+        @Override
     public Block getBlock() {
-        if (blockSupplier == null) {
-            return Blocks.AIR;
+        if (blockSupplier != null) {
+            return blockSupplier.get();
         }
-        return blockSupplier.get();
+        return access.evaluate((level, pos) -> level.getBlockState(pos).getBlock()).orElse(net.minecraft.world.level.block.Blocks.AIR);
     }
 }

@@ -1,52 +1,27 @@
 package de.maxhenkel.easyvillagers.gui;
 
 import de.maxhenkel.easyvillagers.EasyVillagersMod;
+import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.MenuType;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
-import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
-import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class Containers {
 
-    private static final DeferredRegister<MenuType<?>> MENU_TYPE_REGISTER = DeferredRegister.create(BuiltInRegistries.MENU, EasyVillagersMod.MODID);
+    public static final MenuType<AutoTraderContainer> AUTO_TRADER_CONTAINER = registerMenu("auto_trader", new net.fabricmc.fabric.api.menu.v1.ExtendedMenuType<>((id, inv, data) -> new AutoTraderContainer(id, inv, data), net.minecraft.core.BlockPos.STREAM_CODEC));
+    public static final MenuType<BreederContainer> BREEDER_CONTAINER = registerMenu("breeder", new net.fabricmc.fabric.api.menu.v1.ExtendedMenuType<>((id, inv, data) -> new BreederContainer(id, inv, data), net.minecraft.core.BlockPos.STREAM_CODEC));
+    public static final MenuType<ConverterContainer> CONVERTER_CONTAINER = registerMenu("converter", new net.fabricmc.fabric.api.menu.v1.ExtendedMenuType<>((id, inv, data) -> new ConverterContainer(id, inv, data), net.minecraft.core.BlockPos.STREAM_CODEC));
+    public static final MenuType<IncubatorContainer> INCUBATOR_CONTAINER = registerMenu("incubator", new net.fabricmc.fabric.api.menu.v1.ExtendedMenuType<>((id, inv, data) -> new IncubatorContainer(id, inv, data), net.minecraft.core.BlockPos.STREAM_CODEC));
+    public static final MenuType<OutputContainer> OUTPUT_CONTAINER = registerMenu("output", new net.fabricmc.fabric.api.menu.v1.ExtendedMenuType<>((id, inv, data) -> new OutputContainer(id, inv, data), net.minecraft.core.BlockPos.STREAM_CODEC));
+    // Notice: InventoryViewerContainer has blockPos in the original NeoForge mod. We may need to use Fabric Extended Screen Handler here later, but for now we register a generic MenuType.
+    public static final MenuType<InventoryViewerContainer> INVENTORY_VIEWER_CONTAINER = registerMenu("inventory_viewer", new net.fabricmc.fabric.api.menu.v1.ExtendedMenuType<>((id, inv, data) -> new InventoryViewerContainer(id, inv, data), net.minecraft.core.BlockPos.STREAM_CODEC));
 
-    public static final DeferredHolder<MenuType<?>, MenuType<AutoTraderContainer>> AUTO_TRADER_CONTAINER = MENU_TYPE_REGISTER.register("auto_trader", () ->
-            IMenuTypeExtension.create((windowId, inv, data) -> new AutoTraderContainer(windowId, inv))
-    );
-    public static final DeferredHolder<MenuType<?>, MenuType<BreederContainer>> BREEDER_CONTAINER = MENU_TYPE_REGISTER.register("breeder", () ->
-            IMenuTypeExtension.create((windowId, inv, data) -> new BreederContainer(windowId, inv))
-    );
-    public static final DeferredHolder<MenuType<?>, MenuType<ConverterContainer>> CONVERTER_CONTAINER = MENU_TYPE_REGISTER.register("converter", () ->
-            IMenuTypeExtension.create((windowId, inv, data) -> new ConverterContainer(windowId, inv))
-    );
-    public static final DeferredHolder<MenuType<?>, MenuType<IncubatorContainer>> INCUBATOR_CONTAINER = MENU_TYPE_REGISTER.register("incubator", () ->
-            IMenuTypeExtension.create((windowId, inv, data) -> new IncubatorContainer(windowId, inv))
-    );
-    public static final DeferredHolder<MenuType<?>, MenuType<OutputContainer>> OUTPUT_CONTAINER = MENU_TYPE_REGISTER.register("output", () ->
-            IMenuTypeExtension.create((windowId, inv, data) -> new OutputContainer(windowId, inv))
-    );
-    public static final DeferredHolder<MenuType<?>, MenuType<InventoryViewerContainer>> INVENTORY_VIEWER_CONTAINER = MENU_TYPE_REGISTER.register("inventory_viewer", () ->
-            IMenuTypeExtension.create((windowId, inv, data) -> new InventoryViewerContainer(windowId, inv, data.readBlockPos()))
-    );
-
-    public static void init(IEventBus eventBus) {
-        MENU_TYPE_REGISTER.register(eventBus);
+    private static <T extends MenuType<?>> T registerMenu(String name, T menuType) {
+        return Registry.register(BuiltInRegistries.MENU, Identifier.fromNamespaceAndPath(EasyVillagersMod.MODID, name), menuType);
     }
 
-    public static void initClient(IEventBus eventBus) {
-        eventBus.addListener(Containers::onRegisterScreens);
-    }
-
-    public static void onRegisterScreens(RegisterMenuScreensEvent containers) {
-        containers.<AutoTraderContainer, AutoTraderScreen>register(AUTO_TRADER_CONTAINER.get(), AutoTraderScreen::new);
-        containers.<BreederContainer, BreederScreen>register(BREEDER_CONTAINER.get(), BreederScreen::new);
-        containers.<ConverterContainer, ConverterScreen>register(CONVERTER_CONTAINER.get(), ConverterScreen::new);
-        containers.<IncubatorContainer, IncubatorScreen>register(INCUBATOR_CONTAINER.get(), IncubatorScreen::new);
-        containers.<OutputContainer, OutputScreen>register(OUTPUT_CONTAINER.get(), OutputScreen::new);
-        containers.<InventoryViewerContainer, InventoryViewerScreen>register(INVENTORY_VIEWER_CONTAINER.get(), InventoryViewerScreen::new);
+    public static void init() {
     }
 
 }

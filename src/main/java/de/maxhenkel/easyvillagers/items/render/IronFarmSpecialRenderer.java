@@ -9,7 +9,7 @@ import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
 import net.minecraft.world.level.block.state.BlockState;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.function.Supplier;
 
 public class IronFarmSpecialRenderer extends ItemSpecialRendererBase<IronFarmTileentity, IronFarmRenderState> {
@@ -30,7 +30,7 @@ public class IronFarmSpecialRenderer extends ItemSpecialRendererBase<IronFarmTil
         @Override
         @Nullable
         public SpecialModelRenderer<IronFarmTileentity> bake(BakingContext context) {
-            return new IronFarmSpecialRenderer(context.entityModelSet(), () -> ModBlocks.IRON_FARM.get().defaultBlockState());
+            return new IronFarmSpecialRenderer(context.entityModelSet(), () -> ModBlocks.IRON_FARM.defaultBlockState());
         }
 
         @Override

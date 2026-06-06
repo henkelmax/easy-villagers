@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.entity.VillagerRenderer;
 import net.minecraft.client.renderer.entity.ZombieRenderer;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
-import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.golem.IronGolem;
 import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.phys.Vec3;
@@ -76,7 +76,7 @@ public class IronFarmRenderer extends VillagerRendererBase<IronFarmTileentity, I
 
         IronGolem ironGolem = ironGolemCache.get();
         if (ironGolem == null) {
-            ironGolem = new IronGolem(EntityTypes.IRON_GOLEM, minecraft.level);
+            ironGolem = new IronGolem(EntityType.IRON_GOLEM, minecraft.level);
             ironGolemCache = new WeakReference<>(ironGolem);
         }
 

@@ -1,6 +1,6 @@
 package de.maxhenkel.easyvillagers.blocks;
 
-import de.maxhenkel.corelib.block.VoxelUtils;
+import net.minecraft.world.phys.shapes.Shapes;
 import de.maxhenkel.easyvillagers.EasyVillagersMod;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -21,11 +21,13 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
+import de.maxhenkel.easyvillagers.blocks.tileentity.IServerTickableBlockEntity;
+
 import java.util.function.Consumer;
 
 public abstract class VillagerBlockBase extends HorizontalRotatableBlock implements EntityBlock {
 
-    private static final VoxelShape SHAPE = VoxelUtils.combine(
+    private static final VoxelShape SHAPE = Shapes.or(
             Block.box(0D, 0D, 0D, 16D, 1D, 16D),
             Block.box(0D, 15D, 0D, 16D, 16D, 16D),
             Block.box(0D, 0D, 0D, 1D, 16D, 16D),
@@ -43,13 +45,13 @@ public abstract class VillagerBlockBase extends HorizontalRotatableBlock impleme
     }
 
     public static void playRandomVillagerSound(Level world, BlockPos pos, SoundEvent soundEvent) {
-        if (world.getGameTime() % EasyVillagersMod.SERVER_CONFIG.villagerSoundAmount.get() == 0 && world.getRandom().nextInt(40) == 0) {
+        if (world.getGameTime() % EasyVillagersMod.CONFIG.server.villagerSoundAmount.get() == 0 && world.getRandom().nextInt(40) == 0) {
             playVillagerSound(world, pos, soundEvent);
         }
     }
 
     public static void playRandomVillagerSound(ServerPlayer player, SoundEvent soundEvent) {
-        if (player.level().getGameTime() % EasyVillagersMod.SERVER_CONFIG.villagerSoundAmount.get() == 0 && player.level().getRandom().nextInt(40) == 0) {
+        if (player.level().getGameTime() % EasyVillagersMod.CONFIG.server.villagerSoundAmount.get() == 0 && player.level().getRandom().nextInt(40) == 0) {
             player.connection.send(
                     new ClientboundSoundPacket(
                             BuiltInRegistries.SOUND_EVENT.wrapAsHolder(soundEvent),
@@ -72,6 +74,19 @@ public abstract class VillagerBlockBase extends HorizontalRotatableBlock impleme
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter reader, BlockPos pos, CollisionContext context) {
         return SHAPE;
+    }
+
+    @org.jetbrains.annotations.Nullable
+    @Override
+    public <T extends net.minecraft.world.level.block.entity.BlockEntity> net.minecraft.world.level.block.entity.BlockEntityTicker<T> getTicker(Level level, BlockState state, net.minecraft.world.level.block.entity.BlockEntityType<T> type) {
+        if (level.isClientSide()) {
+            return null;
+        }
+        return (lvl, pos, st, blockEntity) -> {
+            if (blockEntity instanceof IServerTickableBlockEntity tickable) {
+                tickable.tickServer();
+            }
+        };
     }
 
     public void onTooltip(ItemStack stack, Item.TooltipContext context, Consumer<Component> component) {

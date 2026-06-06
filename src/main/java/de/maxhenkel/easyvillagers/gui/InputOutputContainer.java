@@ -1,6 +1,6 @@
 package de.maxhenkel.easyvillagers.gui;
 
-import de.maxhenkel.corelib.inventory.LockedSlot;
+import de.maxhenkel.easyvillagers.gui.LockedSlot;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -10,7 +10,8 @@ import net.minecraft.world.inventory.Slot;
 
 public abstract class InputOutputContainer extends VillagerContainerBase {
 
-    public InputOutputContainer(MenuType type, int id, Inventory playerInventory, Container inputInventory, Container outputInventory, ContainerLevelAccess access) {
+            @SuppressWarnings("this-escape")
+    public InputOutputContainer(MenuType<?> type, int id, Inventory playerInventory, Container inputInventory, Container outputInventory, ContainerLevelAccess access) {
         super(type, id, playerInventory, null, access);
 
         for (int i = 0; i < 4; i++) {
@@ -18,22 +19,26 @@ public abstract class InputOutputContainer extends VillagerContainerBase {
         }
 
         for (int i = 0; i < 4; i++) {
-            addSlot(new LockedSlot(outputInventory, i, 52 + i * 18, 51, true, false));
+            addSlot(new de.maxhenkel.easyvillagers.gui.LockedSlot(outputInventory, i, 52 + i * 18, 51, true, false));
         }
 
         addPlayerInventorySlots();
     }
 
-    public InputOutputContainer(MenuType type, int id, Inventory playerInventory) {
+    @SuppressWarnings("this-escape")
+    public InputOutputContainer(MenuType<?> type, int id, Inventory playerInventory) {
         this(type, id, playerInventory, new SimpleContainer(4), new SimpleContainer(4), ContainerLevelAccess.NULL);
     }
 
-    @Override
+    @SuppressWarnings("this-escape")
+    public InputOutputContainer(MenuType<?> type, int id, Inventory playerInventory, net.minecraft.core.BlockPos pos) {
+        this(type, id, playerInventory, new SimpleContainer(4), new SimpleContainer(4), ContainerLevelAccess.create(net.minecraft.client.Minecraft.getInstance().level, pos));
+    }
+
     public int getInvOffset() {
         return -2;
     }
 
-    @Override
     public int getInventorySize() {
         return 8;
     }

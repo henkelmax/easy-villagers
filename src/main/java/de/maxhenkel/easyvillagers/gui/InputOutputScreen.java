@@ -1,6 +1,6 @@
 package de.maxhenkel.easyvillagers.gui;
 
-import de.maxhenkel.corelib.inventory.ScreenBase;
+import de.maxhenkel.easyvillagers.gui.ScreenBase;
 import de.maxhenkel.easyvillagers.EasyVillagersMod;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
@@ -22,9 +22,9 @@ public abstract class InputOutputScreen<T extends AbstractContainerMenu> extends
 
     @Override
     protected void extractLabels(GuiGraphicsExtractor guiGraphics, int x, int y) {
-        drawCentered(guiGraphics, getTopText(), 9, FONT_COLOR);
-        drawCentered(guiGraphics, getBottomText(), 40, FONT_COLOR);
-        guiGraphics.text(font, playerInventory.getDisplayName().getVisualOrderText(), 8, imageHeight - 96 + 3, FONT_COLOR, false);
+        drawCenteredText(guiGraphics, getTopText(), 9, fontColor);
+        drawCenteredText(guiGraphics, getBottomText(), 40, fontColor);
+        guiGraphics.text(font, playerInventory.getDisplayName().getVisualOrderText(), 8, imageHeight - 96 + 3, fontColor, false);
     }
 
     protected abstract MutableComponent getTopText();

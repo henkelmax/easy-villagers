@@ -18,7 +18,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.function.Consumer;
 
 public class AutoTraderBlock extends TraderBlockBase {
@@ -29,11 +29,9 @@ public class AutoTraderBlock extends TraderBlockBase {
 
     @Override
     public void onTooltip(ItemStack stack, Item.TooltipContext context, Consumer<Component> component) {
-        Level level = context.level();
-        if (level == null) {
-            return;
-        }
-        AutoTraderTileentity trader = BlockItemDataCache.get(level, stack, AutoTraderTileentity.class);
+        net.minecraft.core.HolderLookup.Provider registries = context.registries();
+        
+        AutoTraderTileentity trader = BlockItemDataCache.get(registries, stack, AutoTraderTileentity.class);
         if (trader == null) {
             return;
         }
@@ -45,19 +43,26 @@ public class AutoTraderBlock extends TraderBlockBase {
 
     @Override
     protected boolean openGUI(TraderTileentityBase trader, Player player, Level level, BlockPos pos) {
-        player.openMenu(new MenuProvider() {
-            @Override
-            public Component getDisplayName() {
-                return Component.translatable("block.easy_villagers.auto_trader");
-            }
+        if (player instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
+            serverPlayer.openMenu(new net.fabricmc.fabric.api.menu.v1.ExtendedMenuProvider<net.minecraft.core.BlockPos>() {
+                @Override
+                public Component getDisplayName() {
+                    return Component.translatable("block.easy_villagers.auto_trader");
+                }
 
-            @Nullable
-            @Override
-            public AbstractContainerMenu createMenu(int id, Inventory inv, Player player) {
-                AutoTraderTileentity autoTrader = (AutoTraderTileentity) trader;
-                return new AutoTraderContainer(id, inv, autoTrader, autoTrader.getInputInventory(), autoTrader.getOutputInventory(), ContainerLevelAccess.create(level, pos));
-            }
-        });
+                @Nullable
+                @Override
+                public AbstractContainerMenu createMenu(int id, Inventory inv, Player player) {
+                    AutoTraderTileentity autoTrader = (AutoTraderTileentity) trader;
+                    return new AutoTraderContainer(id, inv, autoTrader, autoTrader.getInputInventory(), autoTrader.getOutputInventory(), ContainerLevelAccess.create(level, pos));
+                }
+
+                @Override
+                public net.minecraft.core.BlockPos getScreenOpeningData(net.minecraft.server.level.ServerPlayer player) {
+                    return pos;
+                }
+            });
+        }
         return true;
     }
 

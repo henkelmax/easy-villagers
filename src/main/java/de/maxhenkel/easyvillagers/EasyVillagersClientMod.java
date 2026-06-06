@@ -1,65 +1,56 @@
 package de.maxhenkel.easyvillagers;
 
 import de.maxhenkel.easyvillagers.blocks.tileentity.ModClientTileEntities;
-import de.maxhenkel.easyvillagers.events.GuiEvents;
-import de.maxhenkel.easyvillagers.events.ModSoundEvents;
-import de.maxhenkel.easyvillagers.gui.Containers;
+
+import de.maxhenkel.easyvillagers.gui.*;
 import de.maxhenkel.easyvillagers.items.render.*;
+import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.resources.Identifier;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
-import net.neoforged.neoforge.client.event.RegisterSpecialModelRendererEvent;
-import net.neoforged.neoforge.common.NeoForge;
 import org.lwjgl.glfw.GLFW;
 
-@Mod(value = EasyVillagersMod.MODID, dist = Dist.CLIENT)
-@EventBusSubscriber(modid = EasyVillagersMod.MODID, value = Dist.CLIENT)
-public class EasyVillagersClientMod {
+public class EasyVillagersClientMod implements ClientModInitializer {
 
-    public static KeyMapping.Category CATEGORY_EASY_VILLAGERS;
+    public static final net.minecraft.client.KeyMapping.Category CATEGORY = net.minecraft.client.KeyMapping.Category.register(net.minecraft.resources.Identifier.fromNamespaceAndPath(EasyVillagersMod.MODID, "category"));
     public static KeyMapping CYCLE_TRADES_KEY;
     public static KeyMapping PICKUP_KEY;
 
-    public EasyVillagersClientMod(IEventBus eventBus) {
-        Containers.initClient(eventBus);
-    }
-
-    @SubscribeEvent
-    static void clientSetup(FMLClientSetupEvent event) {
+    @Override
+    public void onInitializeClient() {
         ModClientTileEntities.clientSetup();
+        de.maxhenkel.easyvillagers.events.VillagerEvents.clientSetup();
+        de.maxhenkel.easyvillagers.events.GuiEvents.init();
+        
+        net.minecraft.client.gui.screens.MenuScreens.register(Containers.AUTO_TRADER_CONTAINER, AutoTraderScreen::new);
+        net.minecraft.client.gui.screens.MenuScreens.register(Containers.BREEDER_CONTAINER, BreederScreen::new);
+        net.minecraft.client.gui.screens.MenuScreens.register(Containers.CONVERTER_CONTAINER, ConverterScreen::new);
+        net.minecraft.client.gui.screens.MenuScreens.register(Containers.INCUBATOR_CONTAINER, IncubatorScreen::new);
+        net.minecraft.client.gui.screens.MenuScreens.register(Containers.OUTPUT_CONTAINER, OutputScreen::new);
+        net.minecraft.client.gui.screens.MenuScreens.register(Containers.INVENTORY_VIEWER_CONTAINER, InventoryViewerScreen::new);
+        
+        
 
-        NeoForge.EVENT_BUS.register(new ModSoundEvents());
-        NeoForge.EVENT_BUS.register(new GuiEvents());
-    }
+        PICKUP_KEY = KeyMappingHelper.registerKeyMapping(new KeyMapping(
+                "key.easy_villagers.pick_up",
+                GLFW.GLFW_KEY_V,
+                CATEGORY
+        ));
+        CYCLE_TRADES_KEY = KeyMappingHelper.registerKeyMapping(new KeyMapping(
+                "key.easy_villagers.cycle_trades",
+                GLFW.GLFW_KEY_C,
+                CATEGORY
+        ));
 
-    @SubscribeEvent
-    static void onRegisterKeyBinds(RegisterKeyMappingsEvent event) {
-        CATEGORY_EASY_VILLAGERS = new KeyMapping.Category(Identifier.fromNamespaceAndPath(EasyVillagersMod.MODID, "easy_villagers"));
-        event.registerCategory(CATEGORY_EASY_VILLAGERS);
-        PICKUP_KEY = new KeyMapping("key.easy_villagers.pick_up", GLFW.GLFW_KEY_V, CATEGORY_EASY_VILLAGERS);
-        CYCLE_TRADES_KEY = new KeyMapping("key.easy_villagers.cycle_trades", GLFW.GLFW_KEY_C, CATEGORY_EASY_VILLAGERS);
-        event.register(PICKUP_KEY);
-        event.register(CYCLE_TRADES_KEY);
-    }
-
-    @SubscribeEvent
-    static void registerItemModels(RegisterSpecialModelRendererEvent event) {
-        event.register(Identifier.fromNamespaceAndPath(EasyVillagersMod.MODID, "auto_trader"), AutoTraderSpecialRenderer.Unbaked.MAP_CODEC);
-        event.register(Identifier.fromNamespaceAndPath(EasyVillagersMod.MODID, "breeder"), BreederSpecialRenderer.Unbaked.MAP_CODEC);
-        event.register(Identifier.fromNamespaceAndPath(EasyVillagersMod.MODID, "converter"), ConverterSpecialRenderer.Unbaked.MAP_CODEC);
-        event.register(Identifier.fromNamespaceAndPath(EasyVillagersMod.MODID, "farmer"), FarmerSpecialRenderer.Unbaked.MAP_CODEC);
-        event.register(Identifier.fromNamespaceAndPath(EasyVillagersMod.MODID, "incubator"), IncubatorSpecialRenderer.Unbaked.MAP_CODEC);
-        event.register(Identifier.fromNamespaceAndPath(EasyVillagersMod.MODID, "inventory_viewer"), InventoryViewerSpecialRenderer.Unbaked.MAP_CODEC);
-        event.register(Identifier.fromNamespaceAndPath(EasyVillagersMod.MODID, "trader"), TraderSpecialRenderer.Unbaked.MAP_CODEC);
-        event.register(Identifier.fromNamespaceAndPath(EasyVillagersMod.MODID, "iron_farm"), IronFarmSpecialRenderer.Unbaked.MAP_CODEC);
-
-        event.register(Identifier.fromNamespaceAndPath(EasyVillagersMod.MODID, "villager"), VillagerSpecialRenderer.Unbaked.MAP_CODEC);
+        net.minecraft.client.renderer.special.SpecialModelRenderers.ID_MAPPER.put(Identifier.fromNamespaceAndPath(EasyVillagersMod.MODID, "auto_trader"), AutoTraderSpecialRenderer.Unbaked.MAP_CODEC);
+        net.minecraft.client.renderer.special.SpecialModelRenderers.ID_MAPPER.put(Identifier.fromNamespaceAndPath(EasyVillagersMod.MODID, "breeder"), BreederSpecialRenderer.Unbaked.MAP_CODEC);
+        net.minecraft.client.renderer.special.SpecialModelRenderers.ID_MAPPER.put(Identifier.fromNamespaceAndPath(EasyVillagersMod.MODID, "converter"), ConverterSpecialRenderer.Unbaked.MAP_CODEC);
+        net.minecraft.client.renderer.special.SpecialModelRenderers.ID_MAPPER.put(Identifier.fromNamespaceAndPath(EasyVillagersMod.MODID, "farmer"), FarmerSpecialRenderer.Unbaked.MAP_CODEC);
+        net.minecraft.client.renderer.special.SpecialModelRenderers.ID_MAPPER.put(Identifier.fromNamespaceAndPath(EasyVillagersMod.MODID, "incubator"), IncubatorSpecialRenderer.Unbaked.MAP_CODEC);
+        net.minecraft.client.renderer.special.SpecialModelRenderers.ID_MAPPER.put(Identifier.fromNamespaceAndPath(EasyVillagersMod.MODID, "inventory_viewer"), InventoryViewerSpecialRenderer.Unbaked.MAP_CODEC);
+        net.minecraft.client.renderer.special.SpecialModelRenderers.ID_MAPPER.put(Identifier.fromNamespaceAndPath(EasyVillagersMod.MODID, "iron_farm"), IronFarmSpecialRenderer.Unbaked.MAP_CODEC);
+        net.minecraft.client.renderer.special.SpecialModelRenderers.ID_MAPPER.put(Identifier.fromNamespaceAndPath(EasyVillagersMod.MODID, "trader"), TraderSpecialRenderer.Unbaked.MAP_CODEC);
+        net.minecraft.client.renderer.special.SpecialModelRenderers.ID_MAPPER.put(Identifier.fromNamespaceAndPath(EasyVillagersMod.MODID, "villager"), VillagerSpecialRenderer.Unbaked.MAP_CODEC);
     }
 
 }

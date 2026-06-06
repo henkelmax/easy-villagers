@@ -32,7 +32,7 @@ public class TraderSpecialRenderer extends ItemSpecialRendererBase<TraderTileent
         @Override
         @Nullable
         public SpecialModelRenderer<TraderTileentity> bake(BakingContext context) {
-            return new TraderSpecialRenderer(context.entityModelSet(), Minecraft.getInstance().getBlockModelResolver(), () -> ModBlocks.TRADER.get().defaultBlockState());
+            return new TraderSpecialRenderer(context.entityModelSet(), new net.minecraft.client.renderer.block.BlockModelResolver(net.minecraft.client.Minecraft.getInstance().getModelManager()), () -> ModBlocks.TRADER.defaultBlockState());
         }
 
         @Override

@@ -30,7 +30,7 @@ public class InventoryViewerSpecialRenderer extends ItemSpecialRendererBase<Inve
         @Override
         @Nullable
         public SpecialModelRenderer<InventoryViewerTileentity> bake(BakingContext context) {
-            return new InventoryViewerSpecialRenderer(context.entityModelSet(), () -> ModBlocks.INVENTORY_VIEWER.get().defaultBlockState());
+            return new InventoryViewerSpecialRenderer(context.entityModelSet(), () -> ModBlocks.INVENTORY_VIEWER.defaultBlockState());
         }
 
         @Override
