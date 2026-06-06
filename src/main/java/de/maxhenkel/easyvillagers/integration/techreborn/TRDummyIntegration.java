@@ -267,6 +267,7 @@ public class TRDummyIntegration {
         public void clearContent() {}
     }
 
+    @SuppressWarnings("unchecked")
     public static void initNetworking() {
         net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking.PlayPayloadHandler<?> originalSlotSave = net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking.unregisterGlobalReceiver(reborncore.common.network.serverbound.SlotSavePayload.ID.id());
         net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking.registerGlobalReceiver(reborncore.common.network.serverbound.SlotSavePayload.ID, (payload, context) -> {
