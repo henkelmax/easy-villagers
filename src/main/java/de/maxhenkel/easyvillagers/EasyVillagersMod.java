@@ -49,11 +49,10 @@ public class EasyVillagersMod implements ModInitializer {
                     Object config = ((de.maxhenkel.easyvillagers.integration.techreborn.ITRCompatible) trader).getSlotConfiguration();
                     if (config instanceof de.maxhenkel.easyvillagers.integration.techreborn.TRSlotConfiguration trConfig) { if (!de.maxhenkel.easyvillagers.integration.techreborn.TRStorageWrapper.hasConfiguredSide(trConfig, trader.getInputInventory().getContainerSize() + trader.getOutputInventory().getContainerSize(), direction)) return null; return new de.maxhenkel.easyvillagers.integration.techreborn.TRStorageWrapper(trader.getInputInventory(), trader.getOutputInventory(), trConfig, direction); }
                 }
-                if (direction == net.minecraft.core.Direction.DOWN) {
-                    return new net.fabricmc.fabric.api.transfer.v1.storage.base.FilteringStorage<>(net.fabricmc.fabric.api.transfer.v1.item.ContainerStorage.of(trader.getOutputInventory(), direction)) { @Override protected boolean canInsert(net.fabricmc.fabric.api.transfer.v1.item.ItemVariant resource) { return false; } };
-                } else {
-                    return new net.fabricmc.fabric.api.transfer.v1.storage.base.FilteringStorage<>(net.fabricmc.fabric.api.transfer.v1.item.ContainerStorage.of(trader.getInputInventory(), direction)) { @Override protected boolean canExtract(net.fabricmc.fabric.api.transfer.v1.item.ItemVariant resource) { return false; } };
-                }
+                return new net.fabricmc.fabric.api.transfer.v1.storage.base.CombinedStorage<>(java.util.List.of(
+                    new net.fabricmc.fabric.api.transfer.v1.storage.base.FilteringStorage<>(net.fabricmc.fabric.api.transfer.v1.item.ContainerStorage.of(trader.getInputInventory(), direction)) { @Override protected boolean canExtract(net.fabricmc.fabric.api.transfer.v1.item.ItemVariant resource) { return false; } },
+                    new net.fabricmc.fabric.api.transfer.v1.storage.base.FilteringStorage<>(net.fabricmc.fabric.api.transfer.v1.item.ContainerStorage.of(trader.getOutputInventory(), direction)) { @Override protected boolean canInsert(net.fabricmc.fabric.api.transfer.v1.item.ItemVariant resource) { return false; } }
+                ));
             }
             return null;
         }, ModTileEntities.AUTO_TRADER);
@@ -64,11 +63,10 @@ public class EasyVillagersMod implements ModInitializer {
                     Object config = ((de.maxhenkel.easyvillagers.integration.techreborn.ITRCompatible) breeder).getSlotConfiguration();
                     if (config instanceof de.maxhenkel.easyvillagers.integration.techreborn.TRSlotConfiguration trConfig) { if (!de.maxhenkel.easyvillagers.integration.techreborn.TRStorageWrapper.hasConfiguredSide(trConfig, breeder.getFoodInventory().getContainerSize() + breeder.getOutputInventory().getContainerSize(), direction)) return null; return new de.maxhenkel.easyvillagers.integration.techreborn.TRStorageWrapper(breeder.getFoodInventory(), breeder.getOutputInventory(), trConfig, direction); }
                 }
-                if (direction == net.minecraft.core.Direction.DOWN) {
-                    return new net.fabricmc.fabric.api.transfer.v1.storage.base.FilteringStorage<>(net.fabricmc.fabric.api.transfer.v1.item.ContainerStorage.of(breeder.getOutputInventory(), direction)) { @Override protected boolean canInsert(net.fabricmc.fabric.api.transfer.v1.item.ItemVariant resource) { return false; } };
-                } else {
-                    return new net.fabricmc.fabric.api.transfer.v1.storage.base.FilteringStorage<>(net.fabricmc.fabric.api.transfer.v1.item.ContainerStorage.of(breeder.getFoodInventory(), direction)) { @Override protected boolean canExtract(net.fabricmc.fabric.api.transfer.v1.item.ItemVariant resource) { return false; } };
-                }
+                return new net.fabricmc.fabric.api.transfer.v1.storage.base.CombinedStorage<>(java.util.List.of(
+                    new net.fabricmc.fabric.api.transfer.v1.storage.base.FilteringStorage<>(net.fabricmc.fabric.api.transfer.v1.item.ContainerStorage.of(breeder.getFoodInventory(), direction)) { @Override protected boolean canExtract(net.fabricmc.fabric.api.transfer.v1.item.ItemVariant resource) { return false; } },
+                    new net.fabricmc.fabric.api.transfer.v1.storage.base.FilteringStorage<>(net.fabricmc.fabric.api.transfer.v1.item.ContainerStorage.of(breeder.getOutputInventory(), direction)) { @Override protected boolean canInsert(net.fabricmc.fabric.api.transfer.v1.item.ItemVariant resource) { return false; } }
+                ));
             }
             return null;
         }, ModTileEntities.BREEDER);
@@ -79,11 +77,10 @@ public class EasyVillagersMod implements ModInitializer {
                     Object config = ((de.maxhenkel.easyvillagers.integration.techreborn.ITRCompatible) converter).getSlotConfiguration();
                     if (config instanceof de.maxhenkel.easyvillagers.integration.techreborn.TRSlotConfiguration trConfig) { if (!de.maxhenkel.easyvillagers.integration.techreborn.TRStorageWrapper.hasConfiguredSide(trConfig, converter.getInputInventory().getContainerSize() + converter.getOutputInventory().getContainerSize(), direction)) return null; return new de.maxhenkel.easyvillagers.integration.techreborn.TRStorageWrapper(converter.getInputInventory(), converter.getOutputInventory(), trConfig, direction); }
                 }
-                if (direction == net.minecraft.core.Direction.DOWN) {
-                    return new net.fabricmc.fabric.api.transfer.v1.storage.base.FilteringStorage<>(net.fabricmc.fabric.api.transfer.v1.item.ContainerStorage.of(converter.getOutputInventory(), direction)) { @Override protected boolean canInsert(net.fabricmc.fabric.api.transfer.v1.item.ItemVariant resource) { return false; } };
-                } else {
-                    return new net.fabricmc.fabric.api.transfer.v1.storage.base.FilteringStorage<>(net.fabricmc.fabric.api.transfer.v1.item.ContainerStorage.of(converter.getInputInventory(), direction)) { @Override protected boolean canExtract(net.fabricmc.fabric.api.transfer.v1.item.ItemVariant resource) { return false; } };
-                }
+                return new net.fabricmc.fabric.api.transfer.v1.storage.base.CombinedStorage<>(java.util.List.of(
+                    new net.fabricmc.fabric.api.transfer.v1.storage.base.FilteringStorage<>(net.fabricmc.fabric.api.transfer.v1.item.ContainerStorage.of(converter.getInputInventory(), direction)) { @Override protected boolean canExtract(net.fabricmc.fabric.api.transfer.v1.item.ItemVariant resource) { return false; } },
+                    new net.fabricmc.fabric.api.transfer.v1.storage.base.FilteringStorage<>(net.fabricmc.fabric.api.transfer.v1.item.ContainerStorage.of(converter.getOutputInventory(), direction)) { @Override protected boolean canInsert(net.fabricmc.fabric.api.transfer.v1.item.ItemVariant resource) { return false; } }
+                ));
             }
             return null;
         }, ModTileEntities.CONVERTER);
@@ -94,11 +91,10 @@ public class EasyVillagersMod implements ModInitializer {
                     Object config = ((de.maxhenkel.easyvillagers.integration.techreborn.ITRCompatible) incubator).getSlotConfiguration();
                     if (config instanceof de.maxhenkel.easyvillagers.integration.techreborn.TRSlotConfiguration trConfig) { if (!de.maxhenkel.easyvillagers.integration.techreborn.TRStorageWrapper.hasConfiguredSide(trConfig, incubator.getInputInventory().getContainerSize() + incubator.getOutputInventory().getContainerSize(), direction)) return null; return new de.maxhenkel.easyvillagers.integration.techreborn.TRStorageWrapper(incubator.getInputInventory(), incubator.getOutputInventory(), trConfig, direction); }
                 }
-                if (direction == net.minecraft.core.Direction.DOWN) {
-                    return new net.fabricmc.fabric.api.transfer.v1.storage.base.FilteringStorage<>(net.fabricmc.fabric.api.transfer.v1.item.ContainerStorage.of(incubator.getOutputInventory(), direction)) { @Override protected boolean canInsert(net.fabricmc.fabric.api.transfer.v1.item.ItemVariant resource) { return false; } };
-                } else {
-                    return new net.fabricmc.fabric.api.transfer.v1.storage.base.FilteringStorage<>(net.fabricmc.fabric.api.transfer.v1.item.ContainerStorage.of(incubator.getInputInventory(), direction)) { @Override protected boolean canExtract(net.fabricmc.fabric.api.transfer.v1.item.ItemVariant resource) { return false; } };
-                }
+                return new net.fabricmc.fabric.api.transfer.v1.storage.base.CombinedStorage<>(java.util.List.of(
+                    new net.fabricmc.fabric.api.transfer.v1.storage.base.FilteringStorage<>(net.fabricmc.fabric.api.transfer.v1.item.ContainerStorage.of(incubator.getInputInventory(), direction)) { @Override protected boolean canExtract(net.fabricmc.fabric.api.transfer.v1.item.ItemVariant resource) { return false; } },
+                    new net.fabricmc.fabric.api.transfer.v1.storage.base.FilteringStorage<>(net.fabricmc.fabric.api.transfer.v1.item.ContainerStorage.of(incubator.getOutputInventory(), direction)) { @Override protected boolean canInsert(net.fabricmc.fabric.api.transfer.v1.item.ItemVariant resource) { return false; } }
+                ));
             }
             return null;
         }, ModTileEntities.INCUBATOR);
@@ -109,10 +105,7 @@ public class EasyVillagersMod implements ModInitializer {
                     Object config = ((de.maxhenkel.easyvillagers.integration.techreborn.ITRCompatible) farmer).getSlotConfiguration();
                     if (config instanceof de.maxhenkel.easyvillagers.integration.techreborn.TRSlotConfiguration trConfig) { if (!de.maxhenkel.easyvillagers.integration.techreborn.TRStorageWrapper.hasConfiguredSide(trConfig, farmer.getOutputInventory().getContainerSize(), direction)) return null; return new de.maxhenkel.easyvillagers.integration.techreborn.TRStorageWrapper(null, farmer.getOutputInventory(), trConfig, direction); }
                 }
-                if (direction == net.minecraft.core.Direction.DOWN) {
-                    return new net.fabricmc.fabric.api.transfer.v1.storage.base.FilteringStorage<>(net.fabricmc.fabric.api.transfer.v1.item.ContainerStorage.of(farmer.getOutputInventory(), direction)) { @Override protected boolean canInsert(net.fabricmc.fabric.api.transfer.v1.item.ItemVariant resource) { return false; } };
-                }
-                return null;
+                return new net.fabricmc.fabric.api.transfer.v1.storage.base.FilteringStorage<>(net.fabricmc.fabric.api.transfer.v1.item.ContainerStorage.of(farmer.getOutputInventory(), direction)) { @Override protected boolean canInsert(net.fabricmc.fabric.api.transfer.v1.item.ItemVariant resource) { return false; } };
             }
             return null;
         }, ModTileEntities.FARMER);
@@ -123,10 +116,7 @@ public class EasyVillagersMod implements ModInitializer {
                     Object config = ((de.maxhenkel.easyvillagers.integration.techreborn.ITRCompatible) ironFarm).getSlotConfiguration();
                     if (config instanceof de.maxhenkel.easyvillagers.integration.techreborn.TRSlotConfiguration trConfig) { if (!de.maxhenkel.easyvillagers.integration.techreborn.TRStorageWrapper.hasConfiguredSide(trConfig, ironFarm.getOutputInventory().getContainerSize(), direction)) return null; return new de.maxhenkel.easyvillagers.integration.techreborn.TRStorageWrapper(null, ironFarm.getOutputInventory(), trConfig, direction); }
                 }
-                if (direction == net.minecraft.core.Direction.DOWN) {
-                    return new net.fabricmc.fabric.api.transfer.v1.storage.base.FilteringStorage<>(net.fabricmc.fabric.api.transfer.v1.item.ContainerStorage.of(ironFarm.getOutputInventory(), direction)) { @Override protected boolean canInsert(net.fabricmc.fabric.api.transfer.v1.item.ItemVariant resource) { return false; } };
-                }
-                return null;
+                return new net.fabricmc.fabric.api.transfer.v1.storage.base.FilteringStorage<>(net.fabricmc.fabric.api.transfer.v1.item.ContainerStorage.of(ironFarm.getOutputInventory(), direction)) { @Override protected boolean canInsert(net.fabricmc.fabric.api.transfer.v1.item.ItemVariant resource) { return false; } };
             }
             return null;
         }, ModTileEntities.IRON_FARM);
