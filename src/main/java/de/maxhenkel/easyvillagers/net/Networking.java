@@ -49,7 +49,7 @@ public class Networking {
 
         if (net.fabricmc.loader.api.FabricLoader.getInstance().isModLoaded("techreborn")) {
             net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents.SERVER_STARTING.register(server -> {
-                de.maxhenkel.easyvillagers.integration.techreborn.TRDummyIntegration.initNetworking();
+                de.maxhenkel.easyvillagers.integration.techreborn.TRNetworking.initNetworking();
             });
         }
     }
