@@ -14,6 +14,7 @@ import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.trading.ItemCost;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.world.level.block.Block;
@@ -65,10 +66,10 @@ public class AutoTraderTileentity extends TraderTileentityBase implements ITicka
 
 
         try (Transaction transaction = Transaction.open(null)) {
-            if (!removeNeededItems(getAutoTradeInputA(), transaction)) {
+            if (!removeNeededItems(offer.getItemCostA(), getAutoTradeInputA().getCount(), transaction)) {
                 return;
             }
-            if (!removeNeededItems(offer.getCostB(), transaction)) {
+            if (offer.getItemCostB().isPresent() && !removeNeededItems(offer.getItemCostB().get(), offer.getCostB().getCount(), transaction)) {
                 return;
             }
             if (!insertItems(offer.getResult(), transaction)) {
@@ -87,12 +88,22 @@ public class AutoTraderTileentity extends TraderTileentityBase implements ITicka
         setChanged();
     }
 
-    protected boolean removeNeededItems(ItemStack buying, TransactionContext transaction) {
-        if (buying.isEmpty()) {
+    protected boolean removeNeededItems(ItemCost cost, int amount, TransactionContext transaction) {
+        if (amount <= 0) {
             return true;
         }
-        int extract = inputInventory.extract(ItemResource.of(buying), buying.getCount(), transaction);
-        return extract >= buying.getCount();
+        int extracted = 0;
+        for (int i = 0; i < inputInventory.size(); i++) {
+            ItemResource resource = inputInventory.getResource(i);
+            if (resource.isEmpty() || !resource.test(cost::test)) {
+                continue;
+            }
+            extracted += inputInventory.extract(i, resource, amount - extracted, transaction);
+            if (extracted >= amount) {
+                return true;
+            }
+        }
+        return false;
     }
 
     protected boolean insertItems(ItemStack insert, TransactionContext transaction) {
