@@ -1,1 +1,1 @@
-- Updated Chinese Simplified (China) translation
+- Fixed auto trader not accepting trade items with additional data components
