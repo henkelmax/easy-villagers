@@ -1,1 +1,1 @@
-- Updated to 26.2
+- Fixed auto trader not accepting trade items with additional data components
