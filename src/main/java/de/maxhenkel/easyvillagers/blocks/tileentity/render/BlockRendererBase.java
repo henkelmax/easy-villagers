@@ -28,7 +28,8 @@ public abstract class BlockRendererBase<T extends FakeWorldTileentity, S extends
                 minecraft.getEntityRenderDispatcher().equipmentAssets,
                 minecraft.getAtlasManager(),
                 minecraft.font,
-                minecraft.playerSkinRenderCache()
+                minecraft.playerSkinRenderCache(),
+                minecraft.getPalettedTextureManager()
         );
     }
 

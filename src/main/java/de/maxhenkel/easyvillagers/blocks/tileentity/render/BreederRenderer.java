@@ -75,9 +75,9 @@ public class BreederRenderer extends VillagerRendererBase<BreederTileentity, Bre
         if (state.renderVillager1) {
             stack.pushPose();
             stack.translate(0.5D, 1D / 16D, 0.5D);
-            stack.mulPose(Axis.YP.rotationDegrees(-state.direction.toYRot()));
+            stack.rotate(Axis.YP.rotationDegrees(-state.direction.toYRot()));
             stack.translate(-5D / 16D, 0D, 0D);
-            stack.mulPose(Axis.YP.rotationDegrees(90));
+            stack.rotate(Axis.YP.rotationDegrees(90));
             stack.scale(0.45F, 0.45F, 0.45F);
             villagerRenderer.submit(state.villagerRenderState1, stack, collector, cameraRenderState);
             stack.popPose();
@@ -87,9 +87,9 @@ public class BreederRenderer extends VillagerRendererBase<BreederTileentity, Bre
             stack.pushPose();
 
             stack.translate(0.5D, 1D / 16D, 0.5D);
-            stack.mulPose(Axis.YP.rotationDegrees(-state.direction.toYRot()));
+            stack.rotate(Axis.YP.rotationDegrees(-state.direction.toYRot()));
             stack.translate(5D / 16D, 0D, 0D);
-            stack.mulPose(Axis.YP.rotationDegrees(-90));
+            stack.rotate(Axis.YP.rotationDegrees(-90));
             stack.scale(0.45F, 0.45F, 0.45F);
             villagerRenderer.submit(state.villagerRenderState2, stack, collector, cameraRenderState);
             stack.popPose();
@@ -97,7 +97,7 @@ public class BreederRenderer extends VillagerRendererBase<BreederTileentity, Bre
 
         stack.pushPose();
         stack.translate(0.5D, 1D / 16D, 0.5D);
-        stack.mulPose(Axis.YP.rotationDegrees(-state.direction.toYRot()));
+        stack.rotate(Axis.YP.rotationDegrees(-state.direction.toYRot()));
         stack.translate(0D, 0D, 3D / 16D);
         stack.translate(-0.5D, 0D, -0.5D);
         stack.scale(0.4F, 0.4F, 0.4F);

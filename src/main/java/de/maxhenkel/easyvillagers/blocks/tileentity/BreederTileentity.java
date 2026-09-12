@@ -16,6 +16,7 @@ import de.maxhenkel.easyvillagers.inventory.ValidateResourceHandler;
 import de.maxhenkel.easyvillagers.items.ModItems;
 import de.maxhenkel.easyvillagers.net.MessageVillagerParticles;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -23,6 +24,7 @@ import net.minecraft.world.Container;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.entity.npc.villager.VillagerType;
+import net.minecraft.world.food.VillagerFood;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.state.BlockState;
@@ -194,7 +196,10 @@ public class BreederTileentity extends FakeWorldTileentity implements IServerTic
         int value = 0;
         for (int i = 0; i < foodInventory.size(); i++) {
             ItemResource resource = foodInventory.getResource(i);
-            value += Villager.FOOD_POINTS.getOrDefault(resource.getItem(), 0) * foodInventory.getAmountAsInt(i);
+            VillagerFood villagerFood = resource.get(DataComponents.VILLAGER_FOOD);
+            if (villagerFood != null) {
+                value += villagerFood.nutrition() * foodInventory.getAmountAsInt(i);
+            }
         }
         return value >= 24;
     }
@@ -206,7 +211,11 @@ public class BreederTileentity extends FakeWorldTileentity implements IServerTic
             if (resource.isEmpty()) {
                 continue;
             }
-            int itemValue = Villager.FOOD_POINTS.getOrDefault(resource.getItem(), 0);
+            VillagerFood villagerFood = resource.get(DataComponents.VILLAGER_FOOD);
+            int itemValue = 0;
+            if (villagerFood != null) {
+                itemValue = villagerFood.nutrition();
+            }
             if (itemValue <= 0) {
                 continue;
             }

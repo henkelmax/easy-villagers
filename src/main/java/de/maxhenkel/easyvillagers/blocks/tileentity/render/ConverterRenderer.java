@@ -90,9 +90,9 @@ public class ConverterRenderer extends VillagerRendererBase<ConverterTileentity,
         if (state.renderZombieVillager || state.renderVillager) {
             stack.pushPose();
             stack.translate(0.5D, 1D / 16D, 0.5D);
-            stack.mulPose(Axis.YP.rotationDegrees(-state.direction.toYRot()));
+            stack.rotate(Axis.YP.rotationDegrees(-state.direction.toYRot()));
             stack.translate(-5D / 16D, 0D, 0D);
-            stack.mulPose(Axis.YP.rotationDegrees(90));
+            stack.rotate(Axis.YP.rotationDegrees(90));
             stack.scale(0.4F, 0.4F, 0.4F);
             if (state.renderZombieVillager) {
                 zombieVillagerRenderer.submit(state.zombieVillagerRenderState, stack, collector, cameraRenderState);
@@ -106,9 +106,9 @@ public class ConverterRenderer extends VillagerRendererBase<ConverterTileentity,
         stack.pushPose();
 
         stack.translate(0.5D, 1D / 16D, 0.5D);
-        stack.mulPose(Axis.YP.rotationDegrees(-state.direction.toYRot()));
+        stack.rotate(Axis.YP.rotationDegrees(-state.direction.toYRot()));
         stack.translate(5D / 16D, 0D, 0D);
-        stack.mulPose(Axis.YP.rotationDegrees(-90));
+        stack.rotate(Axis.YP.rotationDegrees(-90));
         stack.scale(0.4F, 0.4F, 0.4F);
         zombieRenderer.submit(state.zombieRenderState, stack, collector, cameraRenderState);
         stack.popPose();

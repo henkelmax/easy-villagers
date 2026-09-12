@@ -58,7 +58,7 @@ public class FarmerRenderer extends VillagerRendererBase<FarmerTileentity, Farme
             stack.pushPose();
 
             stack.translate(0.5D, 1D / 16D, 0.5D);
-            stack.mulPose(Axis.YP.rotationDegrees(-state.direction.toYRot()));
+            stack.rotate(Axis.YP.rotationDegrees(-state.direction.toYRot()));
             stack.translate(0D, 0D, -4D / 16D);
             stack.scale(0.45F, 0.45F, 0.45F);
             VillagerRenderer villagerRenderer = getVillagerRenderer();
@@ -70,7 +70,7 @@ public class FarmerRenderer extends VillagerRendererBase<FarmerTileentity, Farme
             stack.pushPose();
 
             stack.translate(0.5D, 1D / 16D, 0.5D);
-            stack.mulPose(Axis.YP.rotationDegrees(-state.direction.toYRot()));
+            stack.rotate(Axis.YP.rotationDegrees(-state.direction.toYRot()));
             stack.translate(0D, 0D, 2D / 16D);
             stack.translate(-0.5D, 0D, -0.5D);
             stack.scale(0.45F, 0.45F, 0.45F);

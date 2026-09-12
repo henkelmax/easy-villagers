@@ -89,9 +89,9 @@ public class IronFarmRenderer extends VillagerRendererBase<IronFarmTileentity, I
         if (state.renderVillager) {
             stack.pushPose();
             stack.translate(0.5D, 1D / 16D, 0.5D);
-            stack.mulPose(Axis.YP.rotationDegrees(-state.direction.toYRot()));
+            stack.rotate(Axis.YP.rotationDegrees(-state.direction.toYRot()));
             stack.translate(-5D / 16D, 0D, -5D / 16D);
-            stack.mulPose(Axis.YP.rotationDegrees(90));
+            stack.rotate(Axis.YP.rotationDegrees(90));
             stack.scale(0.3F, 0.3F, 0.3F);
             VillagerRenderer villagerRenderer = getVillagerRenderer();
             villagerRenderer.submit(state.villagerRenderState, stack, collector, cameraRenderState);
@@ -100,9 +100,9 @@ public class IronFarmRenderer extends VillagerRendererBase<IronFarmTileentity, I
 
         stack.pushPose();
         stack.translate(0.5D, 1D / 16D, 0.5D);
-        stack.mulPose(Axis.YP.rotationDegrees(-state.direction.toYRot()));
+        stack.rotate(Axis.YP.rotationDegrees(-state.direction.toYRot()));
         stack.translate(5D / 16D, 0D, -5D / 16D);
-        stack.mulPose(Axis.YP.rotationDegrees(-90));
+        stack.rotate(Axis.YP.rotationDegrees(-90));
         stack.scale(0.3F, 0.3F, 0.3F);
         zombieRenderer.submit(state.zombieRenderState, stack, collector, cameraRenderState);
         stack.popPose();
@@ -110,7 +110,7 @@ public class IronFarmRenderer extends VillagerRendererBase<IronFarmTileentity, I
         if (state.renderIronGolem) {
             stack.pushPose();
             stack.translate(0.5D, 1D / 16D, 0.5D);
-            stack.mulPose(Axis.YP.rotationDegrees(-state.direction.toYRot()));
+            stack.rotate(Axis.YP.rotationDegrees(-state.direction.toYRot()));
             stack.translate(0D, 0D, 3D / 16D);
             stack.scale(0.3F, 0.3F, 0.3F);
             ironGolemRenderer.submit(state.ironGolemRenderState, stack, collector, cameraRenderState);

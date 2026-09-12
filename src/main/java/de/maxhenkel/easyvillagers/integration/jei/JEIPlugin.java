@@ -12,8 +12,11 @@ import mezz.jei.api.recipe.types.IRecipeType;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.entity.npc.villager.Villager;
+import net.minecraft.world.food.VillagerFood;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionContents;
@@ -22,6 +25,7 @@ import net.minecraft.world.item.alchemy.Potions;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 @JeiPlugin
 public class JEIPlugin implements IModPlugin {
@@ -53,7 +57,14 @@ public class JEIPlugin implements IModPlugin {
 
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
-        List<ItemStack> foods = Villager.FOOD_POINTS.entrySet().stream().map(itemIntegerEntry -> new ItemStack(itemIntegerEntry.getKey(), (int) Math.ceil(24D / (double) itemIntegerEntry.getValue()))).toList();
+        List<ItemStack> foods = BuiltInRegistries.ITEM.componentLookup().findAll(DataComponents.VILLAGER_FOOD).stream().map(i -> {
+            Item item = i.value();
+            VillagerFood villagerFood = item.components().get(DataComponents.VILLAGER_FOOD);
+            if (villagerFood == null || villagerFood.nutrition() <= 0) {
+                return null;
+            }
+            return new ItemStack(item, (int) Math.ceil(24D / (double) villagerFood.nutrition()));
+        }).filter(Objects::nonNull).toList();
         registration.addRecipes(CATEGORY_BREEDING, foods);
 
         List<ItemStack> potions = new ArrayList<>();

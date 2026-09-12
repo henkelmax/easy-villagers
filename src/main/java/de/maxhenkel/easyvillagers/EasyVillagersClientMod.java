@@ -16,7 +16,7 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.event.RegisterSpecialModelRendererEvent;
 import net.neoforged.neoforge.common.NeoForge;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.sdl.SDLScancode;
 
 @Mod(value = EasyVillagersMod.MODID, dist = Dist.CLIENT)
 @EventBusSubscriber(modid = EasyVillagersMod.MODID, value = Dist.CLIENT)
@@ -42,8 +42,8 @@ public class EasyVillagersClientMod {
     static void onRegisterKeyBinds(RegisterKeyMappingsEvent event) {
         CATEGORY_EASY_VILLAGERS = new KeyMapping.Category(Identifier.fromNamespaceAndPath(EasyVillagersMod.MODID, "easy_villagers"));
         event.registerCategory(CATEGORY_EASY_VILLAGERS);
-        PICKUP_KEY = new KeyMapping("key.easy_villagers.pick_up", GLFW.GLFW_KEY_V, CATEGORY_EASY_VILLAGERS);
-        CYCLE_TRADES_KEY = new KeyMapping("key.easy_villagers.cycle_trades", GLFW.GLFW_KEY_C, CATEGORY_EASY_VILLAGERS);
+        PICKUP_KEY = new KeyMapping("key.easy_villagers.pick_up", SDLScancode.SDL_SCANCODE_V, CATEGORY_EASY_VILLAGERS);
+        CYCLE_TRADES_KEY = new KeyMapping("key.easy_villagers.cycle_trades", SDLScancode.SDL_SCANCODE_C, CATEGORY_EASY_VILLAGERS);
         event.register(PICKUP_KEY);
         event.register(CYCLE_TRADES_KEY);
     }

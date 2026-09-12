@@ -45,7 +45,7 @@ public class InventoryViewerRenderer extends VillagerRendererBase<InventoryViewe
             stack.pushPose();
 
             stack.translate(0.5D, 1D / 16D, 0.5D);
-            stack.mulPose(Axis.YP.rotationDegrees(-state.direction.toYRot()));
+            stack.rotate(Axis.YP.rotationDegrees(-state.direction.toYRot()));
             stack.scale(0.45F, 0.45F, 0.45F);
             VillagerRenderer villagerRenderer = getVillagerRenderer();
             villagerRenderer.submit(state.villagerRenderState, stack, collector, cameraRenderState);
