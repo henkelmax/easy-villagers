@@ -10,6 +10,7 @@ import de.maxhenkel.easyvillagers.inventory.InputOnlyResourceHandler;
 import de.maxhenkel.easyvillagers.inventory.ListAccessItemStacksResourceHandler;
 import de.maxhenkel.easyvillagers.inventory.OutputOnlyResourceHandler;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.npc.villager.Villager;
@@ -81,8 +82,9 @@ public class AutoTraderTileentity extends TraderTileentityBase implements ITicka
         Villager villager = getVillagerEntity();
         offer.increaseUses();
         villager.setVillagerXp(villager.getVillagerXp() + offer.getXp());
-        if (villager.shouldIncreaseLevel()) {
-            villager.increaseProfessionLevelOnUpdate = true;
+        if (villager.shouldIncreaseLevel() && level instanceof ServerLevel serverLevel) {
+            villager.increaseMerchantCareer(serverLevel);
+            updateTradeInv();
         }
 
         setChanged();

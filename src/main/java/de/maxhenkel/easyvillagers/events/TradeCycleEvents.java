@@ -25,7 +25,7 @@ public class TradeCycleEvents {
         if (!(container.trader instanceof Villager villager)) {
             return;
         }
-        villager.offers = null;
+        villager.setOffers(null);
         EasyVillagerEntity.recalculateOffers(villager);
         player.sendMerchantOffers(container.containerId, villager.getOffers(), villager.getVillagerData().level(), villager.getVillagerXp(), villager.showProgressBar(), villager.canRestock());
     }

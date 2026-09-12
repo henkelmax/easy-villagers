@@ -28,6 +28,7 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
 
     protected Block workstation;
     protected long nextRestock;
+    private int lastVillagerLevel = -1;
 
     public TraderTileentityBase(BlockEntityType<?> type, BlockState defaultState, BlockPos pos, BlockState state) {
         super(type, defaultState, pos, state);
@@ -86,6 +87,7 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
         if (hasWorkstation()) {
             fixProfession();
         }
+        lastVillagerLevel = villager.getVillagerData().level();
     }
 
     private void fixProfession() {
@@ -130,11 +132,16 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
         if (v == null) {
             return;
         }
-        if(!(level instanceof ServerLevel serverLevel)){
+        if (!(level instanceof ServerLevel serverLevel)) {
             return;
         }
 
         if (advanceAge()) {
+            sync();
+        }
+        int villagerLevel = v.getVillagerData().level();
+        if (lastVillagerLevel != villagerLevel) {
+            lastVillagerLevel = villagerLevel;
             sync();
         }
         setChanged();
@@ -142,12 +149,6 @@ public abstract class TraderTileentityBase extends VillagerTileentity implements
         VillagerBlockBase.playRandomVillagerSound(serverLevel, getBlockPos(), SoundEvents.VILLAGER_AMBIENT);
 
         if (!v.isTrading()) {
-            if (v.increaseProfessionLevelOnUpdate) {
-                v.increaseMerchantCareer(serverLevel);
-                v.increaseProfessionLevelOnUpdate = false;
-                sync();
-            }
-
             if (level.getGameTime() - getLastRestock() > nextRestock && v.getVillagerData().profession().is(getWorkstationProfession())) {
                 restock();
                 nextRestock = calculateNextRestock();
