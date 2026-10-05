@@ -1,1 +1,1 @@
-- Updated to latest NeoForge version
+- Fixed breeder removing first villager if second one is missing
