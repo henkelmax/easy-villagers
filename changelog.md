@@ -1,1 +1,1 @@
-- Fixed auto trader not accepting trade items with additional data components
+- Fixed breeder removing first villager if second one is missing

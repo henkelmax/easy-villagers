@@ -249,7 +249,7 @@ public class BreederTileentity extends FakeWorldTileentity implements IServerTic
             villager2 = optionalVillager2.get();
             villagerEntity2 = null;
         } else {
-            removeVillager1();
+            removeVillager2();
         }
 
 
