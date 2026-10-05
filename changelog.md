@@ -1,1 +1,1 @@
-- Fixed potential crash when reading invalid villager data
+- Fixed breeder removing first villager if second one is missing
