@@ -1,1 +1,1 @@
-- Fixed breeder removing first villager if second one is missing
+- Fixed blocks not retaining data after being broken
