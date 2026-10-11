@@ -1,1 +1,1 @@
-- Fixed blocks not retaining data after being broken
+- Fixed trade cycling button not showing on servers

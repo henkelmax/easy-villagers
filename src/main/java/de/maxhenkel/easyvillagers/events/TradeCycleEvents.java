@@ -18,7 +18,7 @@ public class TradeCycleEvents {
         }
         MerchantMenu container = (MerchantMenu) player.containerMenu;
 
-        if (container.getTraderXp() > 0 && container.tradeContainer.getActiveOffer() != null) {
+        if (container.getTraderXp() > 0 || container.tradeContainer.getActiveOffer() != null) {
             return;
         }
 
