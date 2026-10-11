@@ -1,1 +1,1 @@
-- Fixed breeder removing first villager if second one is missing
+- Fixed trade cycling button not showing on servers
