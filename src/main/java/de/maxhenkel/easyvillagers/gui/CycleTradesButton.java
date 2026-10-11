@@ -32,7 +32,10 @@ public class CycleTradesButton extends AbstractButton {
 
     @Override
     public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-        visible = canCycle(screen.getMenu());
+        active = canCycle(screen.getMenu());
+        if (!active) {
+            return;
+        }
         if (isHovered) {
             guiGraphics.blit(RenderPipelines.GUI_TEXTURED, ARROW_BUTTON, getX(), getY(), 0, 14, WIDTH, HEIGHT, 32, 32);
             guiGraphics.setTooltipForNextFrame(screen.getMinecraft().font, Collections.singletonList(Component.translatable("tooltip.easy_villagers.cycle_trades").getVisualOrderText()), mouseX, mouseY);
