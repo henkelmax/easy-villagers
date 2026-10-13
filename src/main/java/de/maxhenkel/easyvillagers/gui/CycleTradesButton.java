@@ -45,6 +45,13 @@ public class CycleTradesButton extends AbstractButton {
     }
 
     @Override
+    protected void handleCursor(GuiGraphicsExtractor guiGraphics) {
+        if (active) {
+            super.handleCursor(guiGraphics);
+        }
+    }
+
+    @Override
     protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
     }
 
