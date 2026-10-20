@@ -240,14 +240,18 @@ public class BreederTileentity extends FakeWorldTileentity implements IServerTic
         Optional<ItemStack> optionalVillager1 = valueInput.read("Villager1", ItemStack.CODEC);
         if (optionalVillager1.isPresent()) {
             villager1 = optionalVillager1.get();
-            villagerEntity1 = null;
+            if (villagerEntity1 != null) {
+                VillagerData.loadInto(villager1, villagerEntity1);
+            }
         } else {
             removeVillager1();
         }
         Optional<ItemStack> optionalVillager2 = valueInput.read("Villager2", ItemStack.CODEC);
         if (optionalVillager2.isPresent()) {
             villager2 = optionalVillager2.get();
-            villagerEntity2 = null;
+            if (villagerEntity2 != null) {
+                VillagerData.loadInto(villager2, villagerEntity2);
+            }
         } else {
             removeVillager1();
         }

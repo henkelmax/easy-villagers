@@ -1,1 +1,1 @@
-- Fixed trade cycling button not showing on servers
+- Avoid creating new villager entities when not necessary

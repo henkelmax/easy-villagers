@@ -120,7 +120,9 @@ public class VillagerTileentity extends FakeWorldTileentity {
         Optional<ItemStack> optionalItemStack = valueInput.read("Villager", ItemStack.CODEC);
         if (optionalItemStack.isPresent()) {
             villager = optionalItemStack.get();
-            villagerEntity = null;
+            if (villagerEntity != null) {
+                VillagerData.loadInto(villager, villagerEntity);
+            }
         } else {
             removeVillager();
         }
