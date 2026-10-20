@@ -219,14 +219,18 @@ public class BreederTileentity extends FakeWorldTileentity implements IServerTic
         if (compound.contains("Villager1")) {
             CompoundTag comp = compound.getCompound("Villager1");
             villager1 = VillagerData.convert(provider, comp);
-            villagerEntity1 = null;
+            if (villagerEntity1 != null) {
+                VillagerData.loadInto(villager1, villagerEntity1);
+            }
         } else {
             removeVillager1();
         }
         if (compound.contains("Villager2")) {
             CompoundTag comp = compound.getCompound("Villager2");
             villager2 = VillagerData.convert(provider, comp);
-            villagerEntity2 = null;
+            if (villagerEntity2 != null) {
+                VillagerData.loadInto(villager2, villagerEntity2);
+            }
         } else {
             removeVillager2();
         }

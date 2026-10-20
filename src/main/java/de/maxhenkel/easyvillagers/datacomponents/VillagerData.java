@@ -12,7 +12,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.npc.Villager;
@@ -88,22 +87,27 @@ public class VillagerData {
 
     public EasyVillagerEntity createEasyVillager(Level level, @Nullable ItemStack stack) {
         EasyVillagerEntity v = new EasyVillagerEntity(EntityType.VILLAGER, level);
+        loadInto(v, stack);
+        return v;
+    }
+
+    public void loadInto(EasyVillagerEntity v, @Nullable ItemStack stack) {
         v.readAdditionalSaveData(nbt);
         if (stack != null) {
-            Component customName = stack.get(DataComponents.CUSTOM_NAME);
-            if (customName != null) {
-                v.setCustomName(customName);
-            }
+            v.setCustomName(stack.get(DataComponents.CUSTOM_NAME));
         }
         v.hurtTime = 0;
         v.yHeadRot = 0F;
         v.yHeadRotO = 0F;
-        return v;
     }
 
     public static EasyVillagerEntity createEasyVillager(ItemStack stack, Level level) {
         VillagerData villagerData = getOrCreate(stack);
         return villagerData.createEasyVillager(level, stack);
+    }
+
+    public static void loadInto(ItemStack stack, EasyVillagerEntity villager) {
+        getOrCreate(stack).loadInto(villager, stack);
     }
 
     public static void applyToItem(ItemStack stack, Villager villager) {
