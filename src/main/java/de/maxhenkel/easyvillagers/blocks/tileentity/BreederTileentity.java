@@ -253,7 +253,7 @@ public class BreederTileentity extends FakeWorldTileentity implements IServerTic
                 VillagerData.loadInto(villager2, villagerEntity2);
             }
         } else {
-            removeVillager1();
+            removeVillager2();
         }
 
 
