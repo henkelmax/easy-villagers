@@ -1,14 +1,10 @@
 package de.maxhenkel.easyvillagers.integration.waila;
 
 import de.maxhenkel.easyvillagers.Main;
+import de.maxhenkel.easyvillagers.blocks.tileentity.FakeWorldTileentity;
 import de.maxhenkel.easyvillagers.blocks.tileentity.VillagerTileentity;
 import de.maxhenkel.easyvillagers.entity.EasyVillagerEntity;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.CustomData;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.Nullable;
 import snownee.jade.api.BlockAccessor;
 import snownee.jade.api.IBlockComponentProvider;
@@ -35,13 +31,10 @@ public class HUDHandlerVillager implements IBlockComponentProvider {
 
     @Override
     public @Nullable IElement getIcon(BlockAccessor accessor, IPluginConfig config, IElement currentIcon) {
-        BlockEntity te = accessor.getBlockEntity();
-        ItemStack stack = new ItemStack(te.getBlockState().getBlock().asItem());
-        if (te.getLevel() != null) {
-            CompoundTag blockEntityTag = te.saveWithoutMetadata(te.getLevel().registryAccess());
-            stack.set(DataComponents.BLOCK_ENTITY_DATA, CustomData.of(blockEntityTag));
+        if (accessor.getBlockEntity() instanceof FakeWorldTileentity blockEntity) {
+            return ItemStackElement.of(blockEntity.getItemStack());
         }
-        return ItemStackElement.of(stack);
+        return currentIcon;
     }
 
     @Override

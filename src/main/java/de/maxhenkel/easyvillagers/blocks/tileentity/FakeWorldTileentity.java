@@ -1,14 +1,23 @@
 package de.maxhenkel.easyvillagers.blocks.tileentity;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+
+import javax.annotation.Nullable;
 
 public class FakeWorldTileentity extends SyncableTileentity {
 
     protected boolean fakeWorld;
     protected BlockState defaultState;
+    @Nullable
+    protected ItemStack itemStack;
 
     public FakeWorldTileentity(BlockEntityType<?> type, BlockState defaultState, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -30,6 +39,21 @@ public class FakeWorldTileentity extends SyncableTileentity {
             return defaultState;
         }
         return super.getBlockState();
+    }
+
+    // Cached until new data is loaded, since every new stack creates a new villager when rendered
+    public ItemStack getItemStack() {
+        if (itemStack == null) {
+            itemStack = new ItemStack(getBlockState().getBlock());
+            itemStack.set(DataComponents.BLOCK_ENTITY_DATA, CustomData.of(saveWithoutMetadata(level.registryAccess())));
+        }
+        return itemStack;
+    }
+
+    @Override
+    protected void loadAdditional(CompoundTag compound, HolderLookup.Provider provider) {
+        super.loadAdditional(compound, provider);
+        itemStack = null;
     }
 
 }
