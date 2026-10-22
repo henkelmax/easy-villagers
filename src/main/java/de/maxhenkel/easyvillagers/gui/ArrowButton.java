@@ -11,8 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public class ArrowButton extends AbstractButton {
 
-    private static final ResourceLocation ARROW_LEFT = ResourceLocation.fromNamespaceAndPath(Main.MODID, "textures/gui/arrow_left.png");
-    private static final ResourceLocation ARROW_RIGHT = ResourceLocation.fromNamespaceAndPath(Main.MODID, "textures/gui/arrow_right.png");
+    private static final ResourceLocation ARROWS = ResourceLocation.fromNamespaceAndPath(Main.MODID, "textures/gui/container/auto_trader_arrows.png");
 
     private final boolean left;
     private final OnPress onPress;
@@ -25,10 +24,9 @@ public class ArrowButton extends AbstractButton {
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
-        super.renderWidget(guiGraphics, mouseX, mouseY, delta);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
-        guiGraphics.blit(left ? ARROW_LEFT : ARROW_RIGHT, getX(), getY() + 2, 0, 0, width, height, 16, 16);
+        guiGraphics.blit(ARROWS, getX(), getY(), left ? 0 : 16, isHoveredOrFocused() ? 20 : 0, width, height, 64, 64);
     }
 
     @Override
