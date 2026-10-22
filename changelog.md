@@ -1,1 +1,1 @@
-- Avoid creating new villager entities when not necessary
+- Reworked auto trader arrow button rendering
