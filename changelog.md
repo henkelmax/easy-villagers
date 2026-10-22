@@ -1,2 +1,1 @@
-- Avoid creating new villager entities when not necessary
-- Fixed breeder removing first villager if second one is missing
+- Reworked auto trader arrow button rendering
