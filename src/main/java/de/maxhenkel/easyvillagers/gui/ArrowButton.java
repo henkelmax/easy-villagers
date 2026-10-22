@@ -11,8 +11,7 @@ import net.minecraft.resources.Identifier;
 
 public class ArrowButton extends AbstractButton {
 
-    private static final Identifier ARROW_LEFT = Identifier.fromNamespaceAndPath(EasyVillagersMod.MODID, "textures/gui/arrow_left.png");
-    private static final Identifier ARROW_RIGHT = Identifier.fromNamespaceAndPath(EasyVillagersMod.MODID, "textures/gui/arrow_right.png");
+    private static final Identifier ARROWS = Identifier.fromNamespaceAndPath(EasyVillagersMod.MODID, "textures/gui/container/auto_trader_arrows.png");
 
     private final boolean left;
     private final OnPress onPress;
@@ -25,8 +24,7 @@ public class ArrowButton extends AbstractButton {
 
     @Override
     protected void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float delta) {
-        extractDefaultSprite(guiGraphics);
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, left ? ARROW_LEFT : ARROW_RIGHT, getX(), getY() + 2, 0, 0, width, height, 16, 16);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, ARROWS, getX(), getY(), left ? 0 : 16, isHoveredOrFocused() ? 20 : 0, width, height, 64, 64);
     }
 
     @Override
